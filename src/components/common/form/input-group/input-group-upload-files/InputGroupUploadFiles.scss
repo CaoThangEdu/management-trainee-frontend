@@ -1,0 +1,77 @@
+// extra large: .col-xl- | 1200++ -> desktop
+.input-group-upload-file {
+    .button-box {
+        padding-top: .5rem;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    .files-box {
+        .item-file {
+            position: relative;
+            display: inline-block;
+            margin-right: .75rem;
+            margin-top: .5rem;
+            border: solid 1px #ddd;
+            background-color: white;
+
+            .link-file {
+                display: inline-block;
+                padding: .25rem .75rem;
+
+                .fa {
+                    font-size: 1.5rem;
+                }
+
+                .fa-file-text-o {
+                    color: #464646;
+                }
+
+                .fa-file-excel-o {
+                    color: #1f7244;
+                }
+
+                .fa-file-word-o {
+                    color: blue;
+                }
+
+                .fa-file-pdf-o {
+                    color: red;
+                }
+
+                .fa-file-image-o {
+                    color: olivedrab;
+                }
+
+            }
+
+            .fa-times {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background-color: white;
+                border: 1px solid #ddd;
+                border-radius: 100%;
+                font-size: .75rem;
+                color: red;
+                width: 18px;
+                height: 18px;
+                text-align: center;
+                line-height: 15px;
+                cursor: pointer;
+                z-index: 1;
+            }
+        }
+    }
+}
+
+// large: .col-lg- | 992 - 1199px -> ipad landscape
+@media (max-width: 1199.98px) {}
+
+// medium: .col-md- | 768 - 991px -> ipad portrait
+@media (max-width: 991.98px) {}
+
+// small: .col-sm- | 576 - 767px -> mobile landscape
+@media (max-width: 767.98px) {}
+
+// extra small: .col- | 360 - 575px, mobile portrait
+@media (max-width: 575.98px) {}

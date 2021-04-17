@@ -1,0 +1,77 @@
+#app-notifications {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    max-width: 350px;
+
+    .vue-notification-wrapper {
+        margin: 0.125rem 0 0.75rem;
+        overflow: hidden;
+        font-size: 0.875rem;
+        background-clip: padding-box;
+        border: 1px solid;
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 21, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 0.25rem;
+        background-color: rgba(255, 255, 255, 0.85);
+        border-color: rgba(0, 0, 21, 0.1);
+    }
+
+    .notification-header {
+        display: flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        background-clip: padding-box;
+        border-bottom: 1px solid;
+        border-bottom-color: currentcolor;
+        color: #ffffff;
+        background-color: #000000;
+        border-color: rgba(0, 0, 21, 0.05);
+
+        &.warning {
+            background: #f9b115;
+        }
+
+        &.error {
+            background: #e55353;
+        }
+
+        &.success {
+            background: #2eb85c;
+        }
+
+        &.info {
+            background: #3399ff;
+        }
+
+        .notification-title {
+            margin-right: auto;
+            font-weight: 700;
+        }
+
+        .notification-close {
+            padding: 0;
+            background-color: transparent;
+            border: 0;
+            margin-left: 0.5rem;
+            margin-bottom: 0.25rem;
+            float: right;
+            font-size: 1.3125rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #ffffff;
+            text-shadow: 0 1px 0 #ffffff;
+            cursor: pointer;
+        }
+    }
+
+    .notification-content {
+        padding: 0.75rem;
+        .notification-text {
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+}
