@@ -1,12 +1,13 @@
-<template src="./ListPlanComponent.html">
+<template src='./ListNotificationManagementComponent.html'>
+  
 </template>
 
 <script>
-import PlanDetail from "../../../components/PlanDetail/PlanDetail";
+import NotificationManagementDetailComponent from "../NotificationManagementDetailComponent/NotificationManagementDetailComponent";
 export default {
-  name: "ListPlan",
+  name: "ListNotificationManagementComponent",
   components: {
-    PlanDetail,
+    NotificationManagementDetailComponent,
   },
   data() {
     return {
@@ -27,5 +28,5 @@ export default {
 </script>
 
 <style lang='scss'>
-@import './ListPlanComponent.scss'
+@import './ListNotificationManagementComponent.scss';
 </style>

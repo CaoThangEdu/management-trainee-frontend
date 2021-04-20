@@ -29,6 +29,12 @@ export default [{
             icon: 'cil-pencil',
         },
         {
+            _name: 'CSidebarNavItem',
+            name: 'Quản lý thông báo',
+            to: '/notification-management',
+            icon: 'cil-pencil',
+        },
+        {
             _name: 'CSidebarNavTitle',
             _children: ['Components'],
         },

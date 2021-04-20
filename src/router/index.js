@@ -50,6 +50,18 @@ const routes = [
             breadcrumbName: 'Quản lý thực tập sinh viên',
         },
     },
+    {
+        path: '/notification-management',
+        name: 'quan-ly-thong-bao',
+        component: () =>
+            import (
+                /* webpackChunkName: "ControlExample" */
+                '../router/views/NotificationManagement/NotificationManagement.vue'
+            ),
+        meta: {
+            breadcrumbName: 'Quản lý thông báo',
+        },
+    },
 ];
 
 const router = new VueRouter({
