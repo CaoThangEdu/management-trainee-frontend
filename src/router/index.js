@@ -49,7 +49,19 @@ const routes = [
         meta: {
             breadcrumbName: 'Quản lý thực tập sinh viên',
         },
+  },
+  {
+    path: '/company-management',
+    name: 'quan-ly-cong-ty',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/CompanyManagement/CompanyManagement.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Quản lý công ty',
     },
+  },
 ];
 
 const router = new VueRouter({
