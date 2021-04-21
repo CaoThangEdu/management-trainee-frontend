@@ -2,11 +2,11 @@
 </template>
 
 <script>
-import PlanDetail from "../PlanDetailComponent/PlanDetailComponent";
+import PlanDetailComponent from "../PlanDetailComponent/PlanDetailComponent";
 export default {
   name: "ListPlan",
   components: {
-    PlanDetail,
+    PlanDetailComponent,
   },
   data() {
     return {
