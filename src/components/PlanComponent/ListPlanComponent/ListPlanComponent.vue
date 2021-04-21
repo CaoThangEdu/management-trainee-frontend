@@ -2,11 +2,11 @@
 </template>
 
 <script>
-import PlanDetail from "../../../components/PlanDetail/PlanDetail";
+import PlanDetailComponent from "../PlanDetailComponent/PlanDetailComponent";
 export default {
   name: "ListPlan",
   components: {
-    PlanDetail,
+    PlanDetailComponent,
   },
   data() {
     return {
@@ -17,7 +17,6 @@ export default {
   methods:{
     createBrand() {
       this.editData = {};
-      console.log('abc')
     },
     async changeData() {
       // await this.getListBrandAsync();
