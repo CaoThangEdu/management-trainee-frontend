@@ -1,0 +1,12 @@
+.card{
+    &-header{
+        .btn{
+            &-add{
+                &-file{
+                    margin-left: 20px;
+                    color: white;
+                }
+            }
+        }
+    }
+}

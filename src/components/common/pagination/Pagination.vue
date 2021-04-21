@@ -6,7 +6,7 @@
         :class="{disabled:(currentPage == startLoop ? `disabled`:``)}"
         @click="currentPage = previousPage"
       >
-        <a class="page-link" href="javascript:void(0);">{{ $t('general.pagination-previous') }}</a>
+        <a class="page-link" href="javascript:void(0);">Trước</a>
       </li>
 
       <div class="d-flex" v-if="startLoop > 2">
@@ -41,7 +41,7 @@
         :class="{disabled:(currentPage == endLoop ? `disabled` :``)}"
         @click="currentPage = nextPage"
       >
-        <a class="page-link" href="javascript:void(0);">{{ $t('general.pagination-next') }}</a>
+        <a class="page-link" href="javascript:void(0);">Sau</a>
       </li>
     </ul>
   </nav>
