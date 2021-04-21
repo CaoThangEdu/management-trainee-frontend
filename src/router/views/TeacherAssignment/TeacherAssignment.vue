@@ -1,13 +1,13 @@
 <template>
   <div>
-    <TeacherAssignmentComponent />
+    <ListTeacherAssignmentComponent />
   </div>
 </template>
 
 <script>
-import TeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/TeacherAssignmentComponent'
+import ListTeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/ListTeacherAssignmentComponent/ListTeacherAssignmentComponent'
 export default {
-  components:{ TeacherAssignmentComponent }
+  components:{ ListTeacherAssignmentComponent }
 }
 </script>
 
