@@ -1,4 +1,4 @@
-<template src='./StudentManagementDetailComponent.html'>
+<template src='./TeacherManagementDetailComponent.html'>
 
 </template>
 
@@ -45,8 +45,12 @@ export default {
 </script>
 
 <style lang='scss'>
-@import './StudentManagementDetailComponent.scss';
+@import './TeacherManagementDetailComponent.scss';
 .form-select-class{
+  width: 100%;
+  height: 35px;
+}
+.brith-day{
   width: 100%;
   height: 35px;
 }

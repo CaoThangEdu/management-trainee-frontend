@@ -40,6 +40,12 @@ export default [{
             to: '/student-management',
             icon: 'cil-pencil',
           },
+          {
+            _name: 'CSidebarNavItem',
+            name: 'Quản lý giáo viên',
+            to: '/teacher-management',
+            icon: 'cil-pencil',
+          },
         {
             _name: 'CSidebarNavTitle',
             _children: ['Components'],
