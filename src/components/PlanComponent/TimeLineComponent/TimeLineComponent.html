@@ -1,39 +1,55 @@
-<div class="card">
-    <ul class="timeline">
-
-        <!-- Item 1 -->
-        <li>
-            <div class="direction">
-                <div class="flag-wrapper">
-                    <span class="flag">Freelancer</span>
-                    <span class="time-wrapper"><span class="time">2013 - present</span></span>
-                </div>
-                <div class="desc">My current employment. Way better than the position before!
-                </div>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <header class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+          <path fill="var(--ci-primary-color, currentColor)"
+            d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+            class="ci-primary"></path>
+        </svg> Time line
+        <button class="btn btn-primary float-right" @click="createTimeLine">+ Thêm mới</button>
+      </header>
+      <div class="card-body">
+        <div class="form-row filter-wrapper ml-0 mr-0 mb-2">
+          <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
+            <div class="input-group">
+              <select class="custom-select" id="inputGroupSelect04">
+                <option value="1">Đợt 1</option>
+                <option value="2">Đợt 2</option>
+              </select>
             </div>
-        </li>
-
-        <!-- Item 2 -->
-        <li>
-            <div class="direction">
-                <div class="flag-wrapper">
-                    <span class="flag">Apple Inc.</span>
-                    <span class="time-wrapper"><span class="time">2011 - 2013</span></span>
+          </div>
+        </div>
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column"
+              v-for="(item, index) in timeLines">
+              <div class="vertical-timeline-item vertical-timeline-element">
+                <div>
+                  <span class="vertical-timeline-element-icon bounce-in">
+                    <i class="fas fa-circle"></i>
+                  </span>
+                  <div class="vertical-timeline-element-content bounce-in"
+                    :key="index">
+                    <h4 class="timeline-title">{{ item.timeLineName }}</h4>
+                    <p>{{ item.description }}</p>
+                    <div class="button__edit text-right">
+                      <button class="btn btn-primary mr-2"
+                        @click="updateTimeLine(index)">Sửa</button>
+                      <button class="btn btn-danger" @click="deleteTimeLine(item.id)">xóa</button>
+                    </div>
+                    <span class="vertical-timeline-element-date text-left">{{ item.startDay }}<br />
+                      {{ item.endDay }}</span>
+                  </div>
                 </div>
-                <div class="desc">My first employer. All the stuff I've learned and projects I've been working on.</div>
-            </div>
-        </li>
+              </div>
 
-        <!-- Item 3 -->
-        <li>
-            <div class="direction">
-                <div class="flag-wrapper">
-                    <span class="flag">Harvard University</span>
-                    <span class="time-wrapper"><span class="time">2008 - 2011</span></span>
-                </div>
-                <div class="desc">A description of all the lectures and courses I have taken and my final degree?</div>
             </div>
-        </li>
-
-    </ul>
+          </div>
+        </div>
+      </div>
+      <TimeLineDetailComponent :data="editTimeLine" @change-data="changeData" />
+      <ConfirmDialog :data="confirmTimeline" @agree="deleteTimelineConfirm"></ConfirmDialog>
+    </div>
+  </div>
 </div>

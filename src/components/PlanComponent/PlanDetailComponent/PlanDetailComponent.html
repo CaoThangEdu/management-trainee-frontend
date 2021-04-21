@@ -1,0 +1,108 @@
+<BaseModal @mouse-click-outside="closeModal(false)" :modalName="`PlanDetail`" :isShow="isShow">
+  <div class="">
+    <div class="form-group row">
+      <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">Ngày bắt đầu</label>
+      <div class="col-md-8 col-sm-8">
+        <input class="form-control" type="date"
+          format="yyyy-mm-dd"
+          value="2021-05-03"
+          v-model="plan.startDay">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">Ngày kết thúc</label>
+      <div class="col-md-8 col-sm-8">
+        <input class="form-control" type="date" v-model="plan.endDay">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="name" class="col-md-4 col-sm-4 col-form-label">
+        Mô tả (<span style="color: red;">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" id="name" v-model="plan.description" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Hệ đào tạo</label>
+      <div class="col-md-8 col-sm-8">
+        <div class="input-group mb-3">
+          <select class="form-control form-select form-select-class"
+            v-model="plan.trainingSystemId">
+            <option v-for="(item, index) in trainingsystems" :key="index" :value="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Khóa</label>
+      <div class="col-md-8 col-sm-8">
+        <div class="input-group mb-3">
+          <select class="form-control form-select form-select-class" v-model="plan.courseId">
+            <option v-for="(item, index) in courses" :key="index" :value="item.id">
+              {{ item.courseName }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Ngành</label>
+      <div class="col-md-8 col-sm-8">
+        <div class="input-group mb-3">
+          <select class="form-control form-select form-select-class"
+            v-model="plan.careersId">
+            <option v-for="(item, index) in careers" :key="index" :value="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
+      <div class="col-md-8 col-sm-8">
+        <div class="input-group mb-3">
+          <select class="form-control form-select form-select-class" v-model="plan.status">
+            <option value="new">Mới lập</option>
+            <option value="start">Bắt đầu thực tập</option>
+            <option value="point">Chấm điểm</option>
+            <option value="end">Kết thúc thực tập</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <template #header>
+    <h5>{{plan.id ? "Cập nhật kế hoạch" : "Thêm mới kế hoạch"}}</h5>
+    <button class="close" style="color: red;"
+      @click="closeModal(false)">&times;</button>
+  </template>
+
+  <template #footer>
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <AlertMessages :messages="errorMessages" />
+      </div>
+    </div>
+
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <button @click="save" class="btn btn-primary float-right ml-2">{{plan.id ? "Cập nhật" : "Thêm mới"}}</button>
+        <button class="btn btn-dark float-right" @click="closeModal(false)">Hủy</button>
+      </div>
+    </div>
+  </template>
+</BaseModal>
