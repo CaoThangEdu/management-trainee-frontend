@@ -1,11 +1,11 @@
-<template src="./PlanDetail.html">
+<template src="./PlanDetailComponent.html">
 </template>
 
 <script>
-import ComponentBase from "../../components/common/component-base/ComponentBase"
-import BaseModal from '../../components/common/base-modal/BaseModal'
+import ComponentBase from "../../common/base-modal/BaseModal"
+import BaseModal from '../../common/base-modal/BaseModal'
 export default {
-  name: 'PlanDetail',
+  name: 'PlanDetailComponent',
   extends: ComponentBase,
   components: { BaseModal },
   data() {

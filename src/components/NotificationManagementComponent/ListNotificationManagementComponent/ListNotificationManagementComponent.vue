@@ -18,7 +18,6 @@ export default {
   methods:{
     createBrand() {
       this.editData = {};
-      console.log('abc')
     },
     async changeData() {
       // await this.getListBrandAsync();
