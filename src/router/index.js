@@ -74,6 +74,18 @@ const routes = [
       breadcrumbName: 'Quản lý sinh viên',
     },
   },
+  {
+    path: '/teacher-management',
+    name: 'quan-ly-giao-vien',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/TeacherManagement/TeacherManagement.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Quản lý giáo viên',
+    },
+  },
 ];
 
 const router = new VueRouter({
