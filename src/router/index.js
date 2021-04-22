@@ -63,6 +63,7 @@ const routes = [
     },
   },
   {
+    layout_notification_management
     path: '/notification-management',
     name: 'quan-ly-thong-bao',
     component: () =>
@@ -72,6 +73,17 @@ const routes = [
       ),
     meta: {
       breadcrumbName: 'Quản lý thông báo',
+  },
+  {
+    path: '/student-management',
+    name: 'quan-ly-sinh-vien',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/StudentManagement/StudentManagement.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Quản lý sinh viên',
     },
   },
 ];
