@@ -35,6 +35,12 @@ export default [{
             icon: 'cil-pencil',
         },
         {
+          _name: 'CSidebarNavItem',
+          name: 'Quản lý công ty',
+          to: '/company-management',
+          icon: 'cil-pencil',
+        },
+        {
             _name: 'CSidebarNavTitle',
             _children: ['Components'],
         },

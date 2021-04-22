@@ -49,19 +49,31 @@ const routes = [
         meta: {
             breadcrumbName: 'Quản lý thực tập sinh viên',
         },
+  },
+  {
+    path: '/company-management',
+    name: 'quan-ly-cong-ty',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/CompanyManagement/CompanyManagement.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Quản lý công ty',
     },
-    {
-        path: '/notification-management',
-        name: 'quan-ly-thong-bao',
-        component: () =>
-            import (
-                /* webpackChunkName: "ControlExample" */
-                '../router/views/NotificationManagement/NotificationManagement.vue'
-            ),
-        meta: {
-            breadcrumbName: 'Quản lý thông báo',
-        },
+  },
+  {
+    path: '/notification-management',
+    name: 'quan-ly-thong-bao',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/NotificationManagement/NotificationManagement.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Quản lý thông báo',
     },
+  },
 ];
 
 const router = new VueRouter({
