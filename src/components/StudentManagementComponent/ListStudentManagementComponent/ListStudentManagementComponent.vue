@@ -4,6 +4,8 @@
 
 <script>
 import CompanyManagementDetailComponent from "../StudentManagementDetailComponent/StudentManagementDetailComponent"
+import axios from 'axios'
+
 export default {
   components: {
     CompanyManagementDetailComponent,
@@ -14,6 +16,9 @@ export default {
       editData: {},
     };
   },
+  mounted(){
+    this.callApi()
+  },
   methods:{
     createBrand() {
       this.editData = {};
@@ -21,6 +26,14 @@ export default {
     async changeData() {
       // await this.getListBrandAsync();
     },
+    async callApi(){
+      try{
+        const res = await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=5')
+        console.log(res.data)
+      } catch(error){
+        console.log(error)
+      }
+    }
   }
 }
 </script>
