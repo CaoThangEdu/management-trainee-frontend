@@ -7,19 +7,19 @@
     :isShow="isShow"
   >
     <template #header>
-      <h5 class="mb-0">{{ title ? title : $t('confirm.title-default') }}</h5>
+      <h5 class="mb-0">{{ title ? title : "Thông báo" }}</h5>
     </template>
-    {{ message ? message : $t('confirm.message-confirmation-default') }}
+    {{ message ? message : "Bạn có chắc chắn muốn xóa?" }}
     <template #footer>
       <input
         type="button"
-        :value="$t('confirm.button-delete')"
+        :value="'Có'"
         @click="agreeConfirm"
         class="btn btn-danger"
       />
       <input
         type="button"
-        :value="$t('confirm.button-cancel')"
+        :value="'Không'"
         @click="cancelConfirm"
         class="btn btn-dark"
       />

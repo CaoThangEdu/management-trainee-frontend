@@ -36,7 +36,7 @@ export default {
     defaultText: {
       type: String,
       default: function () {
-        return this.$t('general.all-select')
+        return 'Tất cả'
       },
     }
   },

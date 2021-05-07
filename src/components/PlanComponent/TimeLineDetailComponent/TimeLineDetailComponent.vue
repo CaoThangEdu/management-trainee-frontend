@@ -1,11 +1,11 @@
-<template src="./PlanDetailComponent.html">
+<template src="./TimeLineDetailComponent.html">
 </template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase"
 import BaseModal from '../../common/base-modal/BaseModal'
 export default {
-  name: 'PlanDetailComponent',
+  name: 'TimeLineDetailComponent',
   extends: ComponentBase,
   components: { BaseModal },
   data() {
@@ -42,5 +42,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import './PlanDetailComponent.scss';
+@import './TimeLineDetailComponent.scss';
 </style>
