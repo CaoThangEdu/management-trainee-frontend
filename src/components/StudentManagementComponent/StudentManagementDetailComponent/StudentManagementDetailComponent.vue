@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       isShow: false,
-      objStudent: {},
+      student: {},
 
       errorMessages: [],
     }
@@ -37,7 +37,7 @@ export default {
 
     closeModal(changeData) {
       this.isShow = false;
-      this.objStudent = {};
+      this.student = {};
 
       if (changeData) {
         this.$emit("change-data");
@@ -47,7 +47,7 @@ export default {
     async createStudentAsync() {
       this.showLoading();
       let api = new StudentService();
-      let response = await api.createStudentAsync(this.objStudent);
+      let response = await api.createStudentAsync(this.student);
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
@@ -69,7 +69,7 @@ export default {
     async updateStudentAsync() {
       this.showLoading();
       let api = new StudentService();
-      let response = await api.updateStudentAsync(this.objStudent);
+      let response = await api.updateStudentAsync(this.student);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -93,14 +93,14 @@ export default {
     async save() {
       // validate
       // let viewModel = new StudentService();
-      // viewModel.setFields(this.objStudent);
+      // viewModel.setFields(this.student);
       // this.errorMessages = viewModel.isValid();
 
       // if (this.errorMessages.length > 0) {
       //   return;
       // }
 
-      if (this.objStudent.id > 0) {
+      if (this.student.id > 0) {
         //update
         await this.updateStudentAsync();
       } else {
@@ -113,7 +113,7 @@ export default {
   watch: {
     data() {
       this.isShow = true;
-      this.objStudent = this.data;
+      this.student = this.data;
     }
   }
 }

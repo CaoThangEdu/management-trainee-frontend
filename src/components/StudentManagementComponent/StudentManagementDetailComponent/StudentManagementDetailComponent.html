@@ -3,39 +3,39 @@ size="lg">
   <div class="">
     <div class="form-group row">
       <label for="name" class="col-md-4 col-sm-4 col-form-label">
-        MSSV (<span style="color: red;">*</span>)
+        MSSV (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
         <input type="text" class="form-control" id="studentId"
-        v-model="objStudent.studentId" />
+        v-model="student.studentId" />
       </div>
     </div>
 
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">
-        Họ (<span style="color: red;">*</span>)
+        Họ (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
         <input type="text" class="form-control" 
-        v-model="objStudent.firstName" />
+        v-model="student.firstName" />
       </div>
     </div>
 
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">
-        Tên đệm và tên (<span style="color: red;">*</span>)
+        Tên đệm và tên (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" v-model="objStudent.lastName" />
+        <input type="text" class="form-control" v-model="student.lastName" />
       </div>
     </div>
 
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">
-        Email (<span style="color: red;">*</span>)
+        Email (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" v-model="objStudent.email" />
+        <input type="text" class="form-control" v-model="student.email" />
       </div>
     </div>
     
@@ -45,7 +45,7 @@ size="lg">
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <select class="form-control form-select form-select-class" id="inputGroupSelect02"
-          v-model="objStudent.classId">
+          v-model="student.classId">
             <option selected>Choose...</option>
             <option value="1">CDTH18A</option>
             <option value="2">CDTH18B</option>
@@ -118,8 +118,8 @@ size="lg">
   </div>
 
   <template #header>
-    <h5>{{objStudent.id ? "Cập nhật sinh viên" : "Thêm mới sinh viên"}}</h5>
-    <button class="close" style="color: red;" @click="closeModal(false)">&times;</button>
+    <h5>{{student.id ? "Cập nhật sinh viên" : "Thêm mới sinh viên"}}</h5>
+    <button class="close text--red" @click="closeModal(false)">&times;</button>
   </template>
 
   <template #footer>
@@ -136,7 +136,7 @@ size="lg">
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
         <button
           @click="save"
-          class="btn btn-primary float-right ml-2">{{objStudent.id ? "Cập nhật" : "Thêm mới"}}</button>
+          class="btn btn-primary float-right ml-2">{{student.id ? "Cập nhật" : "Thêm mới"}}</button>
         <button class="btn btn-dark float-right" @click="closeModal(false)">Hủy</button>
       </div>
     </div>
