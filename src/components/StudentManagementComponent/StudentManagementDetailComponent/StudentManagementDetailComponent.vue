@@ -5,16 +5,21 @@
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase"
 import BaseModal from '../../common/base-modal/BaseModal'
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
+import StudentService from '../../../services/student/studentServices'
+import AppConfig from '../../../../src/app.config.json'
+
 export default {
-  name: 'PlanDetail',
+  name: 'StudentManagementDetailComponent',
   extends: ComponentBase,
   components: {
-    BaseModal
+    BaseModal,
+    AlertMessages,
   },
   data() {
     return {
       isShow: false,
-      objBrand: {},
+      student: {},
 
       errorMessages: [],
     }
@@ -26,19 +31,89 @@ export default {
     },
   },
   methods: {
+    async pressKeyEnter() {
+      await this.save();
+    },
+
     closeModal(changeData) {
       this.isShow = false;
-      this.objBrand = {};
+      this.student = {};
 
       if (changeData) {
         this.$emit("change-data");
       }
     },
+
+    async createStudentAsync() {
+      this.showLoading();
+      let api = new StudentService();
+      let response = await api.createStudentAsync(this.student);
+      this.showLoading(false);
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default}`
+      );
+
+      this.closeModal(true);
+    },
+
+    async updateStudentAsync() {
+      this.showLoading();
+      let api = new StudentService();
+      let response = await api.updateStudentAsync(this.student);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+
+        this.closeModal(true);
+    },
+
+    async save() {
+      // validate
+      // let viewModel = new StudentService();
+      // viewModel.setFields(this.student);
+      // this.errorMessages = viewModel.isValid();
+
+      // if (this.errorMessages.length > 0) {
+      //   return;
+      // }
+
+      if (this.student.id > 0) {
+        //update
+        await this.updateStudentAsync();
+      } else {
+        //create
+        await this.createStudentAsync();
+      }
+    },
+
   },
   watch: {
     data() {
       this.isShow = true;
-      this.objBrand = this.data;
+      this.student = this.data;
     }
   }
 }

@@ -1,17 +1,17 @@
-<template src="./PlanDetailComponent.html">
+<template src="./TimeLineDetailComponent.html">
 </template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase"
 import BaseModal from '../../common/base-modal/BaseModal'
 export default {
-  name: 'PlanDetailComponent',
+  name: 'TimeLineDetailComponent',
   extends: ComponentBase,
   components: { BaseModal },
   data() {
     return {
       isShow: false,
-      objBrand: {},
+      brand: {},
 
       errorMessages: [],
     }
@@ -25,7 +25,7 @@ export default {
   methods:{
      closeModal(changeData) {
       this.isShow = false;
-      this.objBrand = {};
+      this.brand = {};
 
       if(changeData) {
         this.$emit("change-data");
@@ -35,12 +35,12 @@ export default {
   watch: {
     data() {
       this.isShow = true;
-      this.objBrand = this.data;
+      this.brand = this.data;
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import './PlanDetailComponent.scss';
+@import './TimeLineDetailComponent.scss';
 </style>
