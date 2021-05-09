@@ -75,6 +75,30 @@ const routes = [
     },
   },
   {
+    path: '/course-management',
+    name: 'quan-ly-nganh',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/CourseManagement/CourseManagement.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Quản lý khóa',
+    },
+  },
+  {
+    path: '/class-management',
+    name: 'quan-ly-lop',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/ClassManagement/ClassManagement.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Quản lý lớp',
+    },
+  },
+  {
     path: '/student-management',
     name: 'quan-ly-sinh-vien',
     component: () =>
