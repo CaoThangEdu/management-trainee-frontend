@@ -7,6 +7,7 @@ import ComponentBase from "../../common/component-base/ComponentBase"
 import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import CourseService from '../../../services/course/courseServices'
+import CourseViewModel from "../../../view-model/course/courseViewModel"
 import AppConfig from '../../../../src/app.config.json'
 
 export default {
@@ -92,13 +93,13 @@ export default {
 
     async save() {
       // validate
-      // let viewModel = new CourseService();
-      // viewModel.setFields(this.course);
-      // this.errorMessages = viewModel.isValid();
+      let viewModel = new CourseViewModel();
+      viewModel.setFields(this.course);
+      this.errorMessages = viewModel.isValid();
 
-      // if (this.errorMessages.length > 0) {
-      //   return;
-      // }
+      if (this.errorMessages.length > 0) {
+        return;
+      }
 
       if(this.course.id === undefined){
         await this.createCourseAsync();
@@ -107,6 +108,7 @@ export default {
       }
     },
   },
+
   watch: {
     data() {
       this.isShow = true;

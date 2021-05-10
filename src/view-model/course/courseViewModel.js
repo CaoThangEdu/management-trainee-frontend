@@ -1,5 +1,7 @@
-export default class CourseViewModel {
+import ViewModel from '../viewModel'
+export default class CourseViewModel extends ViewModel {
   constructor() {
+    super()
     this.fields = {
       courseName: null,
       status: null,
@@ -11,13 +13,16 @@ export default class CourseViewModel {
       courseName: {
         label: 'Tên khóa',
         rules: {
-          require: ''
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
         }
       },
     }
     return validations
   }
   isValid() {
-    return this.getValidations()
+    return super.isValid(this.getValidations())
   }
 }
