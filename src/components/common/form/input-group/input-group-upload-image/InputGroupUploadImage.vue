@@ -24,7 +24,7 @@
           for="input-choose-image"
           class="btn"
           :class="buttonClass"
-        >{{$t('general.choose-image')}}</label>
+        >Chọn hình ảnh</label>
       </div>
     </div>
     <div class="image-review">
@@ -36,9 +36,8 @@
 
 <script>
 import ComponentBase from "../../../component-base/ComponentBase";
-
 import FileUploadApi from "../../../../../api/file-upload/fileUploadApi";
-
+import AppConfig from '../../../../../../src/app.config.json';
 import { options } from "../../../../../helpers/options";
 import fileHelper from "../../../../../helpers/utils/fileHelper";
 export default {
@@ -132,27 +131,22 @@ export default {
         case 0:
           this.showNotifications(
             "error",
-            this.$t("notification.title-default"),
-            this.$i18n.t("notification.upload-image-error-not-choose")
+            `${AppConfig.notification.title_default}`,
+            `${AppConfig.notification.upload_image_error_not_choose}`
           );
           break;
         case -1:
           this.showNotifications(
             "error",
-            this.$t("notification.title-default"),
-            this.$i18n.t("notification.upload-image-error-size", {
-              size: maxSize / 1024 / 1024 + "MB",
-            })
-          );
+            `${AppConfig.notification.title_default}`,
+            `${AppConfig.notification.upload_image_error_size}` + {size: maxSize / 1024 / 1024 + "MB",});
           break;
         case -2:
           this.showNotifications(
             "error",
-            this.$t("notification.title-default"),
-            this.$i18n.t("notification.upload-image-error-extension", {
-              extension: this.strExtensionAccepted.replace(/./g, " *.").trim(),
-            })
-          );
+            `${AppConfig.notification.title_default}`,
+            `${AppConfig.notification.upload_image_error_extension}` + 
+            {extension: this.strExtensionAccepted.replace(/./g, " *.").trim(),});
           break;
       }
 
@@ -168,8 +162,8 @@ export default {
         if (!result.isOK || result.data.length === 0) {
           this.showNotifications(
             "error",
-            this.$t("notification.title-default"),
-            this.$i18n.t("notification.upload-file-error")
+            `${AppConfig.notification.title_default}`,
+            `${AppConfig.notification.upload_file_error}`
           );
         } else {
           let imageInfo = {

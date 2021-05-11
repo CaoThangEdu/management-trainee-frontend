@@ -1,13 +1,16 @@
-<template src="./PlanDetail.html">
+<template src='./TeacherAssignmentDetailComponent.html'>
+
 </template>
 
 <script>
-import ComponentBase from "../../components/common/component-base/ComponentBase"
-import BaseModal from '../../components/common/base-modal/BaseModal'
+import ComponentBase from "../../common/component-base/ComponentBase"
+import BaseModal from '../../common/base-modal/BaseModal'
 export default {
-  name: 'PlanDetail',
+  name: 'TeacherAssignmentDetailComponent',
   extends: ComponentBase,
-  components: { BaseModal },
+  components: {
+    BaseModal
+  },
   data() {
     return {
       isShow: false,
@@ -22,12 +25,12 @@ export default {
       default: null,
     },
   },
-  methods:{
-     closeModal(changeData) {
+  methods: {
+    closeModal(changeData) {
       this.isShow = false;
       this.objBrand = {};
 
-      if(changeData) {
+      if (changeData) {
         this.$emit("change-data");
       }
     },
@@ -41,6 +44,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang='scss'>
+@import './TeacherAssignmentDetailComponent.scss';
 </style>

@@ -194,45 +194,27 @@ export default [{
         },
         {
             _name: 'CSidebarNavItem',
-            name: 'Widgets',
-            to: '/widgets',
-            icon: 'cil-calculator',
-            badge: {
-                color: 'primary',
-                text: 'NEW',
-                shape: 'pill',
-            },
+            name: 'Quản lý sinh viên',
+            to: '/student-management',
+            icon: 'cil-pencil',
         },
         {
-            _name: 'CSidebarNavDivider',
-            _class: 'm-2',
-        },
-        {
-            _name: 'CSidebarNavTitle',
-            _children: ['Extras'],
-        },
-        {
-            _name: 'CSidebarNavDropdown',
-            name: 'Pages',
-            route: '/pages',
-            icon: 'cil-star',
-            items: [{
-                    name: 'Login',
-                    to: '/pages/login',
-                },
-                {
-                    name: 'Register',
-                    to: '/pages/register',
-                },
-                {
-                    name: 'Error 404',
-                    to: '/pages/404',
-                },
-                {
-                    name: 'Error 500',
-                    to: '/pages/500',
-                },
-            ],
-        },
+          _name: 'CSidebarNavItem',
+          name: 'Quản lý giáo viên',
+          to: '/teacher-management',
+          icon: 'cil-pencil',
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Quản lý khóa',
+        to: '/course-management',
+        icon: 'cil-pencil',
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Quản lý lớp',
+        to: '/class-management',
+        icon: 'cil-pencil',
+      },
     ],
 }, ];

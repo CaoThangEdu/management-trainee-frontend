@@ -1,0 +1,89 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <header class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+          <path fill="var(--ci-primary-color, currentColor)"
+            d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+            class="ci-primary"></path>
+        </svg> Thông báo
+        <button class="btn btn-primary float-right" @click="createBrand">+ Thêm mới</button>
+      </header>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-row filter-wrapper ml-0 mr-0">
+              <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
+                <div class="input-group">
+                  <select class="custom-select" id="inputGroupSelect04">
+                    <option selected>...</option>
+                    <option value="1">Đang diễn ra</option>
+                    <option value="2">Đã diễn ra</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
+                <div class="input-group">
+                  <select class="custom-select" id="inputGroupSelect04">
+                    <option selected>Đợt thực tập</option>
+                    <option value="1">Đợt 1</option>
+                    <option value="2">Đợt 2</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-xl-2 col-md-4 col-sm-12">
+                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="">
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Mô tả</th>
+                <th scope="col">Sinh viên</th>
+                <th scope="col">Đợt thực tập</th>
+                <th scope="col">Giáo viên</th>
+                <th scope="col">Ngày thông báo</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Bắt đầu tính thời gian thực tập</td>
+                <td>Tất cả</td>
+                <td class="text-center">1</td>
+                <td>Tất cả</td>
+                <td>09/02/2020</td>
+                <td>Thông báo</td>
+                <td>
+                  <button class="btn btn-primary mr-2">Sửa</button>
+                  <button class="btn btn-danger">Xóa</button>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Kết thúc thực tập</td>
+                <td>Tất cả</td>
+                <td class="text-center">1</td>
+                <td>Tất cả</td>
+                <td>09/04/2020</td>
+                <td>Chưa thông báo</td>
+                <td>
+                  <button class="btn btn-primary mr-2">Sửa</button>
+                  <button class="btn btn-danger">Xóa</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <NotificationManagementDetailComponent :data="editData" />
+</div>

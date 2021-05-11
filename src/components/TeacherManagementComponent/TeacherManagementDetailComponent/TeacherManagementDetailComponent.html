@@ -1,90 +1,82 @@
-<BaseModal @mouse-click-outside="closeModal(false)" :modalName="`StudentManagementDetail`" :isShow="isShow">
+<BaseModal
+  @mouse-click-outside="closeModal(false)"
+  :modalName="`TeacherAssignmentDetailComponent`"
+  :isShow="isShow"
+  size="lg"
+>
   <div class="">
     <div class="form-group row">
-      <label for="name" class="col-md-4 col-sm-4 col-form-label">
-        MSGV (<span style="color: red;">*</span>)
-      </label>
+      <label class="col-md-4 col-sm-4 col-form-label">Họ</label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" id="name" />
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">
-        Tên giáo viên (<span style="color: red;">*</span>)
-      </label>
-      <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" />
-      </div>
-    </div>
-    
-
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Khoa </label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-select form-select-class" id="inputGroupSelect02">
-            <option selected>Choose...</option>
-            <option value="1">Công nghệ thông tin</option>
-            <option value="2">Điện-điện tử</option>
-            <option value="3">Kỹ thuật Ô-tô</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Giới tính</label>
-      <div class="col-md-8 col-sm-8">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-          <label class="form-check-label" for="inlineRadio1">Nam</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-          <label class="form-check-label" for="inlineRadio2">Nữ</label>
-        </div>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          v-model="teachers.firstName"
+        />
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Ngày sinh </label>
+      <label class="col-md-4 col-sm-4 col-form-label">Tên</label>
       <div class="col-md-8 col-sm-8">
-        <input class="brith-day" type="date" id="start" name="trip-start"
-               value="2018-07-22"
-               min="2018-01-01" max="2018-12-31">
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          v-model="teachers.lastName"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Email</label>
+      <div class="col-md-8 col-sm-8">
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          v-model="teachers.email"
+        />
       </div>
     </div>
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Trạng thái </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <select class="form-select form-select-class" id="inputGroupSelect02">
-            <option value="1">Hiển thị</option>
-            <option value="2">Ẩn</option>
+          <select
+            class="form-control form-select form-select-class"
+            id="inputGroupSelect02"
+            v-model="teachers.status"
+          >
+            <option value="Hoạt động">Hoạt động</option>
+            <option value="Không hoạt động">Không hoạt động</option>
           </select>
         </div>
       </div>
     </div>
-
   </div>
 
   <template #header>
-    <h5>Thêm mới giáo viên</h5>
-    <button class="close" style="color: red;" @click="closeModal(false)">&times;</button>
+    <h5>{{teachers.id ? "Cập nhật khóa" : "Thêm mới khóa"}}</h5>
+    <button class="close" style="color: red;" @click="closeModal(false)">
+      &times;
+    </button>
   </template>
 
   <template #footer>
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
-      <div class="col-md-8 col-sm-8 pl-0 pr-0">
-
-      </div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0"></div>
     </div>
 
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
-        <button class="btn btn-primary float-right ml-2">Thêm mới giáo viên</button>
+        <button @click="save" class="btn btn-primary float-right ml-2">
+          {{teachers.id ? "Cập nhật" : "Thêm mới"}}
+        </button>
+        <button class="btn btn-dark float-right" @click="closeModal(false)">
+          Hủy
+        </button>
       </div>
     </div>
   </template>

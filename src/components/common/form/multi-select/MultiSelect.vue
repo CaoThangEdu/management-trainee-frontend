@@ -2,7 +2,7 @@
   <Multiselect
     v-model="listSelected"
     :selectLabel="''"
-    :placeholder="$t('general.placeholder-search-input')"
+    :placeholder="'Nhập từ khóa'"
     label="name"
     track-by="code"
     :options="listOptions"
@@ -14,8 +14,8 @@
     :clearOnSelect="true"
     :hideSelected="true"
   >
-    <template slot="noOptions">{{$t('multi-select.empty-list')}}</template>
-    <template slot="noResult">{{$t('multi-select.no-result')}}</template>
+    <template slot="noOptions">Danh sách rỗng</template>
+    <template slot="noResult">Không tìm thấy dữ liệu</template>
   </Multiselect>
 </template>
 
