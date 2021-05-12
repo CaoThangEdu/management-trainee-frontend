@@ -13,20 +13,11 @@ size="lg">
 
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">
-        Họ (<span class="text--red">*</span>)
+        Họ và tên (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
         <input type="text" class="form-control" 
-        v-model="student.firstName" />
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">
-        Tên đệm và tên (<span class="text--red">*</span>)
-      </label>
-      <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" v-model="student.lastName" />
+        v-model="student.name" />
       </div>
     </div>
 
@@ -58,7 +49,8 @@ size="lg">
       <label class="col-md-4 col-sm-4 col-form-label">Khóa học </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" id="inputGroupSelect02">
+          <select class="form-control form-select form-select-class" id="inputGroupSelect02"
+          v-model="student.role">
             <option selected>Choose...</option>
             <option value="1">18</option>
             <option value="2">19</option>
@@ -87,14 +79,16 @@ size="lg">
       <div class="col-md-8 col-sm-8">
         <input class="form-control brith-day" type="date" id="start" name="trip-start"
           value="2018-07-22"
-          min="2018-01-01" max="2018-12-31">
+          min="2018-01-01" max="2018-12-31"
+          v-model="student.dayOfBirth">
       </div>
     </div>
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Đợt thực tập </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" id="inputGroupSelect02">
+          <select class="form-control form-select form-select-class" id="inputGroupSelect02"
+          v-model="student.internshipCourseId">
             <option selected>Choose...</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -107,7 +101,7 @@ size="lg">
       <label class="col-md-4 col-sm-4 col-form-label">Trạng thái </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" id="inputGroupSelect02">
+          <select class="form-control form-select form-select-class" v-model="student.status">
             <option value="1">Hiển thị</option>
             <option value="2">Ẩn</option>
           </select>

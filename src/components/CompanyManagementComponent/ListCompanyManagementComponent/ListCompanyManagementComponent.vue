@@ -11,12 +11,12 @@ export default {
   data() {
     return {
       listBrand: [],
-      editData: {},
+      editCompany: {},
     };
   },
   methods:{
     createBrand() {
-      this.editData = {};
+      this.editCompany = {};
     },
     async changeData() {
       // await this.getListBrandAsync();

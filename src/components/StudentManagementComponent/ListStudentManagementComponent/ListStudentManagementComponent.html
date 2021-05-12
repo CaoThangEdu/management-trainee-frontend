@@ -9,8 +9,21 @@
         </svg> Danh sách sinh viên
         <button class="btn btn-primary float-right btn-search"          
           @click="createBrand">+ Thêm mới</button>
-        <button class="btn btn-warning float-right btn-add-file" 
-          @click="showNotification">+ Thêm file</button>
+        <input type="file" class="btn btn-warning float-right btn-add-file"
+          @change="previewFiles" />+ Thêm file
+        <div class="form-group row">
+          <label class="col-md-4 col-sm-4 col-form-label">Lớp </label>
+          <div class="col-md-8 col-sm-8">
+            <div class="input-group mb-3">
+              <select class="form-control form-select form-select-class" 
+                v-model="internCourceName">
+                <option
+                v-for="(item, index) in plans"
+                 :key="index" :value="item.id">{{ item.internshipCourceName }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -46,7 +59,7 @@
               <tr v-for="(item, index) in students" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>0306181069</td>
-                <td>{{ item.firstName + ' ' + item.lastName }}</td>
+                <td>{{ item.name }}</td>
                 <td>CDTH18PMA</td>
                 <td>18</td>
                 <td>{{ item.email }}</td>
@@ -67,10 +80,10 @@
       </div>
 
       <StudentManagementDetailComponent
-        :data="editData"
+        :data="editStudent"
         @change-data="changeData" />
 
-      <ConfirmDialog :data="confirmData" @agree="agreeConfirm"></ConfirmDialog>
+      <ConfirmDialog :data="confirmStudent" @agree="agreeConfirm"></ConfirmDialog>
 
       <Pagination :position="`center`" :page="1" :pageSize="10" :totalItems="17" @change-page="changePage"></Pagination>
     </div>

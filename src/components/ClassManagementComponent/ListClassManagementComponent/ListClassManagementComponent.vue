@@ -24,7 +24,7 @@ export default {
       classes: [],
       courses: [],
       editClass: {},
-      confirmData: null,
+      confirmClassRoom: null,
     };
   },
 
@@ -34,9 +34,9 @@ export default {
   },
 
   methods:{
-    getNameCourse(course_Id){
+    getCourseName(courseId){
       for (const x in this.courses) {
-        if(this.courses[x].id === course_Id){
+        if(this.courses[x].id === courseId){
           return this.courses[x].courseName
         }
       }
@@ -93,7 +93,7 @@ export default {
     },
 
     deleteClass(id) {
-      this.confirmData = { id: id };
+      this.confirmClassRoom = { id: id };
     },
 
     // Call api delete Class

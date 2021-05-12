@@ -1,41 +1,34 @@
-export default class StudentViewModel {
+import ViewModel from '../viewModel'
+export default class StudentViewModel extends ViewModel {
   constructor() {
+    super()
     this.fields = {
-      firstName: null,
-      lastName: null,
+      name: null,
       studentId: null,
-      classId: null,
+      status: null,
       email: null,
       dayOfBirth: null,
+      role: 0,
+      internshipCourseId: null,
+      classId: null,
     }
   }
 
   getValidations() {
     let validations = {
-      firstName: {
-        label: 'Họ',
-        rules: {
-          require: ''
-        }
-      },
-
-      lastName: {
-        label: 'Tên đệm và tên',
+      name: {
+        label: 'Tên',
         rules: {
           require: '',
-        }
-      },
-      email: {
-        label: 'Email',
-        rules: {
-          require: '',
-          email: '',
+          maxLength: {
+            max_value: 200
+          }
         }
       },
     }
     return validations
   }
   isValid() {
-    return this.getValidations()
+    return super.isValid(this.getValidations())
   }
 }

@@ -38,7 +38,7 @@
               <tr v-for="(item, index) in classes" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{ item.className }}</td>
-                <td>{{ getNameCourse(item.courseId) }}</td>
+                <td>{{ getCourseName  (item.courseId) }}</td>
                 <td>{{ item.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}}</td>
                 <td>
                   <button class="btn btn-primary mr-2" @click="updateClass(index)">Sửa</button>
@@ -53,7 +53,7 @@
           :data="editClass"
           @change-data="changeData" />
         
-        <ConfirmDialog :data="confirmData" @agree="agreeConfirm"></ConfirmDialog>
+        <ConfirmDialog :data="confirmClassRoom" @agree="agreeConfirm"></ConfirmDialog>
 
         <Pagination :position="`center`" :page="1" :pageSize="10" :totalItems="17" @change-page="changePage">
         </Pagination>

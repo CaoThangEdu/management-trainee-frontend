@@ -49,6 +49,7 @@ export default {
       let api = new StudentService();
       let response = await api.createStudentAsync(this.student);
       this.showLoading(false);
+      console.log(response)
       if(!response.isOK){
         this.showNotifications(
           "error",
