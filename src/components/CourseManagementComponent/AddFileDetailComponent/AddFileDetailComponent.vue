@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      isShowAddFile: true,
+      isShowAddFile: false,
       course: {},
       metaDataFile: [],
       errorMessages: [],
@@ -44,16 +44,10 @@ export default {
         var workbook = XLSX.read(data, {type: 'array'});
         let sheetName = workbook.SheetNames[0]
         /* DO SOMETHING WITH workbook HERE */
-        console.log(workbook);
         let worksheet = workbook.Sheets[sheetName];
         vm.metaDataFile = XLSX.utils.sheet_to_json(worksheet);
-        console.log('file json 1', vm.metaDataFile);
       };
       reader.readAsArrayBuffer(f);
-    },
-
-    removeImage: function () {
-      console.log('file json 2', this.metaDataFile);
     },
 
     async pressKeyEnter() {
@@ -71,7 +65,6 @@ export default {
 
     async createCourseAsync() {
       this.course = this.metaDataFile
-      console.log(this.course, this.metaDataFile)
       this.showLoading();
       let api = new CourseService();
       let response = await api.createCourseAsync(this.course);
@@ -93,33 +86,9 @@ export default {
       this.closeModal(true);
     },
 
-    // async updateCourseAsync() {
-    //   this.showLoading();
-    //   let api = new CourseService();
-    //   let response = await api.updateCourseAsync(this.course);
-    //   this.showLoading(false);
-
-    //   if(!response.isOK){
-    //     this.showNotifications(
-    //       "error",
-    //       `${AppConfig.notification.title_default}`,
-    //       response.errorMessages
-    //     );
-    //     return;
-    //   }
-      
-    //   this.showNotifications(
-    //     "success",
-    //     `${AppConfig.notification.title_default}`,
-    //     `${AppConfig.notification.content_updated_success_default}`
-    //   );
-
-    //   this.closeModal(true);
-    // },
-
     async save() {
-
       this.course = this.metaDataFile
+      const courseLength = this.course.length;
       for (let i = 0; i < this.course.length; i++){
         // validate
         let viewModel = new CourseViewModel();
@@ -129,6 +98,7 @@ export default {
         if (this.errorMessages.length > 0) {
           return;
         }
+        this.showLoading();
         let api = new CourseService();
         let response = await api.createCourseAsync(this.course[i]);
         // this.showLoading(false);
@@ -140,12 +110,20 @@ export default {
           );
           return;
         }
+        // Tạo thành công
+      }
+      if(courseLength === this.course.length){
         this.showNotifications(
           "success",
           `${AppConfig.notification.title_default}`,
           `${AppConfig.notification.content_created_success_default}`
         );
-        console.log('Thành công')
+      } else {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Thêm mới thất bại"
+        );
       }
     },
   },
