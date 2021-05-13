@@ -8,6 +8,9 @@ import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import StudentService from '../../../services/student/studentServices'
 import AppConfig from '../../../../src/app.config.json'
+import PlanService from '../../../services/plan/planServices'
+import ClassService from '../../../services/class/classServices'
+import StudentViewModel from "../../../view-model/student/studentViewModel"
 
 export default {
   name: 'StudentManagementDetailComponent',
@@ -20,17 +23,63 @@ export default {
     return {
       isShow: false,
       student: {},
-
+      plans: [],
+      classes: [],
       errorMessages: [],
     }
   },
+
   props: {
     data: {
       type: Object,
       default: null,
     },
   },
+
+  async mounted(){
+    await this.getPlansAsync()
+    await this.getClassesAsync()
+  },
+
   methods: {
+    async getClassesAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new ClassService()
+
+      const response = await api.getClassesAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.classes = response.data.items
+    },
+
+    async getPlansAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new PlanService()
+
+      const response = await api.getPlansAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.plans = response.data.items
+    },
+
     async pressKeyEnter() {
       await this.save();
     },
@@ -49,7 +98,6 @@ export default {
       let api = new StudentService();
       let response = await api.createStudentAsync(this.student);
       this.showLoading(false);
-      console.log(response)
       if(!response.isOK){
         this.showNotifications(
           "error",
@@ -93,20 +141,20 @@ export default {
 
     async save() {
       // validate
-      // let viewModel = new StudentService();
-      // viewModel.setFields(this.student);
-      // this.errorMessages = viewModel.isValid();
+      let viewModel = new StudentViewModel();
+      viewModel.setFields(this.student);
+      this.errorMessages = viewModel.isValid();
 
-      // if (this.errorMessages.length > 0) {
-      //   return;
-      // }
+      if (this.errorMessages.length > 0) {
+        return;
+      }
 
-      if (this.student.id > 0) {
-        //update
-        await this.updateStudentAsync();
-      } else {
+      if (this.student.id === undefined) {
         //create
         await this.createStudentAsync();
+      } else {        
+        //update
+        await this.updateStudentAsync();
       }
     },
 

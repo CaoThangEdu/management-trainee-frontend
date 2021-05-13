@@ -16,15 +16,6 @@ export default class PlanViewModel extends ViewModel {
 
   getValidations() {
     let validations = {
-      // internshipCourceName: {
-      //   label: 'Tên đợt thực tập',
-      //   rules: {
-      //     require: '',
-      //     maxLength: {
-      //       max_value: 200
-      //     }
-      //   }
-      // },
     }
     return validations
   }

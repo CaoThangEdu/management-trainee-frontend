@@ -4,18 +4,19 @@
 
 <script>
 import CourseManagementDetailComponent from '../CourseManagementDetailComponent/CourseManagementDetailComponent'
+import AddFileDetailComponent from '../AddFileDetailComponent/AddFileDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
 import CourseService from '../../../services/course/courseServices'
 import AppConfig from '../../../../src/app.config.json'
-import XLSX from 'xlsx'
 
 export default {
   name: "ListCourseManagementComponent",
   extends: ComponentBase,
   components: {
     CourseManagementDetailComponent,
+    AddFileDetailComponent,
     ConfirmDialog,
     Pagination,
   },
@@ -27,64 +28,12 @@ export default {
       metaDataFile: [],
     };
   },
+
   async mounted(){
     await this.getCoursesAsync()
-    // console.log(this.metaDataFile)
   },
-
+  
   methods:{
-    async previewFiles(e) {
-      var files = e.target.files, f = files[0];
-      var reader = new FileReader();
-      this.showLoading();
-      reader.onload = async function(e) {
-        var data = new Uint8Array(e.target.result);
-        var workbook = XLSX.read(data, {type: 'array'});
-        let sheetName = workbook.SheetNames[0]
-        /* DO SOMETHING WITH workbook HERE */
-        console.log(workbook);
-        let worksheet = workbook.Sheets[sheetName];
-        this.metaDataFile = XLSX.utils.sheet_to_json(worksheet);
-        console.log('file json 1', this.metaDataFile);
-        for (let i = 0; i < this.metaDataFile.length; i++){
-          // console.log('courseObj', this.metaDataFile[i].courseName);
-          // this.showLoading();
-          let api = new CourseService();
-          let response = await api.createCourseAsync(this.metaDataFile[i]);
-          // this.showLoading(false);
-          if(!response.isOK){
-            // this.showNotifications(
-            //   "error",
-            //   `${AppConfig.notification.title_default}`,
-            //   response.errorMessages
-            // );
-            return;
-          }
-          // this.showNotifications(
-          //   "success",
-          //   `${AppConfig.notification.title_default}`,
-          //   `${AppConfig.notification.content_created_success_default}`
-          // );
-          console.log('Thành công')
-        }
-      };
-      reader.readAsArrayBuffer(f);
-      await this.getCoursesAsync();
-      // setTimeout(() => {
-      //   console.log('file json 2', this.metaDataFile);
-      // }, 2000)
-      this.showLoading(false);
-    },
-
-    addFileExel(arr){
-      // console.log(this.metaDataFile)
-      if(arr){
-        for (let i = 0; i < arr.length; i++){
-          console.log('courseObj', arr[i]);
-        }
-      }
-    },
-
     createCourse() {
       this.editCourse = {};
     },
@@ -121,10 +70,10 @@ export default {
     },
 
     // Call api delete Course
-    async agreeConfirm(dataConfirm) {
+    async deleteCourseConfirm(courseComfirm) {
       this.showLoading();
       let api = new CourseService();
-      let response = await api.deleteCourseAsync(dataConfirm.id); // Gọi Api
+      let response = await api.deleteCourseAsync(courseComfirm.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

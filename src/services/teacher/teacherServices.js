@@ -1,13 +1,13 @@
 import ServicesBaseAPI from '../servicesBaseApi'
 import AppConfig from '../../app.config.json'
 
-export default class StudentService extends ServicesBaseAPI {
+export default class TeacherService extends ServicesBaseAPI {
   constructor() {
     super();
-    this.url = `${AppConfig.apiHost}/Student`
+    this.url = `${AppConfig.apiHost}/Teacher`
   }
 
-  async getStudentsAsync() {
+  async getTeachersAsync() {
     try {
       const response = await this.http.get(`${this.url}/GetAll`);
       this.setResult(response);
@@ -17,7 +17,7 @@ export default class StudentService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async createStudentAsync(object) {
+  async createTeacherAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);
       this.setResult(response);
@@ -27,7 +27,7 @@ export default class StudentService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async updateStudentAsync(object) {
+  async updateTeacherAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);
       this.setResult(response);
@@ -37,7 +37,7 @@ export default class StudentService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async deleteStudentAsync(id) {
+  async deleteTeacherAsync(id) {
     try {
       const response = await this.http.delete(`${this.url}/Delete?id=${id}`);
       this.setResult(response);

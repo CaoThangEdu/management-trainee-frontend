@@ -3,6 +3,7 @@
 
 <script>
 import PlanDetailComponent from "../PlanDetailComponent/PlanDetailComponent";
+import PlanInformationComponent from "../PlanInformationComponent/PlanInformationComponent";
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
@@ -16,11 +17,13 @@ export default {
     PlanDetailComponent,
     ConfirmDialog,
     Pagination,
+    PlanInformationComponent,
   },
   data() {
     return {
       plans: [],
       editPlan: {},
+      detailPlan: {},
       confirmPlan: null,
     };
   },
@@ -34,6 +37,10 @@ export default {
     createPlan() {
       this.editPlan = {};
     },
+
+    // showDetailPlan() {
+    //   this.detailPlan = {};
+    // },
     
     async getPlansAsync(){
       // Call Api
@@ -62,15 +69,19 @@ export default {
       this.editPlan = Object.assign({}, this.plans[index]);
     },
 
+    showdetailPlan(index) {
+      this.detailPlan = Object.assign({}, this.plans[index]);
+    },
+
     deletePlan(id) {
       this.confirmPlan = { id: id };
     },
 
     // Call api delete Plan
-    async agreeConfirm(dataConfirm) {
+    async deletePlanConfirm(planComfirm) {
       this.showLoading();
       let api = new PlanService();
-      let response = await api.deletePlanAsync(dataConfirm.id); // Gọi Api
+      let response = await api.deletePlanAsync(planComfirm.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
