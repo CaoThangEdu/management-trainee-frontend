@@ -8,6 +8,7 @@
             class="ci-primary"></path>
         </svg> Danh sách khóa
         <button class="btn btn-primary float-right" @click="createCourse">+ Thêm mới</button>
+        <button class="btn btn-primary float-right" @click="removeImage">+ Log</button>
         <button class="btn btn-primary float-right" @click="addFileExel()">Hiển thị</button>
         <input class="btn btn-warning float-right btn-add-file"
           @change="previewFiles" type="file" @click="addFileExel" />+ Thêm file
@@ -51,6 +52,8 @@
         </div>
       </div>
       <CourseManagementDetailComponent :data="editCourse" @change-data="changeData" />
+
+      <AddFileDetailComponent :data="editCourse" @change-data="changeData" />
 
       <ConfirmDialog :data="confirmCourse" @agree="agreeConfirm"></ConfirmDialog>
 

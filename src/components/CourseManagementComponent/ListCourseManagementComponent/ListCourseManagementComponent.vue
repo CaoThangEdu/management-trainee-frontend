@@ -4,6 +4,7 @@
 
 <script>
 import CourseManagementDetailComponent from '../CourseManagementDetailComponent/CourseManagementDetailComponent'
+import AddFileDetailComponent from '../AddFileDetailComponent/AddFileDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
@@ -16,6 +17,7 @@ export default {
   extends: ComponentBase,
   components: {
     CourseManagementDetailComponent,
+    AddFileDetailComponent,
     ConfirmDialog,
     Pagination,
   },
@@ -36,7 +38,9 @@ export default {
     async previewFiles(e) {
       var files = e.target.files, f = files[0];
       var reader = new FileReader();
-      this.showLoading();
+      var vm = this;
+
+      // this.showLoading();
       reader.onload = async function(e) {
         var data = new Uint8Array(e.target.result);
         var workbook = XLSX.read(data, {type: 'array'});
@@ -44,36 +48,41 @@ export default {
         /* DO SOMETHING WITH workbook HERE */
         console.log(workbook);
         let worksheet = workbook.Sheets[sheetName];
-        this.metaDataFile = XLSX.utils.sheet_to_json(worksheet);
-        console.log('file json 1', this.metaDataFile);
-        for (let i = 0; i < this.metaDataFile.length; i++){
-          // console.log('courseObj', this.metaDataFile[i].courseName);
-          // this.showLoading();
-          let api = new CourseService();
-          let response = await api.createCourseAsync(this.metaDataFile[i]);
-          // this.showLoading(false);
-          if(!response.isOK){
-            // this.showNotifications(
-            //   "error",
-            //   `${AppConfig.notification.title_default}`,
-            //   response.errorMessages
-            // );
-            return;
-          }
-          // this.showNotifications(
-          //   "success",
-          //   `${AppConfig.notification.title_default}`,
-          //   `${AppConfig.notification.content_created_success_default}`
-          // );
-          console.log('Thành công')
-        }
+        vm.metaDataFile = XLSX.utils.sheet_to_json(worksheet);
+        console.log('file json 1', vm.metaDataFile);
+        // for (let i = 0; i < this.metaDataFile.length; i++){
+        //   // console.log('courseObj', this.metaDataFile[i].courseName);
+        //   // this.showLoading();
+        //   let api = new CourseService();
+        //   let response = await api.createCourseAsync(this.metaDataFile[i]);
+        //   // this.showLoading(false);
+        //   if(!response.isOK){
+        //     // this.showNotifications(
+        //     //   "error",
+        //     //   `${AppConfig.notification.title_default}`,
+        //     //   response.errorMessages
+        //     // );
+        //     return;
+        //   }
+        //   // this.showNotifications(
+        //   //   "success",
+        //   //   `${AppConfig.notification.title_default}`,
+        //   //   `${AppConfig.notification.content_created_success_default}`
+        //   // );
+        //   console.log('Thành công')
+        // }
       };
       reader.readAsArrayBuffer(f);
-      await this.getCoursesAsync();
+      
+      // await this.getCoursesAsync();
       // setTimeout(() => {
       //   console.log('file json 2', this.metaDataFile);
       // }, 2000)
-      this.showLoading(false);
+      // this.showLoading(false);
+    },
+
+    removeImage: function () {
+      console.log('file json 2', this.metaDataFile);
     },
 
     addFileExel(arr){

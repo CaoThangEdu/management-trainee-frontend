@@ -1,0 +1,40 @@
+<BaseModal
+  @mouse-click-outside="closeModal(false)" :modalName="`TeacherAssignmentDetailComponent`"
+  :isShow="isShowAddFile"
+  size="lg">
+  <div class="">
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">
+        File excel (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="file" class="form-control"
+          id="name"
+          @change="previewFiles" />
+      </div>
+    </div>
+    <button class="btn btn-primary float-right" @click="removeImage">+ Log</button>
+  </div>
+
+  <template #header>
+    <h5>Thêm mới bằng file</h5>
+    <button class="close" style="color: red;" @click="closeModal(false)">&times;</button>
+  </template>
+
+  <template #footer>
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <AlertMessages :messages="errorMessages" />
+      </div>
+    </div>
+
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <button @click="save" class="btn btn-primary float-right ml-2">Thêm mới</button>
+        <button class="btn btn-dark float-right" @click="closeModal(false)">Hủy</button>
+      </div>
+    </div>
+  </template>
+</BaseModal>
