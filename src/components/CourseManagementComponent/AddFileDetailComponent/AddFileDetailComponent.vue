@@ -93,33 +93,9 @@ export default {
       this.closeModal(true);
     },
 
-    // async updateCourseAsync() {
-    //   this.showLoading();
-    //   let api = new CourseService();
-    //   let response = await api.updateCourseAsync(this.course);
-    //   this.showLoading(false);
-
-    //   if(!response.isOK){
-    //     this.showNotifications(
-    //       "error",
-    //       `${AppConfig.notification.title_default}`,
-    //       response.errorMessages
-    //     );
-    //     return;
-    //   }
-      
-    //   this.showNotifications(
-    //     "success",
-    //     `${AppConfig.notification.title_default}`,
-    //     `${AppConfig.notification.content_updated_success_default}`
-    //   );
-
-    //   this.closeModal(true);
-    // },
-
     async save() {
-
       this.course = this.metaDataFile
+      const courseLength = this.course.length;
       for (let i = 0; i < this.course.length; i++){
         // validate
         let viewModel = new CourseViewModel();
@@ -129,6 +105,7 @@ export default {
         if (this.errorMessages.length > 0) {
           return;
         }
+        this.showLoading();
         let api = new CourseService();
         let response = await api.createCourseAsync(this.course[i]);
         // this.showLoading(false);
@@ -140,12 +117,22 @@ export default {
           );
           return;
         }
+        console.log('Thành công')
+      }
+      if(courseLength === this.course.length){
+        console.log('courseLength', courseLength);
+        console.log('length course', this.course.length)
         this.showNotifications(
           "success",
           `${AppConfig.notification.title_default}`,
           `${AppConfig.notification.content_created_success_default}`
         );
-        console.log('Thành công')
+      } else {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Thêm mới thất bại"
+        );
       }
     },
   },
