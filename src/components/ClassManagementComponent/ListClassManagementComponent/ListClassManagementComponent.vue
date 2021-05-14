@@ -35,9 +35,9 @@ export default {
 
   methods:{
     getCourseName(courseId){
-      for (const x in this.courses) {
-        if(this.courses[x].id === courseId){
-          return this.courses[x].courseName
+      for (let i in this.courses) {
+        if(this.courses[i].id === courseId){
+          return this.courses[i].courseName
         }
       }
     },
@@ -97,10 +97,10 @@ export default {
     },
 
     // Call api delete Class
-    async agreeConfirm(dataConfirm) {
+    async deleteClassConfirm(classComfirm) {
       this.showLoading();
       let api = new ClassService();
-      let response = await api.deleteClassAsync(dataConfirm.id); // Gọi Api
+      let response = await api.deleteClassAsync(classComfirm.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

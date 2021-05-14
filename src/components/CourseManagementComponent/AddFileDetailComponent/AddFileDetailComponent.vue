@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      isShowAddFile: true,
+      isShowAddFile: false,
       course: {},
       metaDataFile: [],
       errorMessages: [],
@@ -44,16 +44,10 @@ export default {
         var workbook = XLSX.read(data, {type: 'array'});
         let sheetName = workbook.SheetNames[0]
         /* DO SOMETHING WITH workbook HERE */
-        console.log(workbook);
         let worksheet = workbook.Sheets[sheetName];
         vm.metaDataFile = XLSX.utils.sheet_to_json(worksheet);
-        console.log('file json 1', vm.metaDataFile);
       };
       reader.readAsArrayBuffer(f);
-    },
-
-    removeImage: function () {
-      console.log('file json 2', this.metaDataFile);
     },
 
     async pressKeyEnter() {
@@ -71,7 +65,6 @@ export default {
 
     async createCourseAsync() {
       this.course = this.metaDataFile
-      console.log(this.course, this.metaDataFile)
       this.showLoading();
       let api = new CourseService();
       let response = await api.createCourseAsync(this.course);
@@ -117,11 +110,9 @@ export default {
           );
           return;
         }
-        console.log('Thành công')
+        // Tạo thành công
       }
       if(courseLength === this.course.length){
-        console.log('courseLength', courseLength);
-        console.log('length course', this.course.length)
         this.showNotifications(
           "success",
           `${AppConfig.notification.title_default}`,

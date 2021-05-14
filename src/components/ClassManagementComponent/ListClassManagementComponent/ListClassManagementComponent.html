@@ -53,7 +53,7 @@
           :data="editClass"
           @change-data="changeData" />
         
-        <ConfirmDialog :data="confirmClassRoom" @agree="agreeConfirm"></ConfirmDialog>
+        <ConfirmDialog :data="confirmClassRoom" @agree="deleteClassConfirm"></ConfirmDialog>
 
         <Pagination :position="`center`" :page="1" :pageSize="10" :totalItems="17" @change-page="changePage">
         </Pagination>

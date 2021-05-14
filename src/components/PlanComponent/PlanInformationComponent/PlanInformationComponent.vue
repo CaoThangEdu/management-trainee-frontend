@@ -1,34 +1,31 @@
-<template src='./StudentManagementDetailComponent.html'>
-
+<template src="./PlanInformationComponent.html">
 </template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase"
 import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
-import StudentService from '../../../services/student/studentServices'
-import AppConfig from '../../../../src/app.config.json'
 import PlanService from '../../../services/plan/planServices'
-import ClassService from '../../../services/class/classServices'
-import StudentViewModel from "../../../view-model/student/studentViewModel"
+import PlanViewModel from "../../../view-model/plan/planViewModel"
+import AppConfig from '../../../../src/app.config.json'
+import CourseService from '../../../services/course/courseServices'
 
 export default {
-  name: 'StudentManagementDetailComponent',
+  name: 'PlanInformationComponent',
   extends: ComponentBase,
   components: {
     BaseModal,
     AlertMessages,
-  },
+    },
   data() {
     return {
-      isShow: false,
-      student: {},
-      plans: [],
-      classes: [],
+      isShowPlan: false,
+      plan: {},
+      courses:[],
+      students: [],
       errorMessages: [],
     }
   },
-
   props: {
     data: {
       type: Object,
@@ -37,17 +34,16 @@ export default {
   },
 
   async mounted(){
-    await this.getPlansAsync()
-    await this.getClassesAsync()
+    await this.getCoursesAsync()
   },
-
-  methods: {
-    async getClassesAsync(){
+  
+  methods:{
+    async getCoursesAsync(){
       // Call Api
       this.showLoading();
-      const api = new ClassService()
+      const api = new CourseService()
 
-      const response = await api.getClassesAsync()
+      const response = await api.getCoursesAsync()
       this.showLoading(false);
 
       if(!response.isOK){
@@ -58,26 +54,7 @@ export default {
         );
         return;
       }
-      this.classes = response.data.items
-    },
-
-    async getPlansAsync(){
-      // Call Api
-      this.showLoading();
-      const api = new PlanService()
-
-      const response = await api.getPlansAsync()
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.plans = response.data.items
+      this.courses = response.data.items
     },
 
     async pressKeyEnter() {
@@ -85,18 +62,19 @@ export default {
     },
 
     closeModal(changeData) {
-      this.isShow = false;
-      this.student = {};
+      this.isShowPlan = false;
+      this.plan = {};
 
       if (changeData) {
         this.$emit("change-data");
       }
     },
 
-    async createStudentAsync() {
+    async createPlanAsync() {
       this.showLoading();
-      let api = new StudentService();
-      let response = await api.createStudentAsync(this.student);
+      let api = new PlanService();
+      this.plan.internshipCourceName = this.plan.course + ' ' + this.plan.careers;
+      let response = await api.createPlanAsync(this.plan);
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
@@ -115,10 +93,10 @@ export default {
       this.closeModal(true);
     },
 
-    async updateStudentAsync() {
+    async updatePlanAsync() {
       this.showLoading();
-      let api = new StudentService();
-      let response = await api.updateStudentAsync(this.student);
+      let api = new PlanService();
+      let response = await api.updatePlanAsync(this.plan);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -136,42 +114,36 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-        this.closeModal(true);
+      this.closeModal(true);
     },
 
     async save() {
       // validate
-      let viewModel = new StudentViewModel();
-      viewModel.setFields(this.student);
+      let viewModel = new PlanViewModel();
+      viewModel.setFields(this.plan);
       this.errorMessages = viewModel.isValid();
 
       if (this.errorMessages.length > 0) {
         return;
       }
 
-      if (this.student.id === undefined) {
-        //create
-        await this.createStudentAsync();
-      } else {        
-        //update
-        await this.updateStudentAsync();
+      if(this.plan.id === undefined){
+        await this.createPlanAsync();
+      } else{
+        await this.updatePlanAsync();
       }
     },
-
   },
+
   watch: {
     data() {
-      this.isShow = true;
-      this.student = this.data;
+      this.isShowPlan = true;
+      this.plan = this.data;
     }
   }
 }
 </script>
 
-<style lang='scss'>
-@import './StudentManagementDetailComponent.scss';
-.form-select-class{
-  width: 100%;
-  height: 35px;
-}
+<style lang="scss">
+@import './PlanInformationComponent.scss';
 </style>
