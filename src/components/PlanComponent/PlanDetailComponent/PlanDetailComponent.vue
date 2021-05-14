@@ -95,7 +95,6 @@ export default {
 
     async updatePlanAsync() {
       this.showLoading();
-      console.log(this.plan.internshipCourceName)
       this.plan.internshipCourceName = this.plan.trainingSystems + '-' +this.plan.course + '-' + this.plan.careers;
       let api = new PlanService();
       let response = await api.updatePlanAsync(this.plan);
