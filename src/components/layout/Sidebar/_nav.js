@@ -40,12 +40,13 @@ export default [{
             to: '/student-management',
             icon: 'cil-pencil',
         },
-        {
-          _name: 'CSidebarNavItem',
-          name: 'Quản lý giáo viên',
-          to: '/teacher-management',
-          icon: 'cil-pencil',
-      },
+        { layout_teacher_management
+            _name: 'CSidebarNavItem',
+            name: 'Quản lý sinh viên',
+            to: '/student-management',
+            icon: 'cil-pencil',
+        },
+
       {
         _name: 'CSidebarNavItem',
         name: 'Quản lý khóa',
