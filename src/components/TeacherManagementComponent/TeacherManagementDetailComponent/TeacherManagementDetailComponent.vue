@@ -19,7 +19,6 @@ export default {
     return {
       isShow: false,
       teachers: {},
-
       errorMessages: [],
     }
   },
@@ -37,7 +36,6 @@ export default {
     closeModal(changeData) {
       this.isShow = false;
       this.teachers = {};
-
       if (changeData) {
         this.$emit("change-data");
       }
@@ -64,7 +62,7 @@ export default {
 
       this.closeModal(true);
     },
-
+    
     async updateTeacherAsync() {
       this.showLoading();
       let api = new TeacherService();
@@ -94,7 +92,6 @@ export default {
       // let viewModel = new CourseService();
       // viewModel.setFields(this.course);
       // this.errorMessages = viewModel.isValid();
-
       // if (this.errorMessages.length > 0) {
       //   return;
       // }
@@ -117,12 +114,4 @@ export default {
 
 <style lang='scss'>
 @import './TeacherManagementDetailComponent.scss';
-.form-select-class{
-  width: 100%;
-  height: 35px;
-}
-.brith-day{
-  width: 100%;
-  height: 35px;
-}
 </style>

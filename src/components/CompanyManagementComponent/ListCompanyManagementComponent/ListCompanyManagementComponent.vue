@@ -20,13 +20,13 @@ export default {
     return {
       companies: [],
       editCompany:{},
-     confirmData: null,
+      confirmData: null,
     }
   },
-   async mounted(){
+    async mounted(){
     await this.getCompaniesAsync()
   },
-   methods:{
+  methods:{
     createCompany() {
       this.editCompany = {};
     },

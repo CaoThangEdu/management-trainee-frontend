@@ -24,7 +24,7 @@ export default {
     },
   },
   methods:{
-     closeModal(changeData) {
+    closeModal(changeData) {
       this.isShow = false;
       this.objBrand = {};
 

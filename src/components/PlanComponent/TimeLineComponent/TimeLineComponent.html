@@ -7,7 +7,7 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Time line
-        <button class="btn btn-primary float-right" @click="createBrand">+ Thêm mới</button>
+        <button class="btn btn-primary float-right" @click="createTimeLine">+ Thêm mới</button>
       </header>
       <div class="card-body">
         <div class="form-row filter-wrapper ml-0 mr-0 mb-2">
@@ -22,77 +22,34 @@
         </div>
         <div class="main-card mb-3 card">
           <div class="card-body">
-            <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+            <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column"
+              v-for="(item, index) in timeLines">
               <div class="vertical-timeline-item vertical-timeline-element">
                 <div>
                   <span class="vertical-timeline-element-icon bounce-in">
                     <i class="fas fa-circle"></i>
                   </span>
-                  <div class="vertical-timeline-element-content bounce-in">
-                    <h4 class="timeline-title">Đăng ký phiếu giới thiệu thực tập</h4>
-                    <p>Sinh viên đăng ký giấy giới thiệu phải điền vào form đăng ký tại trang web</p>
+                  <div class="vertical-timeline-element-content bounce-in"
+                    :key="index">
+                    <h4 class="timeline-title">{{ item.timeLineName }}</h4>
+                    <p>{{ item.description }}</p>
                     <div class="button__edit text-right">
-                      <button class="btn btn-info">Sửa</button>
+                      <button class="btn btn-primary mr-2"
+                        @click="updateTimeLine(index)">Sửa</button>
+                      <button class="btn btn-danger" @click="deleteTimeLine(item.id)">xóa</button>
                     </div>
-                    <span class="vertical-timeline-element-date text-left">19/01 –><br />
-                      25/01/2021</span>
+                    <span class="vertical-timeline-element-date text-left">{{ item.startDay }}<br />
+                      {{ item.endDay }}</span>
                   </div>
                 </div>
               </div>
-              
-              <div class="vertical-timeline-item vertical-timeline-element">
-                <div>
-                  <span class="vertical-timeline-element-icon bounce-in">
-                    <i class="fas fa-circle"></i>
-                  </span>
-                  <div class="vertical-timeline-element-content bounce-in">
-                    <h4 class="timeline-title">Nhận phiếu giới thiệu thực tập</h4>
-                    <p>Sinh viên lên văn phong khoa để nhận giấy</p>
-                    <div class="button__edit text-right">
-                      <button class="btn btn-info">Sửa</button>
-                    </div>
-                    <span class="vertical-timeline-element-date text-left">11h30 - 12h<br />
-                      26/01/2021</span>
-                  </div>
-                </div>
-              </div>
-              <div class="vertical-timeline-item vertical-timeline-element">
-                <div>
-                  <span class="vertical-timeline-element-icon bounce-in">
-                    <i class="fas fa-circle"></i>
-                  </span>
-                  <div class="vertical-timeline-element-content bounce-in">
-                    <h4 class="timeline-title">Tham gia thực tập</h4>
-                    <p>Sinh viên thực tập trong thời gian này</p>
-                    <div class="button__edit text-right">
-                      <button class="btn btn-info">Sửa</button>
-                    </div>
-                    <span class="vertical-timeline-element-date text-left">22/02 –><br />
-                      03/04/2021</span>
-                  </div>
-                </div>
-              </div>
-              <div class="vertical-timeline-item vertical-timeline-element">
-                <div>
-                  <span class="vertical-timeline-element-icon bounce-in">
-                    <i class="fas fa-circle"></i>
-                  </span>
-                  <div class="vertical-timeline-element-content bounce-in">
-                    <h4 class="timeline-title">Đóng kinh phí đào tạo</h4>
-                    <p>Sinh viên đóng kinh phí đào tạo trong thời gian này</p>
-                    <div class="button__edit text-right">
-                      <button class="btn btn-info">Sửa</button>
-                    </div>
-                    <span class="vertical-timeline-element-date text-left">125/02 –> <br />
-                      02/04/2021</span>
-                  </div>
-                </div>
-              </div>              
+
             </div>
           </div>
         </div>
       </div>
+      <TimeLineDetailComponent :data="editTimeLine" @change-data="changeData" />
+      <ConfirmDialog :data="confirmTimeline" @agree="deleteTimelineConfirm"></ConfirmDialog>
     </div>
   </div>
-  <TimeLineDetailComponent :data="editTimeLine" />
 </div>

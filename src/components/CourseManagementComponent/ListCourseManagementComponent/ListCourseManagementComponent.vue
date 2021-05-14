@@ -4,6 +4,7 @@
 
 <script>
 import CourseManagementDetailComponent from '../CourseManagementDetailComponent/CourseManagementDetailComponent'
+import AddFileDetailComponent from '../AddFileDetailComponent/AddFileDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
@@ -15,6 +16,7 @@ export default {
   extends: ComponentBase,
   components: {
     CourseManagementDetailComponent,
+    AddFileDetailComponent,
     ConfirmDialog,
     Pagination,
   },
@@ -22,12 +24,15 @@ export default {
     return {
       courses: [],
       editCourse: {},
-      confirmData: null,
+      confirmCourse: null,
+      metaDataFile: [],
     };
   },
+
   async mounted(){
     await this.getCoursesAsync()
   },
+  
   methods:{
     createCourse() {
       this.editCourse = {};
@@ -61,14 +66,14 @@ export default {
     },
 
     deleteCourse(id) {
-      this.confirmData = { id: id };
+      this.confirmCourse = { id: id };
     },
 
     // Call api delete Course
-    async agreeConfirm(dataConfirm) {
+    async deleteCourseConfirm(courseComfirm) {
       this.showLoading();
       let api = new CourseService();
-      let response = await api.deleteCourseAsync(dataConfirm.id); // Gọi Api
+      let response = await api.deleteCourseAsync(courseComfirm.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

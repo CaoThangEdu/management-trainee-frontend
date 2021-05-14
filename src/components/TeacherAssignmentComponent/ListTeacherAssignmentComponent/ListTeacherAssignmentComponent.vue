@@ -10,12 +10,12 @@ export default {
   data() {
     return {
       listBrand: [],
-      editData: {},
+      editTeacher: {},
     };
   },
   methods:{
     createBrand() {
-      this.editData = {};
+      this.editTeacher = {};
     },
     async changeData() {
       // await this.getListBrandAsync();
