@@ -28,12 +28,14 @@ export default {
     createTeacher() {
       this.editTeacher = {};
     },
+    
     async getTeachersAsync() {
       // Call Api
       this.showLoading();
       const api = new TeacherService();
       const response = await api.getTeachersAsync();
       this.showLoading(false);
+
       if (!response.isOK) {
         this.showNotifications(
           "error",
@@ -74,9 +76,37 @@ export default {
         `${AppConfig.notification.content_deleted_success_default}`
       );
     },
+
+    deleteTeacher(id) {
+      this.confirmData = { id: id };
+    },
+
+    // Call api delete teacher
+    async agreeConfirm(dataConfirm) {
+      this.showLoading();
+      let api = new TeacherService();
+      let response = await api.deleteTeacherAsync(dataConfirm.id); // Gọi Api
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      await this.getTeachersAsync();
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_deleted_success_default}`
+      );
+    },
+
     async changeData() {
       await this.getTeachersAsync();
     },
+    
     showNotification() {
       this.showNotifications(
         "success",
