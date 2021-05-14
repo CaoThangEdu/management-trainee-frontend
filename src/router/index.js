@@ -72,6 +72,7 @@ const routes = [
       ),
     meta: {
       breadcrumbName: 'Quản lý thông báo',
+    layout_teacher_management
     },
   },
   {
@@ -118,30 +119,6 @@ const routes = [
       /* webpackChunkName: "ControlExample" */
       '../router/views/TeacherManagement/TeacherManagement.vue'
     ),
-    meta: {
-      breadcrumbName: 'Quản lý giáo viên',
-    },
-  },
-  {
-    path: '/student-management',
-    name: 'quan-ly-sinh-vien',
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        '../router/views/StudentManagement/StudentManagement.vue'
-      ),
-    meta: {
-      breadcrumbName: 'Quản lý sinh viên',
-    },
-  },
-  {
-    path: '/teacher-management',
-    name: 'quan-ly-giao-vien',
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        '../router/views/TeacherManagement/TeacherManagement.vue'
-      ),
     meta: {
       breadcrumbName: 'Quản lý giáo viên',
     },
