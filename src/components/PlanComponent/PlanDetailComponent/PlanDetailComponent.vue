@@ -150,5 +150,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import './PlanDetailComponent.scss'
+@import './PlanDetailComponent.scss';
 </style>

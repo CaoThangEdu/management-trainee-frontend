@@ -20,7 +20,7 @@ export default {
     return {
       companies: [],
       editCompany:{},
-     confirmCompany: null,
+     confirmedCompany: null,
     }
   },
    async mounted(){
