@@ -72,7 +72,6 @@ const routes = [
       ),
     meta: {
       breadcrumbName: 'Quản lý thông báo',
-    layout_teacher_management
     },
   },
   {
