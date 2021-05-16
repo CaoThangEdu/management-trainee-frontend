@@ -58,6 +58,12 @@ export default [{
     to: '/class-management',
     icon: 'cil-bell',
   },
+  {
+    _name: 'CSidebarNavItem',
+    name: 'Quản lý thông báo',
+    to: '/notification-management',
+    icon: 'cil-bell',
+  },
   ],
 
 },];
