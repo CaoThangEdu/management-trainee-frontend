@@ -29,7 +29,7 @@ export default {
     },
   },
   methods: {
-    async pressKeyEnter() {
+    async pressEnterKey() {
       await this.save();
     },
 
@@ -40,7 +40,6 @@ export default {
         this.$emit("change-data");
       }
     },
-
     async createTeacherAsync() {
       this.showLoading();
       let api = new TeacherService();
@@ -59,16 +58,13 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-
       this.closeModal(true);
     },
-    
     async updateTeacherAsync() {
       this.showLoading();
       let api = new TeacherService();
       let response = await api.updateTeacherAsync(this.teachers);
       this.showLoading(false);
-
       if(!response.isOK){
         this.showNotifications(
           "error",
@@ -83,10 +79,8 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_success_default}`
       );
-
       this.closeModal(true);
     },
-
     async save() {
       // validate
       // let viewModel = new CourseService();
@@ -95,7 +89,6 @@ export default {
       // if (this.errorMessages.length > 0) {
       //   return;
       // }
-
       if(this.teachers.id === undefined){
         await this.createTeacherAsync();
       } else{

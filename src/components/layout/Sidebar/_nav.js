@@ -59,5 +59,4 @@ export default [{
     icon: 'cil-bell',
   },
   ],
-
-},];
+}, ];

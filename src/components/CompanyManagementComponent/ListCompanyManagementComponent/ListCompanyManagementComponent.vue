@@ -20,13 +20,13 @@ export default {
     return {
       companies: [],
       editCompany:{},
-      confirmData: null,
+     confirmedCompany: null,
     }
   },
-    async mounted(){
+   async mounted(){
     await this.getCompaniesAsync()
   },
-  methods:{
+   methods:{
     createCompany() {
       this.editCompany = {};
     },
@@ -59,7 +59,7 @@ export default {
     },
 
     deleteCompany(id) {
-      this.confirmData = { id: id };
+      this.confirmedCompany = { id: id };
     },
 
     // Call api delete Company

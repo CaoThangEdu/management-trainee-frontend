@@ -1,7 +1,6 @@
-
 <BaseModal
   @mouse-click-outside="closeModal(false)"
-  :modalName="`TeacherAssignmentDetailComponent`"
+  :modalName="`TeacherManagementDetailComponent`"
   :isShow="isShow"
   size="lg"
 >
@@ -9,12 +8,7 @@
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Họ</label>
       <div class="col-md-8 col-sm-8">
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          v-model="teachers.firstName"
-        />
+        <input type="text" class="form-control" id="name" v-model="teachers.firstName" />
       </div>
     </div>
     <div class="form-group row">
@@ -57,7 +51,7 @@
   </div>
 
   <template #header>
-    <h5>{{teachers.id ? "Cập nhật khóa" : "Thêm mới khóa"}}</h5>
+    <h5>{{teachers.id ? "Cập nhật khóa" : "Thêm mới giáo viên"}}</h5>
     <button class="close" style="color: red;" @click="closeModal(false)">
       &times;
     </button>
