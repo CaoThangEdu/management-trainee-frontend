@@ -1,19 +1,22 @@
 import ViewModel from '../viewModel'
-export default class ClassViewModel extends ViewModel {
+export default class CareerViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      className: null,
-      status: null
+      name: null,
+      status: null,
     }
   }
 
   getValidations() {
     let validations = {
-      className: {
-        label: 'Tên lớp',
+      name: {
+        label: 'Tên ngành',
         rules: {
           require: '',
+          maxLength: {
+            max_value: 200
+          }
         }
       },
     }

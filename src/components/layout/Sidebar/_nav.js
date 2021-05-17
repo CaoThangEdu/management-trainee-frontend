@@ -48,6 +48,18 @@ export default [{
   },
   {
     _name: 'CSidebarNavItem',
+    name: 'Quản lý hệ',
+    to: '/trainingsystem-management',
+    icon: 'cil-calculator',
+  },
+  {
+    _name: 'CSidebarNavItem',
+    name: 'Quản lý ngành',
+    to: '/career-management',
+    icon: 'cil-chart-pie',
+  },
+  {
+    _name: 'CSidebarNavItem',
     name: 'Quản lý khóa',
     to: '/course-management',
     icon: 'cil-star',

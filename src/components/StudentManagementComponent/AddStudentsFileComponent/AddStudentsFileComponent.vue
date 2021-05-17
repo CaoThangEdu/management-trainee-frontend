@@ -48,11 +48,10 @@ export default {
   },
 
   methods: {    
-    async getClassId(className){
-      await this.getClassesAsync()
-      for (const x in this.classroom) {
-        if(this.classroom[x].className === className){
-          return this.courses[x].id
+    getClassId(className){
+      for (const x in this.classes) {
+        if(this.classes[x].className === className){
+          return this.classes[x].id
         }
       }
     },
@@ -147,7 +146,7 @@ export default {
       this.students = this.metaDataFile;
       let studentLengthCallApi = this.studentLengthBanDau;
       var id = this.internCourceName
-      for(let i = 0; i< this.students.length; i++){
+      for(let i = 0; i < this.students.length; i++){
         this.students[i].internshipCourseId = id;
         this.students[i].status = 'active';
         // this.students[i].name = this.students[i].firstName + ' ' + this.students[i].lastName;
@@ -160,12 +159,14 @@ export default {
         if (this.errorMessages.length > 0) {
           return;
         }
+
         let classNameFile = this.students[i].classId;
         for (let index in this.classes){
           if(this.students[i].classId == this.classes[index].className){
             this.students[i].classId = this.classes[index].id
           } 
         }
+
         if(classNameFile == this.students[i].classId){
           this.classroom.className = this.students[i].classId;
           this.classroom.status = 'active';
@@ -185,9 +186,11 @@ export default {
             "success",
             `${AppConfig.notification.title_default}`,
             `${AppConfig.notification.content_created_success_default}`
+              + ' lớp ' + classNameFile
           );
-          let id = this.getClassId(this.students[i].classId);
-          this.students[i].classId = id;
+          await this.getClassesAsync()
+          // let id = this.getClassId(classNameFile);
+          this.students[i].classId = this.getClassId(classNameFile);
         }
         this.showLoading();
         let api = new StudentService();
