@@ -6,10 +6,10 @@ export default class PlanViewModel extends ViewModel {
       internshipCourceName: null,
       startDay: null,
       endDay: null,
-      trainingSystems: null,
-      careers: null,
+      trainingSystemId: null,
+      careersId: null,
       description: null,
-      course: null,
+      courseId: null,
       status: null,
     }
   }

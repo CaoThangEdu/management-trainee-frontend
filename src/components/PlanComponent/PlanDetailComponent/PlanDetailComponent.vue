@@ -12,6 +12,8 @@ import PlanService from '../../../services/plan/planServices'
 import PlanViewModel from "../../../view-model/plan/planViewModel"
 import AppConfig from '../../../../src/app.config.json'
 import CourseService from '../../../services/course/courseServices'
+import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
+import CareerService from '../../../services/career/careerServices'
 
 export default {
   name: 'PlanDetailComponent',
@@ -25,11 +27,12 @@ export default {
       isShow: false,
       plan: {},
       courses:[],
-      students: [],
-
+      trainingsystems: [],
+      careers: [],
       errorMessages: [],
     }
   },
+
   props: {
     data: {
       type: Object,
@@ -38,10 +41,66 @@ export default {
   },
 
   async mounted(){
+    await this.getTrainingSystemsAsync()
     await this.getCoursesAsync()
+    await this.getCareersAsync()
   },
   
   methods:{
+    getName(objName, id){
+      for (const x in objName) {
+        if(objName[x].id == id){
+          return objName[x].name
+        }
+      }
+    },
+
+    getNameCourse(objName, id){
+      for (const x in objName) {
+        if(objName[x].id == id){
+          return objName[x].courseName
+        }
+      }
+    },
+
+    async getTrainingSystemsAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new TrainingSystemService()
+
+      const response = await api.getTrainingSystemsAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.trainingsystems = response.data.items
+    },
+
+    async getCareersAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new CareerService()
+
+      const response = await api.getCareersAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.careers = response.data.items
+    },
+
     async getCoursesAsync(){
       // Call Api
       this.showLoading();
@@ -77,7 +136,12 @@ export default {
     async createPlanAsync() {
       this.showLoading();
       let api = new PlanService();
-      this.plan.internshipCourceName = this.plan.trainingSystems + '-' +this.plan.course + '-' + this.plan.careers;
+
+      this.plan.internshipCourceName = 
+      this.getName(this.trainingsystems, this.plan.trainingSystemId)
+      + '-' + this.getNameCourse(this.courses, this.plan.courseId) 
+      + '-' + this.getName(this.careers,this.plan.careersId);
+
       let response = await api.createPlanAsync(this.plan);
       this.showLoading(false);
       if(!response.isOK){
@@ -99,7 +163,11 @@ export default {
 
     async updatePlanAsync() {
       this.showLoading();
-      this.plan.internshipCourceName = this.plan.trainingSystems + '-' +this.plan.course + '-' + this.plan.careers;
+      this.plan.internshipCourceName = 
+      this.getName(this.trainingsystems, this.plan.trainingSystemId)
+      + '-' + this.getNameCourse(this.courses, this.plan.courseId) 
+      + '-' + this.getName(this.careers,this.plan.careersId);
+
       let api = new PlanService();
       let response = await api.updatePlanAsync(this.plan);
       this.showLoading(false);
