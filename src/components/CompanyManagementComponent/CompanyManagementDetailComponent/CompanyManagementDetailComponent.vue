@@ -18,7 +18,7 @@ export default {
  data() {
     return {
       isShow: false,
-      companies: {},
+      company: {},
 
       errorMessages: [],
     }
@@ -36,7 +36,7 @@ export default {
 
     closeModal(changeData) {
       this.isShow = false;
-      this.companies = {};
+      this.company = {};
 
       if (changeData) {
         this.$emit("change-data");
@@ -46,7 +46,7 @@ export default {
     async createCompanyAsync() {
       this.showLoading();
       let api = new CompanyService();
-      let response = await api.createCompanyAsync(this.companies);
+      let response = await api.createCompanyAsync(this.company);
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
@@ -68,7 +68,7 @@ export default {
     async updateCompanyAsync() {
       this.showLoading();
       let api = new CompanyService();
-      let response = await api.updateCompanyAsync(this.companies);
+      let response = await api.updateCompanyAsync(this.company);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -99,7 +99,7 @@ export default {
       //   return;
       // }
 
-      if(this.companies.id === undefined){
+      if(this.company.id === undefined){
         await this.createCompanyAsync();
       } else{
         await this.updateCompanyAsync();
@@ -109,7 +109,7 @@ export default {
   watch: {
     data() {
       this.isShow = true;
-      this.companies = this.data;
+      this.company = this.data;
     }
   }
 }

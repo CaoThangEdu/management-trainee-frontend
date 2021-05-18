@@ -22,7 +22,7 @@
               type="text"
               autocomplete="off"
               class="form-control"
-              v-model="companies.img"
+              v-model="company.img"
             />
             <div class="input-group-append">
               <label for="input-choose-image" class="btn btn-primary"
@@ -43,7 +43,7 @@
           type="text"
           class="form-control"
           id="name"
-          v-model="companies.companiesName"
+          v-model="company.companyName"
         />
       </div>
     </div>
@@ -54,7 +54,7 @@
           type="text"
           class="form-control"
           id="name"
-          v-model="companies.address"
+          v-model="company.address"
         />
       </div>
     </div>
@@ -65,7 +65,7 @@
           type="text"
           class="form-control"
           id="name"
-          v-model="companies.taxCode"
+          v-model="company.taxCode"
         />
       </div>
     </div>
@@ -76,7 +76,7 @@
           type="text"
           class="form-control"
           id="name"
-          v-model="companies.link"
+          v-model="company.link"
         />
       </div>
     </div>
@@ -87,7 +87,7 @@
           <select
             class="form-control form-select form-select-class"
             id="inputGroupSelect02"
-            v-model="companies.status"
+            v-model="company.status"
           >
             <option value="Hoạt động">Hoạt động</option>
             <option value="Không hoạt động">Không hoạt động</option>
@@ -98,7 +98,7 @@
   </div>
 
   <template #header>
-    <h5>{{companies.id ? "Cập nhật khóa" : "Thêm mới công ty"}}</h5>
+    <h5>{{company.id ? "Cập nhật khóa" : "Thêm mới công ty"}}</h5>
     <button class="close" style="color: red;" @click="closeModal(false)">
       &times;
     </button>
@@ -114,7 +114,7 @@
       <div class="col-form-label col-md-4 col-sm-4"></div>
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
         <button @click="save" class="btn btn-primary float-right ml-2">
-          {{companies.id ? "Cập nhật" : "Thêm mới"}}
+          {{company.id ? "Cập nhật" : "Thêm mới"}}
         </button>
         <button class="btn btn-dark float-right" @click="closeModal(false)">
           Hủy

@@ -54,7 +54,7 @@ export default {
     },
 
     async pressEnterKey() {
-      await this.save();
+      await this.addTeacherByFile();
     },
     async createCompanyByFlieAsync(i) {
       this.showLoading();
@@ -78,7 +78,7 @@ export default {
       this.closeModal(true);
     },
 
-    async save() {
+    async addTeacherByFile() {
       this.companies = this.metadataFile;
       var companyLength = this.companies.length;
       for (let i = 0; i < this.companies.length; i++) {
