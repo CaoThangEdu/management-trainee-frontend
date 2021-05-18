@@ -21,7 +21,9 @@
         >
           + Thêm mới
         </button>
-        <button class="btn btn-warning float-right btn-add-file">
+        <button class="btn btn-secondary float-right btn-add-file"
+          @click="createFileTeacher"
+        >
           + Thêm file
         </button>
       </header>
@@ -88,7 +90,11 @@
         @change-data="changeData"
       />
 
-      <ConfirmDialog :data="confirmData" @agree="agreeConfirm"></ConfirmDialog>
+      <AddTeacherFileComponent
+        :data="teacherFile"
+        @change-data="changeData"
+      />
+      <ConfirmDialog :data="confirmTeacher" @agree="agreeConfirm"></ConfirmDialog>
 
       <Pagination
         :position="`center`"

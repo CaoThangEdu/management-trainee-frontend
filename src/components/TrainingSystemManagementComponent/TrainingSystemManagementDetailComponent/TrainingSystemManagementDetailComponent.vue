@@ -1,4 +1,4 @@
-<template src='./ClassManagementDetailComponent.html'>
+<template src='./TrainingSystemManagementDetailComponent.html'>
 
 </template>
 
@@ -6,12 +6,12 @@
 import ComponentBase from "../../common/component-base/ComponentBase"
 import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
-import ClassService from '../../../services/class/classServices'
-import ClassViewModel from "../../../view-model/class/classViewModel"
+import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
+import TrainingSystemViewModel from "../../../view-model/trainingsystem/trainingsystemViewModel"
 import AppConfig from '../../../../src/app.config.json'
 
 export default {
-  name: 'ClassManagementDetailComponent',
+  name: 'TrainingSystemManagementDetailComponent',
   extends: ComponentBase,
   components: {
     BaseModal,
@@ -20,7 +20,8 @@ export default {
   data() {
     return {
       isShow: false,
-      classroom: {},
+      trainingsystem: {},
+
       errorMessages: [],
     }
   },
@@ -30,7 +31,6 @@ export default {
       default: null,
     },
   },
-
   methods: {
     async pressKeyEnter() {
       await this.save();
@@ -38,17 +38,17 @@ export default {
 
     closeModal(changeData) {
       this.isShow = false;
-      this.classroom = {};
+      this.trainingsystem = {};
 
       if (changeData) {
         this.$emit("change-data");
       }
     },
 
-    async createClassAsync() {
+    async createTrainingSystemAsync() {
       this.showLoading();
-      let api = new ClassService();
-      let response = await api.createClassAsync(this.classroom);
+      let api = new TrainingSystemService();
+      let response = await api.createTrainingSystemAsync(this.trainingsystem);
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
@@ -67,10 +67,10 @@ export default {
       this.closeModal(true);
     },
 
-    async updateClassAsync() {
+    async updateTrainingSystemAsync() {
       this.showLoading();
-      let api = new ClassService();
-      let response = await api.updateClassAsync(this.classroom);
+      let api = new TrainingSystemService();
+      let response = await api.updateTrainingSystemAsync(this.trainingsystem);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -93,30 +93,31 @@ export default {
 
     async save() {
       // validate
-      let viewModel = new ClassViewModel();
-      viewModel.setFields(this.classroom);
+      let viewModel = new TrainingSystemViewModel();
+      viewModel.setFields(this.trainingsystem);
       this.errorMessages = viewModel.isValid();
+
       if (this.errorMessages.length > 0) {
         return;
       }
 
-      if(this.classroom.id === undefined){
-        await this.createClassAsync();
+      if(this.trainingsystem.id === undefined){
+        await this.createTrainingSystemAsync();
       } else{
-        await this.updateClassAsync();
+        await this.updateTrainingSystemAsync();
       }
-    }
+    },
   },
-
+  
   watch: {
     data() {
       this.isShow = true;
-      this.classroom = this.data;
+      this.trainingsystem = this.data;
     }
   }
 }
 </script>
 
 <style lang='scss'>
-@import './ClassManagementDetailComponent.scss';
+@import './TrainingSystemManagementDetailComponent.scss';
 </style>

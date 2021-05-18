@@ -3,7 +3,8 @@ export default class StudentViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      name: null,
+      firstName: null,
+      lastName: null,
       studentId: null,
       status: null,
       email: null,
@@ -16,7 +17,16 @@ export default class StudentViewModel extends ViewModel {
 
   getValidations() {
     let validations = {
-      name: {
+      firstName: {
+        label: 'Họ',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      lastName: {
         label: 'Tên',
         rules: {
           require: '',

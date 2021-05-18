@@ -1,46 +1,47 @@
-<template src="./ListCompanyManagementComponent.html">
+<template src='./ListCareerManagementComponent.html'>
   
 </template>
 
 <script>
-import CompanyManagementDetailComponent from "../CompanyManagementDetailComponent/CompanyManagementDetailComponent"
-import AddCompanyFileComponent from "../AddCompanyFileComponent/AddCompanyFileComponent"
+import CareerManagementDetailComponent from '../CareerManagementDetailComponent/CareerManagementDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
-import CompanyService from '../../../services/company/companyServices'
+import CareerService from '../../../services/career/careerServices'
 import AppConfig from '../../../../src/app.config.json'
+
 export default {
-    extends: ComponentBase,
+  name: "ListCareerManagementComponent",
+  extends: ComponentBase,
   components: {
-    CompanyManagementDetailComponent,
-    AddCompanyFileComponent,
+    CareerManagementDetailComponent,
     ConfirmDialog,
     Pagination,
   },
   data() {
     return {
-      companies: [],
-      editCompany:{},
-     confirmedCompany: null,
-    }
+      careers: [],
+      editCareer: {},
+      confirmCareer: null,
+      metaDataFile: [],
+    };
   },
-   async mounted(){
-    await this.getCompaniesAsync()
+
+  async mounted(){
+    await this.getCareersAsync()
   },
-   methods:{
-    createCompany() {
-      this.editCompany = {};
+  
+  methods:{
+    createCareer() {
+      this.editCareer = {};
     },
-     createCompanyFile() {
-      this.companyFile = {};
-    },
-    async getCompaniesAsync(){
+    
+    async getCareersAsync(){
       // Call Api
       this.showLoading();
-      const api = new CompanyService()
+      const api = new CareerService()
 
-      const response = await api.getCompaniesAsync()
+      const response = await api.getCareersAsync()
       this.showLoading(false);
 
       if(!response.isOK){
@@ -51,26 +52,26 @@ export default {
         );
         return;
       }
-      this.companies = response.data.items
+      this.careers = response.data.items
     },
 
     async changePage(currentPage) {
-      await this.getCompaniesAsync(currentPage);
+      await this.getCareersAsync(currentPage);
     },
 
-    updateCompany(index) {
-      this.editCompany = Object.assign({}, this.companies[index]);
+    updateCareer(index) {
+      this.editCareer = Object.assign({}, this.careers[index]);
     },
 
-    deleteCompany(id) {
-      this.confirmedCompany = { id: id };
+    deleteCareer(id) {
+      this.confirmCareer = { id: id };
     },
 
-    // Call api delete Company
-    async agreeConfirm(dataConfirm) {
+    // Call api delete Career
+    async deleteCareerConfirm(careerComfirm) {
       this.showLoading();
-      let api = new CompanyService();
-      let response = await api.deleteCompanyAsync(dataConfirm.id); // Gọi Api
+      let api = new CareerService();
+      let response = await api.deleteCareerAsync(careerComfirm.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
@@ -80,7 +81,7 @@ export default {
         );
         return;
       }
-      await this.getCompaniesAsync();
+      await this.getCareersAsync();
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -89,7 +90,7 @@ export default {
     },
     
     async changeData() {
-      await this.getCompaniesAsync();
+      await this.getCareersAsync();
     },
 
     showNotification() {
@@ -103,6 +104,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang='scss'>
+@import './ListCareerManagementComponent.scss';
 </style>

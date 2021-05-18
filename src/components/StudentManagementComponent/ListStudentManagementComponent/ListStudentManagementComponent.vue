@@ -44,7 +44,7 @@ export default {
   methods:{
     getClassName(classId){
       for (const x in this.classes) {
-        if(this.classes[x].id === classId){
+        if(this.classes[x].id == classId){
           return this.classes[x].className
         }
       }

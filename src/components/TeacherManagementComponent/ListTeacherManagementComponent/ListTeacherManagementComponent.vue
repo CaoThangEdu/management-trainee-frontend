@@ -2,6 +2,7 @@
 
 <script>
 import TeacherManagementDetailComponent from "../TeacherManagementDetailComponent/TeacherManagementDetailComponent";
+import AddTeacherFileComponent from "../AddTeacherFlieComponent/AddTeacherFlieComponent";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import Pagination from "../../common/pagination/Pagination";
@@ -11,14 +12,17 @@ export default {
   extends: ComponentBase,
   components: {
     TeacherManagementDetailComponent,
+    AddTeacherFileComponent,
     ConfirmDialog,
     Pagination,
+
   },
   data() {
     return {
       teachers: [],
       editTeacher: {},
-      confirmData: null,
+      teacherFile: {},
+      confirmTeacher: null,
     };
   },
   async mounted() {
@@ -28,7 +32,11 @@ export default {
     createTeacher() {
       this.editTeacher = {};
     },
-    
+
+    createFileTeacher() {
+      this.teacherFile = {};
+    },
+
     async getTeachersAsync() {
       // Call Api
       this.showLoading();
@@ -53,7 +61,7 @@ export default {
       this.editTeacher = Object.assign({}, this.teachers[index]);
     },
     deleteTeacher(id) {
-      this.confirmData = { id: id };
+      this.confirmTeacher = { id: id };
     },
     // Call api delete teacher
     async agreeConfirm(dataConfirm) {
@@ -78,7 +86,7 @@ export default {
     },
 
     deleteTeacher(id) {
-      this.confirmData = { id: id };
+      this.confirmTeacher = { id: id };
     },
 
     // Call api delete teacher
