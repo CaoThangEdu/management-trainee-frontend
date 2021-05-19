@@ -46,7 +46,7 @@
       <label class="col-md-4 col-sm-4 col-form-label">Hệ đào tạo</label>
       <div class="col-md-8 col-sm-8">
         <label for="example-datetime-local-input" class="col-md-12 col-sm-12 col-form-label">
-          {{ plan.trainingSystems }}
+          {{ getName(trainingsystems, plan.trainingSystemId) }}
         </label>
       </div>
     </div>
@@ -56,7 +56,7 @@
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <label for="example-datetime-local-input" class="col-md-12 col-sm-12 col-form-label">
-            {{ plan.careers }}
+            {{ getName(careers, plan.careersId) }}
           </label>
         </div>
       </div>
@@ -66,7 +66,7 @@
       <label class="col-md-4 col-sm-4 col-form-label">Ngành</label>
       <div class="col-md-8 col-sm-8">
         <label for="example-datetime-local-input" class="col-md-12 col-sm-12 col-form-label">
-          {{ plan.course }}
+          {{ getNameCourse(courses, plan.courseId) }}
         </label>
       </div>
     </div>
@@ -75,7 +75,7 @@
       <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
       <div class="col-md-8 col-sm-8">
         <label for="example-datetime-local-input" class="col-md-12 col-sm-12 col-form-label">
-          {{ plan.status }}
+          {{ checkStatus(plan.status) }}
         </label>
       </div>
     </div>
@@ -84,7 +84,8 @@
 
   <template #header>
     <h5>Chi tiết kế hoạch</h5>
-    <button class="close" style="color: red;">&times;</button>
+    <button class="close" style="color: red;"
+      @click="closeModal(false)">&times;</button>
   </template>
 
   <template #footer>

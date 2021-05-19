@@ -31,9 +31,10 @@
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <select class="form-control form-select form-select-class"
-            v-model="plan.trainingSystems">
-            <option value="Cao đẳng" selected>Mã 3: Cao Đẳng</option>
-            <option value="Cao Đẳng Nghề">Mã 4: Cao Đẳng Nghề</option>
+            v-model="plan.trainingSystemId">
+            <option v-for="(item, index) in trainingsystems" :key="index" :value="item.id">
+              {{ item.name }}
+            </option>
           </select>
         </div>
       </div>
@@ -43,8 +44,11 @@
       <label class="col-md-4 col-sm-4 col-form-label">Khóa</label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <input type="number" value="2018" min="2018" max="2100" step="1"
-            v-model="plan.careers" />
+          <select class="form-control form-select form-select-class" v-model="plan.courseId">
+            <option v-for="(item, index) in courses" :key="index" :value="item.id">
+              {{ item.courseName }}
+            </option>
+          </select>
         </div>
       </div>
     </div>
@@ -54,10 +58,10 @@
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <select class="form-control form-select form-select-class"
-            v-model="plan.course">
-            <option value="CNTT" selected>Mã 006: Công nghệ thông tin</option>
-            <option value="QTM">Mã 068: Ngành Quản Trị Mạng</option>
-            <option value="SCMT">Mã 069: Ngành Sữa chữa Lắp Ráp, Cài Đặt Máy Tính</option>
+            v-model="plan.careersId">
+            <option v-for="(item, index) in careers" :key="index" :value="item.id">
+              {{ item.name }}
+            </option>
           </select>
         </div>
       </div>
@@ -81,7 +85,8 @@
 
   <template #header>
     <h5>{{plan.id ? "Cập nhật kế hoạch" : "Thêm mới kế hoạch"}}</h5>
-    <button class="close" style="color: red;">&times;</button>
+    <button class="close" style="color: red;"
+      @click="closeModal(false)">&times;</button>
   </template>
 
   <template #footer>

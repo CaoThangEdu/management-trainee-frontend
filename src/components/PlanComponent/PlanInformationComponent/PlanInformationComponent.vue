@@ -7,6 +7,8 @@ import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import AppConfig from '../../../../src/app.config.json'
 import CourseService from '../../../services/course/courseServices'
+import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
+import CareerService from '../../../services/career/careerServices'
 
 export default {
   name: 'PlanInformationComponent',
@@ -20,10 +22,12 @@ export default {
       isShowPlan: false,
       plan: {},
       courses:[],
-      students: [],
+      trainingsystems: [],
+      careers: [],
       errorMessages: [],
     }
   },
+
   props: {
     data: {
       type: Object,
@@ -32,10 +36,77 @@ export default {
   },
 
   async mounted(){
+    await this.getTrainingSystemsAsync()
     await this.getCoursesAsync()
+    await this.getCareersAsync()
   },
   
   methods:{
+    checkStatus(status){
+      if (status == 'new') {
+        return 'Mới lập'
+      } else if (status == 'start') {
+        return 'Bắt đầu thực tập'
+      } else if (status == 'point') {
+        return 'Chấm điểm'
+      }
+      return 'Kết thúc thực tập'
+    },
+
+    async getTrainingSystemsAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new TrainingSystemService()
+
+      const response = await api.getTrainingSystemsAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.trainingsystems = response.data.items
+    },
+
+    async getCareersAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new CareerService()
+
+      const response = await api.getCareersAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.careers = response.data.items
+    },
+
+    getName(objName, id){
+      for (const x in objName) {
+        if(objName[x].id == id){
+          return objName[x].name
+        }
+      }
+    },
+
+    getNameCourse(objName, id){
+      for (const x in objName) {
+        if(objName[x].id == id){
+          return objName[x].courseName
+        }
+      }
+    },
+
     async getCoursesAsync(){
       // Call Api
       this.showLoading();
