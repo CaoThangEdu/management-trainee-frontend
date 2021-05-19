@@ -4,6 +4,7 @@
 
 <script>
 import CompanyManagementDetailComponent from "../CompanyManagementDetailComponent/CompanyManagementDetailComponent"
+import AddCompanyFileComponent from "../AddCompanyFileComponent/AddCompanyFileComponent"
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
@@ -13,6 +14,7 @@ export default {
     extends: ComponentBase,
   components: {
     CompanyManagementDetailComponent,
+    AddCompanyFileComponent,
     ConfirmDialog,
     Pagination,
   },
@@ -30,7 +32,9 @@ export default {
     createCompany() {
       this.editCompany = {};
     },
-    
+     createCompanyFile() {
+      this.companyFile = {};
+    },
     async getCompaniesAsync(){
       // Call Api
       this.showLoading();
