@@ -41,7 +41,6 @@ export default {
       // Call Api
       this.showLoading();
       const api = new TeacherService();
-
       const response = await api.getTeachersAsync();
       this.showLoading(false);
 

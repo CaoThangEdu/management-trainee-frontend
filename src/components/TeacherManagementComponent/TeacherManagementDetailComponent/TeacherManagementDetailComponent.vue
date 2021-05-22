@@ -71,7 +71,6 @@ export default {
         );
         return;
       }
-
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,

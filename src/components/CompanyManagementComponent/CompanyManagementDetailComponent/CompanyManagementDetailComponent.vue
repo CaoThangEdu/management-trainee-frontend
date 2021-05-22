@@ -14,7 +14,7 @@ export default {
     BaseModal,
     AlertMessages,
   },
-  data() {
+ data() {
     return {
       isShow: false,
       company: {},
@@ -77,7 +77,6 @@ export default {
         );
         return;
       }
-
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,

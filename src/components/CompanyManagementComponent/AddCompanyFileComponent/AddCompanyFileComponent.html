@@ -1,6 +1,6 @@
 <BaseModal
   @mouse-click-outside="closeModal(false)"
-  :modalName="`AddTeacherFlieComponent`"
+  :modalName="`AddCompanyFlieComponent`"
   :isShow="isShowFile"
   size="lg"
 >
@@ -14,7 +14,7 @@
   </div>
 
   <template #header>
-    <h5>{{"Thêm giáo viên"}}</h5>
+    <h5>{{"Thêm công ty"}}</h5>
     <button class="close" style="color: red;" @click="closeModal(false)">
       &times;
     </button>
@@ -29,7 +29,7 @@
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
-        <button @click="save" class="btn btn-primary float-right ml-2">
+        <button @click="addTeacherByFile" class="btn btn-primary float-right ml-2">
           {{"Thêm mới"}}
         </button>
         <button class="btn btn-dark float-right" @click="closeModal(false)">

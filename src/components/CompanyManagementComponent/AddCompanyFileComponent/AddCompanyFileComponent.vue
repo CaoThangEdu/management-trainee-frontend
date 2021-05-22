@@ -1,15 +1,15 @@
-<template src='./AddTeacherFlieComponent.html'></template>
+<template src='./AddCompanyFileComponent.html'></template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
 import BaseModal from "../../common/base-modal/BaseModal";
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
-// import TeacherViewModel from "../../../view-model/teacher/teacherViewModel";
-import TeacherService from '../../../services/teacher/teacherServices'
+// import CompanyViewModel from "../../../view-model/Company/CompanyViewModel";
+import CompanyService from '../../../services/company/companyServices'
 import AppConfig from "../../../../src/app.config.json";
 import XLSX from "xlsx";
 export default {
-  name: "AddTeacherFileComponent",
+  name: "AddCompanyFileComponent",
   extends: ComponentBase,
   components: {
     BaseModal,
@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       isShowFile: false,
-      teachers: [],
+      companies: [],
       metadataFile: [],
       errorMessages: [],
     };
@@ -54,12 +54,12 @@ export default {
     },
 
     async pressEnterKey() {
-      await this.save();
+      await this.addTeacherByFile();
     },
-    async createTeacherByFlieAsync(i) {
+    async createCompanyByFlieAsync(i) {
       this.showLoading();
-      let api = new TeacherService();
-      let response = await api.createTeacherAsync(this.teachers[i]);
+      let api = new CompanyService();
+      let response = await api.createCompanyAsync(this.companies[i]);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -69,25 +69,31 @@ export default {
         );
         return;
       }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default}`
+      );
+
       this.closeModal(true);
     },
 
-    async save() {
-      this.teachers = this.metadataFile;
-      var teacherLength = this.teachers.length;
-      for (let i = 0; i < this.teachers.length; i++) {
+    async addTeacherByFile() {
+      this.companies = this.metadataFile;
+      var companyLength = this.companies.length;
+      for (let i = 0; i < this.companies.length; i++) {
         // validate
-        // let viewModel = new TeacherViewModel();
-        // viewModel.setFields(this.teachers[i]);
+        // let viewModel = new CompanyViewModel();
+        // viewModel.setFields(this.Companys[i]);
         // this.errorMessages = viewModel.isValid();
 
         // if (this.errorMessages.length > 0) {
         //   return;
         // }
-        this.createTeacherByFlieAsync(i);
+        this.createCompanyByFlieAsync(i);
       }
 
-      if (teacherLength != this.teachers.length) {
+      if (companyLength != this.companies.length) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -111,7 +117,7 @@ export default {
 </script>
 
 <style lang='scss'>
-@import "./AddTeacherFlieComponent.scss";
+@import "./AddCompanyFileComponent.scss";
 .form-select-class {
   width: 100%;
   height: 35px;

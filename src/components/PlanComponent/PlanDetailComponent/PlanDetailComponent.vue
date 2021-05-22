@@ -1,5 +1,5 @@
 
-<template src='./NotificationManagementDetailComponent.html'></template>
+<template src = './PlanDetailComponent.html'></template>
 
 <script>
 import ComponentBase from "../../../components/common/component-base/ComponentBase";
