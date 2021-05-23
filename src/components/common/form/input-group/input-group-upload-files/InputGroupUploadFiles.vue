@@ -16,7 +16,7 @@
           for="input-choose-file"
           class="btn"
           :class="buttonClass"
-        >{{$t('general.choose-file')}}</label>
+        >Chọn tập tin</label>
       </div>
       <div class="files-box">
         <span class="item-file" v-for="(item, index) in listFiles" :key="index" :title="item.fileName">
@@ -37,11 +37,11 @@
 
 <script>
 import ComponentBase from "../../../component-base/ComponentBase";
-
 import FileUploadApi from "../../../../../api/file-upload/fileUploadApi";
-
+import AppConfig from '../../../../../../src/app.config.json';
 import { options } from "../../../../../helpers/options";
 import fileHelper from "../../../../../helpers/utils/fileHelper";
+
 export default {
   name: "InputGroupUploadFiles",
   extends: ComponentBase,
@@ -116,21 +116,15 @@ export default {
         );
         switch (checkFile) {
           case 0:
-            errors.push(this.$i18n.t("notification.upload-file-error-not-choose"));
+            errors.push(`${AppConfig.notification.upload_file_error_not_choose}`);
             break;
           case -1:
-            errors.push(
-              this.$i18n.t("notification.upload-file-error-size", {
-                size: maxSize / 1024 / 1024 + "MB",
-              }) + `<br>(<b>${file.name}</b>)`
-            );
+            errors.push(`${AppConfig.notification.upload_file_error_size}` + 
+            {size: maxSize / 1024 / 1024 + "MB",} + `<br>(<b>${file.name}</b>)`);
             break;
           case -2:
-            errors.push(
-              this.$i18n.t("notification.upload-file-error-extension", {
-                extension: this.strExtensionAccepted.replace(/./g, " *.").trim(),
-              }) + `<br>(<b>${file.name}</b>)`
-            );
+            errors.push(`${AppConfig.notification.upload_file_error_extension}` + 
+            {extension: this.strExtensionAccepted.replace(/./g, " *.").trim(),} + `<br>(<b>${file.name}</b>)`);
             break;
         }
       }
@@ -139,7 +133,7 @@ export default {
       if (errors && errors.length > 0) {
           this.showNotifications(
             "error",
-            this.$t("notification.title-default"),
+            `${AppConfig.notification.title_default}`,
             errors
           );
           return;
@@ -159,8 +153,8 @@ export default {
       if (!result.isOK || result.data.length === 0) {
         this.showNotifications(
           "error",
-          this.$t("notification.title-default"),
-          this.$i18n.t("notification.upload-file-error")
+          `${AppConfig.notification.title_default}`,
+          `${AppConfig.notification.upload_file_error}`
         );
       } else {
         for (const item of result.data) {

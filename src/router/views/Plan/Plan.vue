@@ -1,9 +1,9 @@
 <template>
 <div class="row">
-  <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+  <div class="col-lg-4 col-md-12 col-sm-12 col-12">
     <TimeLineComponent />
   </div>
-  <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+  <div class="col-lg-8 col-md-12 col-sm-12 col-12">
     <ListPlanComponent />
   </div>
 </div>
