@@ -35,8 +35,10 @@ export default [{
           icon: 'cil-pencil',
         },
         {
-            _name: 'CSidebarNavTitle',
-            _children: ['Components'],
+            _name: 'CSidebarNavItem',
+            name: 'Đăng ký giấy giới thiệu thực tập',
+            to: '/registered-intership-referrals',
+            icon: 'cil-pencil',
         },
         {
             _name: 'CSidebarNavDropdown',

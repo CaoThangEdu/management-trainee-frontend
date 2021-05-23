@@ -62,6 +62,18 @@ const routes = [
       breadcrumbName: 'Quản lý công ty',
     },
   },
+  {
+    path: '/registered-intership-referrals',
+    name: 'Đăng ký giấy giới thiệu thực tập',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/RegisteredInternshipReferrals/RegisteredInternshipReferrals.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Đăng ký giấy giới thiệu thực tập',
+    },
+  },
 ];
 
 const router = new VueRouter({
