@@ -1,26 +1,25 @@
-<template src='./CompanyManagementDetailComponent.html'>
-
-</template>
+<template src='./CompanyManagementDetailComponent.html'></template>
 
 <script>
-import ComponentBase from "../../common/component-base/ComponentBase"
-import BaseModal from '../../common/base-modal/BaseModal'
-import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
-import CompanyService from '../../../services/company/companyServices'
-import AppConfig from '../../../../src/app.config.json'
+import ComponentBase from "../../common/component-base/ComponentBase";
+import BaseModal from "../../common/base-modal/BaseModal";
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
+import CompanyService from "../../../services/company/companyServices";
+import AppConfig from "../../../../src/app.config.json";
+import CompanyViewModel from "../../../view-model/company/companyViewModel";
 export default {
-  name: 'PlanDetail',
+  name: "CompanyDetail",
   extends: ComponentBase,
-  components: { 
-     BaseModal,
+  components: {
+    BaseModal,
     AlertMessages,
   },
  data() {
     return {
       isShow: false,
-      companies: {},
+      company: {},
       errorMessages: [],
-    }
+    };
   },
   props: {
     data: {
@@ -35,7 +34,7 @@ export default {
 
     closeModal(changeData) {
       this.isShow = false;
-      this.companies = {};
+      this.company = {};
 
       if (changeData) {
         this.$emit("change-data");
@@ -45,9 +44,9 @@ export default {
     async createCompanyAsync() {
       this.showLoading();
       let api = new CompanyService();
-      let response = await api.createCompanyAsync(this.companies);
+      let response = await api.createCompanyAsync(this.company);
       this.showLoading(false);
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -70,7 +69,7 @@ export default {
       let response = await api.updateCompanyAsync(this.company);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -78,7 +77,6 @@ export default {
         );
         return;
       }
-      
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -89,18 +87,18 @@ export default {
     },
 
     async save() {
-      // validate
-      // let viewModel = new CourseService();
-      // viewModel.setFields(this.course);
-      // this.errorMessages = viewModel.isValid();
+      //validate
+      let viewModel = new CompanyViewModel();
+      viewModel.setFields(this.company);
+      this.errorMessages = viewModel.isValid();
 
-      // if (this.errorMessages.length > 0) {
-      //   return;
-      // }
+      if (this.errorMessages.length > 0) {
+        return;
+      }
 
-      if(this.companies.id === undefined){
+      if (this.company.id === undefined) {
         await this.createCompanyAsync();
-      } else{
+      } else {
         await this.updateCompanyAsync();
       }
     },
@@ -108,12 +106,12 @@ export default {
   watch: {
     data() {
       this.isShow = true;
-      this.companies = this.data;
-    }
-  }
-}
+      this.company = this.data;
+    },
+  },
+};
 </script>
 
 <style lang='scss'>
-@import './CompanyManagementDetailComponent.scss';
+@import "./CompanyManagementDetailComponent.scss";
 </style>

@@ -1,3 +1,5 @@
+
+
 <template src='./NotificationManagementDetailComponent.html'>
   
 </template>
@@ -42,6 +44,9 @@ export default {
 }
 </script>
 
+
+
 <style lang='scss'>
 @import './NotificationManagementDetailComponent.scss';
+
 </style>
