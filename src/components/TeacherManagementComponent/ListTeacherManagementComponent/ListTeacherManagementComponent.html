@@ -60,7 +60,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in teachers" :key="index">
+              <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{ item.firstName }}</td>
                 <td>{{ item.lastName }}</td>
@@ -96,14 +96,10 @@
       />
       <ConfirmDialog :data="confirmTeacher" @agree="agreeConfirm"></ConfirmDialog>
 
-      <Pagination
-        :position="`center`"
-        :page="1"
-        :pageSize="10"
-        :totalItems="17"
-        @change-page="changePage"
-      >
-      </Pagination>
+      <div class="card-footer d-flex justify-content-center text--blue">
+        <JwPagination :items="teachers" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
+        </JwPagination>
+      </div>
     </div>
   </div>
 </div>

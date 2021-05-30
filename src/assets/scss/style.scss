@@ -16,6 +16,12 @@
   font-size: 1.2rem;
 }
 
-.text--red{
-  color: red;
+.text {
+  &--red{
+    color: red;
+  }
+
+  &--blue {
+    color: blue;
+  }
 }
