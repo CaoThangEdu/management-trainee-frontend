@@ -40,7 +40,7 @@ export default {
     await this.getPlansAsync()
     await this.getClassesAsync()
   },
-
+  
   methods:{
     getClassName(classId){
       for (const x in this.classes) {
@@ -105,6 +105,7 @@ export default {
     },
 
     async changeData() {
+      await this.getClassesAsync()
       await this.getStudentsAsync();
     },
     
