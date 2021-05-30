@@ -7,6 +7,8 @@ import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import Pagination from "../../common/pagination/Pagination";
 import TeacherService from "../../../services/teacher/teacherServices";
+import JwPagination from 'jw-vue-pagination';
+
 import AppConfig from "../../../../src/app.config.json";
 export default {
   extends: ComponentBase,
@@ -15,7 +17,7 @@ export default {
     AddTeacherFileComponent,
     ConfirmDialog,
     Pagination,
-
+    JwPagination,
   },
   data() {
     return {
@@ -23,12 +25,24 @@ export default {
       editTeacher: {},
       teacherFile: {},
       confirmTeacher: null,
+      pageOfItems: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
     };
   },
   async mounted() {
     await this.getTeachersAsync();
   },
   methods: {
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+    
     createTeacher() {
       this.editTeacher = {};
     },

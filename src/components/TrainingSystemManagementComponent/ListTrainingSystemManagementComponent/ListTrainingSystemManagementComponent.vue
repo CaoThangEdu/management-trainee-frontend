@@ -9,6 +9,7 @@ import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import AppConfig from '../../../../src/app.config.json'
+import JwPagination from 'jw-vue-pagination';
 
 export default {
   name: "ListTrainingSystemManagementComponent",
@@ -17,6 +18,7 @@ export default {
     TrainingSystemManagementDetailComponent,
     ConfirmDialog,
     Pagination,
+    JwPagination,
   },
   data() {
     return {
@@ -24,6 +26,13 @@ export default {
       editTrainingSystem: {},
       confirmTrainingSystem: null,
       metaDataFile: [],
+      pageOfItems: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
     };
   },
 
@@ -32,6 +41,11 @@ export default {
   },
   
   methods:{
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+    
     createTrainingSystem() {
       this.editTrainingSystem = {};
     },
