@@ -2,7 +2,9 @@
 size="lg">
   <div class="">
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Đợt thực tập</label>
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Đợt thực tập (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <select class="form-control form-select form-select-class"
@@ -54,7 +56,9 @@ size="lg">
     
 
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Lớp</label>
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Lớp (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <select class="form-control form-select form-select-class" v-model="student.classId">
@@ -66,7 +70,7 @@ size="lg">
     </div>
 
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Ngày sinh </label>
+      <label class="col-md-4 col-sm-4 col-form-label">Ngày sinh</label>
       <div class="col-md-8 col-sm-8">
         <input class="form-control brith-day" type="date"
           v-model="student.dayOfBirth">
@@ -74,7 +78,7 @@ size="lg">
     </div>
 
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái </label>
+      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <select class="form-control form-select form-select-class" v-model="student.status">

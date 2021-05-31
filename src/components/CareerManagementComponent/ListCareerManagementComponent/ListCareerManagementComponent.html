@@ -34,7 +34,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in careers" :key="index">
+              <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{ item.name }}</td>
                 <td>{{ item.status === 'active' ? 'Hoạt động' : 'Không hoạt động' }}</td>
@@ -50,8 +50,10 @@
 
       <ConfirmDialog :data="confirmCareer" @agree="deleteCareerConfirm"></ConfirmDialog>
 
-      <Pagination :position="`center`" :page="1" :pageSize="10" :totalItems="17" @change-page="changePage">
-      </Pagination>
+      <div class="card-footer d-flex justify-content-center text--blue">
+        <JwPagination :items="careers" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
+        </JwPagination>
+      </div>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <BaseModal
   @mouse-click-outside="closeModal(false)"
-  :modalName="`TeacherAssignmentDetailComponent`"
+  :modalName="`CompanyManagementDetailComponent`"
   :isShow="isShow"
   size="lg"
 >
@@ -107,7 +107,9 @@
   <template #footer>
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
-      <div class="col-md-8 col-sm-8 pl-0 pr-0"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <AlertMessages :messages="errorMessages" />
+      </div>
     </div>
 
     <div class="form-inline form-group col-md-12 pr-0">

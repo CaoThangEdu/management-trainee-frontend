@@ -69,12 +69,6 @@ export default {
         );
         return;
       }
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
-
       this.closeModal(true);
     },
 

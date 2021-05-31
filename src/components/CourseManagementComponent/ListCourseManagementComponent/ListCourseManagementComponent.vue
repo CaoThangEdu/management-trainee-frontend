@@ -10,6 +10,7 @@ import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
 import CourseService from '../../../services/course/courseServices'
 import AppConfig from '../../../../src/app.config.json'
+import JwPagination from 'jw-vue-pagination';
 
 export default {
   name: "ListCourseManagementComponent",
@@ -19,6 +20,7 @@ export default {
     AddFileDetailComponent,
     ConfirmDialog,
     Pagination,
+    JwPagination,
   },
   data() {
     return {
@@ -26,6 +28,13 @@ export default {
       editCourse: {},
       confirmCourse: null,
       metaDataFile: [],
+      pageOfItems: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
     };
   },
 
@@ -34,6 +43,11 @@ export default {
   },
   
   methods:{
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+    
     createCourse() {
       this.editCourse = {};
     },
