@@ -11,6 +11,7 @@ import AppConfig from '../../../../src/app.config.json'
 import PlanService from '../../../services/plan/planServices'
 import ClassService from '../../../services/class/classServices'
 import StudentViewModel from "../../../view-model/student/studentViewModel"
+import { ADD_STUDENT } from "../../../config/constant"
 
 export default {
   name: 'StudentManagementDetailComponent',
@@ -118,11 +119,11 @@ export default {
       for(const index in this.students){
         if(studentId == this.students[index].studentId){
           this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          'Mã số sinh viên đã tồn tại'
-        );
-        return true;
+            "error",
+            `${AppConfig.notification.title_default}`,
+            'Mã số sinh viên đã tồn tại'
+          );
+          return true;
         }
       }
       return false;
@@ -133,7 +134,7 @@ export default {
         return;
       }
 
-      this.student.email = this.student.studentId + '@caothang.edu.vn';
+      this.student.email = this.student.studentId + ADD_STUDENT.EMAIL;
       this.showLoading();
       let api = new StudentService();
       let response = await api.createStudentAsync(this.student);
@@ -157,7 +158,7 @@ export default {
 
     async updateStudentAsync() {
       this.showLoading();
-      this.student.email = this.student.studentId + '@caothang.edu.vn';
+      this.student.email = this.student.studentId + ADD_STUDENT.EMAIL;
       let api = new StudentService();
       let response = await api.updateStudentAsync(this.student);
       this.showLoading(false);

@@ -12,6 +12,7 @@ import PlanService from '../../../services/plan/planServices'
 import XLSX from 'xlsx'
 import ClassService from '../../../services/class/classServices'
 import StudentViewModel from "../../../view-model/student/studentViewModel"
+import { ADD_STUDENT } from "../../../config/constant"
 
 export default {
   name: 'AddStudentsFileComponent',
@@ -163,7 +164,7 @@ export default {
         this.students[i].internshipCourseId = id;
         this.students[i].status = 'active';
         // this.students[i].name = this.students[i].firstName + ' ' + this.students[i].lastName;
-        this.students[i].email = this.students[i].studentId + '@caothang.edu.vn';
+        this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;
         // validate
         let viewModel = new StudentViewModel();
         viewModel.setFields(this.students[i]);
@@ -186,12 +187,12 @@ export default {
           let api = new ClassService();
           let response = await api.createClassAsync(this.classroom);
           this.showLoading(false);
-          let x = i + 1;
+          let vtSVDaThem = i + 1;
           if(!response.isOK){
             this.showNotifications(
               "error",
               `${AppConfig.notification.title_default}`,
-              response.errorMessages + "<br/> Đã thêm được " + x + " sinh viên"
+              response.errorMessages + "<br/> Đã thêm được " + vtSVDaThem + " sinh viên"
               + "<br/> Lỗi tại sinh viên thứ " + i
             );
             return;

@@ -191,3 +191,7 @@ export const ACCOUNT_ERROR_CODES = {
   IDT08C: 'IDT08C',
 }
 //~~~ [END] Constants API ERROR CODE ~~~\\
+
+export const ADD_STUDENT = {
+  EMAIL: '@caothang.edu.vn',
+}
