@@ -10,6 +10,7 @@ import Pagination from "../../common/pagination/Pagination"
 import CourseService from '../../../services/course/courseServices'
 import ClassService from '../../../services/class/classServices'
 import AppConfig from '../../../../src/app.config.json'
+import JwPagination from 'jw-vue-pagination';
 
 export default {
   name: "ListClassManagementComponent",
@@ -18,6 +19,7 @@ export default {
     ClassManagementDetailComponent,
     ConfirmDialog,
     Pagination,
+    JwPagination,
   },
   data() {
     return {
@@ -25,6 +27,13 @@ export default {
       courses: [],
       editClass: {},
       confirmClassRoom: null,
+      pageOfItems: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
     };
   },
 
@@ -34,6 +43,11 @@ export default {
   },
 
   methods:{
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+    
     getCourseName(courseId){
       for (let i in this.courses) {
         if(this.courses[i].id === courseId){

@@ -12,6 +12,7 @@ import StudentService from '../../../services/student/studentServices'
 import AppConfig from '../../../../src/app.config.json'
 import PlanService from '../../../services/plan/planServices'
 import ClassService from '../../../services/class/classServices'
+import JwPagination from 'jw-vue-pagination';
 
 export default {
   name: "ListStudentManagementComponent",
@@ -21,6 +22,7 @@ export default {
     AddStudentsFileComponent,
     ConfirmDialog,
     Pagination,
+    JwPagination,
   },
   data() {
     return {
@@ -32,6 +34,13 @@ export default {
       confirmStudent: null,
       metaDataFile: [],
       internCourceName: null,
+      pageOfItems: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
     };
   },
   
@@ -42,6 +51,11 @@ export default {
   },
   
   methods:{
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+
     getClassName(classId){
       for (const x in this.classes) {
         if(this.classes[x].id == classId){

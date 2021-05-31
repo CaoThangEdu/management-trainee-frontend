@@ -4,7 +4,7 @@
 
 <script>
 import CompanyManagementDetailComponent from "../CompanyManagementDetailComponent/CompanyManagementDetailComponent"
-import AddCompanyFileComponent from "../AddCompanyFileComponent/AddCompanyFileComponent"
+import AddCompanyFileComponent from "../AddCompanyFlieComponent/AddCompanyFlieComponent"
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import Pagination from "../../common/pagination/Pagination"
@@ -22,6 +22,7 @@ export default {
     return {
       companies: [],
       editCompany:{},
+      companyFile:{},
      confirmedCompany: null,
     }
   },

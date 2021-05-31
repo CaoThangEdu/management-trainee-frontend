@@ -7,6 +7,8 @@ import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import Pagination from "../../common/pagination/Pagination";
 import TeacherService from "../../../services/teacher/teacherServices";
+import JwPagination from 'jw-vue-pagination';
+
 import AppConfig from "../../../../src/app.config.json";
 export default {
   extends: ComponentBase,
@@ -15,7 +17,7 @@ export default {
     AddTeacherFileComponent,
     ConfirmDialog,
     Pagination,
-
+    JwPagination,
   },
   data() {
     return {
@@ -23,12 +25,24 @@ export default {
       editTeacher: {},
       teacherFile: {},
       confirmTeacher: null,
+      pageOfItems: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
     };
   },
   async mounted() {
     await this.getTeachersAsync();
   },
   methods: {
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+    
     createTeacher() {
       this.editTeacher = {};
     },
@@ -54,36 +68,14 @@ export default {
       }
       this.teachers = response.data.items;
     },
+
     async changePage(currentPage) {
       await this.getTeachersAsync(currentPage);
     },
+
     updateTeacher(index) {
       this.editTeacher = Object.assign({}, this.teachers[index]);
     },
-    deleteTeacher(id) {
-      this.confirmTeacher = { id: id };
-    },
-    // Call api delete teacher
-    async agreeConfirm(dataConfirm) {
-      this.showLoading();
-      let api = new TeacherService();
-      let response = await api.deleteTeacherAsync(dataConfirm.id); // Gọi Api
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      await this.getTeachersAsync();
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default}`
-      );
-    },
 
     deleteTeacher(id) {
       this.confirmTeacher = { id: id };
@@ -110,11 +102,9 @@ export default {
         `${AppConfig.notification.content_deleted_success_default}`
       );
     },
-
     async changeData() {
       await this.getTeachersAsync();
     },
-    
     showNotification() {
       this.showNotifications(
         "success",
