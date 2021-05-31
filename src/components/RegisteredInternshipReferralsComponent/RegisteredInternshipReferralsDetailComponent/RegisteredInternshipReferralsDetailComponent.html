@@ -1,16 +1,27 @@
 <BaseModal @mouse-click-outside="closeModal(false)" :modalName="`CompanyManagementDetail`" :isShow="isShow">
   <div class="">
     <div class="form-group row">
-      <label for="name" class="col-md-4 col-sm-4 col-form-label">
-        Tên công ty (<span style="color: red;">*</span>)
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Mã số thuế (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" id="name" />
+        <div class="input-group mb-3">
+          <select class="form-control form-select form-select-class"></select>
+            <option >
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Tên công ty </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" />
       </div>
     </div>
 
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Mã số thuế </label>
+      <label class="col-md-4 col-sm-4 col-form-label">địa chỉ </label>
       <div class="col-md-8 col-sm-8">
         <input type="text" class="form-control" />
       </div>
@@ -22,18 +33,10 @@
         <input type="text" class="form-control" />
       </div>
     </div>
-
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
-      <div class="col-md-8 col-sm-8">
-        <input type="checkbox"> Hiển thị
-      </div>
-    </div>
-
   </div>
 
   <template #header>
-    <h5>Thêm mới công ty</h5>
+    <h5>Đăng ký giấy giới thiệu thực tập</h5>
     <button class="close" style="color: red;" @click="closeModal(false)">&times;</button>
   </template>
 
@@ -48,7 +51,7 @@
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
-        <button class="btn btn-primary float-right ml-2">Lưu</button>
+        <button class="btn btn-primary float-right ml-2">Đăng ký</button>
       </div>
     </div>
   </template>

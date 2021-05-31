@@ -6,8 +6,8 @@
           <path fill="var(--ci-primary-color, currentColor)"
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
-        </svg> Công ty
-        <button class="btn btn-primary float-right" @click="createBrand">+ Thêm mới</button>
+        </svg> Đăng ký giấy giới thiệu thực tập
+        <button class="btn btn-primary float-right" @click="createBrand">+ Đăng ký</button>
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -22,40 +22,37 @@
             </div>
           </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive text-center">
           <table class="table">
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
-                <th scope="col">Tên công ty</th>
                 <th scope="col">Mã số thuế</th>
+                <th scope="col">Tên công ty</th>
+                <th scope="col">Địa chỉ</th>
                 <th scope="col">Website</th>
+                <th scope="col">Ngày đăng ký</th>
                 <th scope="col">Trạng thái</th>
-                <th scope="col">Thao tác</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <th scope="row">1</th>
-                <td>QIT soft</td>
-                <td>MY01245</td>
-                <td>qitsoft.com</td>
-                <td>Hiển thị</td>
-                <td>
-                  <button class="btn btn-primary mr-2">Sửa</button>
-                  <button class="btn btn-danger">Xóa</button>
-                </td>
+                <td>ABCXYX</td>
+                <td>Công ty ABC</td>
+                <td>Quận 2 HCM</td>
+                <td>ABC.com</td>
+                <td>22/5/2021</td>
+                <td>Đang duyệt</td>
               </tr>
               <tr>
                 <th scope="row">2</th>
-                <td>ABC</td>
-                <td>AI97534</td>
-                <td>abc.com</td>
-                <td>Ẩn</td>
-                <td>
-                  <button class="btn btn-primary mr-2">Sửa</button>
-                  <button class="btn btn-danger">Xóa</button>
-                </td>
+                <td>EFG123</td>
+                <td>Công ty EFG</td>
+                <td>Quận 5 HCM</td>
+                <td>EFG.com</td>
+                <td>23/5/2021</td>
+                <td>Đang duyệt</td>
               </tr>
             </tbody>
           </table>
