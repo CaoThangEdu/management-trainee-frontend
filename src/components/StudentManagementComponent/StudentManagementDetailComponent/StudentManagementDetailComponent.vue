@@ -11,6 +11,7 @@ import AppConfig from '../../../../src/app.config.json'
 import PlanService from '../../../services/plan/planServices'
 import ClassService from '../../../services/class/classServices'
 import StudentViewModel from "../../../view-model/student/studentViewModel"
+import { ADD_STUDENT } from "../../../config/constant"
 
 export default {
   name: 'StudentManagementDetailComponent',
@@ -26,6 +27,7 @@ export default {
       plans: [],
       classes: [],
       errorMessages: [],
+      students: [],
     }
   },
 
@@ -39,9 +41,29 @@ export default {
   async mounted(){
     await this.getPlansAsync()
     await this.getClassesAsync()
+    await this.getStudentsAsync()
   },
 
   methods: {
+    async getStudentsAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new StudentService()
+
+      const response = await api.getStudentsAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.students = response.data.items
+    },
+
     async getClassesAsync(){
       // Call Api
       this.showLoading();
@@ -93,7 +115,26 @@ export default {
       }
     },
 
+    checkStudent(studentId){
+      for(const index in this.students){
+        if(studentId == this.students[index].studentId){
+          this.showNotifications(
+            "error",
+            `${AppConfig.notification.title_default}`,
+            'Mã số sinh viên đã tồn tại'
+          );
+          return true;
+        }
+      }
+      return false;
+    },
+
     async createStudentAsync() {
+      if(this.checkStudent(this.student.studentId)){
+        return;
+      }
+
+      this.student.email = this.student.studentId + ADD_STUDENT.EMAIL;
       this.showLoading();
       let api = new StudentService();
       let response = await api.createStudentAsync(this.student);
@@ -117,6 +158,7 @@ export default {
 
     async updateStudentAsync() {
       this.showLoading();
+      this.student.email = this.student.studentId + ADD_STUDENT.EMAIL;
       let api = new StudentService();
       let response = await api.updateStudentAsync(this.student);
       this.showLoading(false);

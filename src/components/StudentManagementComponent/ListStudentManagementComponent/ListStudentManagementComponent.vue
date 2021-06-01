@@ -49,7 +49,7 @@ export default {
     await this.getPlansAsync()
     await this.getClassesAsync()
   },
-
+  
   methods:{
     onChangePage(pageOfItems) {
       // update page of items
@@ -119,6 +119,7 @@ export default {
     },
 
     async changeData() {
+      await this.getClassesAsync()
       await this.getStudentsAsync();
     },
     

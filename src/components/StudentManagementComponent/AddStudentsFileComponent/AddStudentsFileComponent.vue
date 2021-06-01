@@ -12,6 +12,7 @@ import PlanService from '../../../services/plan/planServices'
 import XLSX from 'xlsx'
 import ClassService from '../../../services/class/classServices'
 import StudentViewModel from "../../../view-model/student/studentViewModel"
+import { ADD_STUDENT } from "../../../config/constant"
 
 export default {
   name: 'AddStudentsFileComponent',
@@ -147,10 +148,23 @@ export default {
       let studentLengthCallApi = this.studentLengthBanDau;
       var id = this.internCourceName
       for(let i = 0; i < this.students.length; i++){
+        let vtSV = i + 1;
+        for(const index in this.studentsCallApi){
+          if(this.students[i].studentId == this.studentsCallApi[index].studentId){
+            this.showNotifications(
+            "error",
+            `${AppConfig.notification.title_default}`,
+            'Mã số sinh viên thứ '+ vtSV + ' đã tồn tại!'+
+            "<br/> Đã thêm được " + i + " sinh viên"
+          );
+          return;
+          }
+        }
+
         this.students[i].internshipCourseId = id;
         this.students[i].status = 'active';
         // this.students[i].name = this.students[i].firstName + ' ' + this.students[i].lastName;
-        this.students[i].email = this.students[i].studentId + '@caothang.edu.vn';
+        this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;
         // validate
         let viewModel = new StudentViewModel();
         viewModel.setFields(this.students[i]);
@@ -173,12 +187,13 @@ export default {
           let api = new ClassService();
           let response = await api.createClassAsync(this.classroom);
           this.showLoading(false);
+          let vtSVDaThem = i + 1;
           if(!response.isOK){
             this.showNotifications(
               "error",
               `${AppConfig.notification.title_default}`,
-              response.errorMessages + "<br/> Đã thêm được " + i + " sinh viên"
-              + "<br/> Lỗi tại sinh viên thứ 3"
+              response.errorMessages + "<br/> Đã thêm được " + vtSVDaThem + " sinh viên"
+              + "<br/> Lỗi tại sinh viên thứ " + i
             );
             return;
           }
@@ -186,7 +201,7 @@ export default {
             "success",
             `${AppConfig.notification.title_default}`,
             `${AppConfig.notification.content_created_success_default}`
-              + ' lớp ' + classNameFile
+              + ' Lớp ' + classNameFile
           );
           await this.getClassesAsync()
           // let id = this.getClassId(classNameFile);
@@ -223,8 +238,8 @@ export default {
       }
       await this.getStudentsAsync()
     },
-
   },
+
   watch: {
     data() {
       this.isShowAddFile = true;
