@@ -6,7 +6,6 @@
 import CareerManagementDetailComponent from '../CareerManagementDetailComponent/CareerManagementDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
 import CareerService from '../../../services/career/careerServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
@@ -17,7 +16,6 @@ export default {
   components: {
     CareerManagementDetailComponent,
     ConfirmDialog,
-    Pagination,
     JwPagination,
   },
   data() {

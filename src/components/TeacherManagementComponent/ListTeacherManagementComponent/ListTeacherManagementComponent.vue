@@ -5,7 +5,6 @@ import TeacherManagementDetailComponent from "../TeacherManagementDetailComponen
 import AddTeacherFileComponent from "../AddTeacherFlieComponent/AddTeacherFlieComponent";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
-import Pagination from "../../common/pagination/Pagination";
 import TeacherService from "../../../services/teacher/teacherServices";
 import JwPagination from 'jw-vue-pagination';
 
@@ -16,7 +15,6 @@ export default {
     TeacherManagementDetailComponent,
     AddTeacherFileComponent,
     ConfirmDialog,
-    Pagination,
     JwPagination,
   },
   data() {

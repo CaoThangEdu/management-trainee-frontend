@@ -7,7 +7,6 @@ import CourseManagementDetailComponent from '../CourseManagementDetailComponent/
 import AddFileDetailComponent from '../AddFileDetailComponent/AddFileDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
 import CourseService from '../../../services/course/courseServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
@@ -19,7 +18,6 @@ export default {
     CourseManagementDetailComponent,
     AddFileDetailComponent,
     ConfirmDialog,
-    Pagination,
     JwPagination,
   },
   data() {

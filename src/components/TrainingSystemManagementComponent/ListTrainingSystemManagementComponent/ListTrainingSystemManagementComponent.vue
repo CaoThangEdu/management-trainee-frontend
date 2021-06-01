@@ -6,7 +6,6 @@
 import TrainingSystemManagementDetailComponent from '../TrainingSystemManagementDetailComponent/TrainingSystemManagementDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
@@ -17,7 +16,6 @@ export default {
   components: {
     TrainingSystemManagementDetailComponent,
     ConfirmDialog,
-    Pagination,
     JwPagination,
   },
   data() {
