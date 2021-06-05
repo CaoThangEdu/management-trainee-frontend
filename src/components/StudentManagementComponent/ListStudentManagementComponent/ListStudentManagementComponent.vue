@@ -7,7 +7,6 @@ import StudentManagementDetailComponent from "../StudentManagementDetailComponen
 import AddStudentsFileComponent from "../AddStudentsFileComponent/AddStudentsFileComponent"
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
 import StudentService from '../../../services/student/studentServices'
 import AppConfig from '../../../../src/app.config.json'
 import PlanService from '../../../services/plan/planServices'
@@ -21,7 +20,6 @@ export default {
     StudentManagementDetailComponent,
     AddStudentsFileComponent,
     ConfirmDialog,
-    Pagination,
     JwPagination,
   },
   data() {

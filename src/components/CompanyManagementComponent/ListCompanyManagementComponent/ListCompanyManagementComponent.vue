@@ -7,7 +7,6 @@ import CompanyManagementDetailComponent from "../CompanyManagementDetailComponen
 import AddCompanyFileComponent from "../AddCompanyFlieComponent/AddCompanyFlieComponent"
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
 import CompanyService from '../../../services/company/companyServices'
 import AppConfig from '../../../../src/app.config.json'
 export default {
@@ -16,7 +15,6 @@ export default {
     CompanyManagementDetailComponent,
     AddCompanyFileComponent,
     ConfirmDialog,
-    Pagination,
   },
   data() {
     return {

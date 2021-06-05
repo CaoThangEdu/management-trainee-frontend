@@ -5,8 +5,7 @@
 import PlanDetailComponent from "../PlanDetailComponent/PlanDetailComponent";
 import PlanInformationComponent from "../PlanInformationComponent/PlanInformationComponent";
 import ComponentBase from "../../common/component-base/ComponentBase"
-import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
+import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog" 
 import PlanService from '../../../services/plan/planServices'
 import AppConfig from '../../../../src/app.config.json'
 
@@ -16,7 +15,6 @@ export default {
   components: {
     PlanDetailComponent,
     ConfirmDialog,
-    Pagination,
     PlanInformationComponent,
   },
   data() {
