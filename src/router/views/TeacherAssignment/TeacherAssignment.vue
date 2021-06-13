@@ -1,13 +1,13 @@
 <template>
   <div>
-    <TeacherAssignmentComponent />
+    <ListPlanFilterComponent />
   </div>
 </template>
 
 <script>
-import TeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/TeacherAssignmentComponent'
+import ListPlanFilterComponent from '../../../components/TeacherAssignmentComponent/ListPlanFilterComponent/ListPlanFilterComponent'
 export default {
-  components:{ TeacherAssignmentComponent }
+  components:{ ListPlanFilterComponent }
 }
 </script>
 

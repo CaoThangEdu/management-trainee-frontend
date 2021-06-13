@@ -1,0 +1,70 @@
+<BaseModal
+  @mouse-click-outside="closeModal(false)"
+  :modalName="`TeacherAssignmentDetailComponent`"
+  :isShow="isShow"
+  size="lg"
+>
+  <div class="">
+    <div class="form-group row course-name">
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Tên khóa (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8 course-name">
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          v-model="course.courseName"
+        />
+      </div>
+      <input type="hidden" value="false" v-model="course.isDelete">
+
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Chuyên ngành đào tạo (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <select
+          class="form-control form-select form-select-class"
+          name="trainingSystemId"
+          id="trainingSystemId"
+          v-model="course.careersId"
+        >
+          <option
+            v-for="(item,index) in careers"
+            :key="index"
+            :value="item.id"
+            >{{item.careersName}}</option
+          >
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <template #header>
+    <h5>{{course.id ? "Cập nhật khóa" : "Thêm mới khóa"}}</h5>
+    <button class="close" style="color: red;" @click="closeModal(false)">
+      &times;
+    </button>
+  </template>
+
+  <template #footer>
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <AlertMessages :messages="errorMessages" />
+      </div>
+    </div>
+
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <button @click="save" class="btn btn-primary float-right ml-2">
+          {{course.id ? "Cập nhật" : "Thêm mới"}}
+        </button>
+        <button class="btn btn-dark float-right" @click="closeModal(false)">
+          Hủy
+        </button>
+      </div>
+    </div>
+  </template>
+</BaseModal>

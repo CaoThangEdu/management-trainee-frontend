@@ -1,6 +1,7 @@
 <script>
 import { mapActions } from 'vuex'
 import { options } from '../../../helpers/options'
+import AppConfig from '../../../../src/app.config.json'
 export default {
   data() {
     return {
@@ -33,7 +34,7 @@ export default {
         type = 'info';
       }
       if (!title) {
-        title = 'Thông báo';
+        title = `${AppConfig.notification.title_default}`;
       }
       if (!timeout || isNaN(timeout)) {
         // default 'success', 'info' is short (10s), 'error', 'warning' is medium (20s)
