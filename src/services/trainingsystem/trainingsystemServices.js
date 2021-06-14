@@ -6,8 +6,17 @@ export default class TrainingSystemService extends ServicesBaseAPI {
     super();
     this.url = `${AppConfig.apiHost}/TrainingSystem`
   }
+  async getTrainingSystemsAsync(object) {
+    try {
+      const response = await this.http.post(`${this.url}/Filter`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
 
-  async getTrainingSystemsAsync() {
+  async getAllTrainingSystemsAsync() {
     try {
       const response = await this.http.get(`${this.url}/GetAll`);
       this.setResult(response);
@@ -46,4 +55,7 @@ export default class TrainingSystemService extends ServicesBaseAPI {
     }
     return this.result;
   }
+
+  // thay đổi trạng thái của isDelete
+
 }

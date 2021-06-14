@@ -1,5 +1,4 @@
 <template src='./ListTrainingSystemManagementComponent.html'>
-  
 </template>
 
 <script>
@@ -23,7 +22,6 @@ export default {
       trainingsystems: [],
       editTrainingSystem: {},
       confirmTrainingSystem: null,
-      metaDataFile: [],
       pageOfItems: [],
       customLabels: {
         first: '<<',
@@ -31,32 +29,36 @@ export default {
         previous: '<',
         next: '>'
       },
+      filter: {
+        trainingSystemName: "",
+        isDelete: false
+      }
     };
   },
 
-  async mounted(){
+  async mounted() {
     await this.getTrainingSystemsAsync()
   },
-  
-  methods:{
+
+  methods: {
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
-    
+
     createTrainingSystem() {
       this.editTrainingSystem = {};
     },
-    
-    async getTrainingSystemsAsync(){
+
+    async getTrainingSystemsAsync() {
       // Call Api
       this.showLoading();
       const api = new TrainingSystemService()
 
-      const response = await api.getTrainingSystemsAsync()
+      const response = await api.getTrainingSystemsAsync(this.filter);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -64,7 +66,7 @@ export default {
         );
         return;
       }
-      this.trainingsystems = response.data.items
+      this.trainingsystems = response.data;
     },
 
     async changePage(currentPage) {
@@ -75,17 +77,30 @@ export default {
       this.editTrainingSystem = Object.assign({}, this.trainingsystems[index]);
     },
 
+    changeIsdelete(index) {
+      this.editTrainingSystem = Object.assign({}, this.trainingsystems[index]);
+    },
+
     deleteTrainingSystem(id) {
-      this.confirmTrainingSystem = { id: id };
+      this.confirmTrainingSystem = {
+        id: id
+      };
     },
 
     // Call api delete TrainingSystem
-    async deleteTrainingSystemConfirm(TrainingSystemComfirm) {
+    async updateIsDelete(index) {
+      let trainingSystem = this.trainingsystems[index];
+      if (trainingSystem.isDelete === true) {
+        trainingSystem.isDelete = false;
+      } else {
+        trainingSystem.isDelete = true;
+      }
       this.showLoading();
       let api = new TrainingSystemService();
-      let response = await api.deleteTrainingSystemAsync(TrainingSystemComfirm.id); // Gọi Api
+      let response = await api.updateTrainingSystemAsync(trainingSystem);
       this.showLoading(false);
-      if(!response.isOK){
+
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -93,29 +108,29 @@ export default {
         );
         return;
       }
-      await this.getTrainingSystemsAsync();
+
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default}`,
+        `${AppConfig.notification.content_updated_status_success_default}`
       );
-    },
-    
-    async changeData() {
-      await this.getTrainingSystemsAsync();
+      this.getTrainingSystemsAsync();
     },
 
-    showNotification() {
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
+    getStatusIcon(status) {
+      if (!status) {
+        return 'fa fa-unlock';
+      }
+      return 'fa fa-lock';
+    },
+
+    async changeData() {
+      await this.getTrainingSystemsAsync();
     },
   }
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 @import './ListTrainingSystemManagementComponent.scss';
 </style>

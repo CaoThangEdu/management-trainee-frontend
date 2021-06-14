@@ -45,6 +45,30 @@ export default {
       }
     },
 
+    async deleteTrainingSystemConfirm(){
+      this.showLoading();
+      let api = new TrainingSystemService();
+      let response = await api.deleteTrainingSystemAsync(this.trainingsystem.id);
+      this.showLoading(false);
+
+      if(!response.isOK){   
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+
+      this.closeModal(true);
+    },
+
     async createTrainingSystemAsync() {
       this.showLoading();
       let api = new TrainingSystemService();
