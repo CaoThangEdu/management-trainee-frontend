@@ -51,17 +51,17 @@ const routes = [
           breadcrumbName: 'Danh sách đợt',
         },
       },
-      {
-        path: 'detail',
-        name: 'chi-tiet',
-        component: () =>
-          import(
-            '../router/views/TeacherAssignmentDetail/ '
-          ),
-        meta: {
-          breadcrumbName: 'Chi tiết',
-        },
-      },
+      // {
+      //   path: 'detail',
+      //   name: 'chi-tiet',
+      //   component: () =>
+      //     import(
+      //       '../router/views/TeacherAssignmentDetail/ '
+      //     ),
+      //   meta: {
+      //     breadcrumbName: 'Chi tiết',
+      //   },
+      // },
     ],
   },
   {

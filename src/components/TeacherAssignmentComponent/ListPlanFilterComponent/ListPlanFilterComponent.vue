@@ -24,6 +24,7 @@ export default {
         status: "",
         isDelete: false, 
       }
+    
     };
   },
   async mounted(){
@@ -36,7 +37,7 @@ export default {
     async changeData() {
       // await this.getteachersAsync();
     },
-     async getInternshipCourseAsync(){
+    async getInternshipCourseAsync(){
       // Call Api
       this.showLoading();
       const api = new PlanService()
@@ -52,12 +53,11 @@ export default {
         );
         return;
       }
-      this.internshipCourse = response.data
-      console.log(this.internshipCourse)
+      this.internshipCourse = response.data;
     },
 
-    assignment() {
-      this.$router.push("selectitinerary");
+    assignment(e) {
+      this.$emit("getPlan", e);
     }
   }
 }

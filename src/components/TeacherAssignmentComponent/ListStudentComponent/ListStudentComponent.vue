@@ -13,6 +13,7 @@ export default {
     };
   },
   methods:{
+    
     createBrand() {
       this.editStudent = {};
     },
