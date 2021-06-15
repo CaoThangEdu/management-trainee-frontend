@@ -184,6 +184,18 @@ const routes = [
       breadcrumbName: 'Đăng ký giấy giới thiệu thực tập',
     },
   },
+  {
+    path: '/internship-confirmation',
+    name: 'Xác nhận thực tập',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/InternshipConfirmation/InternshipConfirmation.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Xác nhận thực tập',
+    },
+  },
 ];
 
 const router = new VueRouter({

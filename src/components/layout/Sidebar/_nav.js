@@ -82,5 +82,11 @@ export default [{
     to: '/registered-intership-referrals',
     icon: 'cil-pencil',
 },
+{
+  _name: 'CSidebarNavItem',
+  name: 'Xác nhận thực tập',
+  to: '/internship-confirmation',
+  icon: 'cil-pencil',
+},
   ],
 }, ];
