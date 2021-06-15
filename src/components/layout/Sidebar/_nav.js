@@ -76,5 +76,17 @@ export default [{
     to: '/notification-management',
     icon: 'cil-bell',
   },
+  {
+    _name: 'CSidebarNavItem',
+    name: 'Đăng ký giấy giới thiệu thực tập',
+    to: '/registered-intership-referrals',
+    icon: 'cil-pencil',
+},
+{
+  _name: 'CSidebarNavItem',
+  name: 'Xác nhận thực tập',
+  to: '/internship-confirmation',
+  icon: 'cil-pencil',
+},
   ],
 }, ];

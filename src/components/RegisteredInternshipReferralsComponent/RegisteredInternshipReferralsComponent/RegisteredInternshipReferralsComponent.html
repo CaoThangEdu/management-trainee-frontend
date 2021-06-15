@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <header class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+          <path fill="var(--ci-primary-color, currentColor)"
+            d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+            class="ci-primary"></path>
+        </svg> Đăng ký giấy giới thiệu thực tập
+        <button class="btn btn-primary float-right" @click="createBrand">+ Đăng ký</button>
+      </header>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-row filter-wrapper ml-0 mr-0">
+              <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
+                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
+                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive text-center">
+          <table class="table">
+            <thead class="">
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Mã số thuế</th>
+                <th scope="col">Tên công ty</th>
+                <th scope="col">Địa chỉ</th>
+                <th scope="col">Website</th>
+                <th scope="col">Ngày đăng ký</th>
+                <th scope="col">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>ABCXYX</td>
+                <td>Công ty ABC</td>
+                <td>Quận 2 HCM</td>
+                <td>ABC.com</td>
+                <td>22/5/2021</td>
+                <td>Đang duyệt</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>EFG123</td>
+                <td>Công ty EFG</td>
+                <td>Quận 5 HCM</td>
+                <td>EFG.com</td>
+                <td>23/5/2021</td>
+                <td>Đang duyệt</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <RegisteredInternshipReferralsDetailComponent :data="editData" />
+</div>
