@@ -12,7 +12,8 @@ import PlanService from '../../../services/plan/planServices'
 import XLSX from 'xlsx'
 import ClassService from '../../../services/class/classServices'
 import StudentViewModel from "../../../view-model/student/studentViewModel"
-import { ADD_STUDENT } from "../../../config/constant"
+import { ADD_STUDENT } from "../../../config/constant";
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: 'AddStudentsFileComponent',
@@ -21,6 +22,7 @@ export default {
     BaseModal,
     AlertMessages,
   },
+  mixins: [ CrudMixin ],
   data() {
     return {
       isShowAddFile: false,
@@ -28,27 +30,79 @@ export default {
       studentsCallApi: [],
       studentLengthBanDau: 0,
       metaDataFile: [],
-      internCourceName: null,
-      plans: [],
-      classes: [],
+      classIdSelected: null,
       errorMessages: [],
       classroom: {},
+      classes: [],
+      filter: {
+        keyword: "",
+        isDelete: false,
+        status: "active",
+        classId: "",
+      }
     }
   },
   props: {
     data: {
       type: Object,
       default: null,
-    }, 
+    },
+    plans: {
+      type: Array,
+      default: null,
+    },
   },
 
   async mounted(){
-    await this.getPlansAsync()
-    await this.getClassesAsync()
-    await this.getStudentsAsync()
+    await this.getStudentsAsync();
+    await this.getClassesFilterAsync();
   },
 
-  methods: {    
+  methods: {
+    checkCourse(item) {
+      if (this.getInfoByCourseId(item.courseId, this.plans).internshipCourseName) {
+        return true;
+      }
+      return false;
+    },
+
+    async getClassesFilterAsync(){
+      let filterClass = {
+        courseId: "",
+        isDelete: false,
+        className: "",
+        status: "active",
+      };
+      // Call Api
+      this.showLoading();
+      const api = new ClassService()
+
+      const response = await api.getClassesFilterAsync(filterClass);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.classes = response.data;
+    },
+
+    getInfoByCourseId(courseId, list){
+      return CrudMixin.methods.getInfoByCourseId(courseId, list)
+    },
+
+    getInfoObject(id, list) {
+      return CrudMixin.methods.getInfo(id, list);
+    },
+
+    getInfoObjectByName(className, list) {
+      return CrudMixin.methods.getInfoObjectByName(className, list);
+    },
+
     getClassId(className){
       for (const x in this.classes) {
         if(this.classes[x].className === className){
@@ -65,33 +119,14 @@ export default {
       }
     },
 
-    async getClassesAsync(){
-      // Call Api
-      this.showLoading();
-      const api = new ClassService()
-
-      const response = await api.getClassesAsync()
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.classes = response.data.items
-    },
-
     async getStudentsAsync(){
       // Call Api
       this.showLoading();
       const api = new StudentService()
 
-      const response = await api.getStudentsAsync()
+      const response = await api.getStudentsAsync(this.filter)
       this.showLoading(false);
-      this.studentLengthBanDau = response.data.totalCount;
+      this.studentLengthBanDau = response.data.length;
 
       if(!response.isOK){
         this.showNotifications(
@@ -101,7 +136,7 @@ export default {
         );
         return;
       }
-      this.studentsCallApi = response.data.items
+      this.studentsCallApi = response.data
     },
   
     async previewFiles(e) {
@@ -115,7 +150,7 @@ export default {
         let sheetName = workbook.SheetNames[0]
         /* DO SOMETHING WITH workbook HERE */
         let worksheet = workbook.Sheets[sheetName];
-        vm.metaDataFile = XLSX.utils.sheet_to_json(worksheet);        
+        vm.metaDataFile = XLSX.utils.sheet_to_json(worksheet);     
       };
       reader.readAsArrayBuffer(f);
     },
@@ -144,9 +179,10 @@ export default {
     },
 
     async save() {
+      let courseDaChonId = this.getInfoObject(this.classIdSelected, this.classes).courseId;
       this.students = this.metaDataFile;
       let studentLengthCallApi = this.studentLengthBanDau;
-      var id = this.internCourceName
+      var idClass = this.classIdSelected
       for(let i = 0; i < this.students.length; i++){
         let vtSV = i + 1;
         for(const index in this.studentsCallApi){
@@ -161,9 +197,38 @@ export default {
           }
         }
 
-        this.students[i].internshipCourseId = id;
+        // Kiểm tra lớp đã trùng với lớp đã chọn hay chưa
+        let classOfStudent = this.getInfoObjectByName(this.students[i].classId, this.classes);
+        if (classOfStudent) {
+          // nếu tồn tại lớp
+          this.students[i].classId = classOfStudent.classId;
+          // nếu lớp bằng lớp đã chọn
+          if (classOfStudent.id == idClass){
+            this.students[i].classId = idClass;
+          } else {
+            this.students[i].classId = classOfStudent.id;
+          }
+        } else {
+          this.classroom.courseId = courseDaChonId;
+          this.classroom.className = this.students[i].classId;
+          this.classroom.status = 'active';
+          this.classroom.isDelete = false;
+          let api = new ClassService();
+          let response = await api.createClassAsync(this.classroom);
+          this.showLoading(false);
+          if (response.isOK) {
+            this.showNotifications(
+              "success",
+              `${AppConfig.notification.title_default}`,
+              `${AppConfig.notification.content_created_success_default}`
+                + ' Lớp ' + this.students[i].classId
+            );
+            await this.getClassesFilterAsync()
+          }
+          
+          this.students[i].classId = this.getInfoObjectByName(this.students[i].classId, this.classes).id;
+        }    
         this.students[i].status = 'active';
-        // this.students[i].name = this.students[i].firstName + ' ' + this.students[i].lastName;
         this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;
         // validate
         let viewModel = new StudentViewModel();
@@ -172,40 +237,6 @@ export default {
 
         if (this.errorMessages.length > 0) {
           return;
-        }
-
-        let classNameFile = this.students[i].classId;
-        for (let index in this.classes){
-          if(this.students[i].classId == this.classes[index].className){
-            this.students[i].classId = this.classes[index].id
-          } 
-        }
-
-        if(classNameFile == this.students[i].classId){
-          this.classroom.className = this.students[i].classId;
-          this.classroom.status = 'active';
-          let api = new ClassService();
-          let response = await api.createClassAsync(this.classroom);
-          this.showLoading(false);
-          let vtSVDaThem = i + 1;
-          if(!response.isOK){
-            this.showNotifications(
-              "error",
-              `${AppConfig.notification.title_default}`,
-              response.errorMessages + "<br/> Đã thêm được " + vtSVDaThem + " sinh viên"
-              + "<br/> Lỗi tại sinh viên thứ " + i
-            );
-            return;
-          }
-          this.showNotifications(
-            "success",
-            `${AppConfig.notification.title_default}`,
-            `${AppConfig.notification.content_created_success_default}`
-              + ' Lớp ' + classNameFile
-          );
-          await this.getClassesAsync()
-          // let id = this.getClassId(classNameFile);
-          this.students[i].classId = this.getClassId(classNameFile);
         }
         this.showLoading();
         let api = new StudentService();
@@ -222,7 +253,7 @@ export default {
         this.closeModal(true);
       }
       this.showLoading(false);
-      await this.getStudentsAsync()
+      await this.getStudentsAsync();
       if(studentLengthCallApi == this.studentLengthBanDau){
         this.showNotifications(
           "error",

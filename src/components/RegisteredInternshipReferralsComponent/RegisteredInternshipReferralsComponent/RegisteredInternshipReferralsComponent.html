@@ -7,7 +7,7 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Đăng ký giấy giới thiệu thực tập
-        <button class="btn btn-primary float-right" @click="createBrand">+ Đăng ký</button>
+        <button class="btn btn-primary float-right" @click="createCertificates">+ Đăng ký</button>
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -27,38 +27,52 @@
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
-                <th scope="col">Mã số thuế</th>
                 <th scope="col">Tên công ty</th>
-                <th scope="col">Địa chỉ</th>
-                <th scope="col">Website</th>
+                <th scope="col">Mã số thuế</th>
+                <th scope="col">MSSV</th>
+                <th scope="col">Họ tên</th>
+                <th scope="col">Lớp</th>
+                <th scope="col">SĐT</th>
                 <th scope="col">Ngày đăng ký</th>
                 <th scope="col">Trạng thái</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>ABCXYX</td>
-                <td>Công ty ABC</td>
-                <td>Quận 2 HCM</td>
-                <td>ABC.com</td>
-                <td>22/5/2021</td>
-                <td>Đang duyệt</td>
+              <tr v-for="(item, index) in pageOfItems" :key="index">
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{ item.nameCompany }}</td>
+                <td>{{ item.taxCode }}</td>
+                <td v-if="students.length != 0">
+                  {{ getInfoObject(item.studentId, students).studentId }}
+                </td>
+                <td v-if="students.length != 0">
+                  {{ getInfoObject(item.studentId, students).studentId }}
+                </td>
+                <td v-if="students.length != 0">
+                  {{ getInfoObject(item.studentId, students).classId }}
+                </td>
+                <td>{{ item.phoneStudent }}</td>
+                <td>{{ convertTime(item.registrationDate) }}</td>
+                <td>
+                  {{ item.status }}
+                </td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>EFG123</td>
-                <td>Công ty EFG</td>
-                <td>Quận 5 HCM</td>
-                <td>EFG.com</td>
-                <td>23/5/2021</td>
-                <td>Đang duyệt</td>
+              <tr v-show="pageOfItems == null || pageOfItems.length === 0">
+                <th colspan="5" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+      <RegisteredInternshipReferralsDetailComponent :data="editCertificate" />
+
+      <div class="card-footer d-flex justify-content-center text--blue"
+        v-show="pageOfItems == null || pageOfItems.length === 0">
+        <JwPagination :items="certificates" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
+        </JwPagination>
+      </div>
     </div>
   </div>
-  <RegisteredInternshipReferralsDetailComponent :data="editData" />
 </div>

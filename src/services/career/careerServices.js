@@ -9,7 +9,17 @@ export default class CareerService extends ServicesBaseAPI {
 
   async getCareersAsync() {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/FilterAll`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async getCareersFilterAsync(object) {
+    try {
+      const response = await this.http.post(`${this.url}/Filter`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

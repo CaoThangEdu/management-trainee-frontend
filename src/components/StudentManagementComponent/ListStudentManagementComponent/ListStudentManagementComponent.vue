@@ -12,6 +12,7 @@ import AppConfig from '../../../../src/app.config.json'
 import PlanService from '../../../services/plan/planServices'
 import ClassService from '../../../services/class/classServices'
 import JwPagination from 'jw-vue-pagination';
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ListStudentManagementComponent",
@@ -22,6 +23,7 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
+  mixins: [ CrudMixin ],
   data() {
     return {
       students: [],
@@ -31,7 +33,6 @@ export default {
       classes: [],
       confirmStudent: null,
       metaDataFile: [],
-      internCourceName: null,
       pageOfItems: [],
       customLabels: {
         first: '<<',
@@ -39,16 +40,30 @@ export default {
         previous: '<',
         next: '>'
       },
+      filter: {
+        keyword: "",
+        isDelete: false,
+        status: "active",
+        classId: "",
+      }
     };
   },
   
   async mounted(){
-    await this.getStudentsAsync()
-    await this.getPlansAsync()
-    await this.getClassesAsync()
+    await this.getClassesFilterAsync();
+    await this.getPlansFilterAsync();
+    await this.getStudentsAsync();
   },
   
   methods:{
+    getInfoObject(id, list) {
+      return CrudMixin.methods.getInfo(id, list);
+    },
+
+    getInfoByCourseId(courseId, list){
+      return CrudMixin.methods.getInfoByCourseId(courseId, list)
+    },
+
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
@@ -62,12 +77,18 @@ export default {
       }
     },
 
-    async getClassesAsync(){
+    async getClassesFilterAsync(){
+      let filterClass = {
+        courseId: "",
+        isDelete: false,
+        className: "",
+        status: "active",
+      };
       // Call Api
       this.showLoading();
       const api = new ClassService()
 
-      const response = await api.getClassesAsync()
+      const response = await api.getClassesFilterAsync(filterClass);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -78,23 +99,19 @@ export default {
         );
         return;
       }
-      this.classes = response.data.items
+      this.classes = response.data;
     },
 
-    getPlanName(planId){
-      for(const index in this.plans){
-        if(planId == this.plans[index].id){
-          return this.plans[index].internshipCourceName
-        }
-      }
-    },
-
-    async getPlansAsync(){
+    async getPlansFilterAsync(){
+      let filterPlan = {
+        status: "",
+        isDelete: false
+      };
       // Call Api
       this.showLoading();
       const api = new PlanService()
 
-      const response = await api.getPlansAsync()
+      const response = await api.getPlansAsync(filterPlan)
       this.showLoading(false);
 
       if(!response.isOK){
@@ -105,7 +122,7 @@ export default {
         );
         return;
       }
-      this.plans = response.data.items
+      this.plans = response.data
     },
 
     createStudent() {
@@ -117,8 +134,9 @@ export default {
     },
 
     async changeData() {
-      await this.getClassesAsync()
       await this.getStudentsAsync();
+      await this.getPlansFilterAsync();
+      await this.getClassesFilterAsync();
     },
     
     async getStudentsAsync(){
@@ -126,7 +144,7 @@ export default {
       this.showLoading();
       const api = new StudentService()
 
-      const response = await api.getStudentsAsync()
+      const response = await api.getStudentsAsync(this.filter)
       this.showLoading(false);
 
       if(!response.isOK){
@@ -137,7 +155,7 @@ export default {
         );
         return;
       }
-      this.students = response.data.items
+      this.students = response.data
     },
 
     async changePage(currentPage) {
@@ -145,18 +163,77 @@ export default {
     },
 
     updateStudent(index) {
-      this.editStudent = Object.assign({}, this.students[index]);
+      this.editStudent = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteStudent(id) {
-      this.confirmStudent = { id: id };
+    getStatusIcon(status) {
+      return CrudMixin.methods.getStatusIcon(status);
+    },
+
+    // Call api delete Student
+    async updateIsDeleteStatus(index) {
+      let student = this.pageOfItems[index];
+      student.isDelete = true;
+      this.showLoading();
+      let api = new StudentService();
+      let response = await api.updateStudentAsync(student);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_status_success_default}`
+      );
+      this.getStudentsAsync();
+    },
+    async updateStatus(index) {
+      let student = this.pageOfItems[index];
+      if (student.status === 'active') {
+        student.status = 'unactive';
+      } else {
+        student.status = 'active';
+      }
+      this.showLoading();
+      let api = new StudentService();
+      let response = await api.updateStudentAsync(student);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_status_success_default}`
+      );
+      this.getStudentsAsync();
+    },
+
+    deleteStudent(item) {
+      this.confirmStudent = item;
     },
 
     // Call api delete student
     async deleteStudentConfirm(studentComfirm) {
+      studentComfirm.isDelete = true;
       this.showLoading();
       let api = new StudentService();
-      let response = await api.deleteStudentAsync(studentComfirm.id); // Gọi Api
+      let response = await api.updateStudentAsync(studentComfirm); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

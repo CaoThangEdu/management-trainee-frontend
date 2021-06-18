@@ -4,7 +4,9 @@ export default class ClassViewModel extends ViewModel {
     super()
     this.fields = {
       className: null,
-      status: null
+      status: "active",
+      courseId: null,
+      isDelete: false,
     }
   }
 

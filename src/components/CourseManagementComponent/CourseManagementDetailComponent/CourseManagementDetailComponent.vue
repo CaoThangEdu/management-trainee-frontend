@@ -8,7 +8,7 @@ import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import CourseService from '../../../services/course/courseServices'
 import CourseViewModel from "../../../view-model/course/courseViewModel"
-import AppConfig from '../../../../src/app.config.json'
+import AppConfig from '../../../../src/app.config.json';
 
 export default {
   name: 'CourseManagementDetailComponent',
@@ -30,7 +30,12 @@ export default {
       type: Object,
       default: null,
     },
+    careers: {
+      type: Array,
+      default: null
+    },
   },
+
   methods: {
     async pressKeyEnter() {
       await this.save();
@@ -46,6 +51,7 @@ export default {
     },
 
     async createCourseAsync() {
+      this.course.status = "active";
       this.showLoading();
       let api = new CourseService();
       let response = await api.createCourseAsync(this.course);

@@ -8,7 +8,9 @@ import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import CareerService from '../../../services/career/careerServices'
 import AppConfig from '../../../../src/app.config.json'
+import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import JwPagination from 'jw-vue-pagination';
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ListCareerManagementComponent",
@@ -18,6 +20,7 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
+  mixins: [ CrudMixin ],
   data() {
     return {
       careers: [],
@@ -31,14 +34,30 @@ export default {
         previous: '<',
         next: '>'
       },
+      trainingSystems: [],
+      filter: {
+        trainingSystemId: "",
+        isDelete: false,
+        careersName: "",
+        status: "",
+      },
     };
   },
 
   async mounted(){
-    await this.getCareersAsync()
+    await this.getCareersFilterAsync();
+    await this.getTrainingSystemsFilterAsync();    
   },
   
   methods:{
+    getTrainingSystemName(trainingSystemId, list) {
+      return CrudMixin.methods.getInfo(trainingSystemId, list);
+    },
+
+    getStatusIcon(status) {
+      return CrudMixin.methods.getStatusIcon(status);
+    },
+
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
@@ -48,12 +67,12 @@ export default {
       this.editCareer = {};
     },
     
-    async getCareersAsync(){
+    async getCareersFilterAsync(){
       // Call Api
       this.showLoading();
       const api = new CareerService()
 
-      const response = await api.getCareersAsync()
+      const response = await api.getCareersFilterAsync(this.filter);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -64,15 +83,39 @@ export default {
         );
         return;
       }
-      this.careers = response.data.items
+      this.careers = response.data;
+    },
+
+    async getTrainingSystemsFilterAsync() {
+      let filterTrainingSystem = {
+        trainingSystemName: "",
+        isDelete: false,
+        status: "active",
+      }
+      // Call Api
+      this.showLoading();
+      const api = new TrainingSystemService()
+
+      const response = await api.getTrainingSystemsFilterAsync(filterTrainingSystem);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.trainingSystems = response.data;
     },
 
     async changePage(currentPage) {
-      await this.getCareersAsync(currentPage);
+      await this.getCareersFilterAsync(currentPage);
     },
 
     updateCareer(index) {
-      this.editCareer = Object.assign({}, this.careers[index]);
+      this.editCareer = Object.assign({}, this.pageOfItems[index]);
     },
 
     deleteCareer(id) {
@@ -93,7 +136,7 @@ export default {
         );
         return;
       }
-      await this.getCareersAsync();
+      await this.getCareersFilterAsync();
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -102,15 +145,39 @@ export default {
     },
     
     async changeData() {
-      await this.getCareersAsync();
+      this.$emit("change-career");
+      await this.getCareersFilterAsync();
     },
 
-    showNotification() {
+    // Call api delete TrainingSystem
+    async updateStatus(index) {
+      let career = this.pageOfItems[index];
+      if (career.status === 'active') {
+        career.status = 'unactive';
+      } else {
+        career.status = 'active';
+      }
+      this.showLoading();
+      let api = new CareerService();
+      let response = await api.updateCareerAsync(career);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
+        `${AppConfig.notification.content_updated_success_default}`
       );
+      this.getTrainingSystemsAsync();
+
     },
   }
 }

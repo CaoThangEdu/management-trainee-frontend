@@ -1,21 +1,9 @@
-<BaseModal @mouse-click-outside="closeModal(false)" :modalName="`StudentManagementDetail`" :isShow="isShow"
-size="lg">
+<BaseModal
+  @mouse-click-outside="closeModal(false)"
+  :modalName="`StudentManagementDetail`" 
+  :isShow="isShow"
+  size="lg">
   <div class="">
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">
-        Đợt thực tập (<span class="text--red">*</span>)
-      </label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class"
-            v-model="student.internshipCourseId">
-            <option v-for="(item, index) in plans" :key="index" :value="item.id">{{ item.internshipCourceName }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
     <div class="form-group row" v-if="!student.id">
       <label for="name" class="col-md-4 col-sm-4 col-form-label">
         MSSV (<span class="text--red">*</span>)
@@ -63,14 +51,17 @@ size="lg">
       </div>
     </div>    
 
-    <div class="form-group row">
+    <div class="form-group row"
+      v-if="plans.length != 0">
       <label class="col-md-4 col-sm-4 col-form-label">
         Lớp (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
           <select class="form-control form-select form-select-class" v-model="student.classId">
-            <option v-for="(item, index) in classes" :key="index" :value="item.id">{{ item.className }}
+            <option v-for="(item, index) in classes"
+              :key="index" :value="item.id">
+                {{ item.className + ' ('+ getInfoByCourseId(item.courseId, plans).internshipCourseName +')' }}
             </option>
           </select>
         </div>
