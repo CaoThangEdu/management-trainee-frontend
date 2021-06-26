@@ -17,6 +17,17 @@ const routes = [
     },
   },
   {
+    path: "/login",
+    name: "login",
+    component: () =>
+      import(
+        "../router/views/LoginPage/LoginPage.vue"
+      ),
+    meta: {
+      breadcrumbName: "Đăng nhập",
+    },
+  },
+  {
     path: "/teacher-assignment",
     name: "phan-cong-giao-vien",
     component: () =>

@@ -195,3 +195,7 @@ export const ACCOUNT_ERROR_CODES = {
 export const ADD_STUDENT = {
   EMAIL: '@caothang.edu.vn',
 }
+
+export const STORAGE_KEY = {
+  AUTH_TOKEN: "AUTH_TOKEN"
+}

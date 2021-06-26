@@ -4,6 +4,7 @@ import router from '../router/index'
 import { options } from './options'
 
 import moment from 'moment'
+import { STORAGE_KEY } from '../config/constant'
 
 const esc = encodeURIComponent
 const DEFAULT_HEADERS = {
@@ -18,12 +19,27 @@ const tag_performances = '#performances'
 
 export default class Http {
   getHeaders(header_parameters = {}) {
+    // get authentication token
+    let authToken = localStorage.getItem(STORAGE_KEY.AUTH_TOKEN);
+    let token = '';
+    if (authToken) {
+      authToken = JSON.parse(authToken);
+      const now = new Date();
+      // token's expired
+      if (now < authToken.expiredTime){
+        localStorage.setItem(STORAGE_KEY.AUTH_TOKEN, null);
+        // goto login page
+        // this.$router.push('len-ke-hoach');
+        return;
+      }
+        
+      token = authToken.accessToken;
+    }
+
     let default_headers = DEFAULT_HEADERS
-    // let api_token = store.getters['user/getUser']['api_token'] ['Tên module/ Tên phương thức getters']['api_token']
-    let api_token = store.getters['user/getTokenKey']
-    if (api_token) {
+    if (token) {
       default_headers = {
-        'Authorization': `Bearer ${api_token}`,
+        'Authorization': `Bearer ${token}`,
         ...default_headers,
         ...header_parameters
       }
