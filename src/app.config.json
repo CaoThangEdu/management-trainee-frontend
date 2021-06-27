@@ -1,4 +1,5 @@
 {
+  "authHost": "http://localhost:21021",
   "apiHost": "http://localhost:21021/api/services/app",
   "validate_messages": {
     "_default": "{field} không đúng.",
