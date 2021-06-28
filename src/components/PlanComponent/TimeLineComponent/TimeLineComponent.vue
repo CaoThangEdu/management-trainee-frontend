@@ -33,11 +33,15 @@ export default {
   methods:{
 
     async getPlansAsync(){
+      let filterPlan = {
+        status: "",
+        isDelete: false
+      };
       // Call Api
       this.showLoading();
       const api = new PlanService()
 
-      const response = await api.getPlansAsync()
+      const response = await api.getPlansAsync(filterPlan)
       this.showLoading(false);
 
       if(!response.isOK){

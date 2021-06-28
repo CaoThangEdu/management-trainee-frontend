@@ -108,7 +108,7 @@ const routes = [
         "../router/views/TrainingSystemManagement/TrainingSystemManagement.vue"
       ),
     meta: {
-      breadcrumbName: "Quản lý khóa",
+      breadcrumbName: "Quản lý hệ - ngành - khóa",
     },
   },
   {

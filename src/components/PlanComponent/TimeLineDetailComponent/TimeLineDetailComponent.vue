@@ -38,11 +38,15 @@ export default {
 
   methods:{
     async getPlansAsync(){
+      let filterPlan = {
+        status: "",
+        isDelete: false
+      };
       // Call Api
       this.showLoading();
       const api = new PlanService()
 
-      const response = await api.getPlansAsync()
+      const response = await api.getPlansAsync(filterPlan)
       this.showLoading(false);
 
       if(!response.isOK){
@@ -53,7 +57,7 @@ export default {
         );
         return;
       }
-      this.plans = response.data.items
+      this.plans = response.data
     },
 
     async getTimeLinesAsync(){
@@ -89,6 +93,7 @@ export default {
     },
 
     async createTimeLineAsync() {
+      this.timeline.status = 'active';
       this.showLoading();
       let api = new TimeLineService();
       let response = await api.createTimeLineAsync(this.timeline);

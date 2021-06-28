@@ -3,14 +3,16 @@ export default class CareerViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      name: null,
-      status: null,
+      careersName: null,
+      status: "active",
+      trainingSystemId: "",
+      IsDelete: false
     }
   }
 
   getValidations() {
     let validations = {
-      name: {
+      careersName: {
         label: 'Tên ngành',
         rules: {
           require: '',

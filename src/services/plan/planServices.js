@@ -7,9 +7,9 @@ export default class PlanService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/InternshipCourse`
   }
 
-  async getPlansAsync() {
+  async getPlansAsync(object) {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/Filter`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

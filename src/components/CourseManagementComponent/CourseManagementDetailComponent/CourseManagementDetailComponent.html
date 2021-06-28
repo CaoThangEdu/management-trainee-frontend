@@ -12,12 +12,14 @@
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Chuyên ngành đào tạo (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" v-model="course.status">
-            <option value="active">Hoạt động</option>
-            <option value="unactive">Không hoạt động</option>
+          <select class="form-control form-select form-select-class" name="trainingSystemId" id="trainingSystemId"
+            v-model="course.careersId">
+            <option v-for="(item,index) in careers" :key="index" :value="item.id">{{item.careersName}}</option>
           </select>
         </div>
       </div>

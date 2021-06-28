@@ -44,12 +44,12 @@
             <tbody>
               <tr v-for="(item, index) in plans" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <th scope="row">{{ item.internshipCourceName }}</th>
+                <th scope="row">{{ item.internshipCourseName }}</th>
                 <td>{{ item.startDay }}</td>
                 <td>{{ item.endDay }}</td>
                 <td>
-                  <button class="btn btn-primary mr-2" @click="updatePlan(index)">Sửa</button>
-                  <button class="btn btn-info mr-2" @click="showdetailPlan(index)">Chi tiết</button>
+                  <button class="btn btn-primary mr-2" @click="updatePlan(index, 'edit')">Sửa</button>
+                  <button class="btn btn-info mr-2" @click="updatePlan(index, 'detail')">Chi tiết</button>
                 </td>
               </tr>
               <tr v-show="plans == null || plans.length === 0">
@@ -59,8 +59,11 @@
           </table>
         </div>
       </div>
-      <PlanDetailComponent :data="editPlan" @change-data="changeData" />
-      <PlanInformationComponent :data="detailPlan" @change-data="changeData" />
+      <PlanDetailComponent :data="editPlan" @change-data="changeData"
+        :showDetail="showDetail"
+        :courses="courses"
+        :trainingSystems="trainingSystems"
+        :careers="careers" />
     </div>
   </div>
 </div>

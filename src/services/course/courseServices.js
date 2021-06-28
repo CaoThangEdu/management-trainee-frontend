@@ -9,7 +9,17 @@ export default class CourseService extends ServicesBaseAPI {
 
   async getCoursesAsync() {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/FilterAll`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async getCoursesFilterAsync(object) {
+    try {
+      const response = await this.http.post(`${this.url}/Filter`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

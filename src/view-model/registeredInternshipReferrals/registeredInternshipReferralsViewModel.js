@@ -1,24 +1,22 @@
 import ViewModel from '../viewModel'
-export default class StudentViewModel extends ViewModel {
+export default class RegisteredInternshipReferralsViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      firstName: null,
-      lastName: null,
+      taxCode: null,
+      nameCompany: null,
+      phoneStudent: null,
       studentId: null,
-      status: null,
-      email: null,
-      dayOfBirth: null,
-      role: 0,
-      classId: null,
       isDelete: false,
+      status: 'active',
+      registrationDate: null,
     }
   }
 
   getValidations() {
     let validations = {
-      firstName: {
-        label: 'Họ',
+      taxCode: {
+        label: 'Mã sô thuế',
         rules: {
           require: '',
           maxLength: {
@@ -26,8 +24,8 @@ export default class StudentViewModel extends ViewModel {
           }
         }
       },
-      lastName: {
-        label: 'Tên',
+      nameCompany: {
+        label: 'Tên công ty',
         rules: {
           require: '',
           maxLength: {
@@ -35,23 +33,8 @@ export default class StudentViewModel extends ViewModel {
           }
         }
       },
-      dayOfBirth: {
-        label: 'Ngày sinh',
-        rules: {
-          require: '',
-        }
-      },
-      studentId: {
-        label: 'MSSV',
-        rules: {
-          require: '',
-          maxLength: {
-            max_value: 200
-          }
-        }
-      },
-      classId: {
-        label: 'Lớp',
+      phoneStudent: {
+        label: 'Số điện thoại',
         rules: {
           require: '',
           maxLength: {

@@ -10,6 +10,9 @@ import CourseService from '../../../services/course/courseServices'
 import ClassService from '../../../services/class/classServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
+import CareerService from '../../../services/career/careerServices';
+import CrudMixin from "../../../helpers/mixins/crudMixin";
+import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 
 export default {
   name: "ListClassManagementComponent",
@@ -19,6 +22,7 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
+  mixins: [ CrudMixin ],
   data() {
     return {
       classes: [],
@@ -32,38 +36,107 @@ export default {
         previous: '<',
         next: '>'
       },
+      filter: {
+        courseId: "",
+        isDelete: false,
+        className: "",
+        status: "active",
+      },
+      careers:[],
+      trainingSystems: [],
     };
   },
 
   async mounted(){
-    await this.getClassesAsync()
-    await this.getCoursesAsync()
+    await this.getClassesFilterAsync();
+    await this.getCoursesFilterAsync();
+    await this.getCareersFilterAsync();
+    await this.getTrainingSystemsFilterAsync();
   },
 
   methods:{
+    getStatusIcon(status) {
+      return CrudMixin.methods.getStatusIcon(status);
+    },
+
+    getInfoObject(id, list) {
+      return CrudMixin.methods.getInfo(id, list);
+    },
+
+    async updateStatus(index) {
+      let classRoom = this.pageOfItems[index];
+      if (classRoom.status === 'active') {
+        classRoom.status = 'unactive';
+      } else {
+        classRoom.status = 'active';
+      }
+      this.showLoading();
+      let api = new ClassService();
+      let response = await api.updateClassAsync(classRoom);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+      this.getClassesFilterAsync();
+    },
+
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
-    },
-    
-    getCourseName(courseId){
-      for (let i in this.courses) {
-        if(this.courses[i].id === courseId){
-          return this.courses[i].courseName
-        }
-      }
     },
 
     createClass() {
       this.editClass = {};
     },
 
-    async getCoursesAsync(){
+    async getTrainingSystemsFilterAsync() {
+      let filterTrainingSystem = {
+        trainingSystemName: "",
+        isDelete: false,
+        status: "active",
+      }
       // Call Api
       this.showLoading();
-      const api = new CourseService()
+      const api = new TrainingSystemService()
 
-      const response = await api.getCoursesAsync()
+      const response = await api.getTrainingSystemsFilterAsync(filterTrainingSystem);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.trainingSystems = response.data;
+    },
+
+    async getCareersFilterAsync(){
+      let filterCareer = {
+        trainingSystemId: "",
+        isDelete: false,
+        careersName: "",
+        status: "active",
+      };
+      // Call Api
+      this.showLoading();
+      const api = new CareerService()
+
+      const response = await api.getCareersFilterAsync(filterCareer);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -74,15 +147,40 @@ export default {
         );
         return;
       }
-      this.courses = response.data.items
+      this.careers = response.data;
+    },
+
+    async getCoursesFilterAsync() {
+      let filterCourse = {
+        careersId: "",
+        isDelete: false,
+        courseName: "",
+        status: "active",
+      }
+      // Call Api
+      this.showLoading();
+      const api = new CourseService();
+
+      const response = await api.getCoursesFilterAsync(filterCourse);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.courses = response.data;
     },
     
-    async getClassesAsync(){
+    async getClassesFilterAsync(){
       // Call Api
       this.showLoading();
       const api = new ClassService()
 
-      const response = await api.getClassesAsync()
+      const response = await api.getClassesFilterAsync(this.filter);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -93,15 +191,15 @@ export default {
         );
         return;
       }
-      this.classes = response.data.items
+      this.classes = response.data;
     },
 
     async changePage(currentPage) {
-      await this.getClassesAsync(currentPage);
+      await this.getClassesFilterAsync(currentPage);
     },
 
     updateClass(index) {
-      this.editClass = Object.assign({}, this.classes[index]);
+      this.editClass = Object.assign({}, this.pageOfItems[index]);
     },
 
     deleteClass(id) {
@@ -122,7 +220,7 @@ export default {
         );
         return;
       }
-      await this.getClassesAsync();
+      await this.getClassesFilterAsync();
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -131,15 +229,7 @@ export default {
     },
     
     async changeData() {
-      await this.getClassesAsync();
-    },
-
-    showNotification() {
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
+      await this.getClassesFilterAsync();
     },
   }
 }

@@ -1,5 +1,4 @@
 <template src='./ListTrainingSystemManagementComponent.html'>
-  
 </template>
 
 <script>
@@ -9,6 +8,7 @@ import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ListTrainingSystemManagementComponent",
@@ -18,12 +18,12 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
+  mixins: [ CrudMixin ],
   data() {
     return {
       trainingsystems: [],
       editTrainingSystem: {},
       confirmTrainingSystem: null,
-      metaDataFile: [],
       pageOfItems: [],
       customLabels: {
         first: '<<',
@@ -31,32 +31,37 @@ export default {
         previous: '<',
         next: '>'
       },
+      filter: {
+        trainingSystemName: "",
+        isDelete: false,
+        status: "active",
+      }
     };
   },
 
-  async mounted(){
-    await this.getTrainingSystemsAsync()
+  async mounted() {
+    await this.getTrainingSystemsFilterAsync()
   },
-  
-  methods:{
+
+  methods: {
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
-    
+
     createTrainingSystem() {
       this.editTrainingSystem = {};
     },
-    
-    async getTrainingSystemsAsync(){
+
+    async getTrainingSystemsFilterAsync() {
       // Call Api
       this.showLoading();
       const api = new TrainingSystemService()
 
-      const response = await api.getTrainingSystemsAsync()
+      const response = await api.getTrainingSystemsFilterAsync(this.filter);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -64,7 +69,7 @@ export default {
         );
         return;
       }
-      this.trainingsystems = response.data.items
+      this.trainingsystems = response.data;
     },
 
     async changePage(currentPage) {
@@ -72,20 +77,33 @@ export default {
     },
 
     updateTrainingSystem(index) {
-      this.editTrainingSystem = Object.assign({}, this.trainingsystems[index]);
+      this.editTrainingSystem = Object.assign({}, this.pageOfItems[index]);
+    },
+
+    changeIsdelete(index) {
+      this.editTrainingSystem = Object.assign({}, this.pageOfItems[index]);
     },
 
     deleteTrainingSystem(id) {
-      this.confirmTrainingSystem = { id: id };
+      this.confirmTrainingSystem = {
+        id: id
+      };
     },
 
-    // Call api delete TrainingSystem
-    async deleteTrainingSystemConfirm(TrainingSystemComfirm) {
+    // Call api delete TrainingSystem    
+    async updateStatus(index) {
+      let trainingSystem = this.pageOfItems[index];
+      if (trainingSystem.status === 'active') {
+        trainingSystem.status = 'unactive';
+      } else {
+        trainingSystem.status = 'active';
+      }
       this.showLoading();
       let api = new TrainingSystemService();
-      let response = await api.deleteTrainingSystemAsync(TrainingSystemComfirm.id); // Gọi Api
+      let response = await api.updateTrainingSystemAsync(trainingSystem);
       this.showLoading(false);
-      if(!response.isOK){
+
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -93,29 +111,27 @@ export default {
         );
         return;
       }
-      await this.getTrainingSystemsAsync();
+
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default}`,
+        `${AppConfig.notification.content_updated_status_success_default}`
       );
-    },
-    
-    async changeData() {
-      await this.getTrainingSystemsAsync();
+      this.getTrainingSystemsFilterAsync();
     },
 
-    showNotification() {
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
+    getStatusIcon(status) {
+      return CrudMixin.methods.getStatusIcon(status);
+    },
+
+    async changeData() {
+      this.$emit("change-training-system");
+      await this.getTrainingSystemsFilterAsync();
     },
   }
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 @import './ListTrainingSystemManagementComponent.scss';
 </style>

@@ -42,6 +42,7 @@
   "notification": {
     "title_default": "Thông báo",
     "content_updated_success_default": "Cập nhật thành công!",
+    "content_updated_status_success_default": "Cập nhật trạng thái thành công!",
     "content_created_success_default": "Tạo thành công!",
     "content_deleted_success_default": "Xóa thành công!",
     "notification_list": "Notification List",

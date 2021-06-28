@@ -3,14 +3,15 @@ export default class TrainingSystemViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      name: null,
-      status: null,
+      trainingSystemName: null,
+      isDelete: false,
+      status: 'active',
     }
   }
 
   getValidations() {
     let validations = {
-      name: {
+      trainingSystemName: {
         label: 'Tên hệ đào tạo',
         rules: {
           require: '',

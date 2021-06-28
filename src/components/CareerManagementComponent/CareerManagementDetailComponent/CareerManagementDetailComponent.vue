@@ -21,7 +21,6 @@ export default {
     return {
       isShow: false,
       career: {},
-
       errorMessages: [],
     }
   },
@@ -30,7 +29,12 @@ export default {
       type: Object,
       default: null,
     },
+    trainingSystems: {
+      type: Array,
+      default: null
+    },
   },
+  
   methods: {
     async pressKeyEnter() {
       await this.save();
@@ -46,6 +50,7 @@ export default {
     },
 
     async createCareerAsync() {
+      this.career.status = "active";
       this.showLoading();
       let api = new CareerService();
       let response = await api.createCareerAsync(this.career);
