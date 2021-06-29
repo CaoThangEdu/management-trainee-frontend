@@ -10,7 +10,8 @@ const routes = [
     name: "len-ke-hoach",
     component: () =>
       import(
-        /* webpackChunkName: "ControlExample" */ "../router/views/Plan/Plan.vue"
+        /* webpackChunkName: "ControlExample" */
+        "../router/views/Plan/Plan.vue"
       ),
     meta: {
       breadcrumbName: "Lên kế hoạch",
@@ -24,7 +25,8 @@ const routes = [
         "../router/views/LoginPage/LoginPage.vue"
       ),
     meta: {
-      breadcrumbName: "Đăng nhập",
+      hideSidebar: true,
+      hideHeader: true
     },
   },
   {
@@ -216,6 +218,19 @@ const router = new VueRouter({
 
 router.afterEach(() => {
   // setIsLoadingInStore(false)
+});
+
+router.beforeEach((to, from, next) => {
+  let tokenKey = localStorage.getItem('AUTH_TOKEN');
+  // If user is authenticated || 'to' is not LoginPage => Direct
+  if (tokenKey || to.name === 'login') {
+    // user is authenticated.
+    next();
+  } else {
+    next({
+      name: 'login'
+    });
+  }
 });
 
 export default router;

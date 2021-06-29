@@ -15,14 +15,14 @@
         </div>
       </CHeaderNavLink>
     </template>
-    <CDropdownHeader tag="div" class="text-center" color="light">
+    <!-- <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>Account</strong>
-    </CDropdownHeader>
-    <CDropdownItem>
+    </CDropdownHeader> -->
+    <!-- <CDropdownItem>
       <CIcon name="cil-bell"/> Updates
       <CBadge color="info" class="mfs-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownItem>
+    </CDropdownItem> -->
+    <!-- <CDropdownItem>
       <CIcon name="cil-envelope-open" /> Messages
       <CBadge color="success" class="mfs-auto">{{ itemsCount }}</CBadge>
     </CDropdownItem>
@@ -33,7 +33,7 @@
     <CDropdownItem>
       <CIcon name="cil-comment-square" /> Comments
       <CBadge color="warning" class="mfs-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
+    </CDropdownItem> -->
     <CDropdownHeader
       tag="div"
       class="text-center"
@@ -59,19 +59,38 @@
     <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
     </CDropdownItem>
-    <CDropdownItem>
+    <CDropdownItem @click="logoutAccount">
       <CIcon name="cil-lock-locked" /> Logout
     </CDropdownItem>
   </CDropdown>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: 'HeaderDropdownAccount',
   data () {
     return { 
       itemsCount: 42
     }
+  },
+  methods: {
+    /**
+     * Logout Account Event
+     */
+    logoutAccount() {
+      localStorage.removeItem('AUTH_TOKEN');
+      this.$router.push({ name: "login" })
+    }
+  },
+
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenInfo: "getTokenInfo",
+    })
   }
 }
 </script>

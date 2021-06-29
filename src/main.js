@@ -9,6 +9,7 @@ import VModal from 'vue-js-modal';
 import '@babel/polyfill';
 import Notifications from 'vue-notification';
 import Vuelidate from 'vuelidate';
+import 'regenerator-runtime/runtime';
 
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true });
 Vue.config.productionTip = false;
