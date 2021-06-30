@@ -8,6 +8,7 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import TeacherService from '../../../services/teacher/teacherServices'
 import AppConfig from "../../../../src/app.config.json";
 import XLSX from "xlsx";
+
 export default {
   name: "AddTeacherFileComponent",
   extends: ComponentBase,
@@ -21,6 +22,7 @@ export default {
       teachers: [],
       metadataFile: [],
       errorMessages: [],
+      careersId:"",
     };
   },
   props: {
@@ -28,6 +30,7 @@ export default {
       type: Object,
       default: null,
     },
+    careers:Array
   },
   methods: {
     closeModal(changeData) {
@@ -48,7 +51,10 @@ export default {
         /* DO SOMETHING WITH workbook HERE */
         let worksheet = workbook.Sheets[sheetName];
         vm.metadataFile = XLSX.utils.sheet_to_json(worksheet);
+        vm.metadataFile.forEach(function(element) { element.status = "active"; });
+        vm.metadataFile.forEach(function(element) { element.careersId = vm.careersId; console.log(vm.careersId, element.careersId); });
        
+        console.log(this.careersId);
       };
       reader.readAsArrayBuffer(f);
     },
@@ -57,6 +63,7 @@ export default {
       await this.save();
     },
     async createTeacherByFlieAsync(i) {
+      console.log('careersId', this.teachers[i].careersId)
       this.showLoading();
       let api = new TeacherService();
       let response = await api.createTeacherAsync(this.teachers[i]);
@@ -101,6 +108,7 @@ export default {
         );
       }
     },
+   
   },
   watch: {
     data() {
