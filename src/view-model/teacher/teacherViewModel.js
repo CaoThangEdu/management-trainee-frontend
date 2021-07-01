@@ -1,12 +1,12 @@
-export default class TeacherViewModel {
+import ViewModel from '../viewModel'
+export default class TeacherViewModel extends ViewModel {
   constructor() {
+    super()
     this.fields = {
       firstName: null,
       lastName: null,
       email: null,
       status: null,
-      careersId: "",
-      isDelete: ""
     };
   }
 
@@ -16,24 +16,42 @@ export default class TeacherViewModel {
         label: 'Họ',
         rules: {
           require: '',
+          maxLength: {
+            max_value: 200
+          }
         },
       },
       lastName: {
         label: 'Tên',
         rules: {
           require: '',
+          maxLength: {
+            max_value: 200
+          }
         },
       },
       email: {
         label: 'Email',
         rules: {
           require: '',
+          maxLength: {
+            max_value: 200
+          }
         },
       },
-    };
-    return validations;
+      status: {
+        label: 'Trạng thái',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        },
+      },
+    }
+    return validations
   }
   isValid() {
-    return this.getValidations();
+    return super.isValid(this.getValidations())
   }
 }

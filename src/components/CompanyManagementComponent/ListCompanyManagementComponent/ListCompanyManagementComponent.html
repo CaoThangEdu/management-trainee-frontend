@@ -58,11 +58,9 @@
       </div>
       <CompanyManagementDetailComponent :data="editCompany" 
       @change-data="changeData"/>
-      
+      <AddCompanyFileComponent :data="companyFile" 
+      @change-data="changeData"/>
       <ConfirmDialog :data="confirmedCompany" @agree="agreeConfirm"></ConfirmDialog>
-  
-      <Pagination :position="`center`" :page="1" :pageSize="10" :totalItems="17" @change-page="changePage">
-      </Pagination>
     </div>
    
   </div>

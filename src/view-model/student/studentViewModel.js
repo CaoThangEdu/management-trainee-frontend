@@ -10,8 +10,8 @@ export default class StudentViewModel extends ViewModel {
       email: null,
       dayOfBirth: null,
       role: 0,
-      internshipCourseId: null,
-      classId: "",
+      classId: null,
+      isDelete: false,
     }
   }
 
@@ -28,6 +28,30 @@ export default class StudentViewModel extends ViewModel {
       },
       lastName: {
         label: 'Tên',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      dayOfBirth: {
+        label: 'Ngày sinh',
+        rules: {
+          require: '',
+        }
+      },
+      studentId: {
+        label: 'MSSV',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      classId: {
+        label: 'Lớp',
         rules: {
           require: '',
           maxLength: {

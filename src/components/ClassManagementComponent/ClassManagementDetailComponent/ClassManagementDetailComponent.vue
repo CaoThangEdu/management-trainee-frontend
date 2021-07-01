@@ -9,6 +9,7 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import ClassService from '../../../services/class/classServices'
 import ClassViewModel from "../../../view-model/class/classViewModel"
 import AppConfig from '../../../../src/app.config.json'
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: 'ClassManagementDetailComponent',
@@ -17,6 +18,7 @@ export default {
     BaseModal,
     AlertMessages,
   },
+  mixins: [ CrudMixin ],
   data() {
     return {
       isShow: false,
@@ -25,21 +27,24 @@ export default {
     }
   },
   props: {
+    data: {
+      type: Object,
+      default: null,
+    },
     courses: {
-       type: Array,
+      type: Array,
       default: null
     },
     careers: {
       type: Array,
       default: null
     },
-    data: {
-      type: Object,
-      default: null,
-    },
   },
 
   methods: {
+    getInfoObject(trainingSystemId, list) {
+      return CrudMixin.methods.getInfo(trainingSystemId, list);
+    },
     async pressKeyEnter() {
       await this.save();
     },

@@ -6,7 +6,6 @@ export default class TeacherService extends ServicesBaseAPI {
     super();
     this.url = `${AppConfig.apiHost}/Teacher`
   }
-  
   async getTeachersAsync() {
     try {
       const response = await this.http.get(`${this.url}/GetAll`);
@@ -16,28 +15,9 @@ export default class TeacherService extends ServicesBaseAPI {
     }
     return this.result;
   }
-  async filterTeacherAsync(object) {
-    try {
-      const response = await this.http.post(`${this.url}/Filter`, object);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
   async createTeacherAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
-
-  async filterByCareersIdTeacherAsync(object) {
-    try {
-      const response = await this.http.post(`${this.url}/FilterByCareersId`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

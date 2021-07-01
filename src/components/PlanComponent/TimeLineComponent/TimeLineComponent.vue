@@ -5,7 +5,6 @@
 import TimeLineDetailComponent from "../TimeLineDetailComponent/TimeLineDetailComponent"
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
 import TimlineService from '../../../services/timeline/timelineServices'
 import PlanService from '../../../services/plan/planServices'
 import AppConfig from '../../../../src/app.config.json'
@@ -16,7 +15,6 @@ export default {
   components: {
     TimeLineDetailComponent,
     ConfirmDialog,
-    Pagination,
   },
   data() {
     return {
@@ -35,11 +33,15 @@ export default {
   methods:{
 
     async getPlansAsync(){
+      let filterPlan = {
+        status: "",
+        isDelete: false
+      };
       // Call Api
       this.showLoading();
       const api = new PlanService()
 
-      const response = await api.getPlansAsync()
+      const response = await api.getPlansAsync(filterPlan)
       this.showLoading(false);
 
       if(!response.isOK){

@@ -70,6 +70,7 @@ export default {
     },
 
     async createTrainingSystemAsync() {
+      this.trainingsystem.status = 'active';
       this.showLoading();
       let api = new TrainingSystemService();
       let response = await api.createTrainingSystemAsync(this.trainingsystem);

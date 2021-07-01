@@ -4,12 +4,17 @@
   :isShow="isShowAddFile"
   size="lg">
   <div class="">
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Đợt thực tập</label>
+    <div class="form-group row"
+      v-if="plans.length != 0">
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Đợt thực tập (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" v-model="interncourseName">
-            <option v-for="(item, index) in plans" :key="index" :value="item.id">{{ item.internshipcourseName }}
+          <select class="form-control form-select form-select-class" v-model="classIdSelected">
+            <option v-for="(item, index) in classes"
+              :key="index" :value="item.id" v-show="checkCourse(item)">
+              {{ item.className + ' ('+ getInfoByCourseId(item.courseId, plans).internshipCourseName +')' }}
             </option>
           </select>
         </div>

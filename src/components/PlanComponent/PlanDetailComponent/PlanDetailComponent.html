@@ -1,20 +1,35 @@
 <BaseModal @mouse-click-outside="closeModal(false)" :modalName="`PlanDetail`" :isShow="isShow" size="lg">
   <div class="">
-   
     <div class="form-group row">
-      <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">Ngày bắt đầu</label>
+      <label for="example-datetime-local-input" 
+        class="col-md-4 col-sm-4 col-form-label"
+        >Ngày bắt đầu
+      </label>
       <div class="col-md-8 col-sm-8">
         <input class="form-control" type="date"
           format="yyyy-mm-dd"
           value="2021-05-03"
-          v-model="plan.startDay">
+          v-model="plan.startDay"
+          v-if="typeShowDetail == 'edit'">
+        <label class="col-md-12 col-sm-12 col-form-label"
+          v-if="typeShowDetail == 'detail'">
+          {{ plan.startDay }}
+        </label>
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">Ngày kết thúc</label>
+      <label for="example-datetime-local-input" 
+        class="col-md-4 col-sm-4 col-form-label">
+        Ngày kết thúc
+      </label>
       <div class="col-md-8 col-sm-8">
-        <input class="form-control" type="date" v-model="plan.endDay">
+        <input class="form-control" type="date" v-model="plan.endDay" 
+          v-if="typeShowDetail == 'edit'">
+        <label class="col-md-12 col-sm-12 col-form-label"
+          v-if="typeShowDetail == 'detail'">
+          {{ plan.endDay }}
+        </label>
       </div>
     </div>
 
@@ -23,56 +38,75 @@
         Mô tả (<span style="color: red;">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" id="name" v-model="plan.description" />
+        <input type="text" class="form-control" id="name" 
+          v-model="plan.description"
+          v-if="typeShowDetail == 'edit'" />
+        <label class="col-md-12 col-sm-12 col-form-label"
+          v-if="typeShowDetail == 'detail'">
+          {{ plan.description }}
+        </label>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Hệ đào tạo</label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class"
-            v-model="plan.trainingSystemId" @change="getCareersAsync(plan.trainingSystemId)">
-            <option v-for="(item, index) in trainingsystems" :key="index" :value="item.id">
-              {{ item.trainingSystemName }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Ngành</label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class"
-          @change="getCoursesAsync(plan.careersId)"
-            v-model="plan.careersId">
-            <option v-for="(item, index) in careers" :key="index" :value="item.id">
-              {{ item.careersName }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group row">
+    <div class="form-group row"
+      v-if="careers.length != 0 && trainingSystems.length != 0">
       <label class="col-md-4 col-sm-4 col-form-label">Khóa</label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" v-model="plan.courseId" >
+          <select class="form-control form-select form-select-class" 
+            v-model="plan.courseId"
+            v-if="typeShowDetail == 'edit'"
+            >
             <option v-for="(item, index) in courses" :key="index" :value="item.id">
-              {{ item.courseName }}
+              {{  item.courseName + ' (' +
+                  getInfoObject(item.careersId, careers).careersName + ' - '
+                  + getInfoObject(
+                    getInfoObject(item.careersId, careers).trainingSystemId
+                    , trainingSystems).trainingSystemName
+                  + ')'
+              }}
+            </option>
+          </select>
+          <select class="form-control form-select form-select-class" v-model="plan.courseId"
+            v-if="typeShowDetail == 'detail'" disabled>
+            <option v-for="(item, index) in courses" :key="index" :value="item.id">
+              {{  item.courseName + ' (' +
+                  getInfoObject(item.careersId, careers).careersName + ' - '
+                  + getInfoObject(
+                    getInfoObject(item.careersId, careers).trainingSystemId
+                    , trainingSystems).trainingSystemName
+                  + ')'
+              }}
             </option>
           </select>
         </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
+      <div class="col-md-8 col-sm-8">
+        <div class="input-group mb-3"
+          v-if="typeShowDetail == 'edit'">
+          <select class="form-control form-select form-select-class" v-model="plan.status">
+            <option value="new">Mới lập</option>
+            <option value="start">Bắt đầu thực tập</option>
+            <option value="point">Chấm điểm</option>
+            <option value="end">Kết thúc thực tập</option>
+          </select>
+        </div>
+        <label class="col-md-12 col-sm-12 col-form-label"
+          v-if="typeShowDetail == 'detail'">
+          {{ plan.status }}
+        </label>
       </div>
     </div>
 
   </div>
 
   <template #header>
-    <h5>{{plan.id ? "Cập nhật kế hoạch" : "Thêm mới kế hoạch"}}</h5>
+    <h5 v-if="typeShowDetail=='edit'">{{plan.id ? "Cập nhật kế hoạch" : "Thêm mới kế hoạch"}}</h5>
+    <h5 v-if="typeShowDetail=='detail'">Chi tiết kế hoạch</h5>
     <button class="close" style="color: red;"
       @click="closeModal(false)">&times;</button>
   </template>
@@ -88,7 +122,10 @@
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
-        <button @click="save" class="btn btn-primary float-right ml-2">{{plan.id ? "Cập nhật" : "Thêm mới"}}</button>
+        <button @click="save" class="btn btn-primary float-right ml-2"
+          v-if="typeShowDetail == 'edit'">
+          {{plan.id ? "Cập nhật" : "Thêm mới"}}
+        </button>
         <button class="btn btn-dark float-right" @click="closeModal(false)">Hủy</button>
       </div>
     </div>

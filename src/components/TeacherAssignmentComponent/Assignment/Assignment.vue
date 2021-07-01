@@ -8,7 +8,7 @@ import StudentService from '../../../services/student/studentServices'
 import AppConfig from '../../../../src/app.config.json'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import TeacherAssignmentDetailComponent from "../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent.vue"
-import ClassService from '../../../services/class/classServices'
+// import ClassService from '../../../services/class/classServices'
 
 
 export default {

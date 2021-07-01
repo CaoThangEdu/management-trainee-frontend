@@ -24,21 +24,16 @@ export default {
     }
   },
   props: {
-    trainingSystems: {
-      type: Array,
-      default: null
-    },
-    courses: {
-      type: Array,
-      default: null
-    },
     data: {
       type: Object,
       default: null,
     },
+    trainingSystems: {
+      type: Array,
+      default: null
+    },
   },
-  async mouted(){
-  }, 
+  
   methods: {
     async pressKeyEnter() {
       await this.save();
@@ -52,8 +47,9 @@ export default {
         this.$emit("change-data");
       }
     },
-   
+
     async createCareerAsync() {
+      this.career.status = "active";
       this.showLoading();
       let api = new CareerService();
       let response = await api.createCareerAsync(this.career);
@@ -118,7 +114,6 @@ export default {
   },
   
   watch: {
-    
     data() {
       this.isShow = true;
       this.career = this.data;

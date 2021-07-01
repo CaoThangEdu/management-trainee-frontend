@@ -7,9 +7,9 @@ export default class CourseService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/Course`
   }
 
-  async Filter(object) {
+  async getCoursesAsync() {
     try {
-      const response = await this.http.post(`${this.url}/Filter`, object);
+      const response = await this.http.post(`${this.url}/FilterAll`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -17,9 +17,9 @@ export default class CourseService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async getAllCoursesAsync() {
+  async getCoursesFilterAsync(object) {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/Filter`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

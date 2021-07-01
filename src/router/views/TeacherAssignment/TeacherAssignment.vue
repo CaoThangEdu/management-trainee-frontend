@@ -1,39 +1,14 @@
 <template>
   <div>
-    <ListPlanFilterComponent 
-      @getPlan="getPlan"
-      v-if="renderListPlanFilter" />
-    <Assignment
-      v-if="renderAssignment"
-      :Plan="plan" />
+    <ListTeacherAssignmentComponent />
   </div>
 </template>
 
 <script>
-import ListPlanFilterComponent from '../../../components/TeacherAssignmentComponent/ListPlanFilterComponent/ListPlanFilterComponent';
-import Assignment from '../../../components/TeacherAssignmentComponent/Assignment/Assignment.vue';
-
+// import ListTeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/ListTeacherAssignmentComponent/ListTeacherAssignmentComponent' // Link gốc
+import ListTeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/Assignment/Assignment.vue' // Link tạm 
 export default {
-  components:{ 
-    ListPlanFilterComponent, 
-    Assignment 
-  },
-  data() {
-    return{
-      renderListPlanFilter: true,
-      renderAssignment: false,
-      plan: null,
-    }
-  },
-
-  methods: {
-    getPlan(e) {
-      this.plan = e;
-      console.log(e);
-      this.renderListPlanFilter = false;
-      this.renderAssignment = true;
-    }
-  }
+  components:{ ListTeacherAssignmentComponent }
 }
 </script>
 

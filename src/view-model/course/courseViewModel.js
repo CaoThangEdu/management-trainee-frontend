@@ -4,8 +4,9 @@ export default class CourseViewModel extends ViewModel {
     super()
     this.fields = {
       courseName: null,
+      status: "active",
       isDelete: false,
-      trainingSystemId: ""
+      careersId: "",
     }
   }
 
@@ -18,6 +19,12 @@ export default class CourseViewModel extends ViewModel {
           maxLength: {
             max_value: 200
           }
+        }
+      },
+      careersId: {
+        label: 'Ngành',
+        rules: {
+          require: '',
         }
       },
     }

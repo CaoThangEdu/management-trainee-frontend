@@ -48,22 +48,22 @@ export default [{
   },
   {
     _name: 'CSidebarNavItem',
-    name: 'Quản lý hệ',
+    name: 'Quản lý hệ - ngành - khóa',
     to: '/trainingsystem-management',
     icon: 'cil-calculator',
   },
-  {
-    _name: 'CSidebarNavItem',
-    name: 'Quản lý ngành',
-    to: '/career-management',
-    icon: 'cil-chart-pie',
-  },
-  {
-    _name: 'CSidebarNavItem',
-    name: 'Quản lý khóa',
-    to: '/course-management',
-    icon: 'cil-star',
-  },
+  // {
+  //   _name: 'CSidebarNavItem',
+  //   name: 'Quản lý ngành',
+  //   to: '/career-management',
+  //   icon: 'cil-chart-pie',
+  // },
+  // {
+  //   _name: 'CSidebarNavItem',
+  //   name: 'Quản lý khóa',
+  //   to: '/course-management',
+  //   icon: 'cil-star',
+  // },
   {
     _name: 'CSidebarNavItem',
     name: 'Quản lý lớp',
@@ -76,5 +76,17 @@ export default [{
     to: '/notification-management',
     icon: 'cil-bell',
   },
+  {
+    _name: 'CSidebarNavItem',
+    name: 'Đăng ký giấy giới thiệu thực tập',
+    to: '/registered-intership-referrals',
+    icon: 'cil-pencil',
+},
+{
+  _name: 'CSidebarNavItem',
+  name: 'Xác nhận thực tập',
+  to: '/internship-confirmation',
+  icon: 'cil-pencil',
+},
   ],
 }, ];

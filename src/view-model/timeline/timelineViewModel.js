@@ -8,7 +8,8 @@ export default class TimeLineViewModel extends ViewModel {
       startDay: null,
       endDay: null,
       internshipCourseId: null,
-      status: null,
+      status: 'active',
+      isDelete: false,
     }
   }
 
@@ -22,6 +23,24 @@ export default class TimeLineViewModel extends ViewModel {
       },
       description: {
         label: 'Mô tả',
+        rules: {
+          require: '',
+        }
+      },
+      startDay: {
+        label: 'Ngày bắt đầu',
+        rules: {
+          require: '',
+        }
+      },
+      endDay: {
+        label: 'Ngày kết thúc',
+        rules: {
+          require: '',
+        }
+      },
+      internshipCourseId: {
+        label: 'Đợt thực tập',
         rules: {
           require: '',
         }

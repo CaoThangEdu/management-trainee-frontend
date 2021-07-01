@@ -9,7 +9,7 @@ export default class CareerService extends ServicesBaseAPI {
 
   async getCareersAsync() {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/FilterAll`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -17,7 +17,7 @@ export default class CareerService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async Filter(object) {
+  async getCareersFilterAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Filter`, object);
       this.setResult(response);

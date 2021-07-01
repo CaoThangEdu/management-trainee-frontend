@@ -6,11 +6,13 @@
 import ClassManagementDetailComponent from '../ClassManagementDetailComponent/ClassManagementDetailComponent'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import Pagination from "../../common/pagination/Pagination"
 import CourseService from '../../../services/course/courseServices'
 import ClassService from '../../../services/class/classServices'
 import AppConfig from '../../../../src/app.config.json'
-import CareerService from '../../../services/career/careerServices'
+import JwPagination from 'jw-vue-pagination';
+import CareerService from '../../../services/career/careerServices';
+import CrudMixin from "../../../helpers/mixins/crudMixin";
+import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 
 export default {
   name: "ListClassManagementComponent",
@@ -18,38 +20,59 @@ export default {
   components: { 
     ClassManagementDetailComponent,
     ConfirmDialog,
-    Pagination,
+    JwPagination,
   },
+  mixins: [ CrudMixin ],
   data() {
     return {
       classes: [],
       courses: [],
       editClass: {},
-      careers:[],
       confirmClassRoom: null,
+      pageOfItems: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
+      filter: {
+        courseId: "",
+        isDelete: false,
+        className: "",
+        status: "active",
+      },
+      careers:[],
+      trainingSystems: [],
     };
   },
 
   async mounted(){
-    await this.getClassesAsync()
-    await this.getAllCoursesAsync()
-    await this.getCareersAsync()
+    await this.getClassesFilterAsync();
+    await this.getCoursesFilterAsync();
+    await this.getCareersFilterAsync();
+    await this.getTrainingSystemsFilterAsync();
   },
 
   methods:{
-    getCourseName(courseId){
-      for (let i in this.courses) {
-        if(this.courses[i].id === courseId){
-          return this.courses[i].courseName
-        }
-      }
+    getStatusIcon(status) {
+      return CrudMixin.methods.getStatusIcon(status);
     },
-async getCareersAsync(){
-      // Call Api
-      this.showLoading();
-      const api = new CareerService()
 
-      const response = await api.getCareersAsync()
+    getInfoObject(id, list) {
+      return CrudMixin.methods.getInfo(id, list);
+    },
+
+    async updateStatus(index) {
+      let classRoom = this.pageOfItems[index];
+      if (classRoom.status === 'active') {
+        classRoom.status = 'unactive';
+      } else {
+        classRoom.status = 'active';
+      }
+      this.showLoading();
+      let api = new ClassService();
+      let response = await api.updateClassAsync(classRoom);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -60,18 +83,60 @@ async getCareersAsync(){
         );
         return;
       }
-      this.careers = response.data.items
+      
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+      this.getClassesFilterAsync();
     },
+
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+
     createClass() {
       this.editClass = {};
     },
 
-    async getAllCoursesAsync(){
+    async getTrainingSystemsFilterAsync() {
+      let filterTrainingSystem = {
+        trainingSystemName: "",
+        isDelete: false,
+        status: "active",
+      }
       // Call Api
       this.showLoading();
-      const api = new CourseService()
+      const api = new TrainingSystemService()
 
-      const response = await api.getAllCoursesAsync()
+      const response = await api.getTrainingSystemsFilterAsync(filterTrainingSystem);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.trainingSystems = response.data;
+    },
+
+    async getCareersFilterAsync(){
+      let filterCareer = {
+        trainingSystemId: "",
+        isDelete: false,
+        careersName: "",
+        status: "active",
+      };
+      // Call Api
+      this.showLoading();
+      const api = new CareerService()
+
+      const response = await api.getCareersFilterAsync(filterCareer);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -82,15 +147,40 @@ async getCareersAsync(){
         );
         return;
       }
-      this.courses = response.data.items
+      this.careers = response.data;
+    },
+
+    async getCoursesFilterAsync() {
+      let filterCourse = {
+        careersId: "",
+        isDelete: false,
+        courseName: "",
+        status: "active",
+      }
+      // Call Api
+      this.showLoading();
+      const api = new CourseService();
+
+      const response = await api.getCoursesFilterAsync(filterCourse);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.courses = response.data;
     },
     
-    async getClassesAsync(){
+    async getClassesFilterAsync(){
       // Call Api
       this.showLoading();
       const api = new ClassService()
 
-      const response = await api.getClassesAsync()
+      const response = await api.getClassesFilterAsync(this.filter);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -101,15 +191,15 @@ async getCareersAsync(){
         );
         return;
       }
-      this.classes = response.data.items
+      this.classes = response.data;
     },
 
     async changePage(currentPage) {
-      await this.getClassesAsync(currentPage);
+      await this.getClassesFilterAsync(currentPage);
     },
 
     updateClass(index) {
-      this.editClass = Object.assign({}, this.classes[index]);
+      this.editClass = Object.assign({}, this.pageOfItems[index]);
     },
 
     deleteClass(id) {
@@ -130,7 +220,7 @@ async getCareersAsync(){
         );
         return;
       }
-      await this.getClassesAsync();
+      await this.getClassesFilterAsync();
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -139,15 +229,7 @@ async getCareersAsync(){
     },
     
     async changeData() {
-      await this.getClassesAsync();
-    },
-
-    showNotification() {
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
+      await this.getClassesFilterAsync();
     },
   }
 }

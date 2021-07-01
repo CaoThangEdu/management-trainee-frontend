@@ -7,29 +7,9 @@ export default class StudentService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/Student`
   }
 
-  async getStudentsAsync() {
-    try {
-      const response = await this.http.get(`${this.url}/GetAll`);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
-
-  async filterStudentAsync(object) {
+  async getStudentsAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Filter`, object);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
-  
-   async filterStudentByClassIdAsync(object) {
-    try {
-      const response = await this.http.post(`${this.url}/FilterByCourseId`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

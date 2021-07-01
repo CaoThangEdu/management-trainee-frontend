@@ -4,9 +4,9 @@ export default class ClassViewModel extends ViewModel {
     super()
     this.fields = {
       className: null,
-      status: null,
-      carresId: null,
-      isDelete: false
+      status: "active",
+      courseId: null,
+      isDelete: false,
     }
   }
 
@@ -18,8 +18,6 @@ export default class ClassViewModel extends ViewModel {
           require: '',
         }
       },
-     
-     
     }
     return validations
   }

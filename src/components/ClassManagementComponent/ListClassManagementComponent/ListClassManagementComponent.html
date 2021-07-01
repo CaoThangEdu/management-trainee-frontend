@@ -13,11 +13,33 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
+              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2"
+                v-if="careers.length != 0">
+                <select @change="getClassesFilterAsync" class="form-control form-select form-select-class"
+                  name="coursesId" id="coursesId" v-model="filter.courseId">
+                  <option v-for="(item,index) in courses" :key="index" :value="item.id">
+                    {{  item.courseName + ' (' +
+                        getInfoObject(item.careersId, careers
+                        ).careersName
+                        + ')'}}</option>
+                </select>
+              </div>
+              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+                <select @change="getClassesFilterAsync" 
+                  class="form-control form-select form-select-class"
+                  v-model="filter.status">
+                    <option value="">Tất cả</option>
+                    <option value="active">Đang hoạt động</option>
+                    <option value="unactive">Không hoạt động</option>
+                  </select>
+              </div>
               <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa"
+                  v-model="filter.className" />
               </div>
               <div class="col-xl-2 col-md-4 col-sm-12">
-                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+                <button type="submit" id="btn-search" class="btn btn-primary" @click="getClassesFilterAsync">Tìm
+                  kiếm</button>
               </div>
 
             </div>
@@ -28,35 +50,73 @@
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
-                <th scope="col">Mã lớp</th>
+                <th scope="col">Tên lớp</th>
+                <th scope="col">Khóa</th>
+                <th scope="col">Ngành</th>
+                <th scope="col">Hệ</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in classes" :key="index">
+              <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{ item.className }}</td>
-                <td>{{ item.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}}</td>
-                <td>
-                  <button class="btn btn-primary mr-2" @click="updateClass(index)">Sửa</button>
+                <td
+                  v-if="courses.length != 0">
+                  {{ getInfoObject(item.courseId, courses).courseName }}
                 </td>
+                <td v-if="careers.length != 0">
+                  {{ getInfoObject(
+                      getInfoObject(item.courseId, courses).careersId, careers
+                      ).careersName }}
+                </td>
+                <td v-if="trainingSystems.length != 0">
+                  {{  getInfoObject( 
+                        getInfoObject(
+                          getInfoObject(item.courseId, courses).careersId, careers
+                          ).trainingSystemId , trainingSystems).trainingSystemName
+                  }}
+                </td>
+                <td>
+                  <button class="btn btn-danger mr-2"
+                    @click="updateStatus(index)" 
+                    v-if="item.status == 'unactive'">
+                    <i :class="getStatusIcon(item.status)"></i>
+                  </button>
+                  <button class="btn btn-warning mr-2" 
+                    @click="updateStatus(index)" 
+                    v-if="item.status == 'active'">
+                    <i :class="getStatusIcon(item.status)"></i>
+                  </button>
+                </td>
+                <td>
+                  <button class="btn btn-success mr-2" @click="updateClass(index)">Sửa</button>
+                </td>
+              </tr>
+              <tr v-show="pageOfItems == null || pageOfItems.length === 0">
+                <th colspan="5" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-        <ClassManagementDetailComponent
-          :data="editClass"
-          @change-data="changeData"
-          v-bind:careers="careers" 
-          v-bind:courses="courses"
-          />
-        
-        <ConfirmDialog :data="confirmClassRoom" @agree="deleteClassConfirm"></ConfirmDialog>
+      <ClassManagementDetailComponent
+        :data="editClass"
+        @change-data="changeData"
+        :careers="careers"
+        :courses="courses" />
+      
+      <ConfirmDialog :data="confirmClassRoom" @agree="deleteClassConfirm"></ConfirmDialog>
 
-        <Pagination :position="`center`" :page="1" :pageSize="10" :totalItems="17" @change-page="changePage">
-        </Pagination>
+      <div class="card-footer d-flex justify-content-center text--blue"
+        v-show="pageOfItems == null || pageOfItems.length === 0">
+        <JwPagination :items="classes" @changePage="onChangePage"
+          :labels="customLabels" :pageSize="5">
+        </JwPagination>
+      </div>
     </div>
   </div>
 </div>

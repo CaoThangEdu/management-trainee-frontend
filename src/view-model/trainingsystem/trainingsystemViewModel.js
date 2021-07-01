@@ -5,6 +5,7 @@ export default class TrainingSystemViewModel extends ViewModel {
     this.fields = {
       trainingSystemName: null,
       isDelete: false,
+      status: 'active',
     }
   }
 
@@ -19,7 +20,6 @@ export default class TrainingSystemViewModel extends ViewModel {
           }
         }
       },
-     
     }
     return validations
   }

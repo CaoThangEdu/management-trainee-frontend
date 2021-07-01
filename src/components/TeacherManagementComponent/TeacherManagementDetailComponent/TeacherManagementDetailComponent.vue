@@ -1,77 +1,49 @@
-<template src='./TeacherManagementDetailComponent.html'>
-
-</template>
+<template src='./TeacherManagementDetailComponent.html'></template>
 
 <script>
-import CareerService from '../../../services/career/careerServices'
-import ComponentBase from "../../common/component-base/ComponentBase"
-import BaseModal from '../../common/base-modal/BaseModal'
-import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
-import TeacherService from '../../../services/teacher/teacherServices'
-import AppConfig from '../../../../src/app.config.json'
+import ComponentBase from "../../common/component-base/ComponentBase";
+import BaseModal from "../../common/base-modal/BaseModal";
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
+import TeacherService from "../../../services/teacher/teacherServices";
+import AppConfig from "../../../../src/app.config.json";
+import TeacherViewModel from "../../../view-model/teacher/teacherViewModel";
 export default {
-  name: 'PlanDetail',
-   extends: ComponentBase,
+  name: "TeacherDetail",
+  extends: ComponentBase,
   components: {
     BaseModal,
     AlertMessages,
   },
   data() {
     return {
-            careers:[],
-
       isShow: false,
-      teachers: {},
+      teacher: {},
       errorMessages: [],
-    }
+    };
   },
   props: {
-    
     data: {
       type: Object,
       default: null,
     },
   },
-  async mounted(){
-         await this.getCareersAsync()
-  },
   methods: {
-    async pressEnterKey() {
+    async pressKeyEnter() {
       await this.save();
     },
-
     closeModal(changeData) {
       this.isShow = false;
-      this.teachers = {};
+      this.teacher = {};
       if (changeData) {
         this.$emit("change-data");
       }
     },
-     async getCareersAsync(){
-      // Call Api
-      this.showLoading();
-      const api = new CareerService()
-
-      const response = await api.getCareersAsync()
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.careers = response.data.items
-      console.log(this.careers)
-    },
     async createTeacherAsync() {
       this.showLoading();
       let api = new TeacherService();
-      let response = await api.createTeacherAsync(this.teachers);
+      let response = await api.createTeacherAsync(this.teacher);
       this.showLoading(false);
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -89,9 +61,9 @@ export default {
     async updateTeacherAsync() {
       this.showLoading();
       let api = new TeacherService();
-      let response = await api.updateTeacherAsync(this.teachers);
+      let response = await api.updateTeacherAsync(this.teacher);
       this.showLoading(false);
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -99,7 +71,6 @@ export default {
         );
         return;
       }
-      
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -108,16 +79,17 @@ export default {
       this.closeModal(true);
     },
     async save() {
-      // validate
-      // let viewModel = new CourseService();
-      // viewModel.setFields(this.course);
-      // this.errorMessages = viewModel.isValid();
-      // if (this.errorMessages.length > 0) {
-      //   return;
-      // }
-      if(this.teachers.id === undefined){
+      //validate
+      let viewModel = new TeacherViewModel();
+      viewModel.setFields(this.teacher);
+      this.errorMessages = viewModel.isValid();
+      if (this.errorMessages.length > 0) {
+        return;
+      }
+
+      if (this.teacher.id === undefined) {
         await this.createTeacherAsync();
-      } else{
+      } else {
         await this.updateTeacherAsync();
       }
     },
@@ -125,12 +97,12 @@ export default {
   watch: {
     data() {
       this.isShow = true;
-      this.teachers = this.data;
-    }
-  }
-}
+      this.teacher = this.data;
+    },
+  },
+};
 </script>
 
 <style lang='scss'>
-@import './TeacherManagementDetailComponent.scss';
+@import "./TeacherManagementDetailComponent.scss";
 </style>

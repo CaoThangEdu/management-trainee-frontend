@@ -1,17 +1,17 @@
-<template src='./CourseManagementDetailComponent.html'></template>
+<template src='./CourseManagementDetailComponent.html'>
+
+</template>
 
 <script>
-import ComponentBase from "../../common/component-base/ComponentBase";
-import BaseModal from "../../common/base-modal/BaseModal";
-import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
-import CourseService from "../../../services/course/courseServices";
-import CourseViewModel from "../../../view-model/course/courseViewModel";
-import AppConfig from "../../../../src/app.config.json";
-import TrainingSystemServices from "../../../services/trainingsystem/trainingsystemServices";
-import CareerService from "../../../services/career/careerServices";
+import ComponentBase from "../../common/component-base/ComponentBase"
+import BaseModal from '../../common/base-modal/BaseModal'
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
+import CourseService from '../../../services/course/courseServices'
+import CourseViewModel from "../../../view-model/course/courseViewModel"
+import AppConfig from '../../../../src/app.config.json';
 
 export default {
-  name: "CourseManagementDetailComponent",
+  name: 'CourseManagementDetailComponent',
   extends: ComponentBase,
   components: {
     BaseModal,
@@ -20,61 +20,25 @@ export default {
   data() {
     return {
       isShow: false,
-      trainingSystems: [],
+      course: {},
+
       errorMessages: [],
-      course: [],
-      careers: [],
-    };
+    }
   },
   props: {
     data: {
       type: Object,
       default: null,
     },
+    careers: {
+      type: Array,
+      default: null
+    },
   },
-  async mounted() {
-    await this.getTrainingSystemAsync();
-    await this.getCareersAsync();
-  },
+
   methods: {
     async pressKeyEnter() {
       await this.save();
-    },
-    async getTrainingSystemAsync() {
-      // Call Api
-      this.showLoading();
-      const api = new TrainingSystemServices();
-
-      const response = await api.getAllTrainingSystemsAsync();
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.trainingSystems = response.data.items;
-    },
-    async getCareersAsync() {
-      // Call Api
-      this.showLoading();
-      const api = new CareerService();
-
-      const response = await api.getCareersAsync();
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.careers = response.data.items;
     },
     closeModal(changeData) {
       this.isShow = false;
@@ -84,12 +48,14 @@ export default {
         this.$emit("change-data");
       }
     },
+
     async createCourseAsync() {
+      this.course.status = "active";
       this.showLoading();
       let api = new CourseService();
       let response = await api.createCourseAsync(this.course);
       this.showLoading(false);
-      if (!response.isOK) {
+      if(!response.isOK){
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -112,7 +78,7 @@ export default {
       let response = await api.updateCourseAsync(this.course);
       this.showLoading(false);
 
-      if (!response.isOK) {
+      if(!response.isOK){
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -120,7 +86,7 @@ export default {
         );
         return;
       }
-
+      
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -140,23 +106,23 @@ export default {
         return;
       }
 
-      if (this.course.id === undefined) {
+      if(this.course.id === undefined){
         await this.createCourseAsync();
-      } else {
+      } else{
         await this.updateCourseAsync();
       }
     },
   },
-
+  
   watch: {
     data() {
       this.isShow = true;
       this.course = this.data;
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang='scss'>
-@import "./CourseManagementDetailComponent.scss";
+@import './CourseManagementDetailComponent.scss';
 </style>
