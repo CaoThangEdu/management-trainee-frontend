@@ -6,9 +6,11 @@ import AddTeacherFileComponent from "../AddTeacherFlieComponent/AddTeacherFlieCo
 import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import TeacherService from "../../../services/teacher/teacherServices";
-import JwPagination from 'jw-vue-pagination';
-
+import JwPagination from "jw-vue-pagination";
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 import AppConfig from "../../../../src/app.config.json";
+import CareerService from "../../../services/career/careerServices";
+import planningStepsComponent from "../../planningStepsComponent/planningStepsComponent";
 export default {
   extends: ComponentBase,
   components: {
@@ -16,7 +18,9 @@ export default {
     AddTeacherFileComponent,
     ConfirmDialog,
     JwPagination,
+    planningStepsComponent
   },
+  mixins: [CrudMixin],
   data() {
     return {
       teachers: [],
@@ -25,22 +29,32 @@ export default {
       confirmTeacher: null,
       pageOfItems: [],
       customLabels: {
-        first: '<<',
-        last: '>>',
-        previous: '<',
-        next: '>'
+        first: "<<",
+        last: ">>",
+        previous: "<",
+        next: ">",
       },
+      careers: [],
+      filterByCareersId: "",
+      filter: {
+        trainingSystemId: "",
+        isDelete: false,
+        careersName: "",
+        status: "active"
+      },
+      isActiveStep:"3"
     };
   },
   async mounted() {
     await this.getTeachersAsync();
+    await this.getCareersFilterAsync();
   },
   methods: {
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
-    
+
     createTeacher() {
       this.editTeacher = {};
     },
@@ -53,7 +67,7 @@ export default {
       // Call Api
       this.showLoading();
       const api = new TeacherService();
-      const response = await api.getTeachersAsync();
+      const response = await api.getTeachersAsync(this.filter);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -64,26 +78,51 @@ export default {
         );
         return;
       }
-      this.teachers = response.data.items;
+      this.teachers = response.data;
     },
 
     async changePage(currentPage) {
       await this.getTeachersAsync(currentPage);
+      await this.getCareersFilterAsync(currentPage);
     },
 
     updateTeacher(index) {
       this.editTeacher = Object.assign({}, this.teachers[index]);
     },
 
-    deleteTeacher(id) {
-      this.confirmTeacher = { id: id };
+    deleteTeacher(teacher) {
+      this.confirmTeacher = teacher;
     },
 
     // Call api delete teacher
-    async agreeConfirm(dataConfirm) {
+    async updateIsDeleteStatus(index) {
+      let teacher = this.pageOfItems[index];
+      teacher.isDelete = true;
       this.showLoading();
       let api = new TeacherService();
-      let response = await api.deleteTeacherAsync(dataConfirm.id); // Gọi Api
+      let response = await api.updateTeacherAsync(teacher);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_status_success_default}`
+      );
+      this.getTeachersAsync();
+    },
+
+    async deleteTeacherConfirm(teacherComfirm) {
+      teacherComfirm.isDelete = true;
+      this.showLoading();
+      let api = new TeacherService();
+      let response = await api.updateTeacherAsync(teacherComfirm); // Gọi Api
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -100,15 +139,90 @@ export default {
         `${AppConfig.notification.content_deleted_success_default}`
       );
     },
+
     async changeData() {
       await this.getTeachersAsync();
     },
+
     showNotification() {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
+    },
+
+    getTrainingSystemName(careersId, careers) {
+      return CrudMixin.methods.getInfo(careersId, careers);
+    },
+
+     async getCareersFilterAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new CareerService()
+
+      const response = await api.getCareersFilterAsync(this.filter);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.careers = response.data;
+    },
+
+    async updateStatus(index) {
+      let teacher = this.pageOfItems[index];
+      if (teacher.status === "active") {
+        teacher.status = "unactive";
+      } else {
+        teacher.status = "active";
+      }
+      this.showLoading();
+      let api = new TeacherService();
+      let response = await api.updateTeacherAsync(teacher);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+      this.getTrainingSystemsAsync();
+    },
+
+    getStatusIcon(status) {
+      return CrudMixin.methods.getStatusIcon(status);
+    },
+    async getFilterByCareersId(careersId) {
+      // Call Api
+      this.showLoading();
+      const api = new TeacherService();
+      const response = await api.getFilterByCareersId(careersId);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.teachers = response.data.items;
     },
   },
 };
