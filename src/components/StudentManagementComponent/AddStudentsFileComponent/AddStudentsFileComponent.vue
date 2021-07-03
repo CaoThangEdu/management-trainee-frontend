@@ -11,6 +11,7 @@ import AppConfig from '../../../../src/app.config.json'
 import PlanService from '../../../services/plan/planServices'
 import XLSX from 'xlsx'
 import ClassService from '../../../services/class/classServices'
+import ClassViewModel from "../../../view-model/class/classViewModel"
 import StudentViewModel from "../../../view-model/student/studentViewModel"
 import { ADD_STUDENT } from "../../../config/constant";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
@@ -33,13 +34,25 @@ export default {
       classIdSelected: null,
       errorMessages: [],
       classroom: {},
-      classes: [],
       filter: {
         keyword: "",
         isDelete: false,
         status: "active",
         classId: "",
-      }
+      },
+      faqs: [
+        {
+          title: "Lớp",
+          text: "lop",
+        },
+        {
+          title: "Thêm mới lớp",
+          text: "themLop",
+        },
+      ],
+      currentFaq: 0,
+      classCreated: null,
+      createClassLoading: false,
     }
   },
   props: {
@@ -51,35 +64,49 @@ export default {
       type: Array,
       default: null,
     },
+    classes: {
+      type: Array,
+      default: null,
+    },
+    courses: {
+      type: Array,
+      default: null,
+    },
+    careers: {
+      type: Array,
+      default: null,
+    },
   },
 
   async mounted(){
     await this.getStudentsAsync();
-    await this.getClassesFilterAsync();
   },
 
   methods: {
-    checkCourse(item) {
-      if (this.getInfoByCourseId(item.courseId, this.plans).internshipCourseName) {
-        return true;
+    getInfoByCourseId(courseId, list){
+      if (!CrudMixin.methods.getInfoByCourseId(courseId, list)) {
+        return '';
       }
-      return false;
+      return CrudMixin.methods.getInfoByCourseId(courseId, list);
     },
 
-    async getClassesFilterAsync(){
-      let filterClass = {
-        courseId: "",
-        isDelete: false,
-        className: "",
-        status: "active",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new ClassService()
+    openComponet(i) {
+      this.currentFaq = i;
+    },
 
-      const response = await api.getClassesFilterAsync(filterClass);
-      this.showLoading(false);
-
+    async createClassAsync() {
+      let viewModel = new ClassViewModel();
+      viewModel.setFields(this.classroom);
+      this.errorMessages = viewModel.isValid();
+      if (this.errorMessages.length > 0) {
+        return;
+      }
+      this.classroom.status = "active";
+      this.classroom.isDelete = "false";
+      this.createClassLoading = true;
+      let api = new ClassService();
+      let response = await api.createClassAsync(this.classroom);
+      this.createClassLoading = false;
       if(!response.isOK){
         this.showNotifications(
           "error",
@@ -88,11 +115,13 @@ export default {
         );
         return;
       }
-      this.classes = response.data;
-    },
-
-    getInfoByCourseId(courseId, list){
-      return CrudMixin.methods.getInfoByCourseId(courseId, list)
+      this.classCreated = response.data.id;
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default}` + ' lớp'
+      );
+      this.$emit("change-data-class");
     },
 
     getInfoObject(id, list) {
@@ -179,6 +208,9 @@ export default {
     },
 
     async save() {
+      if (this.classCreated) {
+        this.classIdSelected = this.classCreated;
+      }
       let courseDaChonId = this.getInfoObject(this.classIdSelected, this.classes).courseId;
       this.students = this.metaDataFile;
       let studentLengthCallApi = this.studentLengthBanDau;
@@ -223,10 +255,10 @@ export default {
               `${AppConfig.notification.content_created_success_default}`
                 + ' Lớp ' + this.students[i].classId
             );
-            await this.getClassesFilterAsync()
+            this.students[i].classId = response.data.id;
           }
           
-          this.students[i].classId = this.getInfoObjectByName(this.students[i].classId, this.classes).id;
+          // this.students[i].classId = this.getInfoObjectByName(this.students[i].classId, this.classes).id;
         }    
         this.students[i].status = 'active';
         this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;

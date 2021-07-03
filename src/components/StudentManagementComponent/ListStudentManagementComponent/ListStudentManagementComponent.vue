@@ -9,8 +9,6 @@ import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import StudentService from '../../../services/student/studentServices'
 import AppConfig from '../../../../src/app.config.json'
-import PlanService from '../../../services/plan/planServices'
-import ClassService from '../../../services/class/classServices'
 import JwPagination from 'jw-vue-pagination';
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 
@@ -26,11 +24,8 @@ export default {
   mixins: [ CrudMixin ],
   data() {
     return {
-      students: [],
       editStudent: {},
       addStudents: {},
-      plans: [],
-      classes: [],
       confirmStudent: null,
       metaDataFile: [],
       pageOfItems: [],
@@ -48,11 +43,28 @@ export default {
       }
     };
   },
-  
-  async mounted(){
-    await this.getClassesFilterAsync();
-    await this.getPlansFilterAsync();
-    await this.getStudentsAsync();
+
+  props: {
+    plans: {
+      type: Array,
+      default: null,
+    },
+    classes: {
+      type: Array,
+      default: null,
+    },
+    students: {
+      type: Array,
+      default: null,
+    },
+    courses: {
+      type: Array,
+      default: null,
+    },
+    careers: {
+      type: Array,
+      default: null,
+    },
   },
   
   methods:{
@@ -61,7 +73,10 @@ export default {
     },
 
     getInfoByCourseId(courseId, list){
-      return CrudMixin.methods.getInfoByCourseId(courseId, list)
+      if (!CrudMixin.methods.getInfoByCourseId(courseId, list)) {
+        return '';
+      }
+      return CrudMixin.methods.getInfoByCourseId(courseId, list);
     },
 
     onChangePage(pageOfItems) {
@@ -77,54 +92,6 @@ export default {
       }
     },
 
-    async getClassesFilterAsync(){
-      let filterClass = {
-        courseId: "",
-        isDelete: false,
-        className: "",
-        status: "active",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new ClassService()
-
-      const response = await api.getClassesFilterAsync(filterClass);
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.classes = response.data;
-    },
-
-    async getPlansFilterAsync(){
-      let filterPlan = {
-        status: "",
-        isDelete: false
-      };
-      // Call Api
-      this.showLoading();
-      const api = new PlanService()
-
-      const response = await api.getPlansAsync(filterPlan)
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.plans = response.data
-    },
-
     createStudent() {
       this.editStudent = {};
     },
@@ -134,32 +101,15 @@ export default {
     },
 
     async changeData() {
-      await this.getStudentsAsync();
-      await this.getPlansFilterAsync();
-      await this.getClassesFilterAsync();
-    },
-    
-    async getStudentsAsync(){
-      // Call Api
-      this.showLoading();
-      const api = new StudentService()
-
-      const response = await api.getStudentsAsync(this.filter)
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.students = response.data
+      this.$emit("change-data-student-component");
     },
 
-    async changePage(currentPage) {
-      await this.getStudentsAsync(currentPage);
+    changeDataClass() {
+      this.$emit("change-data-classroom");
+    },
+
+    changePage(currentPage) {
+      this.$emit("change-page", currentPage);
     },
 
     updateStudent(index) {
@@ -193,7 +143,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_status_success_default}`
       );
-      this.getStudentsAsync();
+      this.$emit("change-data-student-component");
     },
     async updateStatus(index) {
       let student = this.pageOfItems[index];
@@ -221,7 +171,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_status_success_default}`
       );
-      this.getStudentsAsync();
+      this.$emit("change-data-student-component");
     },
 
     deleteStudent(item) {
@@ -243,7 +193,7 @@ export default {
         );
         return;
       }
-      await this.getStudentsAsync();
+      this.$emit("change-data-student-component");
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,

@@ -49,21 +49,65 @@
       <div class="col-md-8 col-sm-8">
         <input type="text" class="form-control" v-model="student.email" readonly/>
       </div>
-    </div>    
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="wrapCollapse">
+          <div v-for="(faq, i) in faqs" :key="i">
+            <dt>
+              <a href="#" :class="{ active: currentFaq == i }" @click="openComponet(i)">
+                {{ faq.title }}
+              </a>
+            </dt>
+            <dd class="display-hidden" :class="{ active: currentFaq == i }">
+              <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'lop'">
+                <div class="form-group row" v-if="plans.length != 0">
+                  <label class="col-md-4 col-sm-4 col-form-label">
+                    Lớp (<span class="text--red">*</span>)
+                  </label>
+                  <div class="col-md-8 col-sm-8">
+                    <div class="input-group mb-3">
+                      <select class="form-control form-select form-select-class" v-model="student.classId">
+                        <option v-for="(item, index) in classes" :key="index" :value="item.id">
+                          {{ getInfoByCourseId(item.courseId, plans)? item.className + ' ('+ getInfoByCourseId(item.courseId, plans).internshipCourseName +')' : item.className }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'themLop'">
+                <div class="form-group row">
+                  <label class="col-md-4 col-sm-4 col-form-label">Tên lớp</label>
+                  <div class="col-md-8 col-sm-8">
+                    <input type="text" class="form-control" id="name" v-model="classroom.className" placeholder="Tên lớp cần tạo">
+                  </div>
+                </div>
 
-    <div class="form-group row"
-      v-if="plans.length != 0">
-      <label class="col-md-4 col-sm-4 col-form-label">
-        Lớp (<span class="text--red">*</span>)
-      </label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" v-model="student.classId">
-            <option v-for="(item, index) in classes"
-              :key="index" :value="item.id">
-                {{ item.className + ' ('+ getInfoByCourseId(item.courseId, plans).internshipCourseName +')' }}
-            </option>
-          </select>
+                <div class="form-group row" v-if="careers.length != 0">
+                  <label class="col-md-4 col-sm-4 col-form-label">Khóa</label>
+                  <div class="col-md-6 col-sm-6">
+                    <div class="input-group mb-3">
+                      <select class="form-control form-select form-select-class" v-model="classroom.courseId">
+                        <option value="" v-for="(item, index) in courses" :key="index" :value="item.id">
+                          {{item.courseName + ' (' + 
+                            getInfoObject(item.careersId, careers).careersName 
+                            + ')'}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-sm-2">
+                    <button class="btn btn-linkedin" @click="createClassAsync()">+<i
+                        class="fa fa-book-reader"></i></button>
+                  </div>
+                  <div v-if="createClassLoading" role="status" aria-hidden="false" aria-label="Loading"
+                    class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+                </div>
+              </div>
+            </dd>
+          </div>
         </div>
       </div>
     </div>

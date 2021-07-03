@@ -52,9 +52,7 @@ export default {
         let worksheet = workbook.Sheets[sheetName];
         vm.metadataFile = XLSX.utils.sheet_to_json(worksheet);
         vm.metadataFile.forEach(function(element) { element.status = "active"; });
-        vm.metadataFile.forEach(function(element) { element.careersId = vm.careersId; console.log(vm.careersId, element.careersId); });
-       
-        console.log(this.careersId);
+        vm.metadataFile.forEach(function(element) { element.careersId = vm.careersId; });
       };
       reader.readAsArrayBuffer(f);
     },
@@ -63,7 +61,6 @@ export default {
       await this.save();
     },
     async createTeacherByFlieAsync(i) {
-      console.log('careersId', this.teachers[i].careersId)
       this.showLoading();
       let api = new TeacherService();
       let response = await api.createTeacherAsync(this.teachers[i]);

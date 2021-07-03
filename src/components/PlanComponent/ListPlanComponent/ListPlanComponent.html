@@ -13,14 +13,14 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12 ">
+              <!-- <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12 ">
                 <div class="input-group">
                   <select class="custom-select" id="inputGroupSelect04">
                     <option value="1">Đang diễn ra</option>
                     <option value="2">Đã diễn ra</option>
                   </select>
                 </div>
-              </div>
+              </div> -->
               <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
                 <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
               </div>
@@ -42,7 +42,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in plans" :key="index">
+              <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <th scope="row">{{ item.internshipCourseName }}</th>
                 <td>{{ item.startDay }}</td>
@@ -52,18 +52,35 @@
                   <button class="btn btn-info mr-2" @click="updatePlan(index, 'detail')">Chi tiết</button>
                 </td>
               </tr>
-              <tr v-show="plans == null || plans.length === 0">
+              <tr v-show="pageOfItems == null || pageOfItems.length === 0">
                 <th colspan="5" class="text-left">Không có dữ liệu nào được tìm thấy.</th>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <PlanDetailComponent :data="editPlan" @change-data="changeData"
+      <PlanDetailComponent :data="editPlan" 
+        @change-data="changeData"
+        @change-data-career="changeDataCareer"
+        @change-data-course="changeDataCourse"
+        @change-data-training-system="changeDataTrainingSystem"
         :showDetail="showDetail"
         :courses="courses"
         :trainingSystems="trainingSystems"
         :careers="careers" />
+      <div class="card-footer d-flex justify-content-center text--blue">
+        <JwPagination
+          :items="plans"
+          @changePage="onChangePage"
+          :labels="customLabels"
+          :pageSize="5">
+        </JwPagination>  
+      </div>
+      <div class="button-continue">
+        <router-link :to="{name:'quan-ly-sinh-vien'}" class="btn-continue">
+          Tiếp Tục
+        </router-link>
+      </div>
     </div>
   </div>
 </div>
