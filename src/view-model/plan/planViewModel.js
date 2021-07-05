@@ -33,12 +33,6 @@ export default class PlanViewModel extends ViewModel {
           require: '',
         }
       },
-      courseId: {
-        label: 'Khóa',
-        rules: {
-          require: '',
-        }
-      },
       status: {
         label: 'Trạng thái',
         rules: {

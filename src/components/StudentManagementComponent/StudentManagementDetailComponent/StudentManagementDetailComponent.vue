@@ -8,11 +8,11 @@ import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import StudentService from '../../../services/student/studentServices'
 import AppConfig from '../../../../src/app.config.json'
-// import PlanService from '../../../services/plan/planServices'
-// import ClassService from '../../../services/class/classServices'
 import StudentViewModel from "../../../view-model/student/studentViewModel"
 import { ADD_STUDENT } from "../../../config/constant";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import ClassService from '../../../services/class/classServices'
+import ClassViewModel from "../../../view-model/class/classViewModel"
 
 export default {
   name: 'StudentManagementDetailComponent',
@@ -25,9 +25,20 @@ export default {
     return {
       isShow: false,
       student: {},
-      // plans: [],
-      // classes: [],
       errorMessages: [],
+      classroom: {},
+      faqs: [
+        {
+          title: "Lớp",
+          text: "lop",
+        },
+        {
+          title: "Thêm mới lớp",
+          text: "themLop",
+        },
+      ],
+      currentFaq: 0,
+      createClassLoading: false,
     }
   },
   mixins: [ CrudMixin ],
@@ -49,11 +60,60 @@ export default {
       type: Array,
       default: null,
     },
+    courses: {
+      type: Array,
+      default: null,
+    },
+    careers: {
+      type: Array,
+      default: null,
+    },
   },
 
   methods: {
+    getInfoObject(trainingSystemId, list) {
+      return CrudMixin.methods.getInfo(trainingSystemId, list);
+    },
+
+    openComponet(i) {
+      this.currentFaq = i;
+    },
+
     getInfoByCourseId(courseId, list){
-      return CrudMixin.methods.getInfoByCourseId(courseId, list)
+      if (!CrudMixin.methods.getInfoByCourseId(courseId, list)) {
+        return '';
+      }
+      return CrudMixin.methods.getInfoByCourseId(courseId, list);
+    },
+
+    async createClassAsync() {
+      let viewModel = new ClassViewModel();
+      viewModel.setFields(this.classroom);
+      this.errorMessages = viewModel.isValid();
+      if (this.errorMessages.length > 0) {
+        return;
+      }
+      this.classroom.status = "active";
+      this.classroom.isDelete = "false";
+      this.createClassLoading = true;
+      let api = new ClassService();
+      let response = await api.createClassAsync(this.classroom);
+      this.createClassLoading = false;
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.student.classId = response.data.id;
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default}` + ' lớp'
+      );
+      this.$emit("change-data-class");
     },
 
     async pressKeyEnter() {

@@ -1,28 +1,6 @@
-.card{
-    &-header{
-        .btn{
-            &-add{
-                &-file{
-                    margin-left: 20px;
-                    color: white;
-                }
-            }
-        }
-    }
-}
-.btn-continue{
-    background: #0d86ff url(https://static.ebk.vn/images/theme2/btn-next-bg.png) no-repeat right;
-    float: right;
-    width: 15%;
-    min-width: 180px;
-    height: 40px;
-    border: none;
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    margin: 20px 10px 20px 0;
-    &:hover{
-        border: solid 3px #0d86ff;
-    }
+.card-header {
+  .btn-add-file {
+    margin-left: 20px;
+    color: white;
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="c-app">
+  <div class="app">
     <Sidebar v-if="!$route.meta.hideSidebar" />
     <CWrapper>
       <Header v-if="!$route.meta.hideHeader" />
@@ -7,12 +7,12 @@
         <main class="c-main">
           <CContainer fluid>
             <transition :duration="{ leave: 100, enter: 500 }" name="fade" mode="out-in" appear>
-              <router-view :key="$route.path"></router-view>
+              <router-view></router-view>
             </transition>
           </CContainer>
         </main>
+        <Footer v-if="!$route.meta.hideFooter" />
       </div>
-      <Footer v-if="!$route.meta.hideFooter" />
     </CWrapper>
     <TheLoading :key="'app-spinner'"/>
 

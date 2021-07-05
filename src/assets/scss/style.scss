@@ -29,3 +29,66 @@
 .fa-unlock {
   color: black;
 }
+
+.btn-continue {
+  background: #0d86ff url(https://static.ebk.vn/images/theme2/btn-next-bg.png) no-repeat right;
+  float: right;
+  padding: 10px 50px;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  margin: 20px 10px 20px 0;
+
+  &:hover {
+    border: solid 3px #0d86ff;
+    color: rgb(235, 225, 140);
+  }
+}
+
+.wrapCollapse {
+  dt {
+    display: block;
+
+    a {
+      display: block;
+      padding: 15px;
+      background-color: #adadad;
+      color: #fff;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &.active {
+        background-color: #3c6382;
+        color: #fff;
+      }
+
+      &.activeCourse {
+        background-color: #b86bda;
+        color: #fff;
+      }
+
+      &.activeTrainingSystem {
+        background-color: #c9d33c;
+        color: #fff;
+      }
+    }
+  }
+
+  dd {
+    padding: 0 20px;
+    height: 0;
+    transition: all 0.5s ease;
+    overflow: hidden;
+    opacity: 0;
+
+    &.active {
+      height: auto;
+      padding: 10px 0px;
+      opacity: 1;
+    }
+  }
+}
