@@ -1,4 +1,3 @@
-
 import moment from "moment";
 export default {
   data() {
@@ -16,6 +15,9 @@ export default {
       const result = list.find(({
         id
       }) => id === isId);
+      if (!result) {
+        return false;
+      }
       return result;
     },
 

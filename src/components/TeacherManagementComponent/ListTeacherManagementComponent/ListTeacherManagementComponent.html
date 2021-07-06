@@ -1,6 +1,8 @@
+
 <div class="row">
   <div class="col-12">
-    <div class="card">
+    <planningStepsComponent :isActiveStep="isActiveStep"/>
+    <div class="row card">
       <header class="card-header">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
           <path fill="var(--ci-primary-color, currentColor)"
@@ -25,13 +27,28 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
-                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+                <select class="form-control form-select form-select-class " v-model="filterByCareersId"
+                  name="trainingSystemId" id="trainingSystemId">
+                  <option value="All">Tất cả</option>
+                  <option v-for="(item,index) in careers" :key="index" :value="item.id">{{item.careersName}}</option>
+                </select>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
-                <button type="submit" id="btn-search" class="btn btn-primary">
-                  Tìm kiếm
-                </button>
+              <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
+                <select
+                  class="form-control form-select form-select-class">
+                  <option value="">Tất cả</option>
+                  <option value="active">Đang hoạt động</option>
+                  <option value="unactive">Không hoạt động</option>
+                </select>
+              </div>
+              <div class="col-xl-3 col-md-3 col-sm-12 mb-sm-2">
+                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa"
+                  />
+              </div>
+              <div class="col-xl-3 col-md-3 col-sm-12">
+                <button type="submit" id="btn-search" class="btn btn-primary"
+               >Tìm kiếm</button>
               </div>
             </div>
           </div>
@@ -44,6 +61,8 @@
                 <th scope="col">Họ</th>
                 <th scope="col">Tên</th>
                 <th scope="col">Email</th>
+                <th scope="col">Số điện thoại</th>
+                <th scope="col">Khoa</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>
               </tr>
@@ -54,12 +73,25 @@
                 <td>{{ item.firstName }}</td>
                 <td>{{ item.lastName }}</td>
                 <td>{{ item.email }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{ item.phoneNumber }}</td>
+                <td v-if="careers.length != 0">{{getTrainingSystemName(item.careersId, careers).careersName}}</td>
+                <td>
+                  <button class="btn btn-danger mr-2"   
+                    @click="updateStatus(index)" 
+                    v-if="item.status == 'unactive'">
+                    <i :class="getStatusIcon(item.status)"></i>
+                  </button>
+                  <button class="btn btn-warning mr-2"
+                    @click="updateStatus(index)" 
+                    v-if="item.status == 'active'">
+                    <i :class="getStatusIcon(item.status)"></i>
+                  </button>
+                </td>
                 <td>
                   <button class="btn btn-primary mr-2" @click="updateTeacher(index)">
                     Sửa
                   </button>
-                  <button class="btn btn-danger" @click="deleteTeacher(item.id)">
+                  <button class="btn btn-danger" @click="deleteTeacher(item)">
                     Xóa
                   </button>
                 </td>
@@ -71,17 +103,22 @@
       <TeacherManagementDetailComponent
         :data="editTeacher"
         @change-data="changeData"
+        :careers="careers"
       />
 
       <AddTeacherFileComponent
         :data="teacherFile"
         @change-data="changeData"
+        :careers="careers"
       />
-      <ConfirmDialog :data="confirmTeacher" @agree="agreeConfirm"></ConfirmDialog>
+      <ConfirmDialog :data="confirmTeacher" @agree="deleteTeacherConfirm"></ConfirmDialog>
 
       <div class="card-footer d-flex justify-content-center text--blue">
         <JwPagination :items="teachers" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
         </JwPagination>
+      </div>
+      <div class="button-continue">
+        <button class="btn-continue">Tiếp Tục</button>
       </div>
     </div>
   </div>

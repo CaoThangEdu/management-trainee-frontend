@@ -21,6 +21,15 @@ export default class CareerViewModel extends ViewModel {
           }
         }
       },
+      trainingSystemId: {
+        label: 'Hệ đào tạo',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
     }
     return validations
   }

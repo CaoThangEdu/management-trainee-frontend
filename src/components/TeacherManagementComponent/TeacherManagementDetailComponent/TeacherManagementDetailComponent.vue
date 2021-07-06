@@ -26,6 +26,7 @@ export default {
       type: Object,
       default: null,
     },
+    careers:Array
   },
   methods: {
     async pressKeyEnter() {

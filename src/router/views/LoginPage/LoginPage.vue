@@ -173,3 +173,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.content-center {
+  width: 60%;
+  margin: 0 auto;
+}
+</style>

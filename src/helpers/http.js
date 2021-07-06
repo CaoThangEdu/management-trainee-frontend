@@ -174,7 +174,7 @@ export default class Http {
     if (error.request.status === options.httpStatusCode.unauthorized) {
       await store.dispatch("user/clearTokenAndResetStoreDataAsync");
       e.errorMessages = "Phiên làm việc của bạn đã hết hạn."
-      router.push({ name: "LoginPage" });
+      router.push({ name: "login" });
     }
     return e
   }

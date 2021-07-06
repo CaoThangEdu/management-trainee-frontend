@@ -6,9 +6,21 @@ export default class TeacherService extends ServicesBaseAPI {
     super();
     this.url = `${AppConfig.apiHost}/Teacher`
   }
-  async getTeachersAsync() {
+
+  async getTeachersAsync(object) {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/Filter`,object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+  
+
+  async getFilterByCareersId(careersId) {
+    try {
+      const response = await this.http.post(`${this.url}/FilterByCareersId`, careersId);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

@@ -50,7 +50,7 @@
                 <td
                   v-if="students.length != 0 && classes.length != 0 && plans.length != 0 
                   && getInfoObject(item.classId, classes)">
-                  {{ getInfoByCourseId(getInfoObject(item.classId, classes).courseId, plans).internshipCourseName }}
+                  {{ getInfoByCourseId(getInfoObject(item.classId, classes).courseId, plans) ? getInfoByCourseId(getInfoObject(item.classId, classes).courseId, plans).internshipCourseName : 'Chưa có đợt' }}
                 </td>
                 <td>
                   <button class="btn btn-danger mr-2" @click="updateStatus(index)" v-if="item.status == 'unactive'">
@@ -80,14 +80,21 @@
       <StudentManagementDetailComponent
         :data="editStudent"
         @change-data="changeData"
+        @change-data-class="changeDataClass"
         :classes="classes"
         :students="students"
-        :plans="plans" />
+        :plans="plans"
+        :courses="courses"
+        :careers="careers" />
 
       <AddStudentsFileComponent
         :data="addStudents"
         @change-data="changeData"
-        :plans="plans" />
+        @change-data-class="changeDataClass"
+        :classes="classes"
+        :courses="courses"
+        :plans="plans"
+        :careers="careers" />
 
       <ConfirmDialog
         :data="confirmStudent"
@@ -101,6 +108,11 @@
           :labels="customLabels"
           :pageSize="5">
         </JwPagination>  
+      </div>
+      <div class="button-continue">
+        <router-link :to="{name:'quan-ly-giao-vien'}" class="btn-continue">
+          Tiếp Tục
+        </router-link>
       </div>
     </div>
   </div>  
