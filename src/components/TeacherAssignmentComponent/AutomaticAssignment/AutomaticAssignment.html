@@ -1,0 +1,138 @@
+<BaseModal  @mouse-click-outside="closeModal()"   :modalName="`AutomaticAssignment`"   :isShow="isShow"   size="xl">
+  <div class="information">
+    <div class="information-assignment">
+      <div class="col-md-12 col-sm-12 col-form-label information-assignment__center ">
+        <h5>Đợt thực tập: {{this.internshipCourseName}} - Hệ: {{this.trainingSystemName}} - Ngành: {{this.careersName}} - Khóa : {{this.courseName}}  </h5>
+      </div>     
+      <div class="information-assignment__center">
+        <h4>THỐNG KÊ</h4>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="information-assignment__statistical">
+            <div class="information-assignment__text">Tổng số giáo viên trong đợt thực tập: {{this.numberTeachers}}</div>
+            <div class="information-assignment__text">Tổng số sinh viên trong đợt thực tập: 20</div>           
+            <div class="information-assignment__text">Tổng số sinh viên chưa được phân công: {{this.numberStudentsUnassigned}}</div>                    
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="information-assignment__statistical">
+            <div class="information-assignment__text">Lớp CDTH18A: 20 sinh viên chưa phân công</div>                    
+            <div class="information-assignment__text">Lớp CDTH18B: 20 sinh viên chưa phân công</div>                    
+            <div class="information-assignment__text">Lớp CDTH18C: 20 sinh viên chưa phân công</div>                    
+            <div class="information-assignment__text">Lớp CDTH18D: 20 sinh viên chưa phân công</div>                  
+          </div>
+        </div>
+      </div>      
+    </div>
+  </div>
+  <div class="information-assignment__center">
+    <h4>PHÂN CÔNG</h4>
+  </div>
+  <div class="students">
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="form-row filter-wrapper ml-0 mr-0">
+            <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-2">
+              <label for="keywords">Lớp</label>
+              <select class="form-control">
+                <option>Lớp CDTH18a</option>
+              </select>
+            </div>
+            <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-2 input-information">           
+              <label for="">Số lượng sinh viên được mỗi giáo viên quản lý</label>      
+              <input type="text" class="form-control input-text-center" name="" id="" v-model=this.averageNumber >  
+          </div>        
+          </div>                         
+        </div> 
+                             
+      </div>           
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+          <thead class="">
+            <tr>
+              <th scope="col">Chọn</th>
+              <th scope="col">STT</th>
+              <th scope="col">MSSV</th>
+              <th scope="col">Tên sinh viên</th>
+              <th scope="col">Lớp</th>
+              <th scope="col">Giáo viên</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">
+                <input type="checkbox" name="" id="">
+              </th>
+              <th scope="row">1</th>
+              <td>0306181001</td>
+              <td>Nguyễn Văn A</td>
+              <td>CĐ TH 18PMA</td>
+              <td>
+                <select class="form-control" name="" id="">
+                  <option value="1">GV Tran Thi A</option>
+                  <option value="1">GV Tran Thi B</option>
+                  <option value="1">GV Tran Thi C</option>
+                  <option value="1">GV Tran Thi D</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <input type="checkbox" name="" id="">
+              </th>
+              <th scope="row">1</th>
+              <td>0306181001</td>
+              <td>Nguyễn Văn A</td>
+              <td>CĐ TH 18PMA</td>
+              <td>
+                <select class="form-control" name="" id="">
+                  <option value="1">GV Tran Thi A</option>
+                  <option value="1">GV Tran Thi B</option>
+                  <option value="1">GV Tran Thi C</option>
+                  <option value="1">GV Tran Thi D</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">
+                <input type="checkbox" name="" id="">
+              </th>
+              <th scope="row">1</th>
+              <td>0306181001</td>
+              <td>Nguyễn Văn A</td>
+              <td>CĐ TH 18PMA</td>
+              <td>
+                <select class="form-control" name="" id="">
+                  <option value="1">GV Tran Thi A</option>
+                  <option value="1">GV Tran Thi B</option>
+                  <option value="1">GV Tran Thi C</option>
+                  <option value="1">GV Tran Thi D</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+  </div>
+
+
+  <template #header>
+    <h3>PHÂN CÔNG GIÁO VIÊN</h3>
+    <button class="close" style="color: red;" @click="closeModal(false)">&times;</button>
+  </template>
+
+  <template #footer>
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <button class="btn btn-primary float-right ml-2">Phân công</button>
+        <button class="btn btn-dark float-right" @click="closeModal()">Hủy</button>
+      </div>
+    </div>
+  </template>
+</BaseModal>

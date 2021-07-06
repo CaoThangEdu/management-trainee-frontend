@@ -1,29 +1,29 @@
-<template src='./ListTeacherAssignmentComponent.html'>
-  
-</template>
+<template src='./ListTeacherAssignmentComponent.html'></template>
 
 <script>
-import TeacherAssignmentDetailComponent from '../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent'
+import ComponentBase from "../../common/component-base/ComponentBase";
+import AutomaticAssignment from "../AutomaticAssignment/AutomaticAssignment.vue"
 export default {
   name: "ListTeacherAssignmentComponent",
-  components: { TeacherAssignmentDetailComponent },
+  extends: ComponentBase,
+  components: {AutomaticAssignment},
   data() {
     return {
-      listBrand: [],
-      editTeacher: {},
+     editCareer: {}
     };
   },
-  methods:{
-    createBrand() {
-      this.editTeacher = {};
-    },
-    async changeData() {
-      // await this.getListBrandAsync();
-    },
-  }
-}
+  methods: {
+    automaticAssignment(){
+       this.editCareer = {};
+    }
+   
+  },
+  watch: {
+   
+  },
+};
 </script>
 
 <style lang='scss'>
-@import './ListTeacherAssignmentComponent.scss';
+@import "./ListTeacherAssignmentComponent.scss";
 </style>

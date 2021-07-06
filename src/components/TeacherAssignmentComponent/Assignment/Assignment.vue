@@ -3,21 +3,17 @@
 
 <script>
 import ListStudentComponent from '../ListStudentComponent/ListStudentComponent.vue'
-import TeacherAssingment from '../TeacherAssignmentComponent/TeacherAssignmentComponent.vue'
-import StudentService from '../../../services/student/studentServices'
-import AppConfig from '../../../../src/app.config.json'
+import ListTeacherAssignmentComponent from '../ListTeacherAssignmentComponent/ListTeacherAssignmentComponent.vue'
+// import StudentService from '../../../services/student/studentServices'
+// import AppConfig from '../../../../src/app.config.json'/
 import ComponentBase from "../../common/component-base/ComponentBase"
-import TeacherAssignmentDetailComponent from "../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent.vue"
-// import ClassService from '../../../services/class/classServices'
-
 
 export default {
   name: "Assigment",
   extends: ComponentBase,
   components: {
     ListStudentComponent,
-    TeacherAssingment,
-    TeacherAssignmentDetailComponent
+    ListTeacherAssignmentComponent
   },
   props: {
     Plan: {
@@ -40,35 +36,35 @@ export default {
   created() {
   },
   async mounted(){
-    await this.getStudentsByCourseIdAsync()
+    //await this.getStudentsByCourseIdAsync()
    
   },
   
   methods: {
    
   
-    async getStudentsByCourseIdAsync(){
-      this.studentFilter.courseId = this.Plan.courseId
+    // async getStudentsByCourseIdAsync(){
+    //   this.studentFilter.courseId = this.Plan.courseId
       
-      // Call Api
-      this.showLoading();
-      const api = new StudentService()
+    //   // Call Api
+    //   this.showLoading();
+    //   const api = new StudentService()
 
-      const response = await api.filterStudentByClassIdAsync(this.studentFilter)
-      this.showLoading(false);
+    //   const response = await api.filterStudentByClassIdAsync(this.studentFilter)
+    //   this.showLoading(false);
 
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.students = response.data.items;
-      console.log("Filter roi ne");
-      console.log(this.students);
-    },
+    //   if(!response.isOK){
+    //     this.showNotifications(
+    //       "error",
+    //       `${AppConfig.notification.title_default}`,
+    //       response.errorMessages
+    //     );
+    //     return;
+    //   }
+    //   this.students = response.data.items;
+    //   console.log("Filter roi ne");
+    //   console.log(this.students);
+    // },
    
   }
 
