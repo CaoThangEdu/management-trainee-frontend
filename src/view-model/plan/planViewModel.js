@@ -7,7 +7,8 @@ export default class PlanViewModel extends ViewModel {
       startDay: null,
       endDay: null,
       description: null,
-      courseId: null,
+      careersId: null,
+      courseName: null,
       status: 'active',
       isDelete: false
     }
@@ -29,6 +30,12 @@ export default class PlanViewModel extends ViewModel {
       },
       description: {
         label: 'Mô tả',
+        rules: {
+          require: '',
+        }
+      },
+      careersId: {
+        label: 'Ngành đào tạo',
         rules: {
           require: '',
         }

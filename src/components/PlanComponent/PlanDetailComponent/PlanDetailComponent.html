@@ -49,21 +49,6 @@
       </div>
     </div>
 
-    <!-- <div class="form-group row" v-if="!plan.id">
-      <label class="col-md-4 col-sm-4 col-form-label">Hệ đào tạo</label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" 
-            v-model="trainingSystemId"
-            @change="filterCareer">
-            <option v-for="(item, index) in trainingSystems" :key="index" :value="item.id">
-              {{ item.trainingSystemName }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div> -->
-
     <div class="row" v-if="typeShowDetail == 'edit'">
       <div class="col-12">
         <div class="wrapCollapse">
@@ -195,64 +180,13 @@
       </div>
     </div>
 
-    <div class="row" v-if="typeShowDetail == 'edit'">
-      <div class="col-12">
-        <div class="wrapCollapse">
-          <div v-for="(faqCourse, i) in faqCourses" :key="i">
-            <dt>
-              <a href="#" :class="{ activeCourse: currentFaqCourse == i }" @click="openComponentCourse(i)">
-                {{ faqCourse.title }}
-              </a>
-            </dt>
-            <dd class="display-hidden" :class="{ active: currentFaqCourse == i }">
-              <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faqCourse.text == 'khoa'">
-                <div class="form-group row">
-                  <label class="col-md-4 col-sm-4 col-form-label">Khóa</label>
-                  <div class="col-md-8 col-sm-8">
-                    <div class="input-group mb-3">
-                      <select class="form-control form-select form-select-class" v-model="plan.courseId">
-                        <option v-for="(item, index) in coursesFilter" :key="index" :value="item.id">
-                          {{ item.courseName }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faqCourse.text == 'themKhoa'">
-                <div class="form-group row">
-                  <label class="col-md-4 col-sm-4 col-form-label">Tên khóa</label>
-                  <div class="col-md-6 col-sm-6">
-                    <input class="w-100" type="number" id="quantity" name="quantity" min="2018" max=""
-                      v-model="course.courseName">
-                  </div>
-                  <div class="col-md-2 col-sm-2">
-                    <button class="btn btn-dribbble" @click="createCourseAsync()">+<i
-                        class="fa fa-book-reader"></i></button>
-                  </div>
-                  <div v-if="createCourseLoading" role="status" aria-hidden="false" aria-label="Loading"
-                    class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
-                </div>
-              </div>
-            </dd>
-          </div>
-        </div>
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Tên khóa</label>
+      <div class="col-md-6 col-sm-6">
+        <input class="w-100" type="number" id="quantity" name="quantity" min="2018" max="" v-model="plan.courseName">
       </div>
     </div>
-
-    <div class="form-group row" v-if="typeShowDetail == 'detail'">
-      <label class="col-md-4 col-sm-4 col-form-label">Khóa</label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" v-model="plan.courseId" disabled>
-            <option v-for="(item, index) in coursesFilter" :key="index" :value="item.id">
-              {{ item.courseName }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
+    
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
       <div class="col-md-8 col-sm-8">

@@ -31,11 +31,7 @@ export default {
       type: Object,
       default: null,
     },
-    courses: {
-      type: Array,
-      default: null
-    },
-    careers: {
+    plans: {
       type: Array,
       default: null
     },

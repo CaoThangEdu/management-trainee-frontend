@@ -8,12 +8,11 @@
       <TimeLineComponent />
     </div> -->
     <div>
-      <ListPlanComponent :plans="plans" :courses="courses"
+      <ListPlanComponent :plans="plans"
         :trainingSystems="trainingSystems" :careers="careers"
         @change-data-plan-component="updateDataPlan"
         @change-page="changePage" 
-        @change-data-career="changeDataCareer" 
-        @change-data-course="changeDataCourse"
+        @change-data-career="changeDataCareer"
         @change-data-training-system="changeDataTrainingSystem" />
     </div>
   </div>
@@ -26,7 +25,6 @@ import ListPlanComponent from '../../../components/PlanComponent/ListPlanCompone
 import ComponentBase from '../../../components/common/component-base/ComponentBase.vue'
 import PlanService from '../../../services/plan/planServices'
 import AppConfig from '../../../../src/app.config.json'
-import CourseService from '../../../services/course/courseServices'
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import CareerService from '../../../services/career/careerServices'
 import PlanningStepsComponent from '../../../components/planningStepsComponent/planningStepsComponent.vue'
@@ -43,7 +41,6 @@ export default {
   data() {
     return {
       plans: [],
-      courses:[],
       trainingSystems: [],
       careers: [],
       filter: {
@@ -58,7 +55,6 @@ export default {
   async mounted(){
     await this.getPlansAsync();
     await this.getTrainingSystemsFilterAsync();
-    await this.getCoursesFilterAsync();
     await this.getCareersFilterAsync();
   },
 
@@ -131,31 +127,6 @@ export default {
       this.careers = response.data;
     },
 
-    async getCoursesFilterAsync() {
-      let filterCourse = {
-        careersId: "",
-        isDelete: false,
-        courseName: "",
-        status: "active",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new CourseService();
-
-      const response = await api.getCoursesFilterAsync(filterCourse);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.courses = response.data;
-    },
-
     async updateDataPlan() {
       this.changeDataPlan = true;
       await this.getPlansAsync();
@@ -168,10 +139,6 @@ export default {
 
     async changePage(currentPage) {
       await this.getPlansAsync(currentPage);
-    },
-
-    async changeDataCourse() {
-      await this.getCoursesFilterAsync();
     },
 
     async changeDataTrainingSystem() {

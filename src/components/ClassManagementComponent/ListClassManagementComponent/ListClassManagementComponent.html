@@ -13,17 +13,6 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2"
-                v-if="careers.length != 0">
-                <select @change="getClassesFilterAsync" class="form-control form-select form-select-class"
-                  name="coursesId" id="coursesId" v-model="filter.courseId">
-                  <option v-for="(item,index) in courses" :key="index" :value="item.id">
-                    {{  item.courseName + ' (' +
-                        getInfoObject(item.careersId, careers
-                        ).careersName
-                        + ')'}}</option>
-                </select>
-              </div>
               <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
                 <select @change="getClassesFilterAsync" 
                   class="form-control form-select form-select-class"
@@ -51,9 +40,7 @@
               <tr>
                 <th scope="col">STT</th>
                 <th scope="col">Tên lớp</th>
-                <th scope="col">Khóa</th>
-                <th scope="col">Ngành</th>
-                <th scope="col">Hệ</th>
+                <th scope="col">Đợt thực tập</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>
               </tr>
@@ -62,21 +49,8 @@
               <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{ item.className }}</td>
-                <td
-                  v-if="courses.length != 0">
-                  {{ getInfoObject(item.courseId, courses).courseName }}
-                </td>
-                <td v-if="careers.length != 0">
-                  {{ getInfoObject(
-                      getInfoObject(item.courseId, courses).careersId, careers
-                      ).careersName }}
-                </td>
-                <td v-if="trainingSystems.length != 0">
-                  {{  getInfoObject( 
-                        getInfoObject(
-                          getInfoObject(item.courseId, courses).careersId, careers
-                          ).trainingSystemId , trainingSystems).trainingSystemName
-                  }}
+                <td v-if="plans.length > 0">
+                  {{ getInfoObject(item.internshipCourseId, plans).internshipCourseName }}
                 </td>
                 <td>
                   <button class="btn btn-danger mr-2"
@@ -106,8 +80,7 @@
       <ClassManagementDetailComponent
         :data="editClass"
         @change-data="changeData"
-        :careers="careers"
-        :courses="courses" />
+        :plans="plans" />
       
       <ConfirmDialog :data="confirmClassRoom" @agree="deleteClassConfirm"></ConfirmDialog>
 
