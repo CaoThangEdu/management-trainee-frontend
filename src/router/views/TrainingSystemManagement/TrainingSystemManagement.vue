@@ -22,15 +22,7 @@
               v-if="faq.text == 'ListCareerManagementComponent'"
             >
               <ListCareerManagementComponent 
-                v-if="renderCareerAndCourseComponent"
-                @change-career="changeCareer" />
-            </div>
-            <div
-              class="col-xl-12 col-md-12 col-sm-12 col-12"
-              v-if="faq.text == 'ListCourseManagementComponent'"
-            >
-              <ListCourseManagementComponent 
-                v-if="renderCareerAndCourseComponent && renderCourseComponent"/>
+                v-if="renderCareerComponent" />
             </div>
           </dd>
         </div>
@@ -42,12 +34,10 @@
 <script>
 import ListTrainingSystemManagementComponent from "../../../components/TrainingSystemManagementComponent/ListTrainingSystemManagementComponent/ListTrainingSystemManagementComponent";
 import ListCareerManagementComponent from "../../../components/CareerManagementComponent/ListCareerManagementComponent/ListCareerManagementComponent";
-import ListCourseManagementComponent from "../../../components/CourseManagementComponent/ListCourseManagementComponent/ListCourseManagementComponent";
 export default {
   components: {
     ListTrainingSystemManagementComponent,
     ListCareerManagementComponent,
-    ListCourseManagementComponent,
   },
   data() {
     return {
@@ -60,34 +50,22 @@ export default {
           title: "Danh sách ngành",
           text: "ListCareerManagementComponent",
         },
-        {
-          title: "Danh sách khóa",
-          text: "ListCourseManagementComponent",
-        },
       ],
       currentFaq: 0,
-      renderCareerAndCourseComponent: true,
-      renderCourseComponent: true,
+      renderCareerComponent: true,
     };
   },
 
   methods: {
     openComponet(i) {
-      
       this.currentFaq = i;
     },
     changeTrainingSystem() {
-      this.renderCareerAndCourseComponent = false;
+      this.renderCareerComponent = false;
       this.$nextTick(() => {
-        this.renderCareerAndCourseComponent = true;
+        this.renderCareerComponent = true;
       });
     },
-    changeCareer() {
-      this.renderCourseComponent = false;
-      this.$nextTick(() => {
-        this.renderCourseComponent = true;
-      });
-    }
   },
 };
 </script>

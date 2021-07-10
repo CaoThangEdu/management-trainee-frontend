@@ -12,8 +12,6 @@ import AppConfig from '../../../../src/app.config.json'
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import CareerService from '../../../services/career/careerServices'
 import CareerViewModel from "../../../view-model/career/careerViewModel"
-import CourseService from '../../../services/course/courseServices'
-import CourseViewModel from "../../../view-model/course/courseViewModel"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import TrainingSystemViewModel from "../../../view-model/trainingsystem/trainingsystemViewModel"
 
@@ -195,46 +193,6 @@ export default {
         `${AppConfig.notification.content_created_success_default}`
       );
       this.$emit("change-data-training-system");
-    },
-
-    async createCourseAsync() {
-      this.course.careersId = this.careerId;
-      
-      // validate
-      let viewModel = new CourseViewModel();
-      viewModel.setFields(this.course);
-      this.errorMessages = viewModel.isValid();
-      if (this.errorMessages.length > 0) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          this.errorMessages
-        );
-        return;
-      }
-      this.course.status = "active";
-      this.course.isDelete = "false";
-      this.createCourseLoading = true;
-      let api = new CourseService();
-      let response = await api.createCourseAsync(this.course);
-      this.createCourseLoading = false;
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.plan.courseId = response.data.id;
-      this.courseNamePlan = response.data.courseName;
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
-      this.$emit("change-data-course");
-      this.filterCourse();
     },
 
     themNganh() {

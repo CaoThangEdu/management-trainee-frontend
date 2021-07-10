@@ -1,18 +1,16 @@
-<template src='./ListClassManagementComponent.html'>
+<template src="./ListClassManagementComponent.html">
   
 </template>
 
 <script>
-import ClassManagementDetailComponent from '../ClassManagementDetailComponent/ClassManagementDetailComponent'
-import ComponentBase from "../../common/component-base/ComponentBase"
-import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import CourseService from '../../../services/course/courseServices'
-import ClassService from '../../../services/class/classServices'
-import AppConfig from '../../../../src/app.config.json'
-import JwPagination from 'jw-vue-pagination';
-import CareerService from '../../../services/career/careerServices';
+import ClassManagementDetailComponent from "../ClassManagementDetailComponent/ClassManagementDetailComponent";
+import ComponentBase from "../../common/component-base/ComponentBase";
+import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
+import ClassService from "../../../services/class/classServices";
+import AppConfig from "../../../../src/app.config.json";
+import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
-import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
+import PlanService from '../../../services/plan/planServices';
 
 export default {
   name: "ListClassManagementComponent",
@@ -26,35 +24,54 @@ export default {
   data() {
     return {
       classes: [],
-      courses: [],
       editClass: {},
       confirmClassRoom: null,
       pageOfItems: [],
       customLabels: {
-        first: '<<',
-        last: '>>',
-        previous: '<',
-        next: '>'
+        first: "<<",
+        last: ">>",
+        previous: "<",
+        next: ">"
       },
       filter: {
-        courseId: "",
+        internshipCourseId: "",
         isDelete: false,
         className: "",
         status: "active",
       },
-      careers:[],
-      trainingSystems: [],
+      plans: [],
     };
   },
 
   async mounted(){
     await this.getClassesFilterAsync();
-    await this.getCoursesFilterAsync();
-    await this.getCareersFilterAsync();
-    await this.getTrainingSystemsFilterAsync();
+    await this.getPlansAsync();
   },
 
   methods:{
+    async getPlansAsync(){
+      let planFilter = {
+        status: "",
+        isDelete: false
+      };
+      // Call Api
+      this.showLoading();
+      const api = new PlanService()
+
+      const response = await api.getPlansAsync(planFilter);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.plans = response.data
+    },
+
     getStatusIcon(status) {
       return CrudMixin.methods.getStatusIcon(status);
     },
@@ -65,10 +82,10 @@ export default {
 
     async updateStatus(index) {
       let classRoom = this.pageOfItems[index];
-      if (classRoom.status === 'active') {
-        classRoom.status = 'unactive';
+      if (classRoom.status === "active") {
+        classRoom.status = "unactive";
       } else {
-        classRoom.status = 'active';
+        classRoom.status = "active";
       }
       this.showLoading();
       let api = new ClassService();
@@ -99,80 +116,6 @@ export default {
 
     createClass() {
       this.editClass = {};
-    },
-
-    async getTrainingSystemsFilterAsync() {
-      let filterTrainingSystem = {
-        trainingSystemName: "",
-        isDelete: false,
-        status: "active",
-      }
-      // Call Api
-      this.showLoading();
-      const api = new TrainingSystemService()
-
-      const response = await api.getTrainingSystemsFilterAsync(filterTrainingSystem);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.trainingSystems = response.data;
-    },
-
-    async getCareersFilterAsync(){
-      let filterCareer = {
-        trainingSystemId: "",
-        isDelete: false,
-        careersName: "",
-        status: "active",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new CareerService()
-
-      const response = await api.getCareersFilterAsync(filterCareer);
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.careers = response.data;
-    },
-
-    async getCoursesFilterAsync() {
-      let filterCourse = {
-        careersId: "",
-        isDelete: false,
-        courseName: "",
-        status: "active",
-      }
-      // Call Api
-      this.showLoading();
-      const api = new CourseService();
-
-      const response = await api.getCoursesFilterAsync(filterCourse);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.courses = response.data;
     },
     
     async getClassesFilterAsync(){
@@ -235,6 +178,6 @@ export default {
 }
 </script>
 
-<style lang='scss'>
-@import './ListClassManagementComponent.scss';
+<style lang="scss">
+@import "./ListClassManagementComponent.scss";
 </style>

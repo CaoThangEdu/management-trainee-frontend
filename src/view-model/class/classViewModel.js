@@ -5,7 +5,7 @@ export default class ClassViewModel extends ViewModel {
     this.fields = {
       className: null,
       status: "active",
-      courseId: null,
+      internshipCourseId: null,
       isDelete: false,
     }
   }
@@ -14,6 +14,12 @@ export default class ClassViewModel extends ViewModel {
     let validations = {
       className: {
         label: 'Tên lớp',
+        rules: {
+          require: '',
+        }
+      },
+      internshipCourseId: {
+        label: 'Tên đợt thực tập',
         rules: {
           require: '',
         }
