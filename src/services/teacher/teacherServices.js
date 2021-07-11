@@ -16,7 +16,15 @@ export default class TeacherService extends ServicesBaseAPI {
     }
     return this.result;
   }
-  
+  async getTeachersInInternshipCourse(object) {
+    try {
+      const response = await this.http.post(`${this.url}/GetTeacherInInternshipCourse`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }  
 
   async getFilterByCareersId(careersId) {
     try {
