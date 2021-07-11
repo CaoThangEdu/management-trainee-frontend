@@ -7,6 +7,16 @@ export default class PlanService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/InternshipCourse`
   }
 
+  async getPlanByIdAsync(guid) {
+    try {
+      const response = await this.http.get(`${this.url}/Get?id=${guid}`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
   async getPlansAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Filter`, object);

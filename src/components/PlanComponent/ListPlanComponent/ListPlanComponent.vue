@@ -2,7 +2,6 @@
 </template>
 
 <script>
-import PlanDetailComponent from "../PlanDetailComponent/PlanDetailComponent";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog" ;
 import PlanService from "../../../services/plan/planServices";
@@ -13,7 +12,6 @@ export default {
   name: "ListPlan",
   extends: ComponentBase,
   components: {
-    PlanDetailComponent,
     ConfirmDialog,
     JwPagination,
   },
@@ -59,18 +57,6 @@ export default {
   },
 
   methods:{
-    changeDataCareer() {
-      this.$emit("change-data-career");
-    },
-
-    changeDataCourse() {
-      this.$emit("change-data-course");
-    },
-
-    changeDataTrainingSystem() {
-      this.$emit("change-data-training-system");
-    },
-
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
@@ -78,28 +64,6 @@ export default {
 
     changePage(currentPage) {
       this.$emit("change-page", currentPage);
-    },
-
-    createPlan() {
-      this.showDetail = "edit";
-      this.editPlan = {};
-    },
-
-    updatePlan(index, detail) {
-      this.showDetail = detail;
-      this.renderPlanDetail = false;
-      this.$nextTick(() => {
-        this.renderPlanDetail = true;
-        this.editPlan = Object.assign({}, this.plans[index]);
-      });
-    },
-
-    showdetailPlan(index) {
-      this.renderPlanInfo = false;
-      this.$nextTick(() => {
-        this.renderPlanInfo = true;
-      });
-      this.detailPlan = Object.assign({}, this.plans[index]);
     },
 
     deletePlan(id) {
@@ -126,10 +90,6 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_deleted_success_default}`,
       );
-    },
-    
-    async changeData() {
-      this.$emit("change-data-plan-component");
     },
   }
 }

@@ -3,7 +3,7 @@ export default [{
   _children: [{
     _name: 'CSidebarNavItem',
     name: 'Lên kế hoạch',
-    to: '/',
+    to: '/plan/list',
     icon: 'cil-speedometer',
     badge: {
       color: 'primary',

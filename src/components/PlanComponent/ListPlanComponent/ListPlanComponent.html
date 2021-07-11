@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mt-4">
   <div class="col-12">
     <div class="card">
       <header class="card-header">
@@ -7,20 +7,14 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Danh sách kế hoạch
-        <button class="btn btn-primary float-right" @click="createPlan">+ Thêm mới</button>
+        <router-link :to="{name:'them-ke-hoach'}" class="btn btn-primary float-right">
+          + Thêm mới
+        </router-link>
       </header>
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <!-- <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12 ">
-                <div class="input-group">
-                  <select class="custom-select" id="inputGroupSelect04">
-                    <option value="1">Đang diễn ra</option>
-                    <option value="2">Đã diễn ra</option>
-                  </select>
-                </div>
-              </div> -->
               <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
                 <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
               </div>
@@ -48,8 +42,8 @@
                 <td>{{ item.startDay }}</td>
                 <td>{{ item.endDay }}</td>
                 <td>
-                  <button class="btn btn-primary mr-2" @click="updatePlan(index, 'edit')">Sửa</button>
-                  <button class="btn btn-info mr-2" @click="updatePlan(index, 'detail')">Chi tiết</button>
+                  <router-link :to="{name:'sua-ke-hoach', params: { guid: item.id } }"
+                    class="btn btn-primary mr-2">Sửa</router-link>
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
@@ -59,15 +53,6 @@
           </table>
         </div>
       </div>
-      <PlanDetailComponent :data="editPlan" 
-        @change-data="changeData"
-        @change-data-career="changeDataCareer"
-        @change-data-course="changeDataCourse"
-        @change-data-training-system="changeDataTrainingSystem"
-        :showDetail="showDetail"
-        :courses="courses"
-        :trainingSystems="trainingSystems"
-        :careers="careers" />
       <div class="card-footer d-flex justify-content-center text--blue">
         <JwPagination
           :items="plans"
@@ -77,7 +62,7 @@
         </JwPagination>  
       </div>
       <div class="button-continue">
-        <router-link :to="{name:'quan-ly-sinh-vien'}" class="btn-continue">
+        <router-link :to="{name:'ds-sinh-vien'}" class="btn-continue">
           Tiếp Tục
         </router-link>
       </div>

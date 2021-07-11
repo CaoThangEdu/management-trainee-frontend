@@ -176,8 +176,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_success_default}`
       );
-      this.getTrainingSystemsAsync();
-
+      await this.getCareersFilterAsync();
     },
   }
 }

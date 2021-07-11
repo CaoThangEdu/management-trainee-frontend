@@ -7,15 +7,55 @@ const routes = [
   //homePage
   {
     path: "/",
-    name: "len-ke-hoach",
+    name: "home",
     component: () =>
       import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/Plan/Plan.vue"
+        "../router/views/Home/Home.vue"
       ),
     meta: {
-      breadcrumbName: "Lên kế hoạch",
+      breadcrumbName: 'Trang chủ'
     },
+  },
+  {
+    path: "/plan",
+    name: "len-ke-hoach",
+    component: {
+      render(c) {
+        return c('router-view');
+      }
+    },
+    meta: {
+      breadcrumbName: 'Lên kế hoạch'
+    },
+    children: [{
+      path: 'list',
+      name: 'ds-ke-hoach',
+      component: () =>
+        import("../router/views/Plan/Plan.vue"),
+      meta: {
+        breadcrumbName: 'Danh sách',
+      },
+    },
+    {
+      path: 'create',
+      name: 'them-ke-hoach',
+      component: () =>
+        import("../components/PlanComponent/PlanDetail/PlanDetail.vue"),
+      meta: {
+        breadcrumbName: 'Thêm mới',
+      },
+    },
+    {
+      path: 'update/:guid',
+      name: 'sua-ke-hoach',
+      props: true,
+      component: () =>
+        import("../components/PlanComponent/PlanDetail/PlanDetail.vue"),
+      meta: {
+        breadcrumbName: 'Chỉnh sửa',
+      },
+    },
+  ]
   },
   {
     path: "/login",
@@ -137,17 +177,59 @@ const routes = [
       breadcrumbName: "Quản lý lớp",
     },
   },
+  // {
+  //   path: "/student-management",
+  //   name: "quan-ly-sinh-vien",
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "ControlExample" */
+  //       "../router/views/StudentManagement/StudentManagement.vue"
+  //     ),
+  //   meta: {
+  //     breadcrumbName: "Quản lý sinh viên",
+  //   },
+  // },
   {
     path: "/student-management",
     name: "quan-ly-sinh-vien",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/StudentManagement/StudentManagement.vue"
-      ),
-    meta: {
-      breadcrumbName: "Quản lý sinh viên",
+    component: {
+      render(c) {
+        return c('router-view');
+      }
     },
+    meta: {
+      breadcrumbName: 'Sinh viên'
+    },
+    children: [{
+        path: 'list',
+        name: 'ds-sinh-vien',
+        component: () =>
+          import("../router/views/StudentManagement/StudentManagement.vue"),
+        meta: {
+          breadcrumbName: 'Danh sách',
+        },
+      },
+      {
+        path: 'create/:guid',
+        name: 'them-sv-cua-dot',
+        props: true,
+        component: () =>
+          import("../router/views/StudentByPlan/StudentByPlan.vue"),
+        meta: {
+          breadcrumbName: 'Thêm mới',
+        },
+      },
+      // {
+      //   path: 'update/:guid',
+      //   name: 'sua-ke-hoach',
+      //   props: true,
+      //   component: () =>
+      //     import("../components/PlanComponent/PlanDetail/PlanDetail.vue"),
+      //   meta: {
+      //     breadcrumbName: 'Chỉnh sửa',
+      //   },
+      // },
+    ]
   },
   {
     path: "/teacher-management",
