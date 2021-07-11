@@ -1,8 +1,7 @@
 <template>
   <div>
-    <PlanningStepsComponent :isActiveStep="isActiveStep" />
     <ListStudentManagement 
-      :students="students" :courses="courses"
+      :students="students"
       :plans="plans" :classes="classes"
       @change-data-student-component="changeDataStudentComponent"
       @change-data-classroom="changeDataClassroom"
@@ -17,8 +16,6 @@ import StudentService from '../../../services/student/studentServices';
 import AppConfig from '../../../../src/app.config.json';
 import PlanService from '../../../services/plan/planServices';
 import ClassService from '../../../services/class/classServices';
-import PlanningStepsComponent from '../../../components/planningStepsComponent/planningStepsComponent.vue';
-import CourseService from '../../../services/course/courseServices';
 import CareerService from '../../../services/career/careerServices';
 
 export default {
@@ -26,14 +23,12 @@ export default {
   extends: ComponentBase,
   components: {
     ListStudentManagement,
-    PlanningStepsComponent,
   },
   data() {
     return {
       students: [],
       plans: [],
       classes: [],
-      courses:[],
       careers: [],
       filter: {
         keyword: "",
@@ -41,7 +36,6 @@ export default {
         status: "active",
         classId: "",
       },
-      isActiveStep:"2",
     };
   },
   
@@ -50,7 +44,6 @@ export default {
     await this.getPlansFilterAsync();
     await this.getCareersFilterAsync();
     await this.getStudentsAsync();
-    await this.getCoursesFilterAsync();
   },
   
   methods:{
@@ -77,31 +70,6 @@ export default {
         return;
       }
       this.classes = response.data;
-    },
-    
-    async getCoursesFilterAsync() {
-      let filterCourse = {
-        careersId: "",
-        isDelete: false,
-        courseName: "",
-        status: "active",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new CourseService();
-
-      const response = await api.getCoursesFilterAsync(filterCourse);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.courses = response.data;
     },
 
     async getCareersFilterAsync(){

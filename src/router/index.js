@@ -130,18 +130,6 @@ const routes = [
     },
   },
   {
-    path: "/course-management",
-    name: "quan-ly-nganh",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/CourseManagement/CourseManagement.vue"
-      ),
-    meta: {
-      breadcrumbName: "Quản lý khóa",
-    },
-  },
-  {
     path: "/trainingsystem-management",
     name: "quan-ly-he",
     component: () =>
@@ -150,7 +138,7 @@ const routes = [
         "../router/views/TrainingSystemManagement/TrainingSystemManagement.vue"
       ),
     meta: {
-      breadcrumbName: "Quản lý hệ - ngành - khóa",
+      breadcrumbName: "Quản lý hệ - ngành",
     },
   },
   {

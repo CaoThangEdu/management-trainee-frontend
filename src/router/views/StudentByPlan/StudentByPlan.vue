@@ -1,103 +1,108 @@
 <template>
-<div>
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <header class="card-header">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
-            <path fill="var(--ci-primary-color, currentColor)" d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z" class="ci-primary"></path>
-          </svg> Danh sách lớp của đợt
-          <b>"{{ plan.internshipCourseName }}"</b>
-        </header>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table">
-              <thead class="">
-                <tr>
-                  <th scope="col">STT</th>
-                  <th scope="col">Tên lớp</th>
-                  <th scope="col" class="text-center">Số sinh viên trong lớp</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(classItem, index) in classes" :key="index">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <th scope="row">{{ classItem.className }}</th>
-                  <th scope="row" class="text-center">{{ sumStuentInClass(classItem.id) }}</th>
-                </tr>
-                <tr v-show="classes == null || classes.length === 0">
-                  <th colspan="5" class="text-left">Không có dữ liệu nào được tìm thấy.</th>
-                </tr>
-              </tbody>
-            </table>
+<div class="row">
+  <div class="col-12">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <PlanningStepsComponent :isActiveStep="isActiveStep" />
+    </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
+          <header class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+              <path fill="var(--ci-primary-color, currentColor)" d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z" class="ci-primary"></path>
+            </svg> Danh sách lớp của đợt
+            <b>"{{ plan.internshipCourseName }}"</b>
+          </header>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class="">
+                  <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên lớp</th>
+                    <th scope="col" class="text-center">Số sinh viên trong lớp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(classItem, index) in classes" :key="index">
+                    <th scope="row">{{ index + 1 }}</th>
+                    <th scope="row">{{ classItem.className }}</th>
+                    <th scope="row" class="text-center">{{ sumStuentInClass(classItem.id) }}</th>
+                  </tr>
+                  <tr v-show="classes == null || classes.length === 0">
+                    <th colspan="5" class="text-left">Không có dữ liệu nào được tìm thấy.</th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <header class="card-header">
-          Thêm mới sinh viên của đợt
-          <b>"{{ plan.internshipCourseName }}"</b>
-        </header>
-        <div class="row">
-          <div class="col-12">
-            <div class="wrapCollapse">
-              <div v-for="(faq, i) in faqs" :key="i">
-                <dt>
-                  <a @submit.prevent :class="{ active: currentFaq == i }" @click="openComponet(i)">
-                    {{ faq.title }}
-                  </a>
-                </dt>
-                <dd class="display-hidden" :class="{ active: currentFaq == i }">
-                  <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'lop'">
-                    <div class="form-group row">
-                      <label class="col-md-4 col-sm-4 col-form-label">
-                        Lớp (<span class="text--red">*</span>)
-                      </label>
-                      <div class="col-md-8 col-sm-8">
-                        <div class="input-group mb-3">
-                          <select class="form-control form-select form-select-class" v-model="classIdSelected">
-                            <option v-for="(item, index) in classes" :key="index" :value="item.id">
-                              {{ item.className }}
-                            </option>
-                          </select>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <header class="card-header">
+            Thêm mới sinh viên của đợt
+            <b>"{{ plan.internshipCourseName }}"</b>
+          </header>
+          <div class="row">
+            <div class="col-12">
+              <div class="wrapCollapse">
+                <div v-for="(faq, i) in faqs" :key="i">
+                  <dt>
+                    <a @submit.prevent :class="{ active: currentFaq == i }" @click="openComponet(i)">
+                      {{ faq.title }}
+                    </a>
+                  </dt>
+                  <dd class="display-hidden" :class="{ active: currentFaq == i }">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'lop'">
+                      <div class="form-group row">
+                        <label class="col-md-4 col-sm-4 col-form-label">
+                          Lớp (<span class="text--red">*</span>)
+                        </label>
+                        <div class="col-md-8 col-sm-8">
+                          <div class="input-group mb-3">
+                            <select class="form-control form-select form-select-class" v-model="classIdSelected">
+                              <option v-for="(item, index) in classes" :key="index" :value="item.id">
+                                {{ item.className }}
+                              </option>
+                            </select>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'themLop'">
-                    <div class="form-group row">
-                      <label class="col-md-4 col-sm-4 col-form-label">Tên lớp</label>
-                      <div class="col-md-6 col-sm-6">
-                        <input type="text" class="form-control" id="name" v-model="classroom.className" placeholder="Tên lớp cần tạo">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'themLop'">
+                      <div class="form-group row">
+                        <label class="col-md-4 col-sm-4 col-form-label">Tên lớp</label>
+                        <div class="col-md-6 col-sm-6">
+                          <input type="text" class="form-control" id="name" v-model="classroom.className" placeholder="Tên lớp cần tạo">
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                          <button class="btn btn-linkedin" @click="createClassAsync()">+<i class="fa fa-book-reader"></i></button>
+                        </div>
+                        <div v-if="createClassLoading" role="status" aria-hidden="false" aria-label="Loading" class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
                       </div>
-                      <div class="col-md-2 col-sm-2">
-                        <button class="btn btn-linkedin" @click="createClassAsync()">+<i class="fa fa-book-reader"></i></button>
-                      </div>
-                      <div v-if="createClassLoading" role="status" aria-hidden="false" aria-label="Loading" class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
-                    </div>
 
-                  </div>
-                </dd>
+                    </div>
+                  </dd>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-md-4 col-sm-4 col-form-label ml-3">Chọn file excel</label>
-          <div class="col-md-6 col-sm-6">
-            <div class="input-group mb-3">
-              <input type="file" class="btn btn-secondary float-right btn-add-file" @change="previewFiles" />
+          <div class="form-group row">
+            <label class="col-md-4 col-sm-4 col-form-label ml-3">Chọn file excel</label>
+            <div class="col-md-6 col-sm-6">
+              <div class="input-group mb-3">
+                <input type="file" class="btn btn-secondary float-right btn-add-file" @change="previewFiles" />
+              </div>
             </div>
           </div>
-        </div>
-        <div class="text-center mb-4">
-          <button @click="$router.go(-1)" id="cancel" class="btn btn-primary mr-2">Hủy</button>
-          <button @click="save" id="submit" class="btn btn-success">Lưu</button>
+          <div class="text-center mb-4">
+            <router-link :to="{name:'ds-ke-hoach'}" class="btn btn-primary mr-2">Hủy</router-link>
+            <button @click="save" id="submit" class="btn btn-success">Lưu</button>
+          </div>
         </div>
       </div>
     </div>
@@ -118,11 +123,15 @@ import {
   ADD_STUDENT
 } from "../../../config/constant";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import PlanningStepsComponent from '../../../components/planningStepsComponent/planningStepsComponent.vue';
 
 export default {
   name: 'AddStudentsFileByPlan',
   extends: ComponentBase,
   mixins: [CrudMixin],
+  components: {
+    PlanningStepsComponent,
+  },
   data() {
     return {
       isShowAddFile: false,
@@ -154,6 +163,7 @@ export default {
       classes: [],
       plan: {},
       planName: null,
+      isActiveStep:"2",
     }
   },
   props: {
@@ -177,11 +187,12 @@ export default {
 
   methods: {
     sumStuentInClass(classId) {
-      if(!this.studentsCallApi) {
+      if (!this.studentsCallApi) {
         return 0;
       }
-      let result = this.studentsCallApi.reduce((total, student) => 
-        {return student.classId == classId ? total+1 : total}, 0);
+      let result = this.studentsCallApi.reduce((total, student) => {
+        return student.classId == classId ? total + 1 : total
+      }, 0);
       return result;
     },
 
@@ -242,7 +253,9 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}` + ' lớp'
       );
-      this.$emit("change-data-class");
+      await this.getClassesFilterAsync();
+      this.classes = this.classes.filter(
+        classroom => classroom.internshipCourseId == this.guid);
     },
 
     getInfoObject(id, list) {
@@ -258,14 +271,6 @@ export default {
         if (this.classes[x].className === className) {
           return this.classes[x].id
         }
-      }
-    },
-
-    closeModal(changeData) {
-      this.isShowAddFile = false;
-
-      if (changeData) {
-        this.$emit("change-data");
       }
     },
 
@@ -423,7 +428,6 @@ export default {
           return;
         }
         // Tạo thành công
-        this.closeModal(true);
       }
       this.showLoading(false);
       await this.getStudentsAsync();
@@ -431,16 +435,19 @@ export default {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          "Thêm mới thất bại"
+          "Thêm mới sinh viên thất bại"
         );
       } else {
         this.showNotifications(
           "success",
           `${AppConfig.notification.title_default}`,
-          `${AppConfig.notification.content_created_success_default}`
+          `${AppConfig.notification.content_created_success_default}` + ' sinh viên'
         );
       }
-      await this.getStudentsAsync()
+      await this.getStudentsAsync();
+      await this.getPlanByIdAsync(this.guid);
+      this.classes = this.classes.filter(
+        classroom => classroom.internshipCourseId == this.guid);
     },
   },
 

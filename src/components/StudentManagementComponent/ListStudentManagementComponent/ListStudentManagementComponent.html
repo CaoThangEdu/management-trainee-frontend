@@ -9,7 +9,7 @@
         </svg> Danh sách sinh viên
         <button class="btn btn-primary float-right btn-search"          
           @click="createStudent">+ Thêm mới</button>
-        <button class="btn btn-secondary float-right btn-search mr-2" @click="createStudentsFile">+ Thêm file</button>
+        <!-- <button class="btn btn-secondary float-right btn-search mr-2" @click="createStudentsFile">+ Thêm file</button> -->
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -84,7 +84,6 @@
         :classes="classes"
         :students="students"
         :plans="plans"
-        :courses="courses"
         :careers="careers" />
 
       <AddStudentsFileComponent
@@ -92,7 +91,6 @@
         @change-data="changeData"
         @change-data-class="changeDataClass"
         :classes="classes"
-        :courses="courses"
         :plans="plans"
         :careers="careers" />
 
@@ -108,11 +106,6 @@
           :labels="customLabels"
           :pageSize="5">
         </JwPagination>  
-      </div>
-      <div class="button-continue">
-        <router-link :to="{name:'quan-ly-giao-vien'}" class="btn-continue">
-          Tiếp Tục
-        </router-link>
       </div>
     </div>
   </div>  

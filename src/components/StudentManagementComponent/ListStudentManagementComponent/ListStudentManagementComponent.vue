@@ -57,10 +57,6 @@ export default {
       type: Array,
       default: null,
     },
-    courses: {
-      type: Array,
-      default: null,
-    },
     careers: {
       type: Array,
       default: null,
@@ -145,6 +141,7 @@ export default {
       );
       this.$emit("change-data-student-component");
     },
+    
     async updateStatus(index) {
       let student = this.pageOfItems[index];
       if (student.status === 'active') {
