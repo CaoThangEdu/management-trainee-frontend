@@ -6,6 +6,7 @@ export default class TrainingSystemViewModel extends ViewModel {
       trainingSystemName: null,
       isDelete: false,
       status: 'active',
+      facultyId: null,
     }
   }
 

@@ -13,7 +13,7 @@
         Hệ đào tạo (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8"
-        v-if="trainingSystems.length != 0">
+        v-if="trainingSystems">
         <select class="form-control form-select form-select-class" v-model="career.trainingSystemId">
           <option v-for="(item, index) in trainingSystems" :key="index" :value="item.id">{{item.trainingSystemName}}
           </option>

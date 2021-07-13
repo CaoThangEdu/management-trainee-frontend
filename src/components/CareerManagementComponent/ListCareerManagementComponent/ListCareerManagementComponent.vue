@@ -46,7 +46,7 @@ export default {
 
   async mounted(){
     await this.getCareersFilterAsync();
-    await this.getTrainingSystemsFilterAsync();    
+    await this.getTrainingSystemsFilterAsync();
   },
   
   methods:{

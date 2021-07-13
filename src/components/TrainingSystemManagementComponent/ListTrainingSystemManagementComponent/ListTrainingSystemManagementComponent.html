@@ -74,7 +74,8 @@
         </div>
       </div>
       <TrainingSystemManagementDetailComponent 
-        :data="editTrainingSystem" @change-data="changeData" />
+        :data="editTrainingSystem" @change-data="changeData"
+        :faculties="faculties" />
 
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems == null || pageOfItems.length === 0">

@@ -6,6 +6,7 @@ import TrainingSystemManagementDetailComponent from '../TrainingSystemManagement
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
+import FacultyServices from '../../../services/faculty/facultyServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
 import CrudMixin from "../../../helpers/mixins/crudMixin";
@@ -35,12 +36,14 @@ export default {
         trainingSystemName: "",
         isDelete: false,
         status: "active",
-      }
+      },
+      faculties: [],
     };
   },
 
   async mounted() {
-    await this.getTrainingSystemsFilterAsync()
+    await this.getTrainingSystemsFilterAsync();
+    await this.getFacultiesFilterAsync();
   },
 
   methods: {
@@ -70,6 +73,28 @@ export default {
         return;
       }
       this.trainingsystems = response.data;
+    },
+
+    async getFacultiesFilterAsync() {
+      let facultyFilter = {
+        "isDelete": false
+      };
+      // Call Api
+      this.showLoading();
+      const api = new FacultyServices()
+
+      const response = await api.getFacultiesFilterAsync(facultyFilter);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.faculties = response.data;
     },
 
     async changePage(currentPage) {
