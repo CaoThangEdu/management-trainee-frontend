@@ -109,13 +109,35 @@ export default {
       this.editTrainingSystem = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteTrainingSystem(id) {
-      this.confirmTrainingSystem = {
-        id: id
-      };
+    deleteTrainingSystem(trainingSystem) {
+      this.confirmTrainingSystem = trainingSystem;
     },
 
-    // Call api delete TrainingSystem    
+    // Call api delete TrainingSystem
+    async deleteTrainingSystemConfirm(trainingSystem) {
+      trainingSystem.isDelete = true;
+      this.showLoading();
+      let api = new TrainingSystemService();
+      let response = await api.updateTrainingSystemAsync(trainingSystem);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_status_success_default}`
+      );
+      this.getTrainingSystemsFilterAsync();
+    },
+
     async updateStatus(index) {
       let trainingSystem = this.pageOfItems[index];
       if (trainingSystem.status === 'active') {

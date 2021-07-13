@@ -149,7 +149,7 @@
                 </div>
               </div>
 
-              <div class="form-group row">
+              <div class="form-group row" v-if="planId">
                 <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
                 <div class="col-md-8 col-sm-8">
                   <div class="input-group mb-3">
@@ -565,6 +565,7 @@ export default {
     },
 
     async createPlanAsync() {
+      this.plan.status = 'new';
       if (!this.careerNamePlan) {
         this.careerNamePlan = this.getInfoObject(this.careerId, this.careers).careersName;
       }
