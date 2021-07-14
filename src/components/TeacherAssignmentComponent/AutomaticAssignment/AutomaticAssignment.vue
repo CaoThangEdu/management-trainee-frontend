@@ -55,7 +55,6 @@ export default {
         numberOfStudentsInInternshipCourse: "",
       },
       internshipCourseName: "Đợt thực tập khoa công nghệ thông tin 2018",
-
       averageNumber: 0,
       classId: "",
       filterTeacher: {
@@ -103,7 +102,7 @@ export default {
       // Call Api
       this.showLoading();
       const api = new StudentService()
-
+      this.filterTeacher.internshipCourseId = this.internshipCourseId;
       const response = await api.getStudentsInInternshipCourse(this.filterTeacher)
       this.showLoading(false);
       this.studentLengthBanDau = response.data.length;
@@ -116,10 +115,7 @@ export default {
         );
         return;
       }
-      this.studentsAll = response.data
-      this.statistical.numberOfStudentsInInternshipCourse = this.studentsAll.Count();
-      console.log(this.statistical)
-      
+      this.studentsAll = response.data  
     },
   
     async getTeachersAsync() {
