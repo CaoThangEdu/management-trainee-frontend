@@ -22,6 +22,7 @@
         "axios": "^0.21.1",
         "babel-runtime": "^6.26.0",
         "jw-vue-pagination": "^1.0.3",
+        "linq": "^3.2.3",
         "moment": "^2.29.1",
         "vue": "~2.6.12",
         "vue-js-modal": "^2.0.0-rc.6",
