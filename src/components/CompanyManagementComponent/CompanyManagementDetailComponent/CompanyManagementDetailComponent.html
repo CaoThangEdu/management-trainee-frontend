@@ -5,35 +5,18 @@
   size="lg"
 >
   <div class="">
-    <div class="form-group form-row">
-      <label for="" class="col-md-4 col-sm-4 col-form-label">Hình ảnh</label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group-upload-image" input-class="form-control">
-          <input
-            type="file"
-            id="input-choose-image"
-            aria-describedby="input-choose-image"
-            accept=".heic,.png,.jpg,.jpeg,.gif,.bmp"
-            class="d-none"
-          />
-          <div class="input-group">
-            <input
-              id="input-url-image"
-              type="text"
-              autocomplete="off"
-              class="form-control"
-              v-model="company.img"
-            />
-            <div class="input-group-append">
-              <label for="input-choose-image" class="btn btn-primary"
-                >Chọn hình</label
-              >
-            </div>
-          </div>
-          <!-- <div class="image-review">
-            <img src="" alt="" style="display: none;" />
-          </div> -->
-        </div>
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Mã số thuế</label>
+      <div class="col-md-6 col-sm-8">
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          v-model="company.taxCode"
+        />
+      </div>
+      <div class="col-md-2 col-sm-8 pl-0">
+        <button @click="checkCompany()" class="btn btn-primary float-right ml-2">Kiểm tra</button>
       </div>
     </div>
     <div class="form-group row">
@@ -43,7 +26,20 @@
           type="text"
           class="form-control"
           id="name"
-          v-model="company.companyName"
+          v-model="company.title"
+          :readonly="isConfirmed && !company.id"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Chủ sở hữu</label>
+      <div class="col-md-8 col-sm-8">
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          v-model="company.owner"
+          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>
@@ -54,29 +50,32 @@
           type="text"
           class="form-control"
           id="name"
-          v-model="company.address"
+          v-model="company.companyAddress"
+          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Mã số thuế</label>
+      <label class="col-md-4 col-sm-4 col-form-label">Số điện thoại công ty</label>
       <div class="col-md-8 col-sm-8">
         <input
           type="text"
           class="form-control"
           id="name"
-          v-model="company.taxCode"
+          v-model="company.phoneNumber"
+          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Website</label>
+      <label class="col-md-4 col-sm-4 col-form-label">Ngành nghề</label>
       <div class="col-md-8 col-sm-8">
         <input
           type="text"
           class="form-control"
           id="name"
-          v-model="company.link"
+          v-model="company.career"
+          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>

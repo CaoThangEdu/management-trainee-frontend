@@ -236,12 +236,12 @@ const routes = [
     },
   },
   {
-    path: '/registered-intership-referrals',
+    path: '/certificate-management',
     name: 'Đăng ký giấy giới thiệu thực tập',
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
-        '../router/views/RegisteredInternshipReferrals/RegisteredInternshipReferrals.vue'
+        '../router/views/Certificate/Certificate.vue'
       ),
     meta: {
       breadcrumbName: 'Đăng ký giấy giới thiệu thực tập',

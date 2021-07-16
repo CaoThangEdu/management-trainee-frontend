@@ -1,30 +1,25 @@
 import ViewModel from '../viewModel'
-export default class CompanyViewModel extends ViewModel {
+export default class CertificateViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      taxCode:null,
-      title: null,
-      companyAddress: null,
-      owner: null,
-      career: null,
-      phoneNumber: null,
+      taxCode: null,
+      companyName: null,
+      companyAddress:null,
+      owner:null,
+      phoneNumberOfCompany: null,
+      phoneNumberOfStudent: null,
+      studentId: null,
+      isDelete: false,
+      status: 'unconfirmed', //confirmed, unconfirmed, complete
+      registrationDate: null,
     }
   }
 
   getValidations() {
     let validations = {
-      title: {
-        label: 'Tên công ty',
-        rules: {
-          require: '',
-          maxLength: {
-            max_value: 200
-          }
-        }
-      },
       taxCode: {
-        label: 'Mã số thuế',
+        label: 'Mã sô thuế',
         rules: {
           require: '',
           maxLength: {
@@ -32,16 +27,7 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      companyAddress: {
-        label: 'Địa chỉ',
-        rules: {
-          require: '',
-          maxLength: {
-            max_value: 200
-          }
-        }
-      },
-      manager: {
+      owner: {
         label: 'Chủ sở hữu',
         rules: {
           require: '',
@@ -50,8 +36,8 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      phoneNumber: {
-        label: 'Số điện thoại',
+      companyName: {
+        label: 'Tên công ty',
         rules: {
           require: '',
           maxLength: {
@@ -59,8 +45,26 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      career: {
-        label: 'Ngành nghề',
+      companyAddress: {
+        label: 'Địa chỉ công ty',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      phoneNumberOfCompany: {
+        label: 'Số điện thoại công ty',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      phoneNumberOfStudent: {
+        label: 'Số điện thoại',
         rules: {
           require: '',
           maxLength: {
