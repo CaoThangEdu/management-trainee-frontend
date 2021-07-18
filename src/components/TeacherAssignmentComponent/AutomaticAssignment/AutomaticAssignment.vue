@@ -1,113 +1,107 @@
-<template src='./AutomaticAssignment.html'>
-</template>
+<template src='./AutomaticAssignment.html'></template>
 
 <script>
-import ComponentBase from "../../common/component-base/ComponentBase"
-import BaseModal from '../../common/base-modal/BaseModal'
-import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
-import StudentService from '../../../services/student/studentServices'
-import TeacherService from "../../../services/teacher/teacherServices"
-import AppConfig from '../../../../src/app.config.json'
-import JwPagination from 'jw-vue-pagination';
+import ComponentBase from "../../common/component-base/ComponentBase";
+import BaseModal from "../../common/base-modal/BaseModal";
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
+import StudentService from "../../../services/student/studentServices";
+import TeacherService from "../../../services/teacher/teacherServices";
+import AppConfig from "../../../../src/app.config.json";
+import JwPagination from "jw-vue-pagination";
 import ClassService from "../../../services/class/classServices";
+//import InstructorService from "../../../services/class/classServices";
+import CrudMixin from "../../../helpers/mixins/crudMixin";
+import PlanService from "../../../services/plan/planServices";
 
 export default {
-  name: 'CareerManagementDetailComponent',
+  name: "CareerManagementDetailComponent",
   extends: ComponentBase,
   components: {
     BaseModal,
     AlertMessages,
     JwPagination,
-
   },
   data() {
     return {
-      internshipCourseId: "854ef351-3c36-479e-2323-08d9442977d9",
-      students: [], // Sinh viên chưa được phân công      
+      internshipCourseId: "f7d3b6a4-b1b3-4b3e-b767-08d949fbccb9",
+      students: [], // Sinh viên chưa được phân công
       classes: [],
       teachers: [],
+      studentsAll: [],
+      statistiesStudentInClass: [],
       studentsUnassigned: {
         internshipCourseId: "",
-        classId: ""
+        classId: "",
       },
       classFilter: {
-        className:"",
+        className: "",
         status: "",
-        internshipCourseId:"",
-        isDelete: false
-      },  
-      pageOfItems: [], 
+        internshipCourseId: "",
+        isDelete: false,
+      },
+      pageOfItems: [],
       customLabels: {
-        first: '<<',
-        last: '>>',
-        previous: '<',
-        next: '>'
-      }, 
+        first: "<<",
+        last: ">>",
+        previous: "<",
+        next: ">",
+      },
       isShow: false,
       career: {},
       errorMessages: [],
       statistical: {
-        trainingSystemName: "Cao Dang",
-        careersName: "Công nghệ thông tin",
-        courseName: "K18",
-        numberStudentsUnassigned: 160,
-        numberTeachers: 20,
-        numberOfStudentsInInternshipCourse: "",
+        description: "",
+        internshipCourseName: "",
+        startDay: "",
+        endDay: "",
+        status: "",
+        courseName: "",
+        trainingSystemName: "",
+        careersName: "",
+        numberStudentsUnassigned: 0,
+        numberTeachersInInternshipCourse: 0,
+        numberOfStudentsInInternshipCourse: 0,
       },
-      internshipCourseName: "Đợt thực tập khoa công nghệ thông tin 2018",
       averageNumber: 0,
       classId: "",
       filterTeacher: {
-        internshipCourseId: ""
-      }
-
-    }
+        internshipCourseId: "",
+      },
+      statisticalRequest: {
+        internshipCourseId: "",
+      },
+      searchTerm: "",
+      numberOfStudentsInInternshipCourse: 0,
+      numberTeachersInInternshipCourse: 0,
+      immediateAssignment: false, // khi = true  option đc chọn sẻ đc phân công ngay
+    };
   },
   props: {
     data: {
       type: Object,
       default: null,
-    }
-  },
-
-  async mounted(){
-    await this.getStudentsUnassigned()
-    await this.getClassesAsync()
-    await this.getTeachersAsync()
-    await this.getStudentsInInternshipCourseAsync()
-   
-  },
-  
-  methods: {
-     async getStudentsUnassigned(){      
-      // Call Api
-      this.showLoading();
-      const api = new StudentService()
-      this.studentsUnassigned.classId = this.classId;
-      this.studentsUnassigned.internshipCourseId = this.internshipCourseId;
-      const response = await api.getStudentUnassignedAsync(this.studentsUnassigned)
-      this.showLoading(false);
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }      
-      this.students = response.data;
     },
+  },
 
-    async getStudentsInInternshipCourseAsync(){
-      // Call Api
+  async mounted() {
+    await this.getStudentsUnassigned();
+    await this.getStatisticsStudentInClass();
+    await this.getClassesAsync();
+    await this.getTeachersAsync();
+    await this.getStudentsInInternshipCourseAsync();
+    await this.getPlanService();
+  },
+
+  methods: {
+    async getStatisticsStudentInClass() {
       this.showLoading();
-      const api = new StudentService()
-      this.filterTeacher.internshipCourseId = this.internshipCourseId;
-      const response = await api.getStudentsInInternshipCourse(this.filterTeacher)
+      const api = new ClassService();
+      this.statisticalRequest.internshipCourseId = this.internshipCourseId;
+      const response = await api.getStatisticalClassUnassigned(
+        this.statisticalRequest
+      );
       this.showLoading(false);
-      this.studentLengthBanDau = response.data.length;
-
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -115,15 +109,89 @@ export default {
         );
         return;
       }
-      this.studentsAll = response.data  
+      this.statistiesStudentInClass = response.data;
     },
-  
+
+    async getPlanService() {
+      // Call Api
+      this.showLoading();
+      const api = new PlanService();
+
+      const response = await api.getPlanByIdAsync(this.internshipCourseId);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.statistical.courseName = response.data.courseName;
+      this.statistical.internshipCourseName =
+        response.data.internshipCourseName;
+      this.statistical.description = response.data.description;
+      this.statistical.startDay = response.data.startDay;
+      this.statistical.endDay = response.data.endDay;
+      this.statistical.courseName = response.data.courseName;
+      this.statistical.status = response.data.status;
+      this.statistical.numberStudentsUnassigned = this.studentsAll.length =
+        this.students.length;
+    },
+
+    async getStudentsUnassigned() {
+      // Call Api
+      this.showLoading();
+      const api = new StudentService();
+      this.studentsUnassigned.classId = this.classId;
+      this.studentsUnassigned.internshipCourseId = this.internshipCourseId;
+      const response = await api.getStudentUnassignedAsync(
+        this.studentsUnassigned
+      );
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.students = response.data;
+    },
+
+    async getStudentsInInternshipCourseAsync() {
+      // Call Api
+      this.showLoading();
+      const api = new StudentService();
+      this.filterTeacher.internshipCourseId = this.internshipCourseId;
+      const response = await api.getStudentsInInternshipCourse(
+        this.filterTeacher
+      );
+      this.showLoading(false);
+      this.studentLengthBanDau = response.data.length;
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.studentsAll = response.data;
+      this.statistical.numberOfStudentsInInternshipCourse = response.data.length;
+      this.numberOfStudentsInInternshipCourse = response.data.length
+    },
+
     async getTeachersAsync() {
       // Call Api
       this.showLoading();
       const api = new TeacherService();
       this.filterTeacher.internshipCourseId = this.internshipCourseId;
-      const response = await api.getTeachersInInternshipCourse(this.filterTeacher);
+      const response = await api.getTeachersInInternshipCourse(
+        this.filterTeacher
+      );
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -135,17 +203,19 @@ export default {
         return;
       }
       this.teachers = response.data;
+      this.statistical.numberTeachersInInternshipCourse = response.data.length;
+      this.numberTeachersInInternshipCourse = response.data.length
     },
 
-     async getClassesAsync(){
+    async getClassesAsync() {
       // Call Api
       this.showLoading();
-      const api = new ClassService()
+      const api = new ClassService();
       this.classFilter.internshipCourseId = this.internshipCourseId;
       const response = await api.getClassesFilterAsync(this.classFilter);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -156,14 +226,18 @@ export default {
       this.classes = response.data;
     },
 
-    changeClassName(){
+    changeClassName() {
       this.getStudentsUnassigned();
-    },    
+    },
 
-    getClassName(classId){
+    getInfoObject(id, list) {
+      return CrudMixin.methods.getInfo(id, list);
+    },
+
+    getClassName(classId) {
       for (const x in this.classes) {
-        if(this.classes[x].id == classId){
-          return this.classes[x].className
+        if (this.classes[x].id == classId) {
+          return this.classes[x].className;
         }
       }
     },
@@ -172,22 +246,27 @@ export default {
       this.pageOfItems = pageOfItems;
     },
 
-   changePage(currentPage) {
+    changePage(currentPage) {
       this.$emit("change-page", currentPage);
     },
-
   },
-  
+  computed: {
+    filterByTerm() {
+      return this.localCars.filter((teachers) => {
+        return teachers.lastName.toLowerCase().includes(this.searchTerm);
+      });
+    },
+  },
+
   watch: {
     data() {
-      this.averageNumber = this.numberStudentsUnassigned / this.numberTeachers
+      this.averageNumber = this.numberOfStudentsInInternshipCourse / this.numberTeachersInInternshipCourse;
       this.isShow = true;
-      this.career = this.data;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang='scss'>
-@import './AutomaticAssignment.scss';
+@import "./AutomaticAssignment.scss";
 </style>

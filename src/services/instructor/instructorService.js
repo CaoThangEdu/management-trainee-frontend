@@ -1,13 +1,13 @@
 import ServicesBaseAPI from '../servicesBaseApi'
 import AppConfig from '../../app.config.json'
 
-export default class ClassService extends ServicesBaseAPI {
+export default class InstructorService extends ServicesBaseAPI {
   constructor() {
     super();
-    this.url = `${AppConfig.apiHost}/Class`
+    this.url = `${AppConfig.apiHost}/Instructor`
   }
 
-  async getClassesAsync() {
+  async getInstructorAsync() {
     try {
       const response = await this.http.post(`${this.url}/FilterAll`);
       this.setResult(response);
@@ -15,19 +15,9 @@ export default class ClassService extends ServicesBaseAPI {
       return this.http.loadError(e);
     }
     return this.result;
-  }
-  
-  async getStatisticalClassUnassigned(object){
-    try {
-      const response = await this.http.post(`${this.url}/GetStatisticalClassUnassigned`, object);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
+  }  
 
-  async getClassesFilterAsync(object) {
+  async getInstructorFilterAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Filter`, object);
       this.setResult(response);
@@ -37,7 +27,7 @@ export default class ClassService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async createClassAsync(object) {
+  async createInstructorAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);
       this.setResult(response);
@@ -47,7 +37,7 @@ export default class ClassService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async updateClassAsync(object) {
+  async updateInstructorAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);
       this.setResult(response);
@@ -57,7 +47,7 @@ export default class ClassService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async deleteClassAsync(id) {
+  async deleteInstructorsAsync(id) {
     try {
       const response = await this.http.delete(`${this.url}/Delete?id=${id}`);
       this.setResult(response);

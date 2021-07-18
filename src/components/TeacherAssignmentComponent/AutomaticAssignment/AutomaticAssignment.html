@@ -5,8 +5,9 @@
         class="col-md-12 col-sm-12 col-form-label information-assignment__center "
       >
         <h5>
-          Đợt thực tập: {{this.internshipCourseName}} - Hệ:
-          {{this.statistical.trainingSystemName}} - Ngành: {{this.statistical.careersName}} - Khóa :
+          Đợt thực tập: {{this.statistical.internshipCourseName}} - Hệ:
+          {{this.statistical.courseName}} - Ngành:
+          {{this.statistical.careersName}} - Khóa:
           {{this.statistical.courseName}}
         </h5>
       </div>
@@ -17,10 +18,12 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
           <div class="information-assignment__statistical">
             <div class="information-assignment__text">
-              Tổng số giáo viên trong đợt thực tập: {{this.statistical.numberTeachers}}
+              Tổng số giáo viên trong đợt thực tập:
+              {{this.statistical.numberTeachersInInternshipCourse}}
             </div>
             <div class="information-assignment__text">
-              Tổng số sinh viên trong đợt thực tập: {{this.statistical.numberOfStudentsInInternshipCourse}}
+              Tổng số sinh viên trong đợt thực tập:
+              {{this.statistical.numberOfStudentsInInternshipCourse}}
             </div>
             <div class="information-assignment__text">
               Tổng số sinh viên chưa được phân công:
@@ -30,110 +33,111 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
           <div class="information-assignment__statistical">
-            <div class="information-assignment__text">
-              Lớp CDTH18A: 20 sinh viên chưa phân công
-            </div>
-            <div class="information-assignment__text">
-              Lớp CDTH18B: 20 sinh viên chưa phân công
-            </div>
-            <div class="information-assignment__text">
-              Lớp CDTH18C: 20 sinh viên chưa phân công
-            </div>
-            <div class="information-assignment__text">
-              Lớp CDTH18D: 20 sinh viên chưa phân công
+            <div
+              class="information-assignment__text"
+              v-for="(item, index) in statistiesStudentInClass"
+              :key="index"
+            >
+              Lớp {{item.className}}: {{item.number}} sinh viên chưa được phân
+              công
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="information-assignment__center">
-    <h4>PHÂN CÔNG</h4>
-  </div>
-  <div class="students">
-    <div class="card-body">
-      <div class="row mb-3">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-          <div class="form-row filter-wrapper ml-0 mr-0">
-            <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-2">
-              <label for="keywords">Lớp</label>
-              <select
-                class="form-control"
-                v-model="classId"
-                v-on:change="changeClassName"
-              >
-                <option
-                  v-for="(item, index) in classes"
-                  :key="index"
-                  :value="item.id"
-                  >{{item.className}}</option
+  <div class="list">
+    <div class="students">
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-row filter-wrapper ml-0 mr-0">
+              <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-2">
+                <h6 for="keywords">Lớp</h6>
+                <select
+                  class="form-control"
+                  v-model="classId"
+                  v-on:change="changeClassName"
                 >
-              </select>
-            </div>
-            <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-2 input-information">
-              <label for=""
-                >Số lượng sinh viên được mỗi giáo viên quản lý</label
-              >
-              <input
-                type="text"
-                class="form-control input-text-center"
-                name=""
-                id=""
-                v-model="this.averageNumber"
-              />
+                  <option
+                    v-for="(item, index) in classes"
+                    :key="index"
+                    :value="item.id"
+                    >{{item.className}}</option
+                  >
+                </select>
+              </div>
+              <div class="col-xl-3 col-md-3 col-sm-6 mb-sm-2 input-information">
+                <h6>Phân công ngay khi chọn giáo viên</h6>
+                <input
+                  type="checkbox"
+                  id="checkbox"
+                  v-model="immediateAssignment"
+                  class="form-control"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="">
+          <tr>
+            <th scope="col">Chọn</th>
+            <th scope="col">STT</th>
+            <th scope="col">MSSV</th>
+            <th scope="col">Tên sinh viên</th>
+            <th scope="col">Lớp</th>
+            <th scope="col">Giáo viên</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in pageOfItems" :key="index">
+            <th scope="row">
+              <input type="checkbox" name="" id="" />
+            </th>
+            <th scope="row">{{index + 1 }}</th>
+            <td>{{ item.studentId }}</td>
+            <td>{{ item.firstName}} {{ item.lastName}}</td>
+            <td
+              v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.classId, classes)"
+            >
+              {{ getInfoObject(item.classId, classes).className }}
+            </td>
+            <td>
+              <select class="form-control" name="" id="">
+                <option>Chọn giáo viên </option>
+                <option
+                  value="item.id"
+                  v-for="(item, index) in teachers"
+                  :key="index"
+                >
+                  {{item.firstName}} {{item.lastName}}
+                </option>
+              </select>
+            </td>
+          </tr>
+          <tr v-show="pageOfItems == null || pageOfItems.length === 0">
+            <th colspan="5" class="text-left">
+              Không có dữ liệu nào được tìm thấy.
+            </th>
+          </tr>
+        </tbody>
+      </table>
+      <div class="col btn-assigntment">
+        <button type="button" class="btn btn-primary">Phân công cho sinh viên</button>
+      </div>
+    </div>
+    <div class="card-footer d-flex justify-content-center text--blue">
+      <JwPagination
+        :items="students"
+        @changePage="onChangePage"
+        :labels="customLabels"
+        :pageSize="20"
+      >
+      </JwPagination>
+    </div>
   </div>
-  <div class="table-responsive">
-    <table class="table">
-      <thead class="">
-        <tr>
-          <th scope="col">Chọn</th>
-          <th scope="col">STT</th>
-          <th scope="col">MSSV</th>
-          <th scope="col">Tên sinh viên</th>
-          <th scope="col">Lớp</th>
-          <th scope="col">Giáo viên</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in pageOfItems" :key="index">
-          <th scope="row">
-            <input type="checkbox" name="" id="" />
-          </th>
-          <th scope="row">{{index + 1 }}</th>
-          <td>{{ item.studentId }}</td>
-          <td>{{ item.firstName}} {{ item.lastName}}</td>
-          <td>{{ item.classId }}</td>
-          <td>
-            <select class="form-control" name="" id="">
-              <option value="1">GV Tran Thi A</option>
-              <option value="1">GV Tran Thi B</option>
-              <option value="1">GV Tran Thi C</option>
-              <option value="1">GV Tran Thi D</option>
-            </select>
-          </td>
-        </tr>
-        <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-          <th colspan="5" class="text-left">
-            Không có dữ liệu nào được tìm thấy.
-          </th>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card-footer d-flex justify-content-center text--blue">
-    <JwPagination
-      :items="students"
-      @changePage="onChangePage"
-      :labels="customLabels"
-      :pageSize="20"
-    >
-    </JwPagination>
-  </div>
-</div>
-
 </div>
