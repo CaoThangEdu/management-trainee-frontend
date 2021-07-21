@@ -171,8 +171,8 @@ export default {
       this.$emit("change-data-student-component");
     },
 
-    deleteStudent(item) {
-      this.confirmStudent = item;
+    deleteStudent(student) {
+      this.confirmStudent = student;
     },
 
     // Call api delete student

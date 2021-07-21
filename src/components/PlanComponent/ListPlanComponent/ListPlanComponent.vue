@@ -66,15 +66,16 @@ export default {
       this.$emit("change-page", currentPage);
     },
 
-    deletePlan(id) {
-      this.confirmPlan = { id: id };
+    deletePlan(item) {
+      this.confirmPlan = item;
     },
 
     // Call api delete Plan
     async deletePlanConfirm(planComfirm) {
+      planComfirm.isDelete = true;
       this.showLoading();
       let api = new PlanService();
-      let response = await api.deletePlanAsync(planComfirm.id); // Gọi Api
+      let response = await api.updatePlanAsync(planComfirm); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

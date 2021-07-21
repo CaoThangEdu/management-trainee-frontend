@@ -36,15 +36,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in pageOfItems" :key="index">
+              <tr v-for="(plan, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <th scope="row">{{ item.internshipCourseName }}</th>
-                <td>{{ item.startDay }}</td>
-                <td>{{ item.endDay }}</td>
+                <th scope="row">{{ plan.internshipCourseName }}</th>
+                <td>{{ plan.startDay }}</td>
+                <td>{{ plan.endDay }}</td>
                 <td class="text-lg-center">
-                  <router-link :to="{name:'sua-ke-hoach', params: { guid: item.id } }"
+                  <router-link :to="{name:'sua-ke-hoach', params: { guid: plan.id } }"
                     class="btn btn-success mr-2">Sửa</router-link>
-                  <router-link class="btn btn-instagram" :to="{name:'them-sv-cua-dot', params: { guid: item.id } }">
+                    <button class="btn btn-danger mr-2" @click="deletePlan(plan)">Xóa</button>
+                  <router-link class="btn btn-instagram" :to="{name:'them-sv-cua-dot', params: { guid: plan.id } }">
                     Tiếp tục thêm sinh viên
                   </router-link>
                 </td>
@@ -56,6 +57,9 @@
           </table>
         </div>
       </div>
+      <ConfirmDialog :data="confirmPlan"
+        @agree="deletePlanConfirm">
+      </ConfirmDialog>
       <div class="card-footer d-flex justify-content-center text--blue">
         <JwPagination
           :items="plans"
