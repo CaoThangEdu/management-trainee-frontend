@@ -72,7 +72,7 @@
                 <input
                   type="checkbox"
                   id="checkbox"
-                  v-model="immediateAssignment"
+                  v-model="immediateAssignment"          
                   class="form-control"
                 />
               </div>
@@ -94,7 +94,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in pageOfItems" :key="index">
+          <tr v-for="(item, index) in pageOfItems" :key="index+'teacher-assignment'">
             <th scope="row">
               <input type="checkbox" name="" id="" />
             </th>
@@ -107,14 +107,16 @@
               {{ getInfoObject(item.classId, classes).className }}
             </td>
             <td>
-              <select class="form-control" name="" id="">
+              <select class="form-control" :id="index"                                   
+              >
                 <option>Chọn giáo viên </option>
-                <option
-                  value="item.id"
-                  v-for="(item, index) in teachers"
-                  :key="index"
+                <option                                                           
+                  v-for="(teacher, index2) in teachers" 
+                  :key="index2 + 'teacher'"                                    
+                  :value="teacher.id"
+                  v-on:click="teacherAssignment(teacher.id, item.id)"                                         
                 >
-                  {{item.firstName}} {{item.lastName}}
+                  {{teacher.firstName}} {{teacher.lastName}}
                 </option>
               </select>
             </td>
@@ -127,7 +129,7 @@
         </tbody>
       </table>
       <div class="col btn-assigntment">
-        <button type="button" class="btn btn-primary">Phân công cho sinh viên</button>
+        <button type="button" class="btn btn-primary" v-on:click=assignment()>Phân công cho sinh viên</button>
       </div>
     </div>
     <div class="card-footer d-flex justify-content-center text--blue">
