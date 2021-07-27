@@ -1,14 +1,18 @@
 export default [{
   _name: 'CSidebarNav',
   _children: [{
-    _name: 'CSidebarNavItem',
+    _name: 'CSidebarNavDropdown',
     name: 'Lên kế hoạch',
-    to: '/plan/list',
+    router: '/plan',
     icon: 'cil-speedometer',
-    badge: {
-      color: 'primary',
-      text: 'NEW',
-    },
+    items: [{
+        name: 'Danh sách kế hoạch',
+        to: '/plan/list'
+      }, {
+        name: "Thêm mới kế hoạch",
+        to: '/plan/create'
+      },
+    ]
   },
   {
     _name: 'CSidebarNavItem',
@@ -37,7 +41,7 @@ export default [{
   {
     _name: 'CSidebarNavItem',
     name: 'Quản lý sinh viên',
-    to: '/student-management',
+    to: '/student-management/list',
     icon: 'cil-user',
   },
   {
@@ -48,22 +52,10 @@ export default [{
   },
   {
     _name: 'CSidebarNavItem',
-    name: 'Quản lý hệ - ngành - khóa',
+    name: 'Quản lý hệ - ngành',
     to: '/trainingsystem-management',
     icon: 'cil-calculator',
   },
-  // {
-  //   _name: 'CSidebarNavItem',
-  //   name: 'Quản lý ngành',
-  //   to: '/career-management',
-  //   icon: 'cil-chart-pie',
-  // },
-  // {
-  //   _name: 'CSidebarNavItem',
-  //   name: 'Quản lý khóa',
-  //   to: '/course-management',
-  //   icon: 'cil-star',
-  // },
   {
     _name: 'CSidebarNavItem',
     name: 'Quản lý lớp',

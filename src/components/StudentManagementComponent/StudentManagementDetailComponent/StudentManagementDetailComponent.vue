@@ -60,10 +60,6 @@ export default {
       type: Array,
       default: null,
     },
-    courses: {
-      type: Array,
-      default: null,
-    },
     careers: {
       type: Array,
       default: null,

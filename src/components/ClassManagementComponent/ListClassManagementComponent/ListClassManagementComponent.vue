@@ -145,15 +145,16 @@ export default {
       this.editClass = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteClass(id) {
-      this.confirmClassRoom = { id: id };
+    deleteClass(classroom) {
+      this.confirmClassRoom = classroom;
     },
 
     // Call api delete Class
     async deleteClassConfirm(classComfirm) {
+      classComfirm.isDelete = true;
       this.showLoading();
       let api = new ClassService();
-      let response = await api.deleteClassAsync(classComfirm.id); // Gọi Api
+      let response = await api.updateClassAsync(classComfirm); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

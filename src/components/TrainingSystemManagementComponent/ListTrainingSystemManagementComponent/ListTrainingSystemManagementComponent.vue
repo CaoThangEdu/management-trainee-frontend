@@ -6,6 +6,7 @@ import TrainingSystemManagementDetailComponent from '../TrainingSystemManagement
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
+import FacultyServices from '../../../services/faculty/facultyServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
 import CrudMixin from "../../../helpers/mixins/crudMixin";
@@ -35,12 +36,14 @@ export default {
         trainingSystemName: "",
         isDelete: false,
         status: "active",
-      }
+      },
+      faculties: [],
     };
   },
 
   async mounted() {
-    await this.getTrainingSystemsFilterAsync()
+    await this.getTrainingSystemsFilterAsync();
+    await this.getFacultiesFilterAsync();
   },
 
   methods: {
@@ -72,6 +75,28 @@ export default {
       this.trainingsystems = response.data;
     },
 
+    async getFacultiesFilterAsync() {
+      let facultyFilter = {
+        "isDelete": false
+      };
+      // Call Api
+      this.showLoading();
+      const api = new FacultyServices()
+
+      const response = await api.getFacultiesFilterAsync(facultyFilter);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.faculties = response.data;
+    },
+
     async changePage(currentPage) {
       await this.getTrainingSystemsAsync(currentPage);
     },
@@ -84,13 +109,35 @@ export default {
       this.editTrainingSystem = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteTrainingSystem(id) {
-      this.confirmTrainingSystem = {
-        id: id
-      };
+    deleteTrainingSystem(trainingSystem) {
+      this.confirmTrainingSystem = trainingSystem;
     },
 
-    // Call api delete TrainingSystem    
+    // Call api delete TrainingSystem
+    async deleteTrainingSystemConfirm(trainingSystem) {
+      trainingSystem.isDelete = true;
+      this.showLoading();
+      let api = new TrainingSystemService();
+      let response = await api.updateTrainingSystemAsync(trainingSystem);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_status_success_default}`
+      );
+      this.getTrainingSystemsFilterAsync();
+    },
+
     async updateStatus(index) {
       let trainingSystem = this.pageOfItems[index];
       if (trainingSystem.status === 'active') {

@@ -21,13 +21,16 @@ export default {
     return {
       isShow: false,
       trainingsystem: {},
-
       errorMessages: [],
     }
   },
   props: {
     data: {
       type: Object,
+      default: null,
+    },
+    faculties: {
+      type: Array,
       default: null,
     },
   },
@@ -117,6 +120,7 @@ export default {
     },
 
     async save() {
+      this.trainingsystem.facultyId = this.faculties[0].id;
       // validate
       let viewModel = new TrainingSystemViewModel();
       viewModel.setFields(this.trainingsystem);

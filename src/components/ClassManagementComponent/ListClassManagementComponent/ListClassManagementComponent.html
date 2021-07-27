@@ -66,6 +66,7 @@
                 </td>
                 <td>
                   <button class="btn btn-success mr-2" @click="updateClass(index)">Sửa</button>
+                  <button class="btn btn-danger" @click="deleteClass(item)">Xóa</button>
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
