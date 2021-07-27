@@ -1,16 +1,14 @@
 <template>
   <div>
-    <ListTeacherAssignmentComponent />
+    <ListPlanFilterComponent />
   </div>
 </template>
 
 <script>
-import ListTeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/ListTeacherAssignmentComponent/ListTeacherAssignmentComponent'
+import ListPlanFilterComponent from '../../../components/TeacherAssignmentComponent/ListPlanFilterComponent/ListPlanFilterComponent.vue'
 export default {
-  components:{ ListTeacherAssignmentComponent }
+  components:{ ListPlanFilterComponent }
 }
 </script>
-
 <style>
-
 </style>
