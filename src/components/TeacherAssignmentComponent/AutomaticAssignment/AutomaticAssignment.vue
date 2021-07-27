@@ -12,6 +12,8 @@ import ClassService from "../../../services/class/classServices";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import PlanService from "../../../services/plan/planServices";
 import InstructorService from "../../../services/instructor/instructorService";
+import SelectTeacher from "../../common/form/select-teacher/SelectTeacher.vue";
+
 export default {
   name: "CareerManagementDetailComponent",
   extends: ComponentBase,
@@ -19,10 +21,11 @@ export default {
     BaseModal,
     AlertMessages,
     JwPagination,
+    SelectTeacher,
   },
   data() {
     return {
-      internshipCourseId: "f7d3b6a4-b1b3-4b3e-b767-08d949fbccb9",
+      internshipCourseId: "38fbd57a-7c48-41b3-8347-08d95114df5f",
       students: [], // Sinh viên chưa được phân công
       classes: [],
       teachers: [],
@@ -78,9 +81,10 @@ export default {
         internshipCourseId: "",
         status: "active",
         isDelete: false,
+        index: 0
       },
       listInstructorRequest: [],
-     
+      teacherSelect: "",
     };
   },
   props: {
@@ -93,27 +97,29 @@ export default {
   async mounted() {
     await this.getStudentsUnassigned();
     await this.getStatisticsStudentInClass();
-    await this.getClassesAsync();
     await this.getTeachersAsync();
+    await this.getClassesAsync();
     await this.getStudentsInInternshipCourseAsync();
     await this.getPlanService();
+    console.log('teacher', this.teachers);
   },
 
   methods: {
-    teacherAssignment(teacherId, studentId) {
-      // Phân công ngay khi được thay đổi    
+    teacherAssignment(teacherId, studentId, index) {
+      // Phân công ngay khi được thay đổi 
       if (this.immediateAssignment) {
-        this.createInstructorAsync(teacherId, studentId);
+        this.createInstructorAsync(teacherId, studentId, null, index);
       } else {
-        this.addListInstructorRequest(teacherId, studentId);
+        this.addListInstructorRequest(teacherId, studentId, index);
       }
     },
 
-    addListInstructorRequest(teacherId,studentId) {     
+    addListInstructorRequest(teacherId, studentId, index) {     
       this.instructorRequest = {
         teacherId: teacherId,
         studentId: studentId,
         internshipCourseId: this.internshipCourseId,
+        index: index
       };
       this.listInstructorRequest.push(this.instructorRequest);
     },
@@ -122,29 +128,27 @@ export default {
       this.listInstructorRequest.forEach((instructor) => {
         // Phân công theo danh sách sinh viên
         this.showLoading(true);
-        console.log(this.listInstructorRequest)
-        this.createInstructorAsync(-1, instructor);
+        this.createInstructorAsync(-1, -1, instructor, instructor.index)
         this.showLoading(false);
-        this.listInstructorRequest = []
       });
+      this.listInstructorRequest = []
     },
 
     // Phân công từng sinh viên
-    async createInstructorAsync(studentId, instructor) {
+    async createInstructorAsync(teacherId, studentId, instructor, index) {
       const api = new InstructorService();
       // Phân công từng sinh viên
       if (studentId != -1) {
         this.instructorRequest = {
-          teacherId: this.teacherId,
+          teacherId: teacherId,
           studentId: studentId,
           internshipCourseId: this.internshipCourseId,
         };
         instructor = this.instructorRequest;
       }
-
       const response = await api.createInstructorAsync(instructor);
-      if (this.instructorRequest > -1) {
-        this.students.splice(this.instructorRequest.index, 1);
+      if (response.isOK == true) {
+        this.students.splice(index ,1);
       }
       if (!response.isOK) {
         this.showNotifications(
