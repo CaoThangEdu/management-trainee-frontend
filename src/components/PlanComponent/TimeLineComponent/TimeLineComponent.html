@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mt-4">
   <div class="col-12">
     <div class="card">
       <header class="card-header">
@@ -7,17 +7,20 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Time line
-        <button class="btn btn-primary float-right" @click="createTimeLine">+ Thêm mới</button>
+        <button class="btn btn-primary float-right" 
+          @click="createTimeLine"
+          title="Thêm mới">
+          <i class="fa fa-plus-square"></i></button>
       </header>
       <div class="card-body">
         <div class="form-row filter-wrapper ml-0 mr-0 mb-2">
-          <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10">
-            <div class="input-group">
-              <select class="custom-select" id="inputGroupSelect04">
-                <option value="1">Đợt 1</option>
-                <option value="2">Đợt 2</option>
-              </select>
-            </div>
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <SelectPlan
+              :isRequired="false"
+              v-model="filterTimeLine.planId"
+              :plans="plans"
+              @change="(event) => {filterTimeLine.planId = event.id}">
+            </SelectPlan>
           </div>
         </div>
         <div class="main-card mb-3 card">
@@ -31,19 +34,20 @@
                   </span>
                   <div class="vertical-timeline-element-content bounce-in"
                     :key="index">
-                    <h4 class="timeline-title">{{ item.timeLineName }}</h4>
+                    <h4 class="timeline-title link-detail"
+                      @click="updateTimeLine(index)"
+                      title="Xem">{{ item.timeLineName }}</h4>
                     <p>{{ item.description }}</p>
                     <div class="button__edit text-right">
-                      <button class="btn btn-primary mr-2"
-                        @click="updateTimeLine(index)">Sửa</button>
-                      <button class="btn btn-danger" @click="deleteTimeLine(item.id)">xóa</button>
+                      <button class="btn btn-danger" 
+                        @click="deleteTimeLine(item.id)" title="Xóa">
+                        <i class="fa fa-trash"></i></button>
                     </div>
                     <span class="vertical-timeline-element-date text-left">{{ item.startDay }}<br />
                       {{ item.endDay }}</span>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

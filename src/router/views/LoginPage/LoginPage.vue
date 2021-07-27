@@ -20,7 +20,7 @@
                     <input
                       id="username"
                       type="text"
-                      placeholder="Têm đăng nhập"
+                      placeholder="Tên đăng nhập"
                       autocomplete="username email"
                       class="form-control"
                       v-model.trim="requestInfo.username"

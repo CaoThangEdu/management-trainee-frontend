@@ -34,17 +34,7 @@
         <input type="text" class="form-control" id="name" v-model="teacher.phoneNumber" />
       </div>
     </div>
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Khoa</label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select class="form-control form-select form-select-class" id="inputGroupSelect02" v-model="teacher.careersId">
-            <option v-for="(career, index) in careers" :value="career.id">{{career.careersName}}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="form-group row">
+    <div class="form-group row" v-if="teacher.id">
       <label class="col-md-4 col-sm-4 col-form-label">Trạng thái </label>
       <div class="col-md-8 col-sm-8">
         <div class="input-group mb-3">

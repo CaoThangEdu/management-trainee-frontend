@@ -140,6 +140,7 @@ export default {
     },
 
     async createStudentAsync() {
+      this.student.status = 'active';
       if(this.checkStudent(this.student.studentId)){
         return;
       }

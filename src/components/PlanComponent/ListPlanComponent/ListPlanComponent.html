@@ -7,8 +7,9 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Danh sách kế hoạch
-        <router-link :to="{name:'them-ke-hoach'}" class="btn btn-primary float-right">
-          + Thêm mới
+        <router-link :to="{name:'them-ke-hoach'}" class="btn btn-primary float-right"
+          title="Thêm mới">
+          <i class="fa fa-plus-square"></i>
         </router-link>
       </header>
       <div class="card-body">
@@ -19,7 +20,10 @@
                 <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
-                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+                <button type="submit" id="btn-search" class="btn btn-stack-overflow"
+                  title="Tìm kiếm">
+                  <i class="fas fa-search"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -38,16 +42,23 @@
             <tbody>
               <tr v-for="(plan, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <th scope="row">{{ plan.internshipCourseName }}</th>
-                <td>{{ plan.startDay }}</td>
-                <td>{{ plan.endDay }}</td>
-                <td class="text-lg-center">
-                  <router-link :to="{name:'sua-ke-hoach', params: { guid: plan.id } }"
-                    class="btn btn-success mr-2">Sửa</router-link>
-                    <button class="btn btn-danger mr-2" @click="deletePlan(plan)">Xóa</button>
-                  <router-link class="btn btn-instagram" :to="{name:'them-sv-cua-dot', params: { guid: plan.id } }">
-                    Tiếp tục thêm sinh viên
+                <th scope="row" title="Xem">
+                  <router-link :to="{name:'sua-ke-hoach', params: { guid: plan.id } }">
+                    {{ plan.internshipCourseName }}
                   </router-link>
+                </th>
+                <td>{{ convertTime(plan.startDay, 'DD/MM/YYYY') }}</td>
+                <td>{{ convertTime(plan.endDay, 'DD/MM/YYYY') }}</td>
+                <td class="text-lg-center">
+                  <router-link class="btn btn-info mr-2" 
+                    title="Tiếp tục thêm sinh viên"
+                    :to="{name:'them-sv-cua-dot', params: { guid: plan.id } }">
+                    <i class="fa fa-arrow-alt-circle-right"></i>
+                  </router-link>
+                  <button class="btn btn-danger" @click="deletePlan(plan)"
+                    title="Xóa">
+                    <i class="fa fa-trash"></i>
+                  </button>
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">

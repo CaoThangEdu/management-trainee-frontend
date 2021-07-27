@@ -6,8 +6,8 @@ import TimeLineDetailComponent from "../TimeLineDetailComponent/TimeLineDetailCo
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TimlineService from '../../../services/timeline/timelineServices'
-import PlanService from '../../../services/plan/planServices'
 import AppConfig from '../../../../src/app.config.json'
+import SelectPlan from '../../common/form/select-plan/SelectPlan.vue';
 
 export default {
   name: "TimeLineComponent",
@@ -15,46 +15,30 @@ export default {
   components: {
     TimeLineDetailComponent,
     ConfirmDialog,
+    SelectPlan,
+  },
+  props: {
+    plans: {
+      type: Array,
+      default: null,
+    },
   },
   data() {
     return {
       timeLines: [],
-      plans: [],
       editTimeLine: {},
       confirmTimeline: null,
+      filterTimeLine: {
+        planId: '',
+      },
     };
   },
 
   async mounted(){
-    await this.getTimeLinesAsync()
-    await this.getPlansAsync()
+    await this.getTimeLinesAsync();
   },
 
   methods:{
-
-    async getPlansAsync(){
-      let filterPlan = {
-        status: "",
-        isDelete: false
-      };
-      // Call Api
-      this.showLoading();
-      const api = new PlanService()
-
-      const response = await api.getPlansAsync(filterPlan)
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.plans = response.data.items
-    },
-
     createTimeLine() {
       this.editTimeLine = {};
     },

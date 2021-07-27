@@ -7,6 +7,7 @@ import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog" ;
 import PlanService from "../../../services/plan/planServices";
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ListPlan",
@@ -15,20 +16,9 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
+  mixins: [CrudMixin],
   props: {
     plans: {
-      type: Array,
-      default: null,
-    },
-    courses: {
-      type: Array,
-      default: null,
-    },
-    trainingSystems: {
-      type: Array,
-      default: null,
-    },
-    careers: {
       type: Array,
       default: null,
     },
@@ -67,15 +57,16 @@ export default {
     },
 
     deletePlan(item) {
-      this.confirmPlan = item;
+      this.confirmPlan = null;
+      this.confirmPlan = { item: item };
     },
 
     // Call api delete Plan
     async deletePlanConfirm(planComfirm) {
-      planComfirm.isDelete = true;
+      planComfirm.item.isDelete = true;
       this.showLoading();
       let api = new PlanService();
-      let response = await api.updatePlanAsync(planComfirm); // Gọi Api
+      let response = await api.updatePlanAsync(planComfirm.item); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
@@ -85,7 +76,7 @@ export default {
         );
         return;
       }
-      this.$emit("change-data-plan-component");
+      this.$emit("change-data-plan-component", planComfirm.item.id);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,

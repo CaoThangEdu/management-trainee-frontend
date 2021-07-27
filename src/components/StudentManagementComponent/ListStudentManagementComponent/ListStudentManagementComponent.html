@@ -8,7 +8,9 @@
             class="ci-primary"></path>
         </svg> Danh sách sinh viên
         <button class="btn btn-primary float-right btn-search"          
-          @click="createStudent">+ Thêm mới</button>
+          @click="createStudent" title="Thêm mới">
+          <i class="fa fa-plus-square"></i>
+        </button>
         <!-- <button class="btn btn-secondary float-right btn-search mr-2" @click="createStudentsFile">+ Thêm file</button> -->
       </header>
       <div class="card-body">
@@ -19,7 +21,11 @@
                 <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
-                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+                <button type="submit" id="btn-search" 
+                  class="btn btn-stack-overflow"
+                  title="Tìm kiếm">
+                  <i class="fas fa-search"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -42,7 +48,8 @@
               <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{ item.studentId }}</td>
-                <td>{{ item.firstName + ' ' + item.lastName }}</td>
+                <td @click="updateStudent(index)" class="link-detail"
+                  title="Xem">{{ item.firstName + ' ' + item.lastName }}</td>
                 <td v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.classId, classes)">
                   {{ getInfoObject(item.classId, classes).className }}
                 </td>
@@ -61,10 +68,10 @@
                   </button>
                 </td>
                 <td>
-                  <button class="btn btn-success mr-2"
-                    @click="updateStudent(index)">Sửa</button>
-                  <button class="btn btn-danger"
-                    @click="deleteStudent(item)">Xóa</button>
+                  <button class="btn btn-danger" title="Xóa"
+                    @click="deleteStudent(item)">
+                    <i class="fa fa-trash"></i>
+                  </button>
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
