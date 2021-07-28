@@ -16,7 +16,25 @@ export default class StudentService extends ServicesBaseAPI {
     }
     return this.result;
   }
-
+  async getStudentUnassignedAsync(object){
+    try {
+      const response = await this.http.post(`${this.url}/GetStudentsUnassigned`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+  
+  async getStudentsInInternshipCourse(object){
+    try {
+      const response = await this.http.post(`${this.url}/GetStudentsInInternshipCourse`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
   async createStudentAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);

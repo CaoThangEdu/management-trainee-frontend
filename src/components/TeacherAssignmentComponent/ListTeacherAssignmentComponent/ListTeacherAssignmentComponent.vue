@@ -4,14 +4,29 @@
 
 <script>
 import TeacherAssignmentDetailComponent from '../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent'
+import SelectTeacher from "../../common/form/select-teacher/SelectTeacher.vue";
+
 export default {
   name: "ListTeacherAssignmentComponent",
-  components: { TeacherAssignmentDetailComponent },
+  components: {
+     TeacherAssignmentDetailComponent,
+     SelectTeacher
+  },
   data() {
     return {
       listBrand: [],
       editTeacher: {},
+      classId: "",
+      teacherId: ""
     };
+  },
+  props: {
+   classes: {
+      type: Array,
+    },
+    teachers: {
+      type: Array,
+    },
   },
   methods:{
     createBrand() {
@@ -20,6 +35,12 @@ export default {
     async changeData() {
       // await this.getListBrandAsync();
     },
+    changeClassName() {
+      console.log(this.classes)
+    },
+    changeTeacher(){
+
+    }
   }
 }
 </script>

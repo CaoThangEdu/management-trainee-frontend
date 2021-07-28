@@ -1,0 +1,46 @@
+<div class="information">
+  <div class="information-assignment">
+    <div
+      class="col-md-12 col-sm-12 col-form-label information-assignment__center "
+    >
+      <h5>
+        Đợt thực tập: {{this.statistical.internshipCourseName}} - Hệ:
+        {{this.statistical.courseName}} - Ngành:
+        {{this.statistical.careersName}} - Khóa: {{this.statistical.courseName}}
+      </h5>
+    </div>
+    <div class="information-assignment__center">
+      <h4>THỐNG KÊ</h4>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="information-assignment__statistical">
+          <div class="information-assignment__text">
+            Tổng số giáo viên trong đợt thực tập:
+            {{this.statistical.numberTeachersInInternshipCourse}}
+          </div>
+          <div class="information-assignment__text">
+            Tổng số sinh viên trong đợt thực tập:
+            {{this.statistical.numberOfStudentsInInternshipCourse}}
+          </div>
+          <div class="information-assignment__text">
+            Tổng số sinh viên chưa được phân công:
+            {{this.statistical.numberStudentsUnassigned}}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="information-assignment__statistical">
+          <div
+            class="information-assignment__text"
+            v-for="(item, index) in statistiesStudentInClass"
+            :key="index"
+          >
+            Lớp {{item.className}}: {{item.number}} sinh viên chưa được phân
+            công
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

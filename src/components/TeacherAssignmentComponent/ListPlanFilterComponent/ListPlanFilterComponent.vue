@@ -30,13 +30,7 @@ export default {
   async mounted(){
     await this.getInternshipCourseAsync();
   },
-  methods:{
-    createBrand() {
-      this.editTeacher = {};
-    },
-    async changeData() {
-      // await this.getteachersAsync();
-    },
+  methods:{    
     async getInternshipCourseAsync(){
       // Call Api
       this.showLoading();
@@ -53,10 +47,6 @@ export default {
       }
       this.internshipCourse = response.data;
     },
-
-    assignment(e) {
-      this.$emit("getPlan", e);
-    }
   }
 }
 </script>

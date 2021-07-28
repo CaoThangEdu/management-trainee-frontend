@@ -2,70 +2,101 @@
 </template>
 
 <script>
-// import ListStudentComponent from '../ListStudentComponent/ListStudentComponent.vue'
 import ListTeacherAssignmentComponent from '../ListTeacherAssignmentComponent/ListTeacherAssignmentComponent.vue'
-// import StudentService from '../../../services/student/studentServices'
-// import AppConfig from '../../../../src/app.config.json'
+import TeacherService from "../../../services/teacher/teacherServices";
 import ComponentBase from "../../common/component-base/ComponentBase"
 import Tabs from "../../common/tab-comp/tabs/tabs.vue";
 import Tab from "../../common/tab-comp/tab/tab.vue";
+import ManualAssignment from "../ManualAssignment/ManualAssignment.vue";
+import Statistical from "../Statistical/Statistical.vue";
+import ClassService from "../../../services/class/classServices";
+import AppConfig from "../../../../src/app.config.json";
 
 export default {
   name: "Assigment",
   extends: ComponentBase,
   components: {
-    // ListStudentComponent,
     ListTeacherAssignmentComponent,
+    ManualAssignment,
     Tabs, Tab,
+    Statistical
   },
   props: {
-    guid: {
+    internshipCourseId: {
       type: String,
       default: ''
     },
+    
   },
   
   data() {
     return{
-      students : { },
-      teacher: {},
+      teachers:[],
+      classes: [],     
       studentsUnassigned: {
         internshipCourseId: "",
         classId: ""
       },
       classIdFilter: "",      
-      course: []   
+      course: []  ,
+      classFilter: {
+        className: "",
+        status: "",
+        internshipCourseId: "",
+        isDelete: false,
+      }, 
+      filterTeacher: {
+        internshipCourseId: "",
+      }, 
     };
   },
   created() {
-    console.log('internshipCourseId', this.guid)
   },
   async mounted(){
-    await this.getStudentsUnassigned()   
+    this.getClassesAsync();
+    this.getTeachersAsync();
   },
   
-  methods: {   
-  
-    // async getStudentsUnassigned(){      
-    //   // Call Api
-    //   this.showLoading();
-    //   const api = new StudentService()
-    //   //this.studentsUnassigned.internshipCourseId = this.internshipCourseId;
-    //   this.studentsUnassigned.internshipCourseId = "854ef351-3c36-479e-2323-08d9442977d9";
-    //   //
-    //   this.studentsUnassigned.classId = this.classIdFilter;
-    //   const response = await api.getStudentUnassignedAsync(this.studentsUnassigned)
-    //   this.showLoading(false);
-    //   if(!response.isOK){
-    //     this.showNotifications(
-    //       "error",
-    //       `${AppConfig.notification.title_default}`,
-    //       response.errorMessages
-    //     );
-    //     return;
-    //   }      
-    //   this.students = response.data;     
-    // },   
+  methods: {     
+    async getClassesAsync() {
+      // Call Api
+      this.showLoading();
+      const api = new ClassService();
+      this.classFilter.internshipCourseId = this.internshipCourseId;
+      const response = await api.getClassesFilterAsync(this.classFilter);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.classes = response.data;
+    },
+
+    async getTeachersAsync() {
+      // Call Api
+      this.showLoading();
+      const api = new TeacherService();
+      this.filterTeacher.internshipCourseId = this.internshipCourseId;
+      const response = await api.getTeachersInInternshipCourse(
+        this.filterTeacher
+      );
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.teachers = response.data;      
+    },    
   }
 
 }
