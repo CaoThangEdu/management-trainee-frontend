@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import TeacherAssignmentDetailComponent from '../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent'
 import SelectTeacher from "../../common/form/select-teacher/SelectTeacher.vue";
+import TeacherAssignmentDetailComponent from '../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent'
 
 export default {
   name: "ListTeacherAssignmentComponent",

@@ -80,6 +80,9 @@ export default {
       },
       listInstructorRequest: [],
       teacherSelect: "",
+      filterTeacher: {
+        internshipCourseId: "",
+      }, 
     };
   },
  

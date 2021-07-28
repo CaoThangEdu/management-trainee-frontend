@@ -82,9 +82,7 @@ export default {
       this.showLoading();
       const api = new TeacherService();
       this.filterTeacher.internshipCourseId = this.internshipCourseId;
-      const response = await api.getTeachersInInternshipCourse(
-        this.filterTeacher
-      );
+      const response = await api.getTeachersInInternshipCourse(this.filterTeacher);
       this.showLoading(false);
 
       if (!response.isOK) {
