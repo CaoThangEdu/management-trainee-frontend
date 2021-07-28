@@ -26,7 +26,10 @@ export default {
       type: Object,
       default: null,
     },
-    careers:Array
+    faculties: {
+      type: Array,
+      default: null,
+    }
   },
   methods: {
     async pressKeyEnter() {
@@ -40,6 +43,7 @@ export default {
       }
     },
     async createTeacherAsync() {
+      this.teacher.status = 'active';
       this.showLoading();
       let api = new TeacherService();
       let response = await api.createTeacherAsync(this.teacher);
@@ -80,6 +84,7 @@ export default {
       this.closeModal(true);
     },
     async save() {
+      this.teacher.facultyId = this.faculties[0].id;
       //validate
       let viewModel = new TeacherViewModel();
       viewModel.setFields(this.teacher);

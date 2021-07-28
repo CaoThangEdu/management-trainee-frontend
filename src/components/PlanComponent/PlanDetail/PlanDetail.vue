@@ -1,193 +1,348 @@
 <template>
-<div class="row">
-  <div class="col-12">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-      <PlanningStepsComponent :isActiveStep="isActiveStep" />
-    </div>
-    <div class="row">
-      <div class="col-12 mt-4">
-        <div class="card">
-          <header class="card-header">
-            {{ isCreate ? "Thêm mới kế hoạch" : "Chỉnh sửa kế hoạch" }}
-          </header>
-          <div class="card-body">
-            <form @submit.prevent>
-              <div class="form-group row">
-                <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">Ngày bắt đầu
-                </label>
-                <div class="col-md-8 col-sm-8">
-                  <input class="form-control" type="date" format="yyyy-mm-dd" value="2021-05-03" v-model="plan.startDay">
-                </div>
-              </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <PlanningStepsComponent :isActiveStep="isActiveStep" />
+      </div>
+      <div class="row">
+        <div class="col-12 mt-4">
+          <div class="card">
+            <header class="card-header">
+              {{ isCreate ? "Thêm mới kế hoạch" : "Chỉnh sửa kế hoạch" }}
+            </header>
+            <div class="card-body">
+              <form @submit.prevent>
+                <div class="form-row pt-3">
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                    <label>Ngày bắt đầu
+                      (<span class="text--red">*</span>)
+                    </label>
+                    <DatePicker
+                      v-model="plan.startDay"
+                      input-class="form-control"
+                      :format="'DD/MM/YYYY'"
+                      type="date"
+                      :default-value="new Date()"
+                      :disabled-date="hidePastDates"
+                      class="w-100"
+                    ></DatePicker>                  
+                  </div>
 
-              <div class="form-group row">
-                <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">
-                  Ngày kết thúc
-                </label>
-                <div class="col-md-8 col-sm-8">
-                  <input class="form-control" type="date" v-model="plan.endDay">
-                </div>
-              </div>
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                    <label class="mr-4">Ngày kết thúc 
+                      (<span class="text--red">*</span>)
+                    </label>
+                    <DatePicker
+                      v-model="plan.endDay"
+                      input-class="form-control"
+                      :format="'DD/MM/YYYY'"
+                      type="date"
+                      :disabled-date="displayBetweenFromDateAndPastDates"
+                      class="w-100"
+                    ></DatePicker>
+                  </div>
 
-              <div class="form-group row">
-                <label for="name" class="col-md-4 col-sm-4 col-form-label">
-                  Mô tả (<span style="color: red;">*</span>)
-                </label>
-                <div class="col-md-8 col-sm-8">
-                  <input type="text" class="form-control" id="name" v-model="plan.description" />
-                </div>
-              </div>
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                    <label>Mô tả (<span style="color: red">*</span>) </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      v-model="plan.description"
+                    />
+                  </div>
 
-              <div class="row">
-                <div class="col-12">
-                  <div class="wrapCollapse">
-                    <div v-for="(faq, i) in faqTrainingSystems" :key="i">
-                      <dt>
-                        <div class="title-collapse">
-                          <a @submit.prevent :class="{ activeTrainingSystem: currentFaqTrainingSystem == i }" 
-                            @click="openComponentTrainingSystem(i)">
-                          {{ faq.title }}
-                          </a>
-                        </div>
-                        
-                      </dt>
-                      <dd class="display-hidden" :class="{ active: currentFaqTrainingSystem == i }">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'he'">
-                          <div class="form-group row" v-if="!plan.id">
-                            <label class="col-md-4 col-sm-4 col-form-label">Hệ đào tạo</label>
-                            <div class="col-md-8 col-sm-8">
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                    <label>Tên khóa (<span class="text--red">*</span>) </label>
+                    <input
+                      class="w-100 form-control"
+                      type="number"
+                      id="quantity"
+                      name="quantity"
+                      min="2018"
+                      max=""
+                      v-model="plan.courseName"
+                    />
+                  </div>
+
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                    <div class="wrapCollapse">
+                      <div v-for="(faq, i) in faqTrainingSystems" :key="i">
+                        <dt>
+                          <div class="title-collapse">
+                            <a
+                              @submit.prevent
+                              :class="{
+                                activeTrainingSystem:
+                                  currentFaqTrainingSystem == i,
+                              }"
+                              @click="openComponentTrainingSystem(i)"
+                            >
+                              {{ faq.title }}
+                            </a>
+                          </div>
+                        </dt>
+                        <dd
+                          class="display-hidden"
+                          :class="{ active: currentFaqTrainingSystem == i }"
+                        >
+                          <div
+                            class="col-xl-12 col-md-12 col-sm-12 col-12"
+                            v-if="faq.text == 'he'"
+                          >
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                              v-if="!plan.id"
+                            >
+                              <label>Hệ đào tạo
+                                (<span class="text--red">*</span>)
+                              </label>
                               <div class="input-group mb-3">
-                                <select class="form-control form-select form-select-class" v-model="trainingSystemId" @change="filterCareer">
-                                  <option v-for="(item, index) in trainingSystems" :key="index" :value="item.id">
+                                <select
+                                  class="
+                                    form-control form-select form-select-class
+                                  "
+                                  v-model="trainingSystemId"
+                                  @change="filterCareer"
+                                >
+                                  <option
+                                    v-for="(item, index) in trainingSystems"
+                                    :key="index"
+                                    :value="item.id"
+                                  >
+                                    {{ item.trainingSystemName }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                              v-if="
+                                plan.id &&
+                                careers.length != 0 &&
+                                trainingSystems.length != 0
+                              "
+                            >
+                              <label>Hệ đào tạo
+                                (<span class="text--red">*</span>)
+                              </label>
+                              <div class="input-group mb-3">
+                                <select
+                                  class="
+                                    form-control form-select form-select-class
+                                  "
+                                  v-model="trainingSystemId"
+                                  @change="filterCareer"
+                                >
+                                  <option
+                                    v-for="(item, index) in trainingSystems"
+                                    :key="index"
+                                    :value="item.id"
+                                  >
                                     {{ item.trainingSystemName }}
                                   </option>
                                 </select>
                               </div>
                             </div>
                           </div>
-                          <div class="form-group row" v-if="plan.id && careers.length != 0 && trainingSystems.length != 0">
-                            <label class="col-md-4 col-sm-4 col-form-label">Hệ đào tạo</label>
-                            <div class="col-md-8 col-sm-8">
-                              <div class="input-group mb-3">
-                                <select class="form-control form-select form-select-class" v-model="trainingSystemId" @change="filterCareer">
-                                  <option v-for="(item, index) in trainingSystems" :key="index" :value="item.id">
-                                    {{ item.trainingSystemName }}
-                                  </option>
-                                </select>
+                          <div
+                            class="col-xl-12 col-md-12 col-sm-12 col-12"
+                            v-if="faq.text == 'themHe'"
+                          >
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                            >
+                              <label
+                                >Tên hệ đào tạo (<span class="text--red"
+                                  >*</span
+                                >)
+                              </label>
+                              <div class="row">
+                                <div class="col-md-10 col-sm-10">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    v-model="
+                                      trainingSystem.trainingSystemName
+                                    "
+                                  />
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                  <button
+                                    class="btn btn-vimeo"
+                                    @click="createTrainingSystemAsync()"
+                                  >
+                                    +<i
+                                      class="fa fa-praying-hands"
+                                      style="color: white"
+                                    ></i>
+                                  </button>
+                                </div>
                               </div>
+
+                              <div
+                                v-if="createTrainingLoading"
+                                role="status"
+                                aria-hidden="false"
+                                aria-label="Loading"
+                                class="spinner-border text-primary"
+                                style="width: 3rem; height: 3rem"
+                              ></div>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'themHe'">
-                          <div class="form-group row">
-                            <label class="col-md-4 col-sm-4 col-form-label">
-                              Tên hệ đào tạo (<span class="text--red">*</span>)
-                            </label>
-                            <div class="col-md-6 col-sm-6">
-                              <input type="text" class="form-control" id="name" v-model="trainingSystem.trainingSystemName" />
-                            </div>
-                            <div class="col-md-2 col-sm-2">
-                              <button class="btn btn-vimeo" @click="createTrainingSystemAsync()">+<i class="fa fa-praying-hands" style="color: white;"></i></button>
-                            </div>
-                            <div v-if="createTrainingLoading" role="status" aria-hidden="false" aria-label="Loading" class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
-                          </div>
-                        </div>
-                      </dd>
+                        </dd>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div class="row">
-                <div class="col-12">
-                  <div class="wrapCollapse">
-                    <div v-for="(faq, i) in faqs" :key="i">
-                      <dt>
-                        <a @submit.prevent :class="{ active: currentFaq == i }" @click="openComponet(i)">
-                          {{ faq.title }}
-                        </a>
-                      </dt>
-                      <dd class="display-hidden" :class="{ active: currentFaq == i }">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'nganhDaoTao'">
-                          <div class="form-group row">
-                            <label class="col-md-4 col-sm-4 col-form-label">Ngành</label>
-                            <div class="col-md-8 col-sm-8">
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                    <div class="wrapCollapse">
+                      <div v-for="(faq, i) in faqs" :key="i">
+                        <dt>
+                          <a
+                            @submit.prevent
+                            :class="{ active: currentFaq == i }"
+                            @click="openComponet(i)"
+                          >
+                            {{ faq.title }}
+                          </a>
+                        </dt>
+                        <dd
+                          class="display-hidden"
+                          :class="{ active: currentFaq == i }"
+                        >
+                          <div
+                            class="col-xl-12 col-md-12 col-sm-12 col-12"
+                            v-if="faq.text == 'nganhDaoTao'"
+                          >
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                            >
+                              <label>Ngành
+                                (<span class="text--red">*</span>)
+                              </label>
                               <div class="input-group mb-3">
-                                <select class="form-control form-select form-select-class" v-model="plan.careersId">
-                                  <option v-for="(item, index) in careersFilter" :key="index" :value="item.id">
+                                <select
+                                  class="
+                                    form-control
+                                    form-select
+                                    form-select-class
+                                  "
+                                  v-model="plan.careersId"
+                                >
+                                  <option
+                                    v-for="(item, index) in careersFilter"
+                                    :key="index"
+                                    :value="item.id"
+                                  >
                                     {{ item.careersName }}
                                   </option>
                                 </select>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'themNganh'">
-                          <div class="form-group row">
-                            <label class="col-md-4 col-sm-4 col-form-label">
-                              Tên ngành (<span class="text--red">*</span>)
-                            </label>
-                            <div class="col-md-6 col-sm-6">
-                              <input type="text" class="form-control" id="name" v-model="career.careersName" placeholder="Nhập tên ngành cần tạo" />
+                          <div
+                            class="col-xl-12 col-md-12 col-sm-12 col-12"
+                            v-if="faq.text == 'themNganh'"
+                          >
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                            >
+                              <label>
+                                Tên ngành (<span class="text--red">*</span>)
+                              </label>
+                              <div class="row">
+                                <div class="col-md-10 col-sm-10">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    v-model="career.careersName"
+                                    placeholder="Nhập tên ngành cần tạo"
+                                  />
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                  <button
+                                    class="btn btn-linkedin"
+                                    @click="createCareerAsync()"
+                                  >
+                                    +<i class="fa fa-chalkboard"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              <div
+                                v-if="createCareerLoading"
+                                role="status"
+                                aria-hidden="false"
+                                aria-label="Loading"
+                                class="spinner-border text-primary"
+                                style="width: 3rem; height: 3rem"
+                              ></div>
                             </div>
-                            <div class="col-md-2 col-sm-2">
-                              <button class="btn btn-linkedin" @click="createCareerAsync()">+<i class="fa fa-chalkboard"></i></button>
-                            </div>
-                            <div v-if="createCareerLoading" role="status" aria-hidden="false" aria-label="Loading" class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
                           </div>
-                        </div>
-                      </dd>
+                        </dd>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div class="form-group row">
-                <label class="col-md-4 col-sm-4 col-form-label">Tên khóa</label>
-                <div class="col-md-6 col-sm-6">
-                  <input class="w-100" type="number" id="quantity" name="quantity" min="2018" max="" v-model="plan.courseName">
-                </div>
-              </div>
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6"
+                    v-if="planId"
+                  >
+                    <label
+                      >Trạng thái (<span class="text--red">*</span>)
+                    </label>
+                    <div class="input-group mb-3">
+                      <select
+                        class="form-control form-select form-select-class"
+                        v-model="plan.status"
+                      >
+                        <option value="new">Mới lập</option>
+                        <option value="start">Bắt đầu thực tập</option>
+                        <option value="point">Chấm điểm</option>
+                        <option value="end">Kết thúc thực tập</option>
+                      </select>
+                    </div>
+                  </div>
 
-              <div class="form-group row" v-if="planId">
-                <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
-                <div class="col-md-8 col-sm-8">
-                  <div class="input-group mb-3">
-                    <select class="form-control form-select form-select-class" v-model="plan.status">
-                      <option value="new">Mới lập</option>
-                      <option value="start">Bắt đầu thực tập</option>
-                      <option value="point">Chấm điểm</option>
-                      <option value="end">Kết thúc thực tập</option>
-                    </select>
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6"
+                    v-if="planId">
+                    <div class="button-continue">
+                      <router-link
+                        class="btn-continue"
+                        :to="{ name: 'them-sv-cua-dot', params: { guid: planId } }"
+                      >
+                        Tiếp tục thêm sinh viên
+                      </router-link>
+                    </div>                    
+                  </div>
+                  <div class="form-group col-sm-12 col-md-12 col-lg-12 text-center">
+                    <button
+                      @click="$router.go(-1)"
+                      id="cancel"
+                      class="btn btn-primary mr-2"
+                    >
+                      Hủy
+                    </button>
+                    <button @click="save" id="submit" class="btn btn-success">
+                      Lưu
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div class="text-center">
-                <button @click="$router.go(-1)" id="cancel" class="btn btn-primary mr-2">Hủy</button>
-                <button @click="save" id="submit" class="btn btn-success">Lưu</button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <ConfirmDialog
-      :data="confirmPlan"
-      @agree="changeConfirmPlan"
-      :message="isNotification">
-    </ConfirmDialog>
-
-    <div class="col-12" v-if="planId">
-      <div class="button-continue">
-        <router-link class="btn-continue" :to="{name:'them-sv-cua-dot', params: { guid: planId } }">
-          Tiếp tục thêm sinh viên
-        </router-link>
-      </div>
+      <ConfirmDialog
+        :data="confirmPlan"
+        @agree="changeConfirmPlan"
+        :message="isNotification"
+      >
+      </ConfirmDialog>
     </div>
   </div>
-
-</div>
 </template>
 
 <script>
@@ -205,7 +360,11 @@ import PlanningStepsComponent from "../../../components/planningStepsComponent/p
 import localStorageMixin from "../../../helpers/mixins/localStorageMixin";
 import ConfirmDialog from "../../../components/common/confirm-dialog/ConfirmDialog.vue";
 import crudMixin from "../../../helpers/mixins/crudMixin";
-import FacultyServices from '../../../services/faculty/facultyServices';
+import FacultyServices from "../../../services/faculty/facultyServices";
+import DatePicker from "vue2-datepicker";
+import "vue2-datepicker/index.css";
+import "vue2-datepicker/locale/vi";
+import moment from "moment";
 
 export default {
   name: "PlanDetail",
@@ -213,13 +372,19 @@ export default {
   extends: ComponentBase,
   components: {
     PlanningStepsComponent,
-    ConfirmDialog
+    ConfirmDialog,
+    DatePicker,
   },
   mixins: [localStorageMixin, crudMixin],
   data() {
     return {
       isCreate: true,
-      plan: {},
+      plan: {
+        startDay: new Date(),
+        endDay: moment()
+          .add(+4, "M")
+          .toDate(),
+      },
       errorMessages: [],
       isThemNganh: false,
       career: {},
@@ -229,7 +394,8 @@ export default {
       careers: [],
       careerId: null,
       careerNamePlan: null,
-      faqs: [{
+      faqs: [
+        {
           title: "Ngành",
           text: "nganhDaoTao",
         },
@@ -238,7 +404,8 @@ export default {
           text: "themNganh",
         },
       ],
-      faqTrainingSystems: [{
+      faqTrainingSystems: [
+        {
           title: "Hệ đào tạo",
           text: "he",
         },
@@ -259,7 +426,7 @@ export default {
       plans: [],
       isNotification: null,
       faculties: [],
-    }
+    };
   },
 
   async mounted() {
@@ -270,13 +437,18 @@ export default {
     if (!this.guid) {
       return;
     }
-    this.plans = this.plans.filter(plan => plan.id != this.guid);
+    this.plans = this.plans.filter((plan) => plan.id != this.guid);
     this.isCreate = false;
     await this.getPlanByIdAsync(this.guid);
     this.planId = this.plan.id;
-    this.trainingSystemId = this.getInfoObject(this.plan.careersId, this.careers).trainingSystemId;
+    this.trainingSystemId = this.getInfoObject(
+      this.plan.careersId,
+      this.careers
+    ).trainingSystemId;
+    this.plan.startDay =  new Date(this.plan.startDay);
+    this.plan.endDay = new Date(this.plan.endDay);
     this.filterCareer();
-    let idPlanStore = localStorageMixin.methods.getLocalStorage('ID_PLAN');
+    let idPlanStore = localStorageMixin.methods.getLocalStorage("ID_PLAN");
     if (!idPlanStore) {
       return;
     }
@@ -289,11 +461,11 @@ export default {
   methods: {
     async getFacultiesFilterAsync() {
       let facultyFilter = {
-        "isDelete": false
+        isDelete: false,
       };
       // Call Api
       this.showLoading();
-      const api = new FacultyServices()
+      const api = new FacultyServices();
 
       const response = await api.getFacultiesFilterAsync(facultyFilter);
       this.showLoading(false);
@@ -309,19 +481,19 @@ export default {
       this.faculties = response.data;
     },
 
-    async getPlansAsync(){
+    async getPlansAsync() {
       let planFilter = {
         status: "",
-        isDelete: false
+        isDelete: false,
       };
       // Call Api
       this.showLoading();
-      const api = new PlanService()
+      const api = new PlanService();
 
-      const response = await api.getPlansAsync(planFilter)
+      const response = await api.getPlansAsync(planFilter);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -332,10 +504,19 @@ export default {
       this.plans = response.data;
     },
 
+    hidePastDates(date) {
+      return date > this.plan.endDay || date < new Date();
+    },
+
+    displayBetweenFromDateAndPastDates(date) {
+      const day = new Date(this.plan.startDay);
+      return date < day;
+    },
+
     async getPlanByIdAsync(guid) {
       // Call Api
       this.showLoading();
-      const api = new PlanService()
+      const api = new PlanService();
       const response = await api.getPlanByIdAsync(guid);
       this.showLoading(false);
 
@@ -355,12 +536,14 @@ export default {
         trainingSystemName: "",
         isDelete: false,
         status: "active",
-      }
+      };
       // Call Api
       this.showLoading();
-      const api = new TrainingSystemService()
+      const api = new TrainingSystemService();
 
-      const response = await api.getTrainingSystemsFilterAsync(filterTrainingSystem);
+      const response = await api.getTrainingSystemsFilterAsync(
+        filterTrainingSystem
+      );
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -383,7 +566,7 @@ export default {
       };
       // Call Api
       this.showLoading();
-      const api = new CareerService()
+      const api = new CareerService();
 
       const response = await api.getCareersFilterAsync(filterCareer);
       this.showLoading(false);
@@ -411,7 +594,9 @@ export default {
     },
 
     filterCareer() {
-      this.careersFilter = this.careers.filter(career => career.trainingSystemId == this.trainingSystemId);
+      this.careersFilter = this.careers.filter(
+        (career) => career.trainingSystemId == this.trainingSystemId
+      );
     },
 
     async createCareerAsync() {
@@ -447,15 +632,17 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}` + ' ngành'
+        `${AppConfig.notification.content_created_success_default}` + " ngành"
       );
-      await this.getCareersFilterAsync();
+      this.careers.push(response.data);
       this.filterCareer();
     },
 
     async changeConfirmPlan() {
-      this.plan.internshipCourseName = this.plan.internshipCourseName + '-' + 
-        crudMixin.methods.convertTime(this.plan.startDay, 'DD/MM');
+      this.plan.internshipCourseName =
+        this.plan.internshipCourseName +
+        "-" +
+        crudMixin.methods.convertTime(this.plan.startDay, "DD/MM");
       if (!this.isCreate) {
         this.showLoading();
         let api = new PlanService();
@@ -470,7 +657,10 @@ export default {
           return;
         }
         this.planId = response.data.id;
-        this.$router.push({ name: 'them-sv-cua-dot', params: { guid: `${this.planId}` } });
+        this.$router.push({
+          name: "them-sv-cua-dot",
+          params: { guid: `${this.planId}` },
+        });
 
         this.showNotifications(
           "success",
@@ -492,18 +682,23 @@ export default {
         return;
       }
       this.planId = response.data.id;
-      localStorageMixin.methods.setLocalStorage('ID_PLAN', this.planId);
-      this.$router.push({ name: 'them-sv-cua-dot', params: { guid: `${this.planId}` } })
+      localStorageMixin.methods.setLocalStorage("ID_PLAN", this.planId);
+      this.$router.push({
+        name: "them-sv-cua-dot",
+        params: { guid: `${this.planId}` },
+      });
 
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}` + ' đợt'
+        `${AppConfig.notification.content_created_success_default}` + " đợt"
       );
     },
 
     checkExistencePlan(planName) {
-      const result = this.plans.find(({ internshipCourseName }) => internshipCourseName === planName);
+      const result = this.plans.find(
+        ({ internshipCourseName }) => internshipCourseName === planName
+      );
       if (result) {
         return true;
       }
@@ -539,11 +734,11 @@ export default {
         return;
       }
       this.trainingSystemId = response.data.id;
-      await this.getTrainingSystemsFilterAsync();
+      this.trainingSystems.push(response.data);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}` + ' hệ'
+        `${AppConfig.notification.content_created_success_default}` + " hệ"
       );
     },
 
@@ -553,7 +748,9 @@ export default {
 
     getTrainingSysId() {
       this.trainingSystemId = this.getInfoObject(
-        this.getInfoObject(this.careerId, this.careers).trainingSystemId, this.trainingSystems).id;
+        this.getInfoObject(this.careerId, this.careers).trainingSystemId,
+        this.trainingSystems
+      ).id;
     },
 
     getInfoObject(id, list) {
@@ -565,22 +762,37 @@ export default {
     },
 
     async createPlanAsync() {
-      this.plan.status = 'new';
+      this.plan.status = "new";
       if (!this.careerNamePlan) {
-        this.careerNamePlan = this.getInfoObject(this.careerId, this.careers).careersName;
+        this.careerNamePlan = this.getInfoObject(
+          this.careerId,
+          this.careers
+        ).careersName;
       }
-      this.plan.internshipCourseName = this.getInfoObject(this.trainingSystemId, this.trainingSystems).trainingSystemName +
-        "-" + this.getInfoObject(this.plan.careersId, this.careers).careersName + "-" + this.plan.courseName;
+      this.plan.internshipCourseName =
+        this.getInfoObject(this.trainingSystemId, this.trainingSystems)
+          .trainingSystemName +
+        "-" +
+        this.getInfoObject(this.plan.careersId, this.careers).careersName +
+        "-" +
+        this.plan.courseName;
       let checkPlan = this.checkExistencePlan(this.plan.internshipCourseName);
-      if(checkPlan) {
-        if(this.checkExistencePlan(this.plan.internshipCourseName + '-' + 
-          crudMixin.methods.convertTime(this.plan.startDay, 'DD/MM'))) {
+      if (checkPlan) {
+        if (
+          this.checkExistencePlan(
+            this.plan.internshipCourseName +
+              "-" +
+              crudMixin.methods.convertTime(this.plan.startDay, "DD/MM")
+          )
+        ) {
           this.showNotifications(
             "error",
             `${AppConfig.notification.title_default}`,
-            'Đợt ' + this.plan.internshipCourseName + '-' + 
-              crudMixin.methods.convertTime(this.plan.startDay, 'DD/MM') +
-              ' đã tồn tại! Vui lòng chọn ngày khác để tạo đợt thực tập mới'
+            "Đợt " +
+              this.plan.internshipCourseName +
+              "-" +
+              crudMixin.methods.convertTime(this.plan.startDay, "DD/MM") +
+              " đã tồn tại! Vui lòng chọn ngày khác để tạo đợt thực tập mới"
           );
           return;
         }
@@ -589,7 +801,7 @@ export default {
           tên đợt '${this.plan.internshipCourseName}'?`;
         return;
       }
-      
+
       this.showLoading();
       let api = new PlanService();
       let response = await api.createPlanAsync(this.plan);
@@ -603,36 +815,58 @@ export default {
         return;
       }
       this.planId = response.data.id;
-      localStorageMixin.methods.setLocalStorage('ID_PLAN', this.planId);
-      this.$router.push({ name: 'them-sv-cua-dot', params: { guid: `${this.planId}` } })
+      localStorageMixin.methods.setLocalStorage("ID_PLAN", this.planId);
+      this.$router.push({
+        name: "them-sv-cua-dot",
+        params: { guid: `${this.planId}` },
+      });
 
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}` + ' đợt'
+        `${AppConfig.notification.content_created_success_default}` + " đợt"
       );
     },
 
     async updatePlanAsync() {
       if (this.careerNamePlan) {
-        this.careerNamePlan = this.getInfoObject(this.careerId, this.careers).careersName
+        this.careerNamePlan = this.getInfoObject(
+          this.careerId,
+          this.careers
+        ).careersName;
       }
-      let planNameNew = this.getInfoObject(this.trainingSystemId, this.trainingSystems).trainingSystemName +
-        "-" + this.getInfoObject(this.plan.careersId, this.careers).careersName + "-" + this.plan.courseName;
-      if (this.plan.internshipCourseName !=  planNameNew + '-' + 
-        crudMixin.methods.convertTime(this.plan.startDay, 'DD/MM')){
-        this.plan.internshipCourseName = planNameNew  ;
-      }      
+      let planNameNew =
+        this.getInfoObject(this.trainingSystemId, this.trainingSystems)
+          .trainingSystemName +
+        "-" +
+        this.getInfoObject(this.plan.careersId, this.careers).careersName +
+        "-" +
+        this.plan.courseName;
+      if (
+        this.plan.internshipCourseName !=
+        planNameNew +
+          "-" +
+          crudMixin.methods.convertTime(this.plan.startDay, "DD/MM")
+      ) {
+        this.plan.internshipCourseName = planNameNew;
+      }
       let checkPlan = this.checkExistencePlan(this.plan.internshipCourseName);
-      if(checkPlan) {
-        if(this.checkExistencePlan(this.plan.internshipCourseName + '-' + 
-          crudMixin.methods.convertTime(this.plan.startDay, 'DD/MM'))) {
+      if (checkPlan) {
+        if (
+          this.checkExistencePlan(
+            this.plan.internshipCourseName +
+              "-" +
+              crudMixin.methods.convertTime(this.plan.startDay, "DD/MM")
+          )
+        ) {
           this.showNotifications(
             "error",
             `${AppConfig.notification.title_default}`,
-            'Đợt ' + this.plan.internshipCourseName + '-' + 
-              crudMixin.methods.convertTime(this.plan.startDay, 'DD/MM') +
-              ' đã tồn tại! Vui lòng chọn ngày khác để cập nhật đợt thực tập'
+            "Đợt " +
+              this.plan.internshipCourseName +
+              "-" +
+              crudMixin.methods.convertTime(this.plan.startDay, "DD/MM") +
+              " đã tồn tại! Vui lòng chọn ngày khác để cập nhật đợt thực tập"
           );
           return;
         }
@@ -640,7 +874,7 @@ export default {
         this.isNotification = `Bạn có chắc chắn muốn cập nhật đợt thực tập mới khi trước đó đã tồn tại
           tên đợt '${this.plan.internshipCourseName}'?`;
         return;
-      }      
+      }
       this.showLoading();
       let api = new PlanService();
       let response = await api.updatePlanAsync(this.plan);
@@ -653,7 +887,10 @@ export default {
         );
         return;
       }
-      this.$router.push({ name: 'them-sv-cua-dot', params: { guid: `${this.planId}` } })
+      this.$router.push({
+        name: "them-sv-cua-dot",
+        params: { guid: `${this.planId}` },
+      });
 
       this.showNotifications(
         "success",
@@ -683,9 +920,8 @@ export default {
       }
     },
   },
-}
+};
 </script>
 
 <style>
-
 </style>

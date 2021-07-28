@@ -22,7 +22,7 @@ export default {
   mixins: [ CrudMixin ],
   data() {
     return {
-      trainingsystems: [],
+      trainingSystems: [],
       editTrainingSystem: {},
       confirmTrainingSystem: null,
       pageOfItems: [],
@@ -72,7 +72,7 @@ export default {
         );
         return;
       }
-      this.trainingsystems = response.data;
+      this.trainingSystems = response.data;
     },
 
     async getFacultiesFilterAsync() {
@@ -109,16 +109,16 @@ export default {
       this.editTrainingSystem = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteTrainingSystem(trainingSystem) {
-      this.confirmTrainingSystem = trainingSystem;
+    deleteTrainingSystem(item) {
+      this.confirmTrainingSystem = {item: item};
     },
 
     // Call api delete TrainingSystem
     async deleteTrainingSystemConfirm(trainingSystem) {
-      trainingSystem.isDelete = true;
+      trainingSystem.item.isDelete = true;
       this.showLoading();
       let api = new TrainingSystemService();
-      let response = await api.updateTrainingSystemAsync(trainingSystem);
+      let response = await api.updateTrainingSystemAsync(trainingSystem.item);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -129,13 +129,13 @@ export default {
         );
         return;
       }
-
+      this.trainingSystems = this.trainingSystems.filter(
+      trainingSystem => trainingSystem.id != response.data.id);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_status_success_default}`
       );
-      this.getTrainingSystemsFilterAsync();
     },
 
     async updateStatus(index) {

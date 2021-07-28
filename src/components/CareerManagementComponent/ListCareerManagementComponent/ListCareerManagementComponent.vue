@@ -118,16 +118,16 @@ export default {
       this.editCareer = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteCareer(career) {
-      this.confirmCareer = career;
+    deleteCareer(item) {
+      this.confirmCareer = { item: item };
     },
 
     // Call api delete Career
     async deleteCareerConfirm(careerComfirm) {
-      careerComfirm.isDelete = true;
+      careerComfirm.item.isDelete = true;
       this.showLoading();
       let api = new CareerService();
-      let response = await api.updateCareerAsync(careerComfirm); // Gọi Api
+      let response = await api.updateCareerAsync(careerComfirm.item); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
@@ -137,7 +137,8 @@ export default {
         );
         return;
       }
-      await this.getCareersFilterAsync();
+      this.careers = this.careers.filter(
+      career => career.id != response.data.id);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,

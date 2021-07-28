@@ -92,3 +92,12 @@
     }
   }
 }
+
+.link-detail {
+  color: blue;
+  cursor: pointer;
+  font-weight: 700;
+  &:hover {
+    text-decoration: underline;
+  }
+}
