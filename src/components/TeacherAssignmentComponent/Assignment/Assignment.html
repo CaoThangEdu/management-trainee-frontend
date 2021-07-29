@@ -10,6 +10,7 @@
     <Tabs>
       <Tab name="Danh sách sinh viên đã được phân công" :selected="true">
         <ListTeacherAssignmentComponent
+          v-bind:internshipCourseId="internshipCourseId"
           v-bind:classes="classes"
           v-bind:teachers="teachers"
         />
