@@ -17,13 +17,34 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
-                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 mb-3">
+                <SelectClassroom
+                  :isRequired="false"
+                  v-model="filter.classId"
+                  :plans="plans"
+                  :classrooms="classes" :defaultText="'Chọn lớp'"
+                  @change="(event) => {filter.classId = event.id}">
+                </SelectClassroom>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 mb-3"
+                v-if="filter.classId == '' || filter.classId == -1">
+                <SelectPlan
+                  :isRequired="false"
+                  v-model="filter.internshipCourseId"
+                  :plans="plans" :defaultText="'Chọn đợt thực tập'"
+                  @change="(event) => {filter.internshipCourseId = event.id}">
+                </SelectPlan>
+              </div>
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
+                <input type="text" class="form-control" id="keywords"
+                  v-model="filter.keyword"
+                  placeholder="Nhập từ khóa" />
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12 ">
                 <button type="submit" id="btn-search" 
                   class="btn btn-stack-overflow"
-                  title="Tìm kiếm">
+                  title="Tìm kiếm"
+                  @click="searchStudent()">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
@@ -90,16 +111,14 @@
         @change-data-class="changeDataClass"
         :classes="classes"
         :students="students"
-        :plans="plans"
-        :careers="careers" />
+        :plans="plans"/>
 
       <AddStudentsFileComponent
         :data="addStudents"
         @change-data="changeData"
         @change-data-class="changeDataClass"
         :classes="classes"
-        :plans="plans"
-        :careers="careers" />
+        :plans="plans"/>
 
       <ConfirmDialog
         :data="confirmStudent"
@@ -111,7 +130,7 @@
           :items="students"
           @changePage="onChangePage"
           :labels="customLabels"
-          :pageSize="5">
+          :pageSize="10">
         </JwPagination>  
       </div>
     </div>

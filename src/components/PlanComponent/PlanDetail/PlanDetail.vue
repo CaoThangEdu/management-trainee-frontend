@@ -320,7 +320,7 @@
                     <button
                       @click="$router.go(-1)"
                       id="cancel"
-                      class="btn btn-primary mr-2"
+                      class="btn btn-dark mr-2"
                     >
                       Hủy
                     </button>

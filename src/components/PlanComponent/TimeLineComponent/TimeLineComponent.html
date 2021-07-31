@@ -43,8 +43,9 @@
                         @click="deleteTimeLine(item.id)" title="Xóa">
                         <i class="fa fa-trash"></i></button>
                     </div>
-                    <span class="vertical-timeline-element-date text-left">{{ item.startDay }}<br />
-                      {{ item.endDay }}</span>
+                    <span class="vertical-timeline-element-date text-left">
+                      {{ convertTime(item.startDay, 'DD/MM/YYYY') }}-<br />
+                      {{ convertTime(item.endDay, 'DD/MM/YYYY') }}</span>
                   </div>
                 </div>
               </div>
