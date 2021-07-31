@@ -82,7 +82,8 @@ export default {
       teacherSelect: "",
       filterTeacher: {
         internshipCourseId: "",
-      }, 
+      },
+          editCompany:{},
     };
   },
  
@@ -238,27 +239,18 @@ export default {
         }
       }
     },
+
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
-    },
-
-    changePage(currentPage) {
-      this.$emit("change-page", currentPage);
-    },
+    },   
+     
   },
   computed: {
    
   },
 
-  watch: {
-    data() {
-      this.averageNumber =
-        this.numberOfStudentsInInternshipCourse /
-        this.numberTeachersInInternshipCourse;
-      this.isShow = true;
-    },
-  },
+
 };
 </script>
 

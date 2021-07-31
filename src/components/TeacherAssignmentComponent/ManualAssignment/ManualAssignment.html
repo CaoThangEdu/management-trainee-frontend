@@ -8,7 +8,7 @@
                   d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
                   class="ci-primary"></path>
           </svg> Bảng phân công
-          <button class="btn btn-success float-right mr-2">Phân công tự động</button>
+        
       </header>
       <div class="card-body">       
         <div class="row mb-3">
@@ -51,6 +51,7 @@
             <th scope="col">Chọn</th>
             <th scope="col">STT</th>
             <th scope="col">MSSV</th>
+            <th scope="col">Họ và tên đệm</th>
             <th scope="col">Tên sinh viên</th>
             <th scope="col">Lớp</th>
             <th scope="col" width="100px">sss</th>
@@ -64,7 +65,8 @@
             </th>
             <th scope="row">{{index + 1 }}</th>
             <td>{{ item.studentId }}</td>
-            <td>{{ item.firstName}} {{ item.lastName}}</td>
+            <td>{{ item.firstName }}</td>
+            <td>{{ item.lastName}}</td>
             <td
               v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.classId, classes)"
             >
@@ -87,7 +89,7 @@
                   :value="teacher.id"
                   v-on:click="teacherAssignment(teacher.id, item.id, index)"                                         
                 >
-                  {{teacher.firstName}} {{teacher.lastName}}
+                  {{teacher.firstName + ' ' + teacher.lastName}}
                 </option>
               </select>
             </td>
@@ -111,6 +113,6 @@
         :pageSize="20"
       >
       </JwPagination>
-    </div>
+    </div>  
   </div>
 </div>

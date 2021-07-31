@@ -16,7 +16,17 @@ export default class InstructorService extends ServicesBaseAPI {
     }
     return this.result;
   }  
- 
+
+  async restoreInstructors(object) {
+    try {
+      const response = await this.http.post(`${this.url}/RestoreInstructors`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+  
   async getInstructors(object) {
     try {
       const response = await this.http.post(`${this.url}/GetInstructors`, object);

@@ -12,7 +12,7 @@
         <ListTeacherAssignmentComponent
           v-bind:internshipCourseId="internshipCourseId"
           v-bind:classes="classes"
-          v-bind:teachers="teachers"
+          v-bind:teachers="teachers"          
         />
       </Tab>
       <Tab name="Phân công">
@@ -20,6 +20,14 @@
         v-bind:internshipCourseId="internshipCourseId"
         v-bind:classes="classes"
         v-bind:teachers="teachers"
+        />
+      </Tab>
+      <Tab name="Phân công tự động">
+        <AutomaticAssignment 
+        v-bind:internshipCourseId="internshipCourseId"
+        v-bind:classes="classes"
+        v-bind:teachers="teachers"
+        v-bind:instructors="instructors"
         />
       </Tab>
     </Tabs>

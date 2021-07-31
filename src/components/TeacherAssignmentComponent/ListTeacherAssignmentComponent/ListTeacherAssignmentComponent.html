@@ -49,7 +49,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(instructor, index) in instructors" :key="index">
+              <tr v-for="(instructor, index) in pageOfItems" :key="index">
                 <th scope="row">{{index + 1}}</th>
                 <td>{{instructor.studentName}}</td>
                 <td>{{instructor.className}}</td>
@@ -62,13 +62,23 @@
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-                <th colspan="5" class="text-left">
+                <th colspan="7" class="text-left">
                   Không có dữ liệu nào được tìm thấy.
                 </th>
               </tr>
+             
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="card-footer d-flex justify-content-center text--blue">
+        <JwPagination
+          :items="instructors"
+          @changePage="onChangePage"
+          :labels="customLabels"
+          :pageSize="20"
+        >
+        </JwPagination>
       </div>
     </div>
   </div>

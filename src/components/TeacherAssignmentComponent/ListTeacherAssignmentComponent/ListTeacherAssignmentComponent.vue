@@ -7,6 +7,7 @@ import InstructorService from "../../../services/instructor/instructorService";
 import AppConfig from "../../../../src/app.config.json";
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import BaseModal from '../../common/base-modal/BaseModal'
+import JwPagination from "jw-vue-pagination";
 
 export default {
   name: "ListTeacherAssignmentComponent",
@@ -14,7 +15,9 @@ export default {
     TeacherAssignmentDetailComponent,
     SelectTeacher,
      BaseModal,
-    AlertMessages,
+      AlertMessages,
+          JwPagination,
+
   },
   data() {
     return {
@@ -27,6 +30,13 @@ export default {
         internshipCourseId: "",
         classId: "",
         teacherId: "",
+      },
+       pageOfItems: [],
+      customLabels: {
+        first: "<<",
+        last: ">>",
+        previous: "<",
+        next: ">",
       },
     };
   },
@@ -73,7 +83,15 @@ export default {
      this.getInstructorsAsync();
     },
     changeTeacher() {
-       this.getInstructorsAsync();
+      this.getInstructorsAsync();
+    },
+       onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
+
+    changePage(currentPage) {
+      this.$emit("change-page", currentPage);
     },
   },
 };

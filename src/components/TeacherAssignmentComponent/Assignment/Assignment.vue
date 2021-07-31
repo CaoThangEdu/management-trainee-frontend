@@ -1,16 +1,17 @@
-<template src="./Assignment.html"  @getPlan="course = $event">  
-</template>
+<template src="./Assignment.html"  @getPlan="course = $event"></template>
 
 <script>
-import ListTeacherAssignmentComponent from '../ListTeacherAssignmentComponent/ListTeacherAssignmentComponent.vue'
+import ListTeacherAssignmentComponent from "../ListTeacherAssignmentComponent/ListTeacherAssignmentComponent.vue";
 import TeacherService from "../../../services/teacher/teacherServices";
-import ComponentBase from "../../common/component-base/ComponentBase"
+import ComponentBase from "../../common/component-base/ComponentBase";
 import Tabs from "../../common/tab-comp/tabs/tabs.vue";
 import Tab from "../../common/tab-comp/tab/tab.vue";
 import ManualAssignment from "../ManualAssignment/ManualAssignment.vue";
 import Statistical from "../Statistical/Statistical.vue";
 import ClassService from "../../../services/class/classServices";
 import AppConfig from "../../../../src/app.config.json";
+import AutomaticAssignment from "../AutomaticAssignment/AutomaticAssignment.vue";
+import InstructorService from "../../../services/instructor/instructorService";
 
 export default {
   name: "Assigment",
@@ -18,46 +19,68 @@ export default {
   components: {
     ListTeacherAssignmentComponent,
     ManualAssignment,
-    Tabs, Tab,
-    Statistical
+    Tabs,
+    Tab,
+    Statistical,
+    AutomaticAssignment,
   },
   props: {
     internshipCourseId: {
       type: String,
-      default: ''
+      default: "",
     },
-    
   },
-  
+
   data() {
-    return{
-      teachers:[],
-      classes: [],     
+    return {
+      instructors: [],
+      teachers: [],
+      classes: [],
       studentsUnassigned: {
         internshipCourseId: "",
-        classId: ""
+        classId: "",
       },
-      classIdFilter: "",      
-      course: []  ,
+      classIdFilter: "",
+      course: [],
       classFilter: {
         className: "",
         status: "",
         internshipCourseId: "",
         isDelete: false,
-      }, 
+      },
       filterTeacher: {
         internshipCourseId: "",
-      }, 
+      },
+      listInstructorRequest: [],
+
     };
   },
-  created() {
-  },
-  async mounted(){
+  created() {},
+  async mounted() {
+    this.getInstructorsAsync();
     this.getClassesAsync();
     this.getTeachersAsync();
   },
-  
-  methods: {     
+
+  methods: {
+    async getInstructorsAsync() {
+      const api = new InstructorService();
+      this.instructorRequest = {
+        internshipCourseId: this.internshipCourseId,
+          classId: "",
+          teacherId: "",    
+      };
+      const response = await api.getInstructors(this.instructorRequest);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+      }
+      this.instructors = response.data;
+    },
+
     async getClassesAsync() {
       // Call Api
       this.showLoading();
@@ -82,7 +105,9 @@ export default {
       this.showLoading();
       const api = new TeacherService();
       this.filterTeacher.internshipCourseId = this.internshipCourseId;
-      const response = await api.getTeachersInInternshipCourse(this.filterTeacher);
+      const response = await api.getTeachersInInternshipCourse(
+        this.filterTeacher
+      );
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -93,11 +118,10 @@ export default {
         );
         return;
       }
-      this.teachers = response.data;      
-    },    
-  }
-
-}
+      this.teachers = response.data;
+    },
+  },
+};
 </script>
 
 <style lang='scss'>

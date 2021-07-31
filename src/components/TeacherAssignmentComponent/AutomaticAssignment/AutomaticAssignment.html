@@ -1,0 +1,90 @@
+<div class="auto_assignment">
+  <div class="notification" v-if="instructors.length==0">
+    <h5>Bạn đã phân công cho sinh viên trong đợt thực tập này</h5>
+  </div>
+  <div class="restore_assign" v-if="instructors.length>0">
+    <div class="restore_assign_notifi">
+      <h5>
+        Trong đợt này hiện tại đã có {{instructors.length}}   {{students.length}}sinh viên được phân
+        công
+      </h5>
+      <div class="question_restore">
+        <h5>Bạn có muốn phân công lại từ đầu không</h5>
+        <button class="btn btn-success" @click="restoreAssignment">Có</button>
+        <button class="btn btn-cancel">Không</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="">
+            <tr>
+              <th scope="col">STT</th>
+              <th scope="col">Họ tên giáo viên</th>
+              <th scope="col">Họ tên sinh viên</th>
+              <th scope="col">Lớp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in instructors" :key="index">
+              <th scope="row">{{index + 1 }}</th>
+              <td>{{ item.teacherName }}</td>
+              <td>{{ item.studentName }}</td>
+              <td>{{ item.className}}</td>
+            </tr>
+            <tr v-show="instructors == null || instructors.length === 0">
+              <th colspan="5" class="text-left">
+                Không có dữ liệu nào được tìm thấy.
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>  
+  <div class="info_instructor">
+    <div class="div">
+      <label for="">Số lượng sinh viên mà mỗi giáo viên sẽ quản lý {{averageNumber}}</label>     
+     <input type="">
+    </div>
+    <div>
+      <button class="btn btn-primary" @click="createAssignmentData">Tạo danh sách công</button>
+      <button class="btn btn-primary" @click="teacherAssignment">Phân công</button>
+    </div>
+  </div>
+  
+  <div class="list_assignment">
+    <div class="row">
+    <div class="col-xl-8">
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="">
+          <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Họ tên giáo viên</th>
+            <th scope="col">Họ tên sinh viên</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in assignment" :key="index">
+            <th scope="row">{{index + 1 }}</th>
+            <td>{{ item.teacherId }}</td>
+            <td>{{ item.studentId }}</td>
+           
+          </tr>
+          <tr v-show="instructors == null || instructors.length === 0">
+            <th colspan="5" class="text-left">
+              Không có dữ liệu nào được tìm thấy.
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    </div>
+    <div class="col-xl-4">
+      <ul>
+        <li v-for="(item, index) in listthongke"> {{item.teacherId}} {{item.number}}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
