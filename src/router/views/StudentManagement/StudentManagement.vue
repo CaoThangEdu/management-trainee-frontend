@@ -5,7 +5,7 @@
       :plans="plans" :classes="classes"
       @change-data-student-component="changeDataStudentComponent"
       @change-data-classroom="changeDataClassroom"
-      @change-page="changePage" :careers="careers" />
+      @search-student="searchStudent" />
   </div>
 </template>
 
@@ -16,7 +16,6 @@ import StudentService from '../../../services/student/studentServices';
 import AppConfig from '../../../../src/app.config.json';
 import PlanService from '../../../services/plan/planServices';
 import ClassService from '../../../services/class/classServices';
-import CareerService from '../../../services/career/careerServices';
 
 export default {
   name: "StudentManagement",
@@ -29,12 +28,12 @@ export default {
       students: [],
       plans: [],
       classes: [],
-      careers: [],
       filter: {
         keyword: "",
-        isDelete: false,
-        status: "active",
         classId: "",
+        internshipCourseId: "",
+        status: "active",
+        isDelete: false
       },
     };
   },
@@ -42,11 +41,14 @@ export default {
   async mounted(){
     await this.getClassesFilterAsync();
     await this.getPlansFilterAsync();
-    await this.getCareersFilterAsync();
-    await this.getStudentsAsync();
+    await this.getStudentsAsync(this.filter);
   },
   
   methods:{
+    async searchStudent(filterStudent) {
+      await this.getStudentsAsync(filterStudent);
+    },
+
     async getClassesFilterAsync() {
       let filterClass = {
         courseId: "",
@@ -72,31 +74,6 @@ export default {
       this.classes = response.data;
     },
 
-    async getCareersFilterAsync(){
-      let filterCareer = {
-        trainingSystemId: "",
-        isDelete: false,
-        careersName: "",
-        status: "active",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new CareerService()
-
-      const response = await api.getCareersFilterAsync(filterCareer);
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.careers = response.data;
-    },
-
     async getPlansFilterAsync() {
       let filterPlan = {
         status: "",
@@ -120,12 +97,12 @@ export default {
       this.plans = response.data
     },
     
-    async getStudentsAsync() {
+    async getStudentsAsync(filter) {
       // Call Api
       this.showLoading();
       const api = new StudentService()
 
-      const response = await api.getStudentsAsync(this.filter)
+      const response = await api.getStudentsAsync(filter)
       this.showLoading(false);
 
       if(!response.isOK){
@@ -140,11 +117,7 @@ export default {
     },
 
     async changeDataStudentComponent() {
-      await this.getStudentsAsync();
-    },
-
-    async changePage(currentPage) {
-      await this.getStudentsAsync(currentPage);
+      await this.getStudentsAsync(this.filter);
     },
 
     async changeDataClassroom() {

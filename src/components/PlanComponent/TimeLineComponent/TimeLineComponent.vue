@@ -8,6 +8,7 @@ import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TimlineService from '../../../services/timeline/timelineServices'
 import AppConfig from '../../../../src/app.config.json'
 import SelectPlan from '../../common/form/select-plan/SelectPlan.vue';
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "TimeLineComponent",
@@ -17,6 +18,7 @@ export default {
     ConfirmDialog,
     SelectPlan,
   },
+  mixins: [CrudMixin],
   props: {
     plans: {
       type: Array,

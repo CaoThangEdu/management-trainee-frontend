@@ -26,6 +26,10 @@
   }
 }
 
+.mx-datepicker .mx-input-wrapper:hover .mx-icon-clear {
+  display: none;
+}
+
 .fa-unlock {
   color: black;
 }
