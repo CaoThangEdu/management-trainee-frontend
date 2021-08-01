@@ -8,8 +8,8 @@
             class="ci-primary"></path>
         </svg> Công ty
         
-        <button class="btn btn-primary float-right" @click="createCompany">+ Thêm mới</button>
-        <button class="btn btn-secondary float-right btn-search mr-2" @click="createCompanyFile">+ Thêm file</button>
+        <button class="btn btn-primary float-right" @click="createCompany"><i class="fa fa-plus-square"></i></button>
+        <!-- <button class="btn btn-secondary float-right btn-search mr-2" @click="createCompanyFile">+ Thêm file</button> -->
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -29,27 +29,26 @@
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
-                <th scope="col">Hình ảnh</th>
+                <th scope="col">Mã số thuế</th>
                 <th scope="col">Tên công ty</th>
                 <th scope="col">Địa chỉ</th>
-                <th scope="col">Mã số thuế</th>
-                <th scope="col">Website</th>
+                <th scope="col">Chủ sở hữu</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in companies" :key="index">
+              <tr v-for="(company, index) in companies" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.img }}</td>
-                <td>{{ item.companyName }}</td>
-                <td>{{ item.address }}</td>
-                <td>{{ item.taxCode }}</td>
-                <td>{{ item.link }}</td>
-                <td>{{ item.status }}</td>
+                <td  class="link-detail" title="Xem" @click="updateCompany(index)">
+                  {{ company.taxCode }}
+                </td>
+                <td>{{ company.title }}</td>
+                <td>{{ company.companyAddress }}</td>
+                <td>{{ company.owner }}</td>
+                <td>{{ company.status === "active"?"Hoạt động":"Không hoạt động" }}</td>
                 <td>
-                  <button class="btn btn-primary mr-2" @click="updateCompany(index)">Sửa</button>
-                  <button class="btn btn-danger" @click="deleteCompany(item.id)">Xóa</button>
+                  <button class="btn btn-danger" @click="deleteCompany(company.id)"> <i class="fa fa-trash"></i></button>
                 </td>
               </tr>
             </tbody>

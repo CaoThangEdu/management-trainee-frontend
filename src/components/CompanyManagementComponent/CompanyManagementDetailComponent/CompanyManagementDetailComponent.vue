@@ -19,6 +19,8 @@ export default {
       isShow: false,
       company: {},
       errorMessages: [],
+      isConfirmed:true,
+      companiesByTaxCode:{}
     };
   },
   props: {
@@ -27,6 +29,10 @@ export default {
       default: null,
     },
   },
+  mounted(){
+    this.getCompaniesAsync();
+  },
+
   methods: {
     async pressKeyEnter() {
       await this.save();
@@ -41,7 +47,70 @@ export default {
       }
     },
 
+      async getCompaniesAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new CompanyService()
+
+      const response = await api.getCompaniesAsync()
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      let companies = response.data.items
+      companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
+      this.companiesByTaxCode = companies;
+    },
+
+    async getCompanieByTaxCodeAsync(){
+      // Call Api
+      this.showLoading();
+      const api = new CompanyService()
+
+      const response = await api.getCompanieByTaxCodeAsync(this.company.taxCode);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      return response.data
+    },
+
+    async checkCompany(){
+
+      let company = await this.getCompanieByTaxCodeAsync();
+      if(!company){
+        this.isConfirmed = false;
+         return this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Không tìm thấy công ty vui lòng nhập thông tin công ty!"
+        );
+       
+      }
+        return this.company = company;
+      
+    },
+
     async createCompanyAsync() {
+      if(this.companiesByTaxCode[this.company.taxCode]){
+          return this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Công ty đã tồn tại trong danh sách!"
+        );
+      }
       this.showLoading();
       let api = new CompanyService();
       let response = await api.createCompanyAsync(this.company);

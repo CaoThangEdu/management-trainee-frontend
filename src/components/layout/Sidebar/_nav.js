@@ -71,7 +71,7 @@ export default [{
   {
     _name: 'CSidebarNavItem',
     name: 'Đăng ký giấy giới thiệu thực tập',
-    to: '/registered-intership-referrals',
+    to: '/certificate-management',
     icon: 'cil-pencil',
 },
 {

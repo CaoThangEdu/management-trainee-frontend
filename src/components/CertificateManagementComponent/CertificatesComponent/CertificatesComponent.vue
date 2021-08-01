@@ -1,23 +1,24 @@
-<template src="./RegisteredInternshipReferralsComponent.html">
+<template src="./CertificatesComponent.html">
   
 </template>
 
 <script>
-import RegisteredInternshipReferralsDetailComponent from "../RegisteredInternshipReferralsDetailComponent/RegisteredInternshipReferralsDetailComponent"
+import CertificateDetailComponent from "../CertificateDetailComponent/CertificateDetailComponent.vue"
 import ComponentBase from "../../common/component-base/ComponentBase"
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
-import CertificateSevice from '../../../services/registeredInternshipReferrals/registeredInternshipReferrals'
+import CertificateSevice from '../../../services/certificate/CertificateServices'
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import { STANDARD_DATE_FORMAT } from "../../../config/constant"
 import StudentService from '../../../services/student/studentServices'
+import moment from 'moment'
 
 export default {
-  name: "ListRegisteredInternshipReferralsComponent",
+  name: "CertificatesComponent",
   extends: ComponentBase,
   components: {
-    RegisteredInternshipReferralsDetailComponent,
+    CertificateDetailComponent,
     ConfirmDialog,
     JwPagination,
   },
@@ -26,7 +27,7 @@ export default {
     return {
       certificates: [],
       editCertificate: {},
-      confirmCertificate: null,
+      confirmedCertificate: null,
       pageOfItems: [],
       customLabels: {
         first: '<<',
@@ -44,13 +45,13 @@ export default {
   },
 
   async mounted() {
-    await this.getCertificatesFilterAsync();
+    await this.getCertificatesAsync();
     await this.getStudentsAsync();
   },
 
   methods:{
     convertTime(time) {
-      return CrudMixin.methods.convertTime(time, STANDARD_DATE_FORMAT.DMY);
+      return moment(time).format('DD/MM/YYYY');
     },
 
     getInfoObject(id, list) {
@@ -91,12 +92,12 @@ export default {
       this.editCertificate = {};
     },
 
-    async getCertificatesFilterAsync() {
+    async getCertificatesAsync() {
       // Call Api
       this.showLoading();
       const api = new CertificateSevice()
 
-      const response = await api.getRegisteredInternshipReferralsAsync(this.filter);
+      const response = await api.getCertificatesAsync();
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -107,15 +108,12 @@ export default {
         );
         return;
       }
-      this.certificates = response.data;
+      this.certificates = response.data.items;
     },
 
-    async changePage(currentPage) {
-      await this.getCertificatesFilterAsync(currentPage);
-    },
 
     updateCertificate(index) {
-      this.editCertificate = Object.assign({}, this.pageOfItems[index]);
+      this.editCertificate = Object.assign({}, this.certificates[index]);
     },
 
     changeIsdelete(index) {
@@ -124,18 +122,40 @@ export default {
 
     async changeData() {
       this.$emit("change-certificate");
-      await this.getCertificatesFilterAsync();
+      await this.getCertificatesAsync();
     },
 
-    deleteCertificate(id) {
-      this.confirmCertificate = {
-        id: id
+    deleteCertificate(id, index) {
+      this.confirmedCertificate = {
+        id: id,
+        index: index
       };
+    },
+    // Call api delete Certificate
+    async agreeConfirm(confirmedCertificate) {
+      this.showLoading();
+      let api = new CertificateSevice();
+      let response = await api.deleteCertificateAsync(confirmedCertificate.id); // Gọi Api
+      this.showLoading(false);
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.certificates.splice(confirmedCertificate.index, 1);
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_deleted_success_default}`,
+      );
     },
   }
 }
 </script>
 
 <style lang='scss'>
-@import './RegisteredInternshipReferralsComponent.scss';
+@import './CertificatesComponent.scss';
 </style>

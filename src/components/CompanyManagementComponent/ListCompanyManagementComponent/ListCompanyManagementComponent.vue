@@ -38,7 +38,6 @@ export default {
       // Call Api
       this.showLoading();
       const api = new CompanyService()
-
       const response = await api.getCompaniesAsync()
       this.showLoading(false);
 
