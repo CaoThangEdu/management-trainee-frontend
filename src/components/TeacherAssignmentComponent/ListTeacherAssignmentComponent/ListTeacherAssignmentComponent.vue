@@ -5,8 +5,8 @@ import SelectTeacher from "../../common/form/select-teacher/SelectTeacher.vue";
 import TeacherAssignmentDetailComponent from "../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent";
 import InstructorService from "../../../services/instructor/instructorService";
 import AppConfig from "../../../../src/app.config.json";
-import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
-import BaseModal from '../../common/base-modal/BaseModal'
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
+import BaseModal from "../../common/base-modal/BaseModal";
 import JwPagination from "jw-vue-pagination";
 
 export default {
@@ -14,10 +14,9 @@ export default {
   components: {
     TeacherAssignmentDetailComponent,
     SelectTeacher,
-     BaseModal,
-      AlertMessages,
-          JwPagination,
-
+    BaseModal,
+    AlertMessages,
+    JwPagination,
   },
   data() {
     return {
@@ -31,7 +30,7 @@ export default {
         classId: "",
         teacherId: "",
       },
-       pageOfItems: [],
+      pageOfItems: [],
       customLabels: {
         first: "<<",
         last: ">>",
@@ -57,20 +56,20 @@ export default {
   methods: {
     async getInstructorsAsync() {
       const api = new InstructorService();
-      this.instructorRequest= {
+      this.instructorRequest = {
         internshipCourseId: this.internshipCourseId,
         classId: this.classId,
         teacherId: this.teacherId,
-      }
+      };
       const response = await api.getInstructors(this.instructorRequest);
       if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
           response.errorMessages
-        );      
+        );
       }
-        this.instructors = response.data;
+      this.instructors = response.data;
     },
 
     createBrand() {
@@ -80,12 +79,12 @@ export default {
       // await this.getListBrandAsync();
     },
     changeClassName() {
-     this.getInstructorsAsync();
+      this.getInstructorsAsync();
     },
     changeTeacher() {
       this.getInstructorsAsync();
     },
-       onChangePage(pageOfItems) {
+    onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
     },

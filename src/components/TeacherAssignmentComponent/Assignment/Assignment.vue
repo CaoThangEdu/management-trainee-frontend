@@ -12,6 +12,7 @@ import ClassService from "../../../services/class/classServices";
 import AppConfig from "../../../../src/app.config.json";
 import AutomaticAssignment from "../AutomaticAssignment/AutomaticAssignment.vue";
 import InstructorService from "../../../services/instructor/instructorService";
+import StudentService from "../../../services/student/studentServices";
 
 export default {
   name: "Assigment",
@@ -36,6 +37,7 @@ export default {
       instructors: [],
       teachers: [],
       classes: [],
+      students:[],
       studentsUnassigned: {
         internshipCourseId: "",
         classId: "",
@@ -60,9 +62,29 @@ export default {
     this.getInstructorsAsync();
     this.getClassesAsync();
     this.getTeachersAsync();
+    this.getStudentsUnassigned();
   },
 
   methods: {
+     async getStudentsUnassigned() {
+      // Call Api
+      this.showLoading();
+      const api = new StudentService();
+      this.studentsUnassigned.internshipCourseId = this.internshipCourseId;
+      const response = await api.getStudentUnassignedAsync(
+        this.studentsUnassigned
+      );
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.students = response.data;
+    },
     async getInstructorsAsync() {
       const api = new InstructorService();
       this.instructorRequest = {

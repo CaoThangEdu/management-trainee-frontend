@@ -7,7 +7,7 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import JwPagination from "jw-vue-pagination";
 import InstructorService from "../../../services/instructor/instructorService";
 import AppConfig from "../../../../src/app.config.json";
-import StudentService from "../../../services/student/studentServices";
+import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "AutomaticAssignment",
@@ -19,7 +19,6 @@ export default {
   },
   data() {
     return {
-      students: [],
       assignment: [],
       studentTemp: [],
       studentTempDelete: [],
@@ -30,27 +29,22 @@ export default {
         status: "active",
         isDelete: false,
         index: 0,
+      },     
+      averageNumber: 0,    
+      statistic: {
+        teacherId: "",
+        number: 0,
       },
-      studentsUnassigned: {
-        classId: "",
-        internshipCourseId: "",
-      },
-      averageNumber: 0,
-      numberAv: {
-        studentsNumber: 0,
-        teachersNumber: 0,
-      },
-      thongke: {
-        teacherId:"",
-        number: 0
-      },
-      listthongke:[]
+      statistics: [],
     };
   },
   props: {
     internshipCourseId: {
       type: String,
       default: "",
+    },
+    students: {
+      type: Array,
     },
     classes: {
       type: Array,
@@ -61,28 +55,27 @@ export default {
     instructors: {
       type: Array,
     },
+   
   },
 
   async mounted() {
-    this.getStudentsUnassigned();
-    this.createAssignmentData();
   },
 
   methods: {
     createAssignmentData() {
-      console.log(this.students.length);
       //Phân công từ đầu
-      this.listthongke = []
+      console.log(this.students)
+      this.statistics = [];
       this.studentTempDelete = this.students;
       this.assignment = [];
       this.averageNumber = Math.round(
-        this.numberAv.studentsNumber / this.teachers.length
+        this.students.length / this.teachers.length
       );
       this.teachers.forEach((teacher) => {
         this.studentTemp = [];
         this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber);
         this.studentTempDelete.splice(0, this.averageNumber);
-        var count =0;        
+        var count = 0;
         this.studentTemp = this.studentTemp.forEach((student) => {
           count++;
           this.assignmentRequest = {
@@ -92,26 +85,39 @@ export default {
             status: "active",
             isDelete: false,
           };
-         
+
           this.assignment.push(this.assignmentRequest);
         });
-         this.thongke ={
-            teacherId :teacher.id,
-            number: count
-          }
-          this.listthongke.push(this.thongke);
+        this.statistic = {
+          teacherId: teacher.id,
+          number: count,
+        };
+        this.statistics.push(this.statistic);
       });
     },
-    teacherAssignment() {
-      this.assignment.forEach((assignment) => {
+    async teacherAssignment() {
+      console.log("loading...");
+      // hiện loading
+      this.showLoading();
+      await this.assignment.forEach((assignment) => {
         this.createInstructorAsync(assignment);
       });
       this.assignment = [];
+      // có r mà đâu show giao diện
+      // hay là phải show ở dưới hàm call api mới đc
+      // ẩn loading
+      this.showLoading(false);
+      console.log("end loading");
     },
+
     async createInstructorAsync(assignment) {
+      console.log("loading...");
+      this.showLoading();
       const api = new InstructorService();
       // Phân công từng sinh viên
       const response = await api.createInstructorAsync(assignment);
+      this.showLoading(false);
+      console.log("end loading");
       if (!response.isOK) {
         this.showNotifications(
           "error",
@@ -141,25 +147,16 @@ export default {
       this.instructors = response.data;
     },
 
-    async getStudentsUnassigned() {
-      // Call Api
-      this.showLoading();
-      const api = new StudentService();
-      this.studentsUnassigned.internshipCourseId = this.internshipCourseId;
-      const response = await api.getStudentUnassignedAsync(
-        this.studentsUnassigned
-      );
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
+    getInfoObject(id, list) {
+      return CrudMixin.methods.getInfo(id, list);
+    },
+
+    getClassName(classId) {
+      for (const x in this.classes) {
+        if (this.classes[x].id == classId) {
+          return this.classes[x].className;
+        }
       }
-      this.students = response.data;
-      this.numberAv.studentsNumber = response.data.length;
     },
   },
   watch: {
