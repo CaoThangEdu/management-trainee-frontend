@@ -1,6 +1,11 @@
 .assignment {
-    margin: 10px;
     background-color: #fff;
-    border: 1px solid olive;
-    border-radius: 5px;
+}
+
+.is-active {
+    color: white;
+    background-color: #4e3bcd;
+    .nav-link {
+        border-color: #d8dbe0 #d8dbe0 #c4c9d0;
+    }
 }

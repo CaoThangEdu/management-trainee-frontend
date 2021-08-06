@@ -3,29 +3,28 @@
     <div
       class="col-md-12 col-sm-12 col-form-label information-assignment__center "
     >
-      <h5>
-        Đợt thực tập: {{this.statistical.internshipCourseName}} - Hệ:
-        {{this.statistical.courseName}} - Ngành:
-        {{this.statistical.careersName}} - Khóa: {{this.statistical.courseName}}
-      </h5>
+    <h5>
+      Đợt thực tập: {{this.statisticalPlan.internshipCourseName}} - Khóa: {{this.statisticalPlan.courseName}}
+      - Ngày bắt đầu: {{this.statisticalPlan.startDay}} - Ngày kết thúc: {{this.statisticalPlan.endDay}}
+    </h5>
     </div>
     <div class="information-assignment__center">
       <h4>THỐNG KÊ</h4>
     </div>
-    <div class="row">
+    <div class="row col-12">
       <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="information-assignment__statistical">
           <div class="information-assignment__text">
             Tổng số giáo viên trong đợt thực tập:
-            {{this.statistical.numberTeachersInInternshipCourse}}
+            {{this.statisticalPlan.numberTeachersInInternshipCourse}}
           </div>
           <div class="information-assignment__text">
             Tổng số sinh viên trong đợt thực tập:
-            {{this.statistical.numberOfStudentsInInternshipCourse}}
+            {{this.statisticalPlan.numberStudentsInInternshipCourse}}
           </div>
           <div class="information-assignment__text">
             Tổng số sinh viên chưa được phân công:
-            {{this.statistical.numberStudentsUnassigned}}
+            {{this.statisticalPlan.numberStudentsUnassigned}}
           </div>
         </div>
       </div>

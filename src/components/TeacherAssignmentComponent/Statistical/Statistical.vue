@@ -17,6 +17,9 @@ export default {
      teachers: {
       type: Array,
     },
+    statisticalPlan: {
+      type: Object,        
+    }
   },
 
   data() {
@@ -39,6 +42,7 @@ export default {
         internshipCourseId: "",
       },
     };
+   
   },
   async mounted() {
       this.getStatisticsStudentInClass();

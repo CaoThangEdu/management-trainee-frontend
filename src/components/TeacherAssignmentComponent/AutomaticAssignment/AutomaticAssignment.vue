@@ -2,25 +2,28 @@
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
-import BaseModal from "../../common/base-modal/BaseModal";
-import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import JwPagination from "jw-vue-pagination";
 import InstructorService from "../../../services/instructor/instructorService";
 import AppConfig from "../../../../src/app.config.json";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 
 export default {
   name: "AutomaticAssignment",
   extends: ComponentBase,
   components: {
-    BaseModal,
-    AlertMessages,
     JwPagination,
+    ConfirmDialog,
   },
   data() {
     return {
-      assignment: [],
+      assignments: [],
       studentTemp: [],
+      teacherTemp: [],
+      teacherTempRequest: {
+        teacherId: "",
+        number: 0,
+      },
       studentTempDelete: [],
       assignmentRequest: {
         teacherId: "",
@@ -29,13 +32,26 @@ export default {
         status: "active",
         isDelete: false,
         index: 0,
-      },     
-      averageNumber: 0,    
+      },
+      averageNumber: 0,
       statistic: {
         teacherId: "",
         number: 0,
       },
+      numberOfTeacher: 0,
       statistics: [],
+      isShowAssignment: false,
+        pageOfItems: [],
+        pageOfItemsInstructor: [],
+        customLabels: {
+        first: "<<",
+        last: ">>",
+        previous: "<",
+        next: ">",
+      },
+      confirmInternshipCourseId: null,
+      isShowContinueAssignment: false,
+      showCreateAssignments: false,
     };
   },
   props: {
@@ -55,59 +71,139 @@ export default {
     instructors: {
       type: Array,
     },
-   
-  },
+    numberOfStudentInInternshipCourse: Number,
 
-  async mounted() {
   },
 
   methods: {
-    createAssignmentData() {
-      //Phân công từ đầu
-      console.log(this.students)
-      this.statistics = [];
-      this.studentTempDelete = this.students;
-      this.assignment = [];
-      this.averageNumber = Math.round(
-        this.students.length / this.teachers.length
-      );
-      this.teachers.forEach((teacher) => {
-        this.studentTemp = [];
-        this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber);
-        this.studentTempDelete.splice(0, this.averageNumber);
-        var count = 0;
-        this.studentTemp = this.studentTemp.forEach((student) => {
-          count++;
-          this.assignmentRequest = {
-            teacherId: teacher.id,
-            studentId: student.id,
-            internshipCourseId: this.internshipCourseId,
-            status: "active",
-            isDelete: false,
-          };
+    showAssignments() {
+      this.isShowAssignment = !this.isShowAssignment;
+      if (this.isShowContinueAssignment) {
+        this.isShowContinueAssignment = false;
+      }
+    },
 
-          this.assignment.push(this.assignmentRequest);
+    showContinueAssignment() {
+      this.isShowContinueAssignment = !this.isShowContinueAssignment;
+      if (this.isShowAssignment) {
+        this.isShowAssignment = false;
+      }
+    },
+
+    createAssignmentData() {
+       if(this.showCreateAssignments) {
+        this.showCreateAssignments = false;
+        return;
+      }
+      console.log("abc")
+      this.showCreateAssignments = true;
+      //Phân công từ đầu
+      this.statistics = [];
+      this.studentTempDelete = JSON.parse(JSON.stringify(this.students));
+      this.assignments = [];
+      this.averageNumber = Math.round(
+        this.numberOfStudentInInternshipCourse / this.teachers.length
+      );
+      if(this.numberOfTeacher != 0 && this.numberOfTeacher != this.averageNumber ){
+        this.averageNumber = this.numberOfTeacher
+      }
+      if (this.instructors.length == 0) {
+        this.teachers.forEach((teacher) => {
+          this.studentTemp = [];
+          this.studentTemp = this.studentTempDelete.slice(
+            0,
+            this.averageNumber
+          );
+          this.studentTempDelete.splice(0, this.averageNumber);
+          var count = 0;
+          this.studentTemp = this.studentTemp.forEach((student) => {
+            count++;
+            this.assignmentRequest = {
+              teacherId: teacher.id,
+              studentId: student.id,
+              internshipCourseId: this.internshipCourseId,
+              status: "active",
+              isDelete: false,
+            };
+
+            this.assignments.push(this.assignmentRequest);
+          });
+          this.statistic = {
+            teacherId: teacher.id,
+            number: count,
+          };
+          this.statistics.push(this.statistic);
         });
-        this.statistic = {
+      } else {
+        this.addAssignmentStudentNumber();
+        this.teacherTemp.forEach((teacher) => {
+          this.studentTemp = [];
+          //Nếu giáo viên đã được phân công thì giảm bớt số sinh viên lại cho đều
+          if (teacher.number > 0) {
+            this.studentTemp = this.studentTempDelete.slice(
+              0,
+              this.averageNumber - teacher.number
+            );
+            this.studentTempDelete.splice(
+              0,
+              this.averageNumber - teacher.number
+            );
+          } else {
+            this.studentTemp = this.studentTempDelete.slice(
+              0,
+              this.averageNumber
+            );
+            this.studentTempDelete.splice(0, this.averageNumber);
+          }
+          var count = 0;
+          this.studentTemp = this.studentTemp.forEach((student) => {
+            count++;
+            this.assignmentRequest = {
+              teacherId: teacher.teacherId,
+              studentId: student.id,
+              internshipCourseId: this.internshipCourseId,
+              status: "active",
+              isDelete: false,
+            };
+
+            this.assignments.push(this.assignmentRequest);
+          });
+          this.statistic = {
+            teacherId: teacher.teacherId,
+            number: count,
+          };
+          this.statistics.push(this.statistic);
+        });
+      }
+    },
+    addAssignmentStudentNumber() {
+      this.teacherTemp = [];
+      this.teachers.forEach((teacher) => {
+        var count = 0;
+        this.instructors.forEach((instructor) => {
+          if (
+            teacher.firstName + "" + teacher.lastName ==
+            instructor.teacherName
+          ) {
+            count++;
+          }
+        });
+        this.teacherTempRequest = {
           teacherId: teacher.id,
           number: count,
         };
-        this.statistics.push(this.statistic);
+        this.teacherTemp.push(this.teacherTempRequest);
       });
+      console.log(this.teacherTemp);
     },
     async teacherAssignment() {
-      console.log("loading...");
-      // hiện loading
-      this.showLoading();
-      await this.assignment.forEach((assignment) => {
+       this.showLoading()
+      await this.assignments.forEach((assignment) => {
         this.createInstructorAsync(assignment);
       });
-      this.assignment = [];
-      // có r mà đâu show giao diện
-      // hay là phải show ở dưới hàm call api mới đc
-      // ẩn loading
-      this.showLoading(false);
-      console.log("end loading");
+      this.showLoading(false)
+      this.assignments = [];  
+      this.statistics = []   
     },
 
     async createInstructorAsync(assignment) {
@@ -127,16 +223,23 @@ export default {
         return;
       }
     },
-    restoreAssignment() {
-      this.getInstructorsAsync();
+
+    deleteStudent(internshipCourseId) {
+      this.confirmInternshipCourseId = {
+        internshipCourseId: internshipCourseId,
+      };
     },
 
-    async getInstructorsAsync() {
+    async restoreAssignment(confirmInternshipCourseId) {
+      await this.getInstructorsAsync(confirmInternshipCourseId);
+    },
+
+    async getInstructorsAsync(confirmInternshipCourseId) {
+      this.showLoading();
       const api = new InstructorService();
-      this.instructorRequest = {
-        internshipCourseId: this.internshipCourseId,
-      };
+      this.instructorRequest = confirmInternshipCourseId;
       const response = await api.restoreInstructors(this.instructorRequest);
+      this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
           "error",
@@ -144,7 +247,13 @@ export default {
           response.errorMessages
         );
       }
-      this.instructors = response.data;
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        "Xóa danh sách phân công thành công"
+      );
+      console.log("response.data", response.data);
+      this.$emit("change-instructors", response.data);
     },
 
     getInfoObject(id, list) {
@@ -158,9 +267,14 @@ export default {
         }
       }
     },
+
+     onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    }, 
   },
   watch: {
-    data() {},
+   
   },
 };
 </script>

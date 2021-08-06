@@ -8,7 +8,6 @@ import StudentService from "../../../services/student/studentServices";
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
-import PlanService from "../../../services/plan/planServices";
 import InstructorService from "../../../services/instructor/instructorService";
 import SelectTeacher from "../../common/form/select-teacher/SelectTeacher.vue";
 
@@ -92,8 +91,6 @@ export default {
 
   async mounted() {
     await this.getStudentsUnassigned();
-    await this.getStudentsInInternshipCourseAsync();
-    await this.getPlanService();
   },
 
   methods: {
@@ -138,7 +135,10 @@ export default {
         };
         instructor = this.instructorRequest;
       }
+      this.showLoading()
       const response = await api.createInstructorAsync(instructor);
+      this.$emit('reloadData')
+      this.showLoading(false)
       if (response.isOK == true) {
         this.students.splice(index ,1);
       }
@@ -149,36 +149,9 @@ export default {
           response.errorMessages
         );
         return;
-      }
-    },
-
-   
-    async getPlanService() {
-      // Call Api
-      this.showLoading();
-      const api = new PlanService();
-
-      const response = await api.getPlanByIdAsync(this.internshipCourseId);
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.statistical.courseName = response.data.courseName;
-      this.statistical.internshipCourseName = response.data.internshipCourseName;
-      this.statistical.description = response.data.description;
-      this.statistical.startDay = response.data.startDay;
-      this.statistical.endDay = response.data.endDay;
-      this.statistical.courseName = response.data.courseName;
-      this.statistical.status = response.data.status;
-      this.statistical.numberStudentsUnassigned = this.studentsAll.length =
-        this.students.length;
-    },
-
+      }      
+    },   
+    
     async getStudentsUnassigned() {
       // Call Api
       this.showLoading();
@@ -199,31 +172,7 @@ export default {
       }
       this.students = response.data;
     },
-
-    async getStudentsInInternshipCourseAsync() {
-      // Call Api
-      this.showLoading();
-      const api = new StudentService();
-      this.filterTeacher.internshipCourseId = this.internshipCourseId;
-      const response = await api.getStudentsInInternshipCourse(
-        this.filterTeacher
-      );
-      this.showLoading(false);
-      this.studentLengthBanDau = response.data.length;
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.studentsAll = response.data;
-      this.statistical.numberOfStudentsInInternshipCourse =
-        response.data.length;
-      this.numberOfStudentsInInternshipCourse = response.data.length;
-    },
+   
     changeClassName() {
       this.getStudentsUnassigned();
     },

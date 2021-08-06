@@ -92,7 +92,7 @@ const routes = [
       },
     },
     {
-      path: 'assignment/:guid',
+      path: 'assignment/:internshipCourseId',
       name: 'phan-cong-dot',
       props: true,
       component: () =>

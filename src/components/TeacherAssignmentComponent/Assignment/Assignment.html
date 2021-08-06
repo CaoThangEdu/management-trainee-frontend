@@ -4,12 +4,14 @@
      v-bind:internshipCourseId="internshipCourseId"
      v-bind:classes="classes"
      v-bind:teachers="teachers"
+     v-bind:statisticalPlan="statisticalPlan"
      />
   </div>
-  <div id="root" class="">
+  <div class="card">
     <Tabs>
       <Tab name="Danh sách sinh viên đã được phân công" :selected="true">
         <ListTeacherAssignmentComponent
+        v-if="reloadAutomaticAssignment"
           v-bind:internshipCourseId="internshipCourseId"
           v-bind:classes="classes"
           v-bind:teachers="teachers"          
@@ -24,11 +26,14 @@
       </Tab>
       <Tab name="Phân công tự động">
         <AutomaticAssignment 
+        v-if="reloadAutomaticAssignment"
         v-bind:internshipCourseId="internshipCourseId"
         v-bind:classes="classes"
         v-bind:teachers="teachers"
         v-bind:instructors="instructors"
         v-bind:students="students"
+        v-bind:numberOfStudentInInternshipCourse="studentInInternshipCourse.length"
+        @change-instructors="changeInstructors"
         />
       </Tab>
     </Tabs>
