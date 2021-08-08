@@ -19,9 +19,11 @@
       </Tab>
       <Tab name="Phân công">
         <ManualAssignment 
+        v-if="reloadAutomaticAssignment"
         v-bind:internshipCourseId="internshipCourseId"
         v-bind:classes="classes"
         v-bind:teachers="teachers"
+        @change-instructors="changeInstructors"
         />
       </Tab>
       <Tab name="Phân công tự động">

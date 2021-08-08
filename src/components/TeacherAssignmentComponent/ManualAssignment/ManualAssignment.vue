@@ -20,27 +20,28 @@ export default {
     JwPagination,
     SelectTeacher,
   },
-   props: {
+  props: {
     internshipCourseId: {
       type: String,
-      default: ''
+      default: "",
     },
     classes: {
       type: Array,
     },
-     teachers: {
+    teachers: {
       type: Array,
     },
   },
   data() {
     return {
-      students: [], // Sinh viên chưa được phân công    
+      students: [], // Sinh viên chưa được phân công
       studentsAll: [],
+      studentId: "",
       statistiesStudentInClass: [],
       studentsUnassigned: {
         internshipCourseId: "",
         classId: "",
-      },     
+      },
       pageOfItems: [],
       customLabels: {
         first: "<<",
@@ -64,66 +65,51 @@ export default {
         numberTeachersInInternshipCourse: 0,
         numberOfStudentsInInternshipCourse: 0,
       },
-      averageNumber: 0,
-      classId: "",         
+      classId: "",
       numberOfStudentsInInternshipCourse: 0,
       numberTeachersInInternshipCourse: 0,
-      immediateAssignment: "", // khi = true  option đc chọn sẻ đc phân công ngay  
       instructorRequest: {
         teacherId: "",
         studentId: "",
         internshipCourseId: "",
         status: "active",
         isDelete: false,
-        index: 0
+        index: 0,
       },
       listInstructorRequest: [],
       teacherSelect: "",
       filterTeacher: {
         internshipCourseId: "",
       },
-          editCompany:{},
+      editCompany: {},
+      index: 0,
     };
   },
- 
-  created(){
-  },
+
+  created() {},
 
   async mounted() {
     await this.getStudentsUnassigned();
   },
 
   methods: {
-    teacherAssignment(teacherId, studentId, index) {
-      // Phân công ngay khi được thay đổi 
-      if (this.immediateAssignment) {
-        this.createInstructorAsync(teacherId, studentId, null, index);
-      } else {
-        this.addListInstructorRequest(teacherId, studentId, index);
-      }
+    changeStudentId(id, index) {
+      this.studentId = id;
+      this.index = index;
     },
-
-    addListInstructorRequest(teacherId, studentId, index) {     
-      this.instructorRequest = {
-        teacherId: teacherId,
-        studentId: studentId,
-        internshipCourseId: this.internshipCourseId,
-        status: "active",
-        isDelete: false,
-        index: index
-      };
-      this.listInstructorRequest.push(this.instructorRequest);
+    changeTeacher(teacher) {
+      this.createInstructorAsync(teacher.id, this.studentId, null, this.index);
     },
 
     async assignment() {
       this.listInstructorRequest.forEach((instructor) => {
         // Phân công theo danh sách sinh viên
         this.showLoading(true);
-        this.createInstructorAsync(-1, -1, instructor, instructor.index)
+        this.createInstructorAsync(-1, -1, instructor, instructor.index);
         this.showLoading(false);
       });
       await this.getInstructorsAsync();
-      this.listInstructorRequest = []
+      this.listInstructorRequest = [];
     },
 
     // Phân công từng sinh viên
@@ -140,12 +126,12 @@ export default {
         };
         instructor = this.instructorRequest;
       }
-      this.showLoading()
+      this.showLoading();
       const response = await api.createInstructorAsync(instructor);
-      this.$emit("change-instructors", response.data);
-      this.showLoading(false)
+      this.$emit("change-instructors", true);
+      this.showLoading(false);
       if (response.isOK == true) {
-        this.students.splice(index ,1);
+        this.students.splice(index, 1);
       }
       if (!response.isOK) {
         this.showNotifications(
@@ -154,9 +140,9 @@ export default {
           response.errorMessages
         );
         return;
-      }      
-    },   
-    
+      }
+    },
+
     async getStudentsUnassigned() {
       // Call Api
       this.showLoading();
@@ -177,7 +163,7 @@ export default {
       }
       this.students = response.data;
     },
-   
+
     changeClassName() {
       this.getStudentsUnassigned();
     },
@@ -197,14 +183,9 @@ export default {
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
-    },   
-     
+    },
   },
-  computed: {
-   
-  },
-
-
+  computed: {},
 };
 </script>
 

@@ -26,6 +26,10 @@
             Tổng số sinh viên chưa được phân công:
             {{this.statisticalPlan.numberStudentsUnassigned}}
           </div>
+          <div class="information-assignment__text">
+            Tổng số sinh viên đã được phân công:
+            {{this.statisticalPlan.numberStudentsInInternshipCourse - this.statisticalPlan.numberStudentsUnassigned}}
+          </div>
         </div>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12">

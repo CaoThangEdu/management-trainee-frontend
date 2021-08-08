@@ -28,16 +28,7 @@
                     >{{item.className}}</option
                   >
                 </select>               
-              </div>
-              <div class="col-xl-3 col-md-3 col-sm-6 mb-sm-2 input-information">
-                <h6>Phân công ngay khi chọn giáo viên</h6>
-                <input
-                  type="checkbox"
-                  id="checkbox"
-                  v-model="immediateAssignment"          
-                  class="form-control"
-                />
-              </div>
+              </div>             
             </div>
           </div>
         </div>
@@ -48,21 +39,16 @@
       <table class="table">
         <thead class="">
           <tr>
-            <th scope="col">Chọn</th>
             <th scope="col">STT</th>
             <th scope="col">MSSV</th>
             <th scope="col">Họ và tên đệm</th>
             <th scope="col">Tên sinh viên</th>
             <th scope="col">Lớp</th>
-            <th scope="col" width="100px">sss</th>
-            <th scope="col">Giáo viên</th>
+            <th scope="col" style="width:200px">Giáo viên</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in pageOfItems" :key="index">
-            <th scope="row">
-              <input type="checkbox" name="" id="" />
-            </th>
+          <tr v-for="(item, index) in pageOfItems" :key="index">           
             <th scope="row">{{index + 1 }}</th>
             <td>{{ item.studentId }}</td>
             <td>{{ item.firstName }}</td>
@@ -72,27 +58,15 @@
             >
               {{ getInfoObject(item.classId, classes).className }}
             </td>
-            <td>
-            <SelectTeacher  
-              width="100px"         
-              :teachers="teachers"
-              @change="(event) => {teacherSelect = event.id}">
-            </SelectTeacher>
-            </td>
-            <td>
-              <select class="form-control"                                    
+            <td v-on:click="changeStudentId(item.id, index)" style="width:200px">
+            <SelectTeacher
+              :teachers="teachers"            
+              @change="(event) => {teacherSelect = event.id}"
+              @changeTeacher="changeTeacher"            
               >
-                <option>Chọn giáo viên </option>
-                <option                                                           
-                  v-for="(teacher, index2) in teachers" 
-                  :key="index2"                                    
-                  :value="teacher.id"
-                  v-on:click="teacherAssignment(teacher.id, item.id, index)"                                         
-                >
-                  {{teacher.firstName + ' ' + teacher.lastName}}
-                </option>
-              </select>
-            </td>
+            </SelectTeacher>
+            </td>            
+         
           </tr>
           <tr v-show="pageOfItems == null || pageOfItems.length === 0">
             <th colspan="5" class="text-left">
@@ -100,10 +74,7 @@
             </th>
           </tr>
         </tbody>
-      </table>
-      <div class="col btn-assigntment">
-        <button type="button" class="btn btn-primary" v-on:click=assignment()>Phân công cho sinh viên</button>
-      </div>
+      </table>    
     </div>
     <div class="card-footer d-flex justify-content-center text--blue">
       <JwPagination

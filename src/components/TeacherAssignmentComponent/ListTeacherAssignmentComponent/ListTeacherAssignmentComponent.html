@@ -11,22 +11,19 @@
                   v-model="classId"
                   v-on:change="changeClassName()"
                 >
+                <option value="">Chọn lớp</option>
                   <option v-for="(item, index) in classes" :key="index" :value="item.id"
                     >{{item.className}}</option
                   >
                 </select>
               </div>
-              <div class="col-xl-6 col-md-6 col-sm-12">
-                <!-- <SelectTeacher                
-                  :teachers="teachers"
-                  @change="(event) => {teacherSelect = event.id}"
-                >
-                </SelectTeacher> -->
+              <div class="col-xl-6 col-md-6 col-sm-12">             
                 <select
                 class="form-control"
                 v-model="teacherId"
                 v-on:change="changeTeacher()"
               >
+                <option value="">Chọn giáo viên</option>
                 <option v-for="(teacher, index) in teachers" :key="index" :value="teacher.id"
                   >{{teacher.firstName}} {{teacher.lastName}}</option
                 >
@@ -45,8 +42,8 @@
                 <th scope="col">Khóa</th>
                 <th scope="col">Đợt thực tập</th>
                 <th scope="col">Tên giáo viên</th>
-                <th scope="col">Thao tác</th>
-              </tr>
+                <th scope="col">Thao tác (Thay đổi giáo viên)</th>
+              </tr> 
             </thead>
             <tbody>
               <tr v-for="(instructor, index) in pageOfItems" :key="index">
@@ -57,8 +54,12 @@
                 <td>{{instructor.internshipCourseName}}</td>
                 <td>{{instructor.teacherName}}</td>
                 <td>
-                  <button class="btn btn-primary mr-2">Thay đổi giáo viên</button>
-                 
+                  <SelectTeacher
+                  :teachers="teachers"            
+                  @change="(event) => {teacherSelect = event.id}"
+                  @changeTeacher="changeTeacher"            
+                  >
+                </SelectTeacher>  
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">

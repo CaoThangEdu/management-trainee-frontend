@@ -95,7 +95,6 @@ export default {
         this.showCreateAssignments = false;
         return;
       }
-      console.log("abc")
       this.showCreateAssignments = true;
       //Phân công từ đầu
       this.statistics = [];
@@ -180,6 +179,7 @@ export default {
         });
       }
     },
+
     addAssignmentStudentNumber() {
       this.teacherTemp = [];
       this.teachers.forEach((teacher) => {
@@ -198,14 +198,13 @@ export default {
         };
         this.teacherTemp.push(this.teacherTempRequest);
       });
-      console.log(this.teacherTemp);
     },
+
     async teacherAssignment() {
-       this.showLoading()
-      await this.assignments.forEach((assignment) => {
+       this.assignments.forEach((assignment) => {
         this.createInstructorAsync(assignment);
       });
-      this.showLoading(false)
+       this.$emit("change-instructors", true);
       this.assignments = [];  
       this.statistics = []   
     },

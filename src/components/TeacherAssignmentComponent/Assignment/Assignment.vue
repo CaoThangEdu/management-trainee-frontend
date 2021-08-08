@@ -77,6 +77,7 @@ export default {
       if (changeInstructors) {
         await this.getInstructorsAsync();
         await this.getStudentsUnassigned();
+        await this.getPlanService();
         this.reloadAutomaticAssignment = false;
         this.$nextTick(() => {
           this.reloadAutomaticAssignment = true;
@@ -145,7 +146,7 @@ export default {
         endDay: response.data.endDay,
         status: response.data.status,
         numberStudentsUnassigned:
-          this.studentInInternshipCourse.length - this.instructors.length,
+        this.studentInInternshipCourse.length - this.instructors.length,
         numberStudentsInInternshipCourse: this.studentInInternshipCourse.length,
         numberTeachersInInternshipCourse: this.teachers.length,
       };

@@ -54,6 +54,16 @@ export default {
     this.getInstructorsAsync();
   },
   methods: {
+    // changeStudentId(id, index) {
+    //   this.studentId = id;
+    //   this.index = index;
+    // },
+
+    // changeTeacher(teacher) {
+    //   this.createInstructorAsync(teacher.id, this.studentId, null, this.index);
+
+    // },
+
     async getInstructorsAsync() {
       const api = new InstructorService();
       this.instructorRequest = {
