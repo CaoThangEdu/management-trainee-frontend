@@ -108,18 +108,21 @@ export default {
         teacherId: teacherId,
         studentId: studentId,
         internshipCourseId: this.internshipCourseId,
+        status: "active",
+        isDelete: false,
         index: index
       };
       this.listInstructorRequest.push(this.instructorRequest);
     },
 
-    assignment() {
+    async assignment() {
       this.listInstructorRequest.forEach((instructor) => {
         // Phân công theo danh sách sinh viên
         this.showLoading(true);
         this.createInstructorAsync(-1, -1, instructor, instructor.index)
         this.showLoading(false);
       });
+      await this.getInstructorsAsync();
       this.listInstructorRequest = []
     },
 
@@ -132,12 +135,14 @@ export default {
           teacherId: teacherId,
           studentId: studentId,
           internshipCourseId: this.internshipCourseId,
+          status: "active",
+          isDelete: false,
         };
         instructor = this.instructorRequest;
       }
       this.showLoading()
       const response = await api.createInstructorAsync(instructor);
-      this.$emit('reloadData')
+      this.$emit("change-instructors", response.data);
       this.showLoading(false)
       if (response.isOK == true) {
         this.students.splice(index ,1);

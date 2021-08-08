@@ -137,9 +137,13 @@ export default {
       } else {
         this.addAssignmentStudentNumber();
         this.teacherTemp.forEach((teacher) => {
-          this.studentTemp = [];
           //Nếu giáo viên đã được phân công thì giảm bớt số sinh viên lại cho đều
-          if (teacher.number > 0) {
+          if(teacher.number >= this.numberOfTeacher && this.numberOfTeacher != 0){
+           return
+          }
+          this.studentTemp = [];
+
+          if (teacher.number > 0 && teacher.number < this.numberOfTeacher) {
             this.studentTemp = this.studentTempDelete.slice(
               0,
               this.averageNumber - teacher.number
@@ -207,13 +211,11 @@ export default {
     },
 
     async createInstructorAsync(assignment) {
-      console.log("loading...");
       this.showLoading();
       const api = new InstructorService();
       // Phân công từng sinh viên
       const response = await api.createInstructorAsync(assignment);
       this.showLoading(false);
-      console.log("end loading");
       if (!response.isOK) {
         this.showNotifications(
           "error",
@@ -252,7 +254,6 @@ export default {
         `${AppConfig.notification.title_default}`,
         "Xóa danh sách phân công thành công"
       );
-      console.log("response.data", response.data);
       this.$emit("change-instructors", response.data);
     },
 
