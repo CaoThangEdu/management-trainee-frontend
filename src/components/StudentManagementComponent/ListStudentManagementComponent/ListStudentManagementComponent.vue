@@ -11,6 +11,8 @@ import StudentService from '../../../services/student/studentServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import SelectPlan from '../../../components/common/form/select-plan/SelectPlan.vue';
+import SelectClassroom from '../../../components/common/form/select-classroom/SelectClassroom.vue';
 
 export default {
   name: "ListStudentManagementComponent",
@@ -20,6 +22,8 @@ export default {
     AddStudentsFileComponent,
     ConfirmDialog,
     JwPagination,
+    SelectPlan,
+    SelectClassroom,
   },
   mixins: [ CrudMixin ],
   data() {
@@ -37,10 +41,11 @@ export default {
       },
       filter: {
         keyword: "",
-        isDelete: false,
-        status: "active",
         classId: "",
-      }
+        internshipCourseId: "",
+        status: "active",
+        isDelete: false
+      },
     };
   },
 
@@ -57,13 +62,23 @@ export default {
       type: Array,
       default: null,
     },
-    careers: {
-      type: Array,
-      default: null,
-    },
   },
   
   methods:{
+    searchStudent() {
+      if (this.filter.classId == -1 || this.filter.classId == '') {
+        this.filter.classId = '';
+      } else {
+        this.filter.internshipCourseId = '';
+        this.$emit("search-student", this.filter);
+        return;
+      }
+      if (this.filter.internshipCourseId == -1) {
+        this.filter.internshipCourseId = '';
+      }
+      this.$emit("search-student", this.filter);
+    },
+
     getInfoObject(id, list) {
       return CrudMixin.methods.getInfo(id, list);
     },
@@ -102,10 +117,6 @@ export default {
 
     changeDataClass() {
       this.$emit("change-data-classroom");
-    },
-
-    changePage(currentPage) {
-      this.$emit("change-page", currentPage);
     },
 
     updateStudent(index) {

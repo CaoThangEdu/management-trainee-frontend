@@ -1,15 +1,15 @@
 import ServicesBaseAPI from '../servicesBaseApi'
 import AppConfig from '../../app.config.json'
 
-export default class RegisteredInternshipReferralsService extends ServicesBaseAPI {
+export default class CertificateService extends ServicesBaseAPI {
   constructor() {
     super();
     this.url = `${AppConfig.apiHost}/Certificate`
   }
 
-  async getRegisteredInternshipReferralsAsync(object) {
+  async getCertificatesAsync() {
     try {
-      const response = await this.http.post(`${this.url}/Filter`, object);
+      const response = await this.http.get(`${this.url}/GetAll`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -17,7 +17,7 @@ export default class RegisteredInternshipReferralsService extends ServicesBaseAP
     return this.result;
   }
 
-  async createRegisteredInternshipReferralsAsync(object) {
+  async createCertificateAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);
       this.setResult(response);
@@ -27,7 +27,7 @@ export default class RegisteredInternshipReferralsService extends ServicesBaseAP
     return this.result;
   }
 
-  async updateRegisteredInternshipReferralsAsync(object) {
+  async updateCertificateAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);
       this.setResult(response);
@@ -37,7 +37,7 @@ export default class RegisteredInternshipReferralsService extends ServicesBaseAP
     return this.result;
   }
 
-  async deleteRegisteredInternshipReferralsAsync(id) {
+  async deleteCertificateAsync(id) {
     try {
       const response = await this.http.delete(`${this.url}/Delete?id=${id}`);
       this.setResult(response);

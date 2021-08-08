@@ -35,12 +35,14 @@
                 <th scope="col">SĐT</th>
                 <th scope="col">Ngày đăng ký</th>
                 <th scope="col">Trạng thái</th>
+                <th scope="col">Hoạt động</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.nameCompany }}</td>
+                <td v-if="item.status === 'unconfirmed'" @click="updateCertificate(index)"  class="link-detail" title="Xem">{{ item.nameCompany }}</td>
+                <td v-if="item.status === 'confirmed' && item.status === 'complete'">{{ item.nameCompany }}</td>
                 <td>{{ item.taxCode }}</td>
                 <td v-if="students.length != 0">
                   {{ getInfoObject(item.studentId, students).studentId }}
@@ -56,6 +58,9 @@
                 <td>
                   {{ item.status }}
                 </td>
+                <td>
+                  <button :disabled="item.status === 'confirmed' && item.status === 'complete' " class="btn btn-danger" @click="deleteCertificate(item.id, index)"> <i class="fa fa-trash"></i></button>
+                </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
                 <th colspan="5" class="text-left">
@@ -66,12 +71,13 @@
           </table>
         </div>
       </div>
-      <RegisteredInternshipReferralsDetailComponent :data="editCertificate" />
+      <CertificateDetailComponent :data="editCertificate"/>
 
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems == null || pageOfItems.length === 0">
         <JwPagination :items="certificates" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
         </JwPagination>
+        <ConfirmDialog :data="confirmedCertificate" @agree="agreeConfirm"></ConfirmDialog>
       </div>
     </div>
   </div>
