@@ -16,7 +16,6 @@ export default class StudentService extends ServicesBaseAPI {
     }
     return this.result;
   }
-  
   async getStudentUnassignedAsync(object){
     try {
       const response = await this.http.post(`${this.url}/GetStudentsUnassigned`, object);
@@ -36,7 +35,6 @@ export default class StudentService extends ServicesBaseAPI {
     }
     return this.result;
   }
-
   async createStudentAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);

@@ -1,18 +1,14 @@
 <template>
   <div>
-    <ListTeacherAssignmentComponent />
+    <ListPlanFilterComponent />
   </div>
 </template>
 
 <script>
-// import ListTeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/ListTeacherAssignmentComponent/ListTeacherAssignmentComponent' // Link gốc
-// import ListTeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/Assignment/Assignment.vue' // Link tạm 
-import ListTeacherAssignmentComponent from '../../../components/TeacherAssignmentComponent/AutomaticAssignment/AutomaticAssignment.vue'
+import ListPlanFilterComponent from '../../../components/TeacherAssignmentComponent/ListPlanFilterComponent/ListPlanFilterComponent.vue'
 export default {
-  components:{ ListTeacherAssignmentComponent }
+  components:{ ListPlanFilterComponent }
 }
 </script>
-
 <style>
-
 </style>

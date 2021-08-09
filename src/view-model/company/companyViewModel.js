@@ -3,17 +3,18 @@ export default class CompanyViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      companyName: null,
-      taxCode: null,
-      address: null,
-      link: null,
-      img: null,
+      taxCode:null,
+      title: null,
+      companyAddress: null,
+      owner: null,
+      career: null,
+      phoneNumber: null,
     }
   }
 
   getValidations() {
     let validations = {
-      companyName: {
+      title: {
         label: 'Tên công ty',
         rules: {
           require: '',
@@ -31,7 +32,7 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      address: {
+      companyAddress: {
         label: 'Địa chỉ',
         rules: {
           require: '',
@@ -40,8 +41,8 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      link: {
-        label: 'Trang web',
+      manager: {
+        label: 'Chủ sở hữu',
         rules: {
           require: '',
           maxLength: {
@@ -49,8 +50,17 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      img: {
-        label: 'Logo công ty',
+      phoneNumber: {
+        label: 'Số điện thoại',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      career: {
+        label: 'Ngành nghề',
         rules: {
           require: '',
           maxLength: {

@@ -58,7 +58,10 @@
           d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
           class="ci-primary"></path>
       </svg> Danh sách ngành
-      <button class="btn btn-primary float-right" @click="createCareer">+ Thêm mới</button>
+      <button class="btn btn-primary float-right" title="Thêm mới"
+        @click="createCareer">
+        <i class="fa fa-plus-square"></i>
+      </button>
     </header>
     <div class="card-body">
       <div class="row mb-3">
@@ -85,8 +88,11 @@
                 v-model="filter.careersName" />
             </div>
             <div class="col-xl-3 col-md-3 col-sm-12">
-              <button type="submit" id="btn-search" class="btn btn-primary"
-              @click="getCareersFilterAsync">Tìm kiếm</button>
+              <button type="submit" id="btn-search" class="btn btn-stack-overflow"
+                @click="getCareersFilterAsync"
+                title="Tìm kiếm">
+                <i class="fas fa-search"></i>
+              </button>
             </div>
 
           </div>
@@ -106,7 +112,10 @@
           <tbody>
             <tr v-for="(item, index) in pageOfItems" :key="index">
               <th scope="row">{{ index + 1 }}</th>
-              <td>{{ item.careersName }}</td>
+              <td
+                @click="updateCareer(index)"
+                class="link-detail"
+                title="Xem">{{ item.careersName }}</td>
               <td v-if="trainingSystems.length != 0">
                 {{ getTrainingSystemName(item.trainingSystemId, trainingSystems).trainingSystemName }}
               </td>
@@ -123,8 +132,8 @@
                 </button>
               </td>
               <td>
-                <button class="btn btn-success mr-2" @click="updateCareer(index)">Sửa</button>
-                <button class="btn btn-danger" @click="deleteCareer(item)">Xóa</button>
+                <button class="btn btn-danger"title="Xóa"
+                  @click="deleteCareer(item)"><i class="fa fa-trash"></i></button>
               </td>
             </tr>
             <tr v-show="pageOfItems == null || pageOfItems.length === 0">

@@ -77,8 +77,9 @@
                 <td>{{item.endDay}}</td>
                 <td>{{item.status}}</td>
                 <td>
-                  <button class="btn btn-info"
-                    @click="assignment(item)">Chi tiết</button>
+                  <router-link :to="{name:'phan-cong-dot', params: { internshipCourseId: item.id } }">
+                    Chi tiết
+                  </router-link>
                 </td>
               </tr>
             </tbody>

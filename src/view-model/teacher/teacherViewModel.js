@@ -1,12 +1,14 @@
 import ViewModel from '../viewModel'
 export default class TeacherViewModel extends ViewModel {
   constructor() {
-    super()
+    super();
     this.fields = {
       firstName: null,
       lastName: null,
-      email: null,
+      phoneNumber: null,
       status: null,
+      facultyId: null,
+      isDelete: null,
     };
   }
 

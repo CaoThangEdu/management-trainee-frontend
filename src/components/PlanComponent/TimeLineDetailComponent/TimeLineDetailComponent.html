@@ -1,12 +1,15 @@
-<BaseModal @mouse-click-outside="closeModal(false)" :modalName="`TimeLineDetail`" :isShow="isShow" size="lg">
+<BaseModal @mouse-click-outside="closeModal(false)" 
+  :modalName="`TimeLineDetail`" :isShow="isShow" size="lg">
   <div class="">
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">
         Đợt thực tập (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
-        <select class="form-control" v-model="timeline.internshipCourseId">
-          <option v-for="(item, index) in plans" :key="index" :value="item.id">{{ item.internshipCourseName }}</option>
+        <select class="form-control" v-model="timeline.internshipCourseId"
+          @change="changeTimeLineDay()">
+          <option v-for="(item, index) in plans" :key="index" 
+            :value="item.id">{{ item.internshipCourseName }}</option>
         </select>
       </div>
     </div>
@@ -30,16 +33,33 @@
     </div>
 
     <div class="form-group row">
-      <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">Ngày bắt đầu</label>
+      <label for="example-datetime-local-input" 
+        class="col-md-4 col-sm-4 col-form-label">Ngày bắt đầu</label>
       <div class="col-md-8 col-sm-8">
-        <input class="form-control" type="date" value="" v-model="timeline.startDay">
+        <DatePicker
+          v-model="timeline.startDay"
+          input-class="form-control"
+          :format="'DD/MM/YYYY'"
+          type="date"
+          :default-value="new Date()"
+          :disabled-date="hidePastDates"
+          class="w-100"
+        ></DatePicker> 
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="example-datetime-local-input" class="col-md-4 col-sm-4 col-form-label">Ngày kết thúc</label>
+      <label for="example-datetime-local-input"
+        class="col-md-4 col-sm-4 col-form-label">Ngày kết thúc</label>
       <div class="col-md-8 col-sm-8">
-        <input class="form-control" type="date" value="" v-model="timeline.endDay">
+        <DatePicker
+          v-model="timeline.endDay"
+          input-class="form-control"
+          :format="'DD/MM/YYYY'"
+          type="date"
+          :disabled-date="displayBetweenFromDateAndPastDates"
+          class="w-100"
+        ></DatePicker> 
       </div>
     </div>
   </div>

@@ -16,6 +16,7 @@ export default class TeacherService extends ServicesBaseAPI {
     }
     return this.result;
   }
+  
   async getTeachersInInternshipCourse(object) {
     try {
       const response = await this.http.post(`${this.url}/GetTeacherInInternshipCourse`, object);
@@ -24,7 +25,7 @@ export default class TeacherService extends ServicesBaseAPI {
       return this.http.loadError(e);
     }
     return this.result;
-  }  
+  }    
 
   async getFilterByCareersId(careersId) {
     try {

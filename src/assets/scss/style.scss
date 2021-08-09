@@ -26,6 +26,10 @@
   }
 }
 
+.mx-datepicker .mx-input-wrapper:hover .mx-icon-clear {
+  display: none;
+}
+
 .fa-unlock {
   color: black;
 }
@@ -90,5 +94,14 @@
       padding: 10px 0px;
       opacity: 1;
     }
+  }
+}
+
+.link-detail {
+  color: blue;
+  cursor: pointer;
+  font-weight: 700;
+  &:hover {
+    text-decoration: underline;
   }
 }

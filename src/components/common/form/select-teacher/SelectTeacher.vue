@@ -1,10 +1,12 @@
 <template>
+<div class="select">
   <select2
     v-model="valueModel"
     :options="teachersForSelect2"
     :settings="{ dropdownAutoWidth: true }"
     @change="changeTeacher($event)"
   />
+  </div>
 </template>
 
 <script>
@@ -22,6 +24,10 @@ export default {
     teachers: {
       type: Array,
       default: () => []
+    },
+    studentId:{
+      type: String,
+      default: ""
     },
     value: {
       type: String,
@@ -53,6 +59,7 @@ export default {
   },
 
   methods: {
+  
     changeTeacher(teacherGuid){
       let selectedteacher = this.teachers.find(m => m.id == teacherGuid);
       let emitData = {
@@ -73,7 +80,7 @@ export default {
           phoneNumber: "",
         };
       }
-      this.$emit("change", emitData);
+      this.$emit("changeTeacher", emitData);
     },
   },
 
@@ -110,3 +117,9 @@ export default {
   },
 };
 </script>
+
+<style>
+  .select{
+    width: 250px;
+  }
+</style>

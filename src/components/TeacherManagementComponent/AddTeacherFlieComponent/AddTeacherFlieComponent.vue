@@ -22,7 +22,6 @@ export default {
       teachers: [],
       metadataFile: [],
       errorMessages: [],
-      careersId:"",
     };
   },
   props: {
@@ -30,7 +29,10 @@ export default {
       type: Object,
       default: null,
     },
-    careers:Array
+    faculties: {
+      type: Array,
+      default: null,
+    },
   },
   methods: {
     closeModal(changeData) {
@@ -52,7 +54,7 @@ export default {
         let worksheet = workbook.Sheets[sheetName];
         vm.metadataFile = XLSX.utils.sheet_to_json(worksheet);
         vm.metadataFile.forEach(function(element) { element.status = "active"; });
-        vm.metadataFile.forEach(function(element) { element.careersId = vm.careersId; });
+        vm.metadataFile.forEach(function(element) { element.facultyId = 'facultyId'; });
       };
       reader.readAsArrayBuffer(f);
     },
@@ -61,6 +63,7 @@ export default {
       await this.save();
     },
     async createTeacherByFlieAsync(i) {
+      this.teachers[i].facultyId = this.faculties[0].id;
       this.showLoading();
       let api = new TeacherService();
       let response = await api.createTeacherAsync(this.teachers[i]);

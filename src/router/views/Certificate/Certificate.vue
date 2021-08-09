@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import RegisteredInternshipReferrals from '../../../components/RegisteredInternshipReferralsComponent/RegisteredInternshipReferralsComponent/RegisteredInternshipReferralsComponent'
+import RegisteredInternshipReferrals from '../../../components/CertificateManagementComponent/CertificatesComponent/CertificatesComponent.vue'
 export default {
     components:{
         RegisteredInternshipReferrals

@@ -1,154 +1,151 @@
-<div class="automatic_assignment">
-  <div class="information">
-    <div class="information-assignment">
-      <div
-        class="col-md-12 col-sm-12 col-form-label information-assignment__center "
-      >
-        <h5>
-          Đợt thực tập: {{this.statistical.internshipCourseName}} - Hệ:
-          {{this.statistical.courseName}} - Ngành:
-          {{this.statistical.careersName}} - Khóa:
-          {{this.statistical.courseName}}
-        </h5>
-      </div>
-      <div class="information-assignment__center"
-        v-if="teachers">
-        <h4>THỐNG KÊ</h4>
-      </div>
-      <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
-          <div class="information-assignment__statistical">
-            <div class="information-assignment__text">
-              Tổng số giáo viên trong đợt thực tập:
-              {{this.statistical.numberTeachersInInternshipCourse}}
-            </div>
-            <div class="information-assignment__text">
-              Tổng số sinh viên trong đợt thực tập:
-              {{this.statistical.numberOfStudentsInInternshipCourse}}
-            </div>
-            <div class="information-assignment__text">
-              Tổng số sinh viên chưa được phân công:
-              {{this.statistical.numberStudentsUnassigned}}
-            </div>
-          </div>
+<div class="auto_assignment">
+  <div class="notification" v-if="instructors.length == students.length">
+    <h5>Bạn đã phân công cho sinh viên trong đợt thực tập này</h5>
+  </div>
+  <div class="restore_assign" v-if="instructors.length>0">
+    <div class="restore_assign_notifi">
+      <div class="pl-0 pr-0 row align-items-center">
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+          Trong đợt này hiện tại đã có {{instructors.length}} sinh viên được phân công
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-          <div class="information-assignment__statistical">
-            <div
-              class="information-assignment__text"
-              v-for="(item, index) in statistiesStudentInClass"
-              :key="index"
+        <div class="col-md-4 col-lg-4 col-md-4 col-sm-12 text-right">
+          <button class="btn btn-danger mr-2"
+            data-toggle="tooltip" data-placement="top" title="Phân công lại từ đầu"
+            @click="deleteStudent(internshipCourseId)"
             >
-              Lớp {{item.className}}: {{item.number}} sinh viên chưa được phân
-              công
-            </div>
-          </div>
+            <i class="fa fa-retweet"></i>
+          </button>
+          <button class="btn btn-success mr-2" 
+            @click="showContinueAssignment"
+            title="Tiếp tục phân công">
+            <i class="fa fa-file-signature"></i>
+          </button>
+          <button class="btn btn-info" 
+            title="Xem chi tiết"
+            @click="showAssignments">
+            <i class="fa fa-window-restore"></i>
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="list">
-    <div class="students">
-      <div class="card-body">
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-2">
-                <h6 for="keywords">Lớp</h6>
-                <select
-                  class="form-control"
-                  v-model="classId"
-                  v-on:change="changeClassName"
-                >
-                  <option
-                    v-for="(item, index) in classes"
-                    :key="index"
-                    :value="item.id"
-                    >{{item.className}}</option
-                  >
-                </select>               
-              </div>
-              <div class="col-xl-3 col-md-3 col-sm-6 mb-sm-2 input-information">
-                <h6>Phân công ngay khi chọn giáo viên</h6>
-                <input
-                  type="checkbox"
-                  id="checkbox"
-                  v-model="immediateAssignment"          
-                  class="form-control"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="table-responsive">
+
+  <div class="table-responsive" v-if="isShowAssignment">
+    <hr>
+    <figure>
+      <figcaption class="mb-3 font-weight-bold text-center">Danh sách giáo viên và sinh viên đã thêm vào phân công</figcaption>
       <table class="table">
         <thead class="">
           <tr>
-            <th scope="col">Chọn</th>
             <th scope="col">STT</th>
-            <th scope="col">MSSV</th>
-            <th scope="col">Tên sinh viên</th>
+            <th scope="col">Họ tên giáo viên</th>
+            <th scope="col">Họ tên sinh viên</th>
             <th scope="col">Lớp</th>
-            <th scope="col" width="100px">sss</th>
-            <th scope="col">Giáo viên</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in pageOfItems" :key="index">
-            <th scope="row">
-              <input type="checkbox" name="" id="" />
-            </th>
+          <tr v-for="(item, index) in instructors" :key="index">
             <th scope="row">{{index + 1 }}</th>
-            <td>{{ item.studentId }}</td>
-            <td>{{ item.firstName}} {{ item.lastName}}</td>
-            <td
-              v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.classId, classes)"
-            >
-              {{ getInfoObject(item.classId, classes).className }}
-            </td>
-            <td>
-            <SelectTeacher  
-              width="100px"         
-              :teachers="teachers"
-              @change="(event) => {teacherSelect = event.id}">
-            </SelectTeacher>
-            </td>
-            <td>
-              <select class="form-control"                                    
-              >
-                <option>Chọn giáo viên </option>
-                <option                                                           
-                  v-for="(teacher, index2) in teachers" 
-                  :key="index2"                                    
-                  :value="teacher.id"
-                  v-on:click="teacherAssignment(teacher.id, item.id, index)"                                         
-                >
-                  {{teacher.firstName}} {{teacher.lastName}}
-                </option>
-              </select>
-            </td>
+            <td>{{ item.teacherName }}</td>
+            <td>{{ item.studentName }}</td>
+            <td>{{ item.className}}</td>
           </tr>
-          <tr v-show="pageOfItems == null || pageOfItems.length === 0">
+          <tr v-show="instructors == null || instructors.length === 0">
             <th colspan="5" class="text-left">
               Không có dữ liệu nào được tìm thấy.
             </th>
           </tr>
         </tbody>
-      </table>
-      <div class="col btn-assigntment">
-        <button type="button" class="btn btn-primary" v-on:click=assignment()>Phân công cho sinh viên</button>
+      </table>    
+    </figure>
+  </div>
+
+  <div class="continue-assignment">
+    <hr>    
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Số lượng sinh viên mà mỗi giáo viên sẽ quản lý {{averageNumber}}
+        (<span class="text--red">*</span>)
+      </label>
+      <label>Nên để số lượng được gợi ý để đảm bảo các sinh viên đều được phân công
+        (<span class="text--red">*</span>)
+      </label>
+      <input type="number" class="form-control" v-model="numberOfTeacher"/>               
+    </div>
+   
+    <div class="btn btn-success btn-create-assignment-data mb-2" @click="createAssignmentData">
+      Tạo danh sách công
+    </div>
+    <hr>  
+    <div class="info_instructor form-row mb-3" v-if="showCreateAssignments">      
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <label class="d-sm-block d-none">&nbsp;</label>
+        <button class="btn btn-primary btn-create-assignment" @click="teacherAssignment"
+          v-if="showCreateAssignments">
+          Phân công
+        </button>
       </div>
     </div>
-    <div class="card-footer d-flex justify-content-center text--blue">
-      <JwPagination
-        :items="students"
-        @changePage="onChangePage"
-        :labels="customLabels"
-        :pageSize="20"
-      >
-      </JwPagination>
+  
+    <div class="list_assignment" v-if="showCreateAssignments">
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="table-responsive">
+            <figure>
+              <figcaption class="mb-3 font-weight-bold text-center">Danh sách phân công</figcaption>
+              <table class="table">
+                <thead class="">
+                  <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Họ tên giáo viên</th>
+                    <th scope="col">Họ tên sinh viên</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in pageOfItems" :key="index">
+                    <th scope="row">{{index + 1 }}</th>
+                    <td
+                      v-if="teachers.length != 0 && getInfoObject(item.teacherId, teachers)"
+                    >
+                      {{ getInfoObject(item.teacherId, teachers).firstName }} {{
+                      getInfoObject(item.teacherId, teachers).lastName }}
+                    </td>
+                    <td
+                      v-if="students.length != 0 && getInfoObject(item.studentId, students)"
+                    >
+                      {{ getInfoObject(item.studentId, students).firstName }} {{
+                      getInfoObject(item.studentId, students).lastName }}
+                    </td>
+                  </tr>                 
+                </tbody>
+              </table>
+              <div class="card-footer d-flex justify-content-center text--blue">
+                <JwPagination
+                  :items="assignments"
+                  @changePage="onChangePage"
+                  :labels="customLabels"
+                  :pageSize="20"
+                >
+                </JwPagination>
+              </div>  
+            </figure>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <label for="" class="font-weight-bold">Thống kê</label>
+          <ul>
+            <li v-for="(item, index) in statistics">
+              {{ getInfoObject(item.teacherId, teachers).firstName }} {{
+              getInfoObject(item.teacherId, teachers).lastName }}: {{item.number}}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
+
+  <ConfirmDialog
+    :data="confirmInternshipCourseId"
+    @agree="restoreAssignment"
+    :message="'Bạn có muốn phân công lại từ đầu'">
+  </ConfirmDialog>
 </div>

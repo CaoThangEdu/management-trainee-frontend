@@ -9,8 +9,9 @@ import TeacherService from "../../../services/teacher/teacherServices";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import AppConfig from "../../../../src/app.config.json";
-import CareerService from "../../../services/career/careerServices";
+import FacultyServices from "../../../services/faculty/facultyServices";
 import planningStepsComponent from "../../planningStepsComponent/planningStepsComponent";
+
 export default {
   extends: ComponentBase,
   components: {
@@ -34,22 +35,43 @@ export default {
         previous: "<",
         next: ">",
       },
-      careers: [],
-      filterByCareersId: "",
       filter: {
         trainingSystemId: "",
         isDelete: false,
         careersName: "",
         status: "active"
       },
-      isActiveStep:"3"
+      isActiveStep:"3",
+      faculties: [],
     };
   },
   async mounted() {
     await this.getTeachersAsync();
-    await this.getCareersFilterAsync();
+    await this.getFacultiesFilterAsync();
   },
   methods: {
+    async getFacultiesFilterAsync() {
+      let facultyFilter = {
+        isDelete: false,
+      };
+      // Call Api
+      this.showLoading();
+      const api = new FacultyServices();
+
+      const response = await api.getFacultiesFilterAsync(facultyFilter);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.faculties = response.data;
+    },
+
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
@@ -82,7 +104,6 @@ export default {
 
     async changePage(currentPage) {
       await this.getTeachersAsync(currentPage);
-      await this.getCareersFilterAsync(currentPage);
     },
 
     updateTeacher(index) {
@@ -155,25 +176,6 @@ export default {
       return CrudMixin.methods.getInfo(careersId, careers);
     },
 
-     async getCareersFilterAsync(){
-      // Call Api
-      this.showLoading();
-      const api = new CareerService()
-
-      const response = await api.getCareersFilterAsync(this.filter);
-      this.showLoading(false);
-
-      if(!response.isOK){
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.careers = response.data;
-    },
-
     async updateStatus(index) {
       let teacher = this.pageOfItems[index];
       if (teacher.status === "active") {
@@ -205,23 +207,6 @@ export default {
 
     getStatusIcon(status) {
       return CrudMixin.methods.getStatusIcon(status);
-    },
-    async getFilterByCareersId(careersId) {
-      // Call Api
-      this.showLoading();
-      const api = new TeacherService();
-      const response = await api.getFilterByCareersId(careersId);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.teachers = response.data.items;
     },
   },
 };

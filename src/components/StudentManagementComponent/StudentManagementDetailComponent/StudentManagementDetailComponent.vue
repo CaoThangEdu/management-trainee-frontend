@@ -60,10 +60,6 @@ export default {
       type: Array,
       default: null,
     },
-    careers: {
-      type: Array,
-      default: null,
-    },
   },
 
   methods: {
@@ -140,6 +136,7 @@ export default {
     },
 
     async createStudentAsync() {
+      this.student.status = 'active';
       if(this.checkStudent(this.student.studentId)){
         return;
       }

@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="col-12">
     <planningStepsComponent :isActiveStep="isActiveStep"/>
@@ -12,28 +11,23 @@
         </svg>
         Danh sách giáo viên
         <button
-          class="btn btn-primary float-right btn-search"
+          class="btn btn-primary float-right"
           @click="createTeacher"
+          title="Thêm mới"
         >
-          + Thêm mới
+          <i class="fa fa-plus-square"></i>
         </button>
-        <button class="btn btn-secondary float-right btn-add-file"
+        <button class="btn btn-instagram float-right btn-add-file"
           @click="createFileTeacher"
+          title="Thêm file"
         >
-          + Thêm file
+        <i class="fa fa-file-excel"></i>
         </button>
       </header>
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                <select class="form-control form-select form-select-class " v-model="filterByCareersId"
-                  name="trainingSystemId" id="trainingSystemId">
-                  <option value="All">Tất cả</option>
-                  <option v-for="(item,index) in careers" :key="index" :value="item.id">{{item.careersName}}</option>
-                </select>
-              </div>
               <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
                 <select
                   class="form-control form-select form-select-class">
@@ -47,8 +41,11 @@
                   />
               </div>
               <div class="col-xl-3 col-md-3 col-sm-12">
-                <button type="submit" id="btn-search" class="btn btn-primary"
-               >Tìm kiếm</button>
+                <button type="submit" id="btn-search" 
+                  class="btn btn-stack-overflow"
+                  title="Tìm kiếm">
+                  <i class="fas fa-search"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -58,11 +55,9 @@
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
-                <th scope="col">Họ</th>
-                <th scope="col">Tên</th>
+                <th scope="col">Họ và tên</th>
                 <th scope="col">Email</th>
                 <th scope="col">Số điện thoại</th>
-                <th scope="col">Khoa</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>
               </tr>
@@ -70,31 +65,36 @@
             <tbody>
               <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.firstName }}</td>
-                <td>{{ item.lastName }}</td>
+                <td @click="updateTeacher(index)"
+                  class="link-detail" title="Xem">
+                  {{ item.firstName + ' ' + item.lastName }}</td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.phoneNumber }}</td>
-                <td v-if="careers.length != 0">{{getTrainingSystemName(item.careersId, careers).careersName}}</td>
                 <td>
                   <button class="btn btn-danger mr-2"   
-                    @click="updateStatus(index)" 
+                    @click="updateStatus(index)"
+                    title="Chưa hoạt động"
                     v-if="item.status == 'unactive'">
                     <i :class="getStatusIcon(item.status)"></i>
                   </button>
                   <button class="btn btn-warning mr-2"
-                    @click="updateStatus(index)" 
+                    @click="updateStatus(index)"
+                    title="Hoạt động"
                     v-if="item.status == 'active'">
                     <i :class="getStatusIcon(item.status)"></i>
                   </button>
                 </td>
                 <td>
-                  <button class="btn btn-primary mr-2" @click="updateTeacher(index)">
-                    Sửa
-                  </button>
-                  <button class="btn btn-danger" @click="deleteTeacher(item)">
-                    Xóa
+                  <button class="btn btn-danger" title="Xóa"
+                    @click="deleteTeacher(item)">
+                    <i class="fa fa-trash"></i>
                   </button>
                 </td>
+              </tr>
+              <tr v-show="pageOfItems == null || pageOfItems.length === 0">
+                <th colspan="5" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
               </tr>
             </tbody>
           </table>
@@ -103,22 +103,19 @@
       <TeacherManagementDetailComponent
         :data="editTeacher"
         @change-data="changeData"
-        :careers="careers"
+        :faculties="faculties"
       />
 
       <AddTeacherFileComponent
         :data="teacherFile"
         @change-data="changeData"
-        :careers="careers"
+        :faculties="faculties"
       />
       <ConfirmDialog :data="confirmTeacher" @agree="deleteTeacherConfirm"></ConfirmDialog>
 
       <div class="card-footer d-flex justify-content-center text--blue">
         <JwPagination :items="teachers" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
         </JwPagination>
-      </div>
-      <div class="button-continue">
-        <button class="btn-continue">Tiếp Tục</button>
       </div>
     </div>
   </div>

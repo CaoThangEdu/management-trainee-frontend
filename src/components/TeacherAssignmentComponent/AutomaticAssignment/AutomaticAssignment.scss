@@ -1,22 +1,11 @@
-.information-assignment {
-    &__center  {
-        background-color: #CC99FF;
-        text-align: center;
-        margin-bottom: 5px;
-    }
-    &__text  {
-        margin: 2px;
-    }
-}
-.automatic_assignment {
-    background-color: #fff;
-}
-    
-.list {
-    background-color:  white;
+.auto_assignment{
+    margin: 10px;
+    border: 10px;
 }
 
-.btn-assigntment {
-    text-align: center;    
-    margin-bottom: 20px;
+.btn-create-assignment-data {
+    text-decoration: underline;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 15px;
 }

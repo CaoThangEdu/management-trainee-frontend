@@ -30,21 +30,13 @@ export default {
   async mounted(){
     await this.getInternshipCourseAsync();
   },
-  methods:{
-    createBrand() {
-      this.editTeacher = {};
-    },
-    async changeData() {
-      // await this.getteachersAsync();
-    },
+  methods:{    
     async getInternshipCourseAsync(){
       // Call Api
       this.showLoading();
       const api = new PlanService()
-
-      const response = await api.Filter(this.internshipCourseFilter)
+      const response = await api.getPlansAsync(this.internshipCourseFilter)
       this.showLoading(false);
-
       if(!response.isOK){
         this.showNotifications(
           "error",
@@ -55,10 +47,6 @@ export default {
       }
       this.internshipCourse = response.data;
     },
-
-    assignment(e) {
-      this.$emit("getPlan", e);
-    }
   }
 }
 </script>
