@@ -113,7 +113,7 @@ export default {
     let token = localStorage.getItem('AUTH_TOKEN');
     let tokenKey = JSON.parse(token);
     if (!tokenKey) return;
-    this.$router.push({ name: 'ds-ke-hoach'});
+    this.$router.push({ name: 'them-ke-hoach'});
   },
 
   methods: {
@@ -165,7 +165,7 @@ export default {
       }
 
       // goto the next page
-      this.$router.push({ name: 'ds-ke-hoach'});
+      this.$router.push({ name: 'them-ke-hoach'});
     },
   },
   computed: {

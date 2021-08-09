@@ -19,6 +19,7 @@ const routes = [
   {
     path: "/plan",
     name: "len-ke-hoach",
+    redirect: '/plan/list',
     component: {
       render(c) {
         return c('router-view');
@@ -130,18 +131,6 @@ const routes = [
     },
   },
   {
-    path: "/course-management",
-    name: "quan-ly-nganh",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/CourseManagement/CourseManagement.vue"
-      ),
-    meta: {
-      breadcrumbName: "Quản lý khóa",
-    },
-  },
-  {
     path: "/trainingsystem-management",
     name: "quan-ly-he",
     component: () =>
@@ -150,7 +139,7 @@ const routes = [
         "../router/views/TrainingSystemManagement/TrainingSystemManagement.vue"
       ),
     meta: {
-      breadcrumbName: "Quản lý hệ - ngành - khóa",
+      breadcrumbName: "Quản lý hệ - ngành",
     },
   },
   {
@@ -177,21 +166,10 @@ const routes = [
       breadcrumbName: "Quản lý lớp",
     },
   },
-  // {
-  //   path: "/student-management",
-  //   name: "quan-ly-sinh-vien",
-  //   component: () =>
-  //     import(
-  //       /* webpackChunkName: "ControlExample" */
-  //       "../router/views/StudentManagement/StudentManagement.vue"
-  //     ),
-  //   meta: {
-  //     breadcrumbName: "Quản lý sinh viên",
-  //   },
-  // },
   {
     path: "/student-management",
     name: "quan-ly-sinh-vien",
+    redirect: '/student-management/list',
     component: {
       render(c) {
         return c('router-view');
@@ -219,16 +197,6 @@ const routes = [
           breadcrumbName: 'Thêm mới',
         },
       },
-      // {
-      //   path: 'update/:guid',
-      //   name: 'sua-ke-hoach',
-      //   props: true,
-      //   component: () =>
-      //     import("../components/PlanComponent/PlanDetail/PlanDetail.vue"),
-      //   meta: {
-      //     breadcrumbName: 'Chỉnh sửa',
-      //   },
-      // },
     ]
   },
   {

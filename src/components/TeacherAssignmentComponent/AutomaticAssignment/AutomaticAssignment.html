@@ -11,7 +11,8 @@
           {{this.statistical.courseName}}
         </h5>
       </div>
-      <div class="information-assignment__center">
+      <div class="information-assignment__center"
+        v-if="teachers">
         <h4>THỐNG KÊ</h4>
       </div>
       <div class="row">
@@ -65,7 +66,7 @@
                     :value="item.id"
                     >{{item.className}}</option
                   >
-                </select>
+                </select>               
               </div>
               <div class="col-xl-3 col-md-3 col-sm-6 mb-sm-2 input-information">
                 <h6>Phân công ngay khi chọn giáo viên</h6>
@@ -90,11 +91,12 @@
             <th scope="col">MSSV</th>
             <th scope="col">Tên sinh viên</th>
             <th scope="col">Lớp</th>
+            <th scope="col" width="100px">sss</th>
             <th scope="col">Giáo viên</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in pageOfItems" :key="index+'teacher-assignment'">
+          <tr v-for="(item, index) in pageOfItems" :key="index">
             <th scope="row">
               <input type="checkbox" name="" id="" />
             </th>
@@ -107,14 +109,21 @@
               {{ getInfoObject(item.classId, classes).className }}
             </td>
             <td>
-              <select class="form-control" :id="index"                                   
+            <SelectTeacher  
+              width="100px"         
+              :teachers="teachers"
+              @change="(event) => {teacherSelect = event.id}">
+            </SelectTeacher>
+            </td>
+            <td>
+              <select class="form-control"                                    
               >
                 <option>Chọn giáo viên </option>
                 <option                                                           
                   v-for="(teacher, index2) in teachers" 
-                  :key="index2 + 'teacher'"                                    
+                  :key="index2"                                    
                   :value="teacher.id"
-                  v-on:click="teacherAssignment(teacher.id, item.id)"                                         
+                  v-on:click="teacherAssignment(teacher.id, item.id, index)"                                         
                 >
                   {{teacher.firstName}} {{teacher.lastName}}
                 </option>
