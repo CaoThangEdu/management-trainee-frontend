@@ -16,6 +16,30 @@ const routes = [
       breadcrumbName: 'Trang chủ'
     },
   },
+  // template mail
+  {
+    path: "/template-mail",
+    name: "template-mail",
+    component: () =>
+      import(
+        "../components/common/template-mail/TemplateMail.vue"
+      ),
+    meta: {
+      breadcrumbName: 'Template mail'
+    },
+  },
+  //404
+  {
+    path: '*',
+    name: '404',
+    component: () =>
+      import('./views/page-404/Page404.vue'),
+    meta: {
+      hideSidebar: true,
+      hideHeader: true,
+      hideFooter: true
+    }
+  },
   {
     path: "/plan",
     name: "len-ke-hoach",
