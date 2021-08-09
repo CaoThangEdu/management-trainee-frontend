@@ -16,6 +16,15 @@ export default class ClassService extends ServicesBaseAPI {
     }
     return this.result;
   }
+  async getStatisticalClassUnassigned(object){
+    try {
+      const response = await this.http.post(`${this.url}/GetStatisticalClassUnassigned`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
 
   async getClassesFilterAsync(object) {
     try {

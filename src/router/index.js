@@ -97,14 +97,35 @@ const routes = [
   {
     path: "/teacher-assignment",
     name: "phan-cong-giao-vien",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/TeacherAssignment/TeacherAssignment.vue"
-      ),
-    meta: {
-      breadcrumbName: "Phân công giáo viên",
+    redirect: '/teacher-assignment/list',
+    component: {
+      render(c) {
+        return c('router-view');
+      }
     },
+    meta: {
+      breadcrumbName: 'Phân công giáo viên'
+    },
+    children: [{
+      path: 'list',
+      name: 'phan-cong-giao-vien',
+      component: () =>
+        import("../router/views/TeacherAssignment/TeacherAssignment.vue"),
+      meta: {
+        breadcrumbName: 'Danh sách',
+      },
+    },
+    {
+      path: 'assignment/:internshipCourseId',
+      name: 'phan-cong-dot',
+      props: true,
+      component: () =>
+        import("../components/TeacherAssignmentComponent/Assignment/Assignment.vue"),
+      meta: {
+        breadcrumbName: 'Phân công',
+      },
+    },
+  ]
   },
   {
     path: "/confirm-referra-file",
