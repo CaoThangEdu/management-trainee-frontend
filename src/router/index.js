@@ -304,6 +304,18 @@ const routes = [
       breadcrumbName: 'Xác nhận thực tập',
     },
   },
+  {
+    path: '/upload-file',
+    name: 'Upload file',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/UploadFile/UploadFile.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Upload file',
+    },
+  },
 ];
 
 const router = new VueRouter({

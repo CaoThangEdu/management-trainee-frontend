@@ -142,9 +142,11 @@ export default {
         );
         return;
       }
-      let companies = response.data.items
-      companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
-      this.companiesByTaxCode = companies;
+      let companies = response.data.items;
+      if(companies.length !== 0 || companies !== undefined){
+        companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
+        this.companiesByTaxCode = companies;
+      }
     },
 
     async getCompanieByTaxCodeAsync(taxCode){

@@ -2,7 +2,6 @@
 
 <script>
 import SelectTeacher from "../../common/form/select-teacher/SelectTeacher.vue";
-import TeacherAssignmentDetailComponent from "../TeacherAssignmentDetailComponent/TeacherAssignmentDetailComponent";
 import InstructorService from "../../../services/instructor/instructorService";
 import AppConfig from "../../../../src/app.config.json";
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
@@ -12,7 +11,6 @@ import JwPagination from "jw-vue-pagination";
 export default {
   name: "ListTeacherAssignmentComponent",
   components: {
-    TeacherAssignmentDetailComponent,
     SelectTeacher,
     BaseModal,
     AlertMessages,

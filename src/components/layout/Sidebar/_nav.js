@@ -80,5 +80,11 @@ export default [{
   to: '/internship-confirmation',
   icon: 'cil-pencil',
 },
+{
+  _name: 'CSidebarNavItem',
+  name: 'Upload file',
+  to: '/upload-file',
+  icon: 'cil-pencil',
+},
   ],
 }, ];

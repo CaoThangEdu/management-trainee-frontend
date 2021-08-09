@@ -6,8 +6,10 @@
           <path fill="var(--ci-primary-color, currentColor)"
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
-        </svg> Đăng ký giấy giới thiệu thực tập
-        <button class="btn btn-primary float-right" @click="createCertificates">+ Đăng ký</button>
+        </svg> 
+        <span v-if="isAdmin === false">Đăng ký giấy giới thiệu thực tập</span> 
+        <span v-if="isAdmin === true">Duyệt giấy giới thiệu thực tập</span> 
+        <button v-if="isAdmin === false" class="btn btn-primary float-right" @click="createCertificates">+ Đăng ký</button>
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -35,7 +37,7 @@
                 <th scope="col">SĐT</th>
                 <th scope="col">Ngày đăng ký</th>
                 <th scope="col">Trạng thái</th>
-                <th scope="col">Hoạt động</th>
+                <th v-if="isAdmin === false" scope="col">Hoạt động</th>
               </tr>
             </thead>
             <tbody>
@@ -56,9 +58,23 @@
                 <td>{{ item.phoneStudent }}</td>
                 <td>{{ convertTime(item.registrationDate) }}</td>
                 <td>
-                  {{ item.status }}
+                  <button 
+                    @click="updateStatusCertificate(unconfirmed, index)"
+                    :class="{'not-active':isAdmin === false}" 
+                    v-if="item.status === unconfirmed" 
+                    type="button" class="btn btn-warning">
+                  Đang duyệt
+                  </button>
+                  <button 
+                    @click="updateStatusCertificate(confirmed, index)"
+                    :class="{'not-active':isAdmin === false}" 
+                    v-if="item.status === confirmed" 
+                    type="button" class="btn btn-primary">
+                  Đã duyệt
+                  </button>
+                  <button :class="{'not-active':isAdmin === false}" v-if="item.status === complete" type="button" class="btn btn-success">Đã in </button>
                 </td>
-                <td>
+                <td v-if="isAdmin === false">
                   <button :disabled="item.status === 'confirmed' && item.status === 'complete' " class="btn btn-danger" @click="deleteCertificate(item.id, index)"> <i class="fa fa-trash"></i></button>
                 </td>
               </tr>

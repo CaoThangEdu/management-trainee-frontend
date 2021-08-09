@@ -1,19 +1,21 @@
 <template>
-    <div>
-       <RegisteredInternshipReferrals/>
-    </div>
+  <div>
+    <CertificatesComponent :isAdmin="isAdmin" />
+  </div>
 </template>
 
 <script>
-import RegisteredInternshipReferrals from '../../../components/CertificateManagementComponent/CertificatesComponent/CertificatesComponent.vue'
+import CertificatesComponent from "../../../components/CertificateManagementComponent/CertificatesComponent/CertificatesComponent.vue";
 export default {
-    components:{
-        RegisteredInternshipReferrals
-    }
-    
-}
+  components: {
+    CertificatesComponent,
+  },
+  data() {
+    return {
+      isAdmin: false,
+    };
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

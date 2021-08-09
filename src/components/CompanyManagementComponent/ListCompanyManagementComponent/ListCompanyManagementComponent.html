@@ -48,8 +48,13 @@
                 <td>{{ company.owner }}</td>
                 <td>{{ company.status === "active"?"Hoạt động":"Không hoạt động" }}</td>
                 <td>
-                  <button class="btn btn-danger" @click="deleteCompany(company.id)"> <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-danger" @click="deleteCompany(company.id)"> <em class="fa fa-trash"></em></button>
                 </td>
+              </tr>
+              <tr v-show="companies == null || companies.length === 0">
+                <th colspan="5" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
               </tr>
             </tbody>
           </table>
