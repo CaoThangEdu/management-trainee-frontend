@@ -1,16 +1,17 @@
 <template>
   <div>
-    <ConfirmReferralFileComponent />
+    <CertificatesComponent :isAdmin="isAdmin" />
   </div>
 </template>
 
 <script>
-import ConfirmReferralFileComponent from '../../../components/ConfirmReferralFileComponent/ConfirmReferralFileComponent'
+import CertificatesComponent from "../../../components/CertificateManagementComponent/CertificatesComponent/CertificatesComponent.vue";
 export default {
-  components: { ConfirmReferralFileComponent }
-}
+  components: { CertificatesComponent },
+  data() {
+    return {
+      isAdmin: true,
+    };
+  },
+};
 </script>
-
-<style>
-
-</style>

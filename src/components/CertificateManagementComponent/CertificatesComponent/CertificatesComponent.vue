@@ -10,7 +10,6 @@ import JwPagination from 'jw-vue-pagination';
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import CertificateSevice from '../../../services/certificate/CertificateServices'
 import CrudMixin from "../../../helpers/mixins/crudMixin";
-import { STANDARD_DATE_FORMAT } from "../../../config/constant"
 import StudentService from '../../../services/student/studentServices'
 import moment from 'moment'
 
@@ -21,6 +20,9 @@ export default {
     CertificateDetailComponent,
     ConfirmDialog,
     JwPagination,
+  },
+  props:{
+    isAdmin: Boolean,
   },
   mixins: [ CrudMixin ],
   data() {
@@ -151,6 +153,41 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_deleted_success_default}`,
       );
+    },
+
+    async updateStatusCertificate(status, index){
+      if(status ==="unconfirmed"){
+        this.certificate[index].status = "confirmed";
+        await this.updateCertificateAsync(this.certificate[index]);
+      }
+      if(status ==="confirmed"){
+        this.certificate[index].status = "complete";
+        await this.updateCertificateAsync(this.certificate[index]);
+      }
+    },
+
+    async updateCertificateAsync(certificate) {
+      this.showLoading();
+      let api = new CertificateService();
+      let response = await api.updateCertificateAsync(certificate);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+
+        this.closeModal(true);
     },
   }
 }
