@@ -19,7 +19,6 @@ export default {
       isShow: false,
       company: {},
       errorMessages: [],
-      isConfirmed:true,
       companiesByTaxCode:{}
     };
   },
@@ -38,12 +37,11 @@ export default {
       await this.save();
     },
 
-    closeModal(changeData) {
+    closeModal(changeData, company, action) {
       this.isShow = false;
       this.company = {};
-
       if (changeData) {
-        this.$emit("change-data");
+        this.$emit("change-data", company, action);
       }
     },
 
@@ -82,25 +80,17 @@ export default {
           `${AppConfig.notification.title_default}`,
           response.errorMessages
         );
-        return;
       }
-      return response.data
-    },
-
-    async checkCompany(){
-
-      let company = await this.getCompanieByTaxCodeAsync();
-      if(!company){
-        this.isConfirmed = false;
+      if(response.data.taxCode === null && response.data.title === null 
+        && response.data.companyAddress === null && response.data.owner === null
+        && response.data.career === null && response.data.phoneNumber === null){
          return this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
           "Không tìm thấy công ty vui lòng nhập thông tin công ty!"
         );
-       
-      }
-        return this.company = company;
-      
+        }
+      return this.company = response.data
     },
 
     async createCompanyAsync() {
@@ -128,8 +118,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-
-      this.closeModal(true);
+      this.closeModal(true, response.data, "create");
     },
 
     async updateCompanyAsync() {
@@ -152,7 +141,7 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-      this.closeModal(true);
+     this.closeModal(true, response.data, "update");
     },
 
     async save() {

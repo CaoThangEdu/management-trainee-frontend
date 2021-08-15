@@ -22,18 +22,17 @@ export default {
     return {
       isShow: false,
       errorMessages: [],
-      isConfirmed:true,
       companiesByTaxCode:{},
       certificate:{
-        taxCode: "",
-        companyName: "",
-        companyAddress:"",
-        owner:"",
-        phoneNumberOfCompany: "",
-        phoneNumberOfStudent: "",
-        studentId: "9e0a3237-1d62-4b92-1c4f-08d94f842d55",
-        isDelete: false,
+        taxCode: "0313041477",
+        companyName: "Công Ty TNHH Một Thành Viên Phần Mềm Ebk",
+        companyAddress:"L11 - L12 Miếu Nổi - Quận Bình Thạnh - TP Hồ Chí Minh",
+        owner:"Ngô Đình Minh Đức",
+        phoneNumberOfCompany: "094552446",
+        phoneNumberOfStudent: "01234567890",
         status: 'unconfirmed', //confirmed, unconfirmed, complete
+        studentId: "c41ed77c-10e5-4aef-1e78-08d95f740042",
+        isDelete: false
       },
     }
   },
@@ -53,12 +52,12 @@ export default {
       await this.save();
     },
 
-    closeModal(changeData) {
+    closeModal(changeData, certificate) {
       this.isShow = false;
       this.certificate = {};
 
       if (changeData) {
-        this.$emit("change-data");
+        this.$emit("change-data", certificate);
       }
     },
 
@@ -80,7 +79,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-      this.closeModal(true);
+      this.closeModal(true, response.data);
     },
 
     async updateCertificateAsync() {
@@ -104,7 +103,7 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-        this.closeModal(true);
+        this.closeModal(true, response.data);
     },
 
     async save() {
@@ -178,13 +177,12 @@ export default {
 
       let company = await this.getCompanieByTaxCodeAsync(this.certificate.taxCode);
       if(Object.keys(company).length !== 0){
-      this.certificate.nameCompany = company.title;
+      this.certificate.companyName = company.title;
       this.certificate.owner = company.owner;
       this.certificate.companyAddress = company.companyAddress;
       this.certificate.phoneNumberOfCompany = company.phoneNumber;
       return;
       }
-      this.isConfirmed = false;
       return this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,

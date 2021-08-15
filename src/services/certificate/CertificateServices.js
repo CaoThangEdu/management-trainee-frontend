@@ -17,9 +17,22 @@ export default class CertificateService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async createCertificateAsync(object) {
+  async createCertificateAsync(query) {
+
+    let certificate = {
+    taxCode: query.taxCode,
+    companyName: query.companyName,
+    companyAddress: query.companyAddress,
+    owner: query.owner,
+    phoneNumberOfCompany:query.phoneNumberOfCompany,
+    phoneNumberOfStudent: query.phoneNumberOfStudent,
+    status: query.status,
+    studentId: query.studentId,
+    isDelete: query.isDelete
+    }
+
     try {
-      const response = await this.http.post(`${this.url}/Create`, object);
+      const response = await this.http.post(`${this.url}/Create`, certificate);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

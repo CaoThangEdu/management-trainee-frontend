@@ -12,7 +12,6 @@ export default class CertificateViewModel extends ViewModel {
       studentId: null,
       isDelete: false,
       status: 'unconfirmed', //confirmed, unconfirmed, complete
-      registrationDate: null,
     }
   }
 
@@ -23,7 +22,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },
@@ -32,7 +31,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },
@@ -41,7 +40,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },
@@ -50,7 +49,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },

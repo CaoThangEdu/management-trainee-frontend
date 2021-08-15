@@ -22,6 +22,7 @@ export default {
       editCompany:{},
       companyFile:{},
      confirmedCompany: null,
+     selectCompany:-1
     }
   },
    async mounted(){
@@ -29,7 +30,9 @@ export default {
   },
    methods:{
     createCompany() {
-      this.editCompany = {};
+      this.editCompany = {
+        status: "active"
+      };
     },
      createCompanyFile() {
       this.companyFile = {};
@@ -57,11 +60,12 @@ export default {
     },
 
     updateCompany(index) {
+      this.selectCompany = index;
       this.editCompany = Object.assign({}, this.companies[index]);
     },
 
-    deleteCompany(id) {
-      this.confirmedCompany = { id: id };
+    deleteCompany(id, index) {
+      this.confirmedCompany = { id: id, index: index };
     },
 
     // Call api delete Company
@@ -78,7 +82,7 @@ export default {
         );
         return;
       }
-      await this.getCompaniesAsync();
+      this.companies.splice(dataConfirm.index, 1);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -86,8 +90,12 @@ export default {
       );
     },
     
-    async changeData() {
-      await this.getCompaniesAsync();
+    async changeData(company, action) {
+      if(action === "create"){
+        return this.companies.unshift(company);
+      }
+      this.$set(this.companies, this.selectCompany, company);
+      this.selectCompany = -1;
     },
 
     showNotification() {

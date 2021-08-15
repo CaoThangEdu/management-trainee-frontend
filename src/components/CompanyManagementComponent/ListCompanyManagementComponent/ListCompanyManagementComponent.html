@@ -28,27 +28,29 @@
           <table class="table">
             <thead class="">
               <tr>
-                <th scope="col">STT</th>
-                <th scope="col">Mã số thuế</th>
-                <th scope="col">Tên công ty</th>
-                <th scope="col">Địa chỉ</th>
-                <th scope="col">Chủ sở hữu</th>
-                <th scope="col">Trạng thái</th>
-                <th scope="col">Thao tác</th>
+                <th scope="col" class="align-middle">STT</th>
+                <th scope="col" class="align-middle">Mã số thuế</th>
+                <th scope="col" class="align-middle">Tên công ty</th>
+                <th scope="col" class="align-middle">thông tin</th>
+                <th scope="col" class="align-middle">Trạng thái</th>
+                <th scope="col" class="align-middle">Thao tác</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(company, index) in companies" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <td  class="link-detail" title="Xem" @click="updateCompany(index)">
+                <td  class="link-detail" title="Xem chi tiết" @click="updateCompany(index)">
                   {{ company.taxCode }}
                 </td>
                 <td>{{ company.title }}</td>
-                <td>{{ company.companyAddress }}</td>
-                <td>{{ company.owner }}</td>
+                <td>
+                  <div><strong>Đại chỉ: </strong> {{ company.companyAddress }}</div>
+                  <div><strong>Chủ sở hữu: </strong> {{ company.owner }}</div>
+                  <div><strong>Số điện thoại: </strong>{{ company.phoneNumber }}</div>
+                </td>
                 <td>{{ company.status === "active"?"Hoạt động":"Không hoạt động" }}</td>
                 <td>
-                  <button class="btn btn-danger" @click="deleteCompany(company.id)"> <em class="fa fa-trash"></em></button>
+                  <button class="btn btn-danger" @click="deleteCompany(company.id, index)"> <em class="fa fa-trash"></em></button>
                 </td>
               </tr>
               <tr v-show="companies == null || companies.length === 0">

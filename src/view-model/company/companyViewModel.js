@@ -3,7 +3,7 @@ export default class CompanyViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      taxCode:null,
+      taxCode: null,
       title: null,
       companyAddress: null,
       owner: null,
@@ -41,7 +41,7 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      manager: {
+      owner: {
         label: 'Chủ sở hữu',
         rules: {
           require: '',
@@ -59,15 +59,15 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      career: {
-        label: 'Ngành nghề',
-        rules: {
-          require: '',
-          maxLength: {
-            max_value: 200
-          }
-        }
-      },
+      // career: {
+      //   label: 'Ngành nghề',
+      //   rules: {
+      //     require: '',
+      //     maxLength: {
+      //       max_value: 200
+      //     }
+      //   }
+      // },
     }
     return validations
   }

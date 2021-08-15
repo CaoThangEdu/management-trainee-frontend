@@ -6,10 +6,11 @@
           <path fill="var(--ci-primary-color, currentColor)"
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
-        </svg> 
-        <span v-if="isAdmin === false">Đăng ký giấy giới thiệu thực tập</span> 
-        <span v-if="isAdmin === true">Duyệt giấy giới thiệu thực tập</span> 
-        <button v-if="isAdmin === false" class="btn btn-primary float-right" @click="createCertificates">+ Đăng ký</button>
+        </svg>
+        <span v-if="isAdmin === false">Đăng ký giấy giới thiệu thực tập</span>
+        <span v-if="isAdmin === true">Duyệt giấy giới thiệu thực tập</span>
+        <button v-if="isAdmin === false" class="btn btn-primary float-right" @click="createCertificates">+ Đăng
+          ký</button>
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -24,58 +25,90 @@
             </div>
           </div>
         </div>
-        <div class="table-responsive text-center">
+        <div class="table-responsive">
           <table class="table">
             <thead class="">
               <tr>
-                <th scope="col">STT</th>
-                <th scope="col">Tên công ty</th>
-                <th scope="col">Mã số thuế</th>
-                <th scope="col">MSSV</th>
-                <th scope="col">Họ tên</th>
-                <th scope="col">Lớp</th>
-                <th scope="col">SĐT</th>
-                <th scope="col">Ngày đăng ký</th>
-                <th scope="col">Trạng thái</th>
-                <th v-if="isAdmin === false" scope="col">Hoạt động</th>
+                <th scope="col" class="align-middle">STT</th>
+                <th scope="col" class="align-middle">Thông tin sinh viên</th>
+                <th scope="col" class="align-middle">Thông tin công ty</th>
+                <th scope="col" class="align-middle">Ngày đăng ký</th>
+                <th scope="col" class="align-middle">Trạng thái</th>
+                <th scope="col" class="align-middle">Hoạt động</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <td v-if="item.status === 'unconfirmed'" @click="updateCertificate(index)"  class="link-detail" title="Xem">{{ item.nameCompany }}</td>
-                <td v-if="item.status === 'confirmed' && item.status === 'complete'">{{ item.nameCompany }}</td>
-                <td>{{ item.taxCode }}</td>
-                <td v-if="students.length != 0">
-                  {{ getInfoObject(item.studentId, students).studentId }}
-                </td>
-                <td v-if="students.length != 0">
-                  {{ getInfoObject(item.studentId, students).studentId }}
-                </td>
-                <td v-if="students.length != 0">
-                  {{ getInfoObject(item.studentId, students).classId }}
-                </td>
-                <td>{{ item.phoneStudent }}</td>
-                <td>{{ convertTime(item.registrationDate) }}</td>
                 <td>
-                  <button 
-                    @click="updateStatusCertificate(unconfirmed, index)"
-                    :class="{'not-active':isAdmin === false}" 
-                    v-if="item.status === unconfirmed" 
-                    type="button" class="btn btn-warning">
-                  Đang duyệt
-                  </button>
-                  <button 
-                    @click="updateStatusCertificate(confirmed, index)"
-                    :class="{'not-active':isAdmin === false}" 
-                    v-if="item.status === confirmed" 
-                    type="button" class="btn btn-primary">
-                  Đã duyệt
-                  </button>
-                  <button :class="{'not-active':isAdmin === false}" v-if="item.status === complete" type="button" class="btn btn-success">Đã in </button>
+                  <div><strong>MSSV:</strong> {{
+                    getInfoObject(item.studentId, students).studentId}}
+                  </div>
+                  <div>
+                    <strong>Họ tên sinh viên:</strong>
+                    {{ getInfoObject(item.studentId, students).firstName }}
+                    {{getInfoObject(item.studentId, students).lastName}}.
+                  </div>
+                  <div>
+                    <strong>lớp:</strong>
+                    {{ getNameClass(getInfoObject(item.studentId, students).classId) }}.
+                  </div>
+                  <div>
+                    <strong>Số điện thoại:</strong>
+                    {{ item.phoneNumberOfStudent }}.
+                  </div>
                 </td>
+                <td>
+                  <div>
+                    <strong>Mã số thuế:</strong> {{ item.taxCode }}.
+                  </div>
+                  <div>
+                    <strong>Tên công ty:</strong> {{ item.companyName }}.
+                  </div>
+                </td>
+                <td>{{ convertTime(item.registrationDate) }}</td>
                 <td v-if="isAdmin === false">
-                  <button :disabled="item.status === 'confirmed' && item.status === 'complete' " class="btn btn-danger" @click="deleteCertificate(item.id, index)"> <i class="fa fa-trash"></i></button>
+                  <button 
+                      v-if="item.status === 'unconfirmed'"
+                      class="btn btn-warning not-active">
+                      Đang duyệt
+                  </button>
+                  <button 
+                    v-if="item.status === 'confirmed'"
+                    class="btn btn-primary not-active">
+                    Đã duyệt
+                  </button>
+                  <button
+                    v-if="item.status === 'complete'"
+                    class="btn btn-success not-active">Đã in
+                  </button>
+                </td>
+                <td v-if="isAdmin === true">
+                  <select name="status" id="group" class="form-control mb-2 select-type"       @change="changeStatus($event, index)">
+                    <option :selected="item.status === 'unconfirmed'" value="unconfirmed">Đang duyệt</option>
+                    <option :selected="item.status === 'confirmed'" value="confirmed">Đã duyệt</option>
+                    <option :selected="item.status === 'complete'" value="complete">Đã in</option>
+                  </select>
+                </td>
+                <td :class="{'text-center':isAdmin === true}">
+                  <button 
+                    v-if="isAdmin === false"
+                    :disabled="item.status === 'confirmed' && item.status === 'complete' " 
+                    class="btn btn-primary mr-1"
+                    @click="updateCertificate(index)"> <em class="fa fa-edit"></em>
+                  </button>
+                  <button
+                    v-if="isAdmin === false" 
+                    :disabled="item.status === 'confirmed' && item.status === 'complete'" 
+                    class="btn btn-danger"
+                    @click="deleteCertificate(item.id, index)"> <em class="fa fa-trash"></em>
+                  </button>
+                  <button
+                    @click="updateCertificateAsync(index)"
+                    v-if="isAdmin === true"  
+                    class="btn btn-primary"
+                   ><em class="fa fa-edit"></em></button> 
+                  </button>
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
@@ -87,7 +120,7 @@
           </table>
         </div>
       </div>
-      <CertificateDetailComponent :data="editCertificate"/>
+      <CertificateDetailComponent :data="editCertificate" />
 
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems == null || pageOfItems.length === 0">
