@@ -7,6 +7,7 @@ import AppConfig from "../../../../src/app.config.json";
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import BaseModal from "../../common/base-modal/BaseModal";
 import JwPagination from "jw-vue-pagination";
+import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 
 export default {
   name: "ListTeacherAssignmentComponent",
@@ -15,6 +16,7 @@ export default {
     BaseModal,
     AlertMessages,
     JwPagination,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -23,10 +25,20 @@ export default {
       editTeacher: {},
       classId: "",
       teacherId: "",
+      studentId: "",
+      instructorId: "",
       instructorRequest: {
         internshipCourseId: "",
         classId: "",
         teacherId: "",
+      },
+      updateInstructor: {
+        internshipCourseId: "",
+        id: "",
+        studentId: "",
+        teacherId: "",
+        status: "",
+        isDelete: ""
       },
       pageOfItems: [],
       customLabels: {
@@ -35,6 +47,7 @@ export default {
         previous: "<",
         next: ">",
       },
+      confirmChangeTeacher: null,
     };
   },
   props: {
@@ -47,21 +60,14 @@ export default {
     teachers: {
       type: Array,
     },
+    studentInInternshipCourse: {
+      type: Array
+    }
   },
   async mounted() {
     this.getInstructorsAsync();
   },
   methods: {
-    // changeStudentId(id, index) {
-    //   this.studentId = id;
-    //   this.index = index;
-    // },
-
-    // changeTeacher(teacher) {
-    //   this.createInstructorAsync(teacher.id, this.studentId, null, this.index);
-
-    // },
-
     async getInstructorsAsync() {
       const api = new InstructorService();
       this.instructorRequest = {
@@ -80,18 +86,51 @@ export default {
       this.instructors = response.data;
     },
 
-    createBrand() {
-      this.editTeacher = {};
+     changeStudentId(instructor) {       
+      this.studentId = instructor.studentId
+      this.instructorId = instructor.instructorId       
     },
-    async changeData() {
-      // await this.getListBrandAsync();
+
+    changeTeacher(teacher){
+      this.teacherId = teacher.id     
+      this.updateInstructorAsync()
     },
+
+    async updateInstructorAsync() {
+      const api = new InstructorService();
+      this.updateInstructor = {
+        internshipCourseId: this.internshipCourseId,
+        id: this.instructorId,
+        studentId : this.studentId,
+        teacherId: this.teacherId,
+        isDelete: false,
+        status: "active"     
+      };
+    
+      const response = await api.updateInstructorAsync(this.updateInstructor);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+      }
+      this.$emit("change-instructors", true);
+      this.instructors = response.data;
+    },  
+
     changeClassName() {
       this.getInstructorsAsync();
     },
-    changeTeacher() {
+
+    changeAsignmantWhileChooseTeacher(instructor) {
+      this.confirmChangeTeacher = { instructor: instructor};
+    },
+
+    changeTeacherFromSelect() {
       this.getInstructorsAsync();
     },
+
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
