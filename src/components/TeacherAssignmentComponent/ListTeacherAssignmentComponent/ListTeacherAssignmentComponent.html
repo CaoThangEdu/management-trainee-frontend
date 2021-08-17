@@ -21,7 +21,7 @@
                 <select
                 class="form-control"
                 v-model="teacherId"
-                v-on:change="changeTeacher()"
+                v-on:change="changeTeacherFromSelect()"
               >
                 <option value="">Chọn giáo viên</option>
                 <option v-for="(teacher, index) in teachers" :key="index" :value="teacher.id"
@@ -46,20 +46,23 @@
               </tr> 
             </thead>
             <tbody>
-              <tr v-for="(instructor, index) in pageOfItems" :key="index">
+              <tr v-for="(instructor, index) in pageOfItems" :key="index">                
                 <th scope="row">{{index + 1}}</th>
                 <td>{{instructor.studentName}}</td>
                 <td>{{instructor.className}}</td>
                 <td>{{instructor.courseName}}</td>
                 <td>{{instructor.internshipCourseName}}</td>
                 <td>{{instructor.teacherName}}</td>
-                <td>
+                <td v-on:click="changeStudentId(instructor)">
                   <SelectTeacher
-                  :teachers="teachers"            
-                  @change="(event) => {teacherSelect = event.id}"
-                  @changeTeacher="changeTeacher"            
-                  >
-                </SelectTeacher>  
+                    :teachers="teachers"            
+                     @change="(event) => {teacherSelect = event.id}"
+                     @changeTeacher="changeTeacher"
+                    :isRequired="false"
+                    :defaultText="'Chọn giáo viên'"       
+                    >
+                  </SelectTeacher>
+                  <!-- changeTeacher="changeAsignmantWhileChooseTeacher(instructor)" -->  
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
@@ -81,7 +84,11 @@
         >
         </JwPagination>
       </div>
+      <ConfirmDialog
+        :message="'Bạn có muốn thay đổi giáo viên?'"
+        :data="confirmChangeTeacher"
+        @agree="changeTeacher">
+      </ConfirmDialog>
     </div>
   </div>
-  <TeacherAssignmentDetailComponent :data="editTeacher" />
 </div>

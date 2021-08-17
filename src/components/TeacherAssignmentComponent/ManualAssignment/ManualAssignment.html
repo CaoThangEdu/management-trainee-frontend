@@ -44,7 +44,7 @@
             <th scope="col">Họ và tên đệm</th>
             <th scope="col">Tên sinh viên</th>
             <th scope="col">Lớp</th>
-            <th scope="col" style="width:200px">Giáo viên</th>
+            <th scope="col">Giáo viên</th>
           </tr>
         </thead>
         <tbody>
@@ -58,11 +58,13 @@
             >
               {{ getInfoObject(item.classId, classes).className }}
             </td>
-            <td v-on:click="changeStudentId(item.id, index)" style="width:200px">
+            <td v-on:click="changeStudentId(item.id, index)" >
             <SelectTeacher
               :teachers="teachers"            
               @change="(event) => {teacherSelect = event.id}"
-              @changeTeacher="changeTeacher"            
+              @changeTeacher="changeTeacher"   
+              :isRequired="false"
+              :defaultText="'Chọn giáo viên'"      
               >
             </SelectTeacher>
             </td>            

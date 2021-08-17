@@ -11,10 +11,12 @@
     <Tabs>
       <Tab name="Danh sách sinh viên đã được phân công" :selected="true">
         <ListTeacherAssignmentComponent
-        v-if="reloadAutomaticAssignment"
+          v-if="reloadAutomaticAssignment"
+          v-bind:studentInInternshipCourse="studentInInternshipCourse"
           v-bind:internshipCourseId="internshipCourseId"
           v-bind:classes="classes"
-          v-bind:teachers="teachers"          
+          v-bind:teachers="teachers" 
+          @change-instructors="changeInstructors"         
         />
       </Tab>
       <Tab name="Phân công">

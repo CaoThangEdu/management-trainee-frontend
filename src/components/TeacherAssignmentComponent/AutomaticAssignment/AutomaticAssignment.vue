@@ -100,20 +100,22 @@ export default {
       this.statistics = [];
       this.studentTempDelete = JSON.parse(JSON.stringify(this.students));
       this.assignments = [];
+
       this.averageNumber = Math.round(
         this.numberOfStudentInInternshipCourse / this.teachers.length
       );
+
       if(this.numberOfTeacher != 0 && this.numberOfTeacher != this.averageNumber ){
         this.averageNumber = this.numberOfTeacher
-      }
+      }    
+      
       if (this.instructors.length == 0) {
         this.teachers.forEach((teacher) => {
           this.studentTemp = [];
-          this.studentTemp = this.studentTempDelete.slice(
-            0,
-            this.averageNumber
-          );
+
+          this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber);
           this.studentTempDelete.splice(0, this.averageNumber);
+
           var count = 0;
           this.studentTemp = this.studentTemp.forEach((student) => {
             count++;
@@ -127,35 +129,24 @@ export default {
 
             this.assignments.push(this.assignmentRequest);
           });
-          this.statistic = {
-            teacherId: teacher.id,
-            number: count,
-          };
-          this.statistics.push(this.statistic);
-        });
-      } else {
-        this.addAssignmentStudentNumber();
-        this.teacherTemp.forEach((teacher) => {
-          //Nếu giáo viên đã được phân công thì giảm bớt số sinh viên lại cho đều
-          if(teacher.number >= this.numberOfTeacher && this.numberOfTeacher != 0){
-           return
-          }
-          this.studentTemp = [];
 
-          if (teacher.number > 0 && teacher.number < this.numberOfTeacher) {
-            this.studentTemp = this.studentTempDelete.slice(
-              0,
-              this.averageNumber - teacher.number
-            );
-            this.studentTempDelete.splice(
-              0,
-              this.averageNumber - teacher.number
-            );
-          } else {
-            this.studentTemp = this.studentTempDelete.slice(
-              0,
-              this.averageNumber
-            );
+          this.addStatistics(teacher.teacherId, count)  
+
+        });
+      } 
+      // Phân công tiếp tục 
+      else {
+        // Láy danh sách giáo viên tạm bao gồm số lượng sinh viên đã phân công cho giáo viên đó.
+        this.addAssignmentStudentNumber();
+
+        this.teacherTemp.forEach((teacher) => {         
+          this.studentTemp = [];
+          if(teacher.number > 0 && teacher.number <= this.averageNumber) {
+            this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber - teacher.number);
+            this.studentTempDelete.splice(0, this.averageNumber - teacher.number);
+          } 
+          else {
+            this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber );
             this.studentTempDelete.splice(0, this.averageNumber);
           }
           var count = 0;
@@ -171,13 +162,19 @@ export default {
 
             this.assignments.push(this.assignmentRequest);
           });
-          this.statistic = {
-            teacherId: teacher.teacherId,
-            number: count,
-          };
-          this.statistics.push(this.statistic);
+
+          this.addStatistics(teacher.teacherId, count)         
         });
       }
+    },
+
+    addStatistics(teacherId, count)
+    {
+      this.statistic = {
+        teacherId: teacherId,
+        number: count,
+        };
+        this.statistics.push(this.statistic);
     },
 
     addAssignmentStudentNumber() {
@@ -185,10 +182,8 @@ export default {
       this.teachers.forEach((teacher) => {
         var count = 0;
         this.instructors.forEach((instructor) => {
-          if (
-            teacher.firstName + "" + teacher.lastName ==
-            instructor.teacherName
-          ) {
+          if (teacher.id == instructor.teacherId)
+          {
             count++;
           }
         });
