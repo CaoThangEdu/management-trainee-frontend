@@ -160,14 +160,24 @@ export default class Http {
   //     body: data
   //   })
   // }
+  getErrorMessages(errorMessages) {
+    if(!errorMessages) {
+      return;
+    }
+    return errorMessages.map((message) => {
+        return message.errorMessage;
+    }).join("<br />");
+  }
   /**
    * Handle error while call api error
    * @param {Object} error Object Error of axios while call api
    */
   async loadError(error) {
+    let message = error.response.data.error.message;
+    let errorMessageDisplay = message?message:[error.message];
     let e = {
       data: null,
-      errorMessages: [error.message],
+      errorMessages: errorMessageDisplay,
       isOK: false
     }
     // If http status code is unauthorized (401)

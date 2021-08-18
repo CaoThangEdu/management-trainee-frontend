@@ -257,30 +257,6 @@ const routes = [
     },
   },
   {
-    path: "/student-management",
-    name: "quan-ly-sinh-vien",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/StudentManagement/StudentManagement.vue"
-      ),
-    meta: {
-      breadcrumbName: "Quản lý sinh viên",
-    },
-  },
-  {
-    path: "/teacher-management",
-    name: "quan-ly-giao-vien",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/TeacherManagement/TeacherManagement.vue"
-      ),
-    meta: {
-      breadcrumbName: "Quản lý giáo viên",
-    },
-  },
-  {
     path: '/certificate-management',
     name: 'Đăng ký giấy giới thiệu thực tập',
     component: () =>
