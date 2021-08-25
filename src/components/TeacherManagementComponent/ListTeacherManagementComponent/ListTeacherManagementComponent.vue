@@ -36,10 +36,9 @@ export default {
         next: ">",
       },
       filter: {
-        trainingSystemId: "",
-        isDelete: false,
-        careersName: "",
-        status: "active"
+        status: "active",
+        facultyId: "",
+        lastName: ""
       },
       isActiveStep:"3",
       faculties: [],
@@ -56,8 +55,7 @@ export default {
       };
       // Call Api
       this.showLoading();
-      const api = new FacultyServices();
-
+      const api = new FacultyServices();     
       const response = await api.getFacultiesFilterAsync(facultyFilter);
       this.showLoading(false);
 
@@ -70,6 +68,7 @@ export default {
         return;
       }
       this.faculties = response.data;
+      console.log(this.faculties);
     },
 
     onChangePage(pageOfItems) {
@@ -89,6 +88,7 @@ export default {
       // Call Api
       this.showLoading();
       const api = new TeacherService();
+      this.filter.facultyId = this.faculties.id
       const response = await api.getTeachersAsync(this.filter);
       this.showLoading(false);
 

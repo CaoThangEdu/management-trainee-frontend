@@ -8,6 +8,8 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import TeacherService from '../../../services/teacher/teacherServices'
 import AppConfig from "../../../../src/app.config.json";
 import XLSX from "xlsx";
+import crudMixin from "../../../helpers/mixins/crudMixin";
+import createUserMixin from "../../../helpers/mixins/createUserMixin";
 
 export default {
   name: "AddTeacherFileComponent",
@@ -16,12 +18,22 @@ export default {
     BaseModal,
     AlertMessages,
   },
+   mixins: [ crudMixin, createUserMixin ],
+
   data() {
     return {
       isShowFile: false,
       teachers: [],
+      teachersForCreate: [],
       metadataFile: [],
       errorMessages: [],
+      dataForCreateUser: {
+        username: "",
+        name: "",
+        surname: "",
+        emailAddress: "",
+      },
+      dataForCreateUsers: []
     };
   },
   props: {
@@ -62,11 +74,11 @@ export default {
     async pressEnterKey() {
       await this.save();
     },
-    async createTeacherByFlieAsync(i) {
-      this.teachers[i].facultyId = this.faculties[0].id;
+
+    async createTeachersAsync() {     
       this.showLoading();
       let api = new TeacherService();
-      let response = await api.createTeacherAsync(this.teachers[i]);
+      let response = await api.createTeachersAsync(this.teachersForCreate);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -78,11 +90,20 @@ export default {
       }
       this.closeModal(true);
     },
-
+  
     async save() {
       this.teachers = this.metadataFile;
       var teacherLength = this.teachers.length;
       for (let i = 0; i < this.teachers.length; i++) {
+        // duyệt danh sách teacher từ file
+        this.dataForCreateUser ={
+          username: this.teachers[i].firstName + this.teachers[i].lastName,
+          name: this.teachers[i].firstName,
+          surname : this.teachers[i].lastName,
+          emailAddress : this.teachers[i].email
+        };
+        this.dataForCreateUsers.push(this.dataForCreateUser);
+
         // validate
         // let viewModel = new TeacherViewModel();
         // viewModel.setFields(this.teachers[i]);
@@ -90,9 +111,23 @@ export default {
 
         // if (this.errorMessages.length > 0) {
         //   return;
-        // }
-        this.createTeacherByFlieAsync(i);
+        // }      
+        this.teachers[i].facultyId = this.faculties[0].id;
+        this.teachersForCreate.push(this.teachers[i])
       }
+
+      this.createTeachersAsync();
+      // Gọi hàm bắn event ngay đây
+      let createUserResponse = await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.teachers, 'TEACHER', 1);
+      this.showLoading(false);
+      if(!createUserResponse.isOk) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          createUserResponse.errorMessages,
+        );
+      }
+      // Data gửi đi (this.dataForCreateUsers, TEACHER, 1)
 
       if (teacherLength != this.teachers.length) {
         this.showNotifications(

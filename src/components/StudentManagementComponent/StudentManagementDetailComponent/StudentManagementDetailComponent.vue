@@ -13,6 +13,7 @@ import { ADD_STUDENT } from "../../../config/constant";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import ClassService from '../../../services/class/classServices'
 import ClassViewModel from "../../../view-model/class/classViewModel"
+import createUserMixin from "../../../helpers/mixins/createUserMixin";
 
 export default {
   name: 'StudentManagementDetailComponent',
@@ -21,6 +22,8 @@ export default {
     BaseModal,
     AlertMessages,
   },
+  mixins: [ CrudMixin, createUserMixin ],
+
   data() {
     return {
       isShow: false,
@@ -39,9 +42,14 @@ export default {
       ],
       currentFaq: 0,
       createClassLoading: false,
+      dataForCreateUser: {
+        username: "",
+        name: "",
+        surname: "",
+        emailAddress: "",
+      }
     }
   },
-  mixins: [ CrudMixin ],
 
   props: {
     data: {
@@ -159,9 +167,24 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-
+      this.mapDataCreateStudentToCreateAccount(this.student);
       this.closeModal(true);
     },
+
+    async mapDataCreateStudentToCreateAccount(student){
+      this.showLoading();
+      //bắn event tạo account ngay đây truyền đi (teacher, TEACHER, 0)
+      let createUserResponse = await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(student, 'STUDENT', 0);
+      this.showLoading(false);
+      if(!createUserResponse.isOk) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          createUserResponse.errorMessages,
+        );
+      }
+      // kết thúc tạo user
+    },   
 
     async updateStudentAsync() {
       this.showLoading();

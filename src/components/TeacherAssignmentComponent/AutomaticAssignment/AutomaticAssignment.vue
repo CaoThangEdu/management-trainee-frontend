@@ -196,14 +196,31 @@ export default {
     },
 
     async teacherAssignment() {
-       this.assignments.forEach((assignment) => {
-        this.createInstructorAsync(assignment);
-      });
-       this.$emit("change-instructors", true);
+      //Phân công danh sách
+      this.createInstructorsAsync()     
+      this.$emit("change-instructors", true);
       this.assignments = [];  
       this.statistics = []   
     },
 
+    // Phân công cho 1 danh sách
+    async createInstructorsAsync() {
+      this.showLoading();
+      const api = new InstructorService();
+      // Phân công từng sinh viên
+      const response = await api.createInstructorsAsync(this.assignments);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+    },
+
+    // Phân công cho từng người
     async createInstructorAsync(assignment) {
       this.showLoading();
       const api = new InstructorService();

@@ -29,7 +29,7 @@
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
               <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                <select
+                <select v-model="filter.status"                  
                   class="form-control form-select form-select-class">
                   <option value="">Tất cả</option>
                   <option value="active">Đang hoạt động</option>
@@ -37,11 +37,12 @@
                 </select>
               </div>
               <div class="col-xl-3 col-md-3 col-sm-12 mb-sm-2">
-                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa"
+                <input v-model="filter.lastName" type="text" class="form-control" id="keywords" placeholder="Tên giáo viên"
                   />
               </div>
               <div class="col-xl-3 col-md-3 col-sm-12">
-                <button type="submit" id="btn-search" 
+                <button type="submit" id="btn-search"
+                  v-on:click="getTeachersAsync" 
                   class="btn btn-stack-overflow"
                   title="Tìm kiếm">
                   <i class="fas fa-search"></i>

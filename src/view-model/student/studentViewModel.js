@@ -12,6 +12,7 @@ export default class StudentViewModel extends ViewModel {
       role: 0,
       classId: null,
       isDelete: false,
+      account: true
     }
   }
 

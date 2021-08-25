@@ -6,7 +6,6 @@ export default class TeacherViewModel extends ViewModel {
       firstName: null,
       lastName: null,
       phoneNumber: null,
-      status: null,
       facultyId: null,
       isDelete: null,
     };
@@ -41,15 +40,7 @@ export default class TeacherViewModel extends ViewModel {
           }
         },
       },
-      status: {
-        label: 'Trạng thái',
-        rules: {
-          require: '',
-          maxLength: {
-            max_value: 200
-          }
-        },
-      },
+     
     }
     return validations
   }

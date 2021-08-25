@@ -36,9 +36,20 @@ export default class TeacherService extends ServicesBaseAPI {
     }
     return this.result;
   }
+
   async createTeacherAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async createTeachersAsync(array) {
+    try {
+      const response = await this.http.post(`${this.url}/CreateTeachers`, array);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

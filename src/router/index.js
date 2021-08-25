@@ -83,6 +83,18 @@ const routes = [
   ]
   },
   {
+    path: "/user-manage",
+    name: "user-manage",
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        "../router/views/UserManagement/UserManagement.vue"
+      ),
+    meta: {
+      breadcrumbName: "Quản lý tài khoản",
+    },
+  },
+  {
     path: "/login",
     name: "login",
     component: () =>
