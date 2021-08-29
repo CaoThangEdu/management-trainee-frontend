@@ -156,13 +156,12 @@ export default {
           response.errorMessages
         );
         return;
-      } else {
-        this.showNotifications(
-          "success",
-          `${AppConfig.notification.title_default}`,
-          'Đăng nhập thành công'
-        );
       }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        'Đăng nhập thành công'
+      );
 
       // goto the next page
       this.$router.push({ name: 'them-ke-hoach'});

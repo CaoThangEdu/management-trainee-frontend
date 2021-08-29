@@ -8,7 +8,6 @@ export default class TeacherViewModel extends ViewModel {
       phoneNumber: null,
       status: null,
       facultyId: null,
-      isDelete: null,
     };
   }
 
@@ -34,15 +33,6 @@ export default class TeacherViewModel extends ViewModel {
       },
       email: {
         label: 'Email',
-        rules: {
-          require: '',
-          maxLength: {
-            max_value: 200
-          }
-        },
-      },
-      status: {
-        label: 'Trạng thái',
         rules: {
           require: '',
           maxLength: {

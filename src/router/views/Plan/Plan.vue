@@ -36,7 +36,6 @@ export default {
       plans: [],
       filter: {
         status: "",
-        isDelete: false
       },
       changeDataPlan: false,
       isActiveStep:"1",

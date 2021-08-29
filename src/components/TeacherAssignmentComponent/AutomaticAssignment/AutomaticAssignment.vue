@@ -30,7 +30,6 @@ export default {
         studentId: "",
         internshipCourseId: "",
         status: "active",
-        isDelete: false,
         index: 0,
       },
       averageNumber: 0,
@@ -124,7 +123,6 @@ export default {
               studentId: student.id,
               internshipCourseId: this.internshipCourseId,
               status: "active",
-              isDelete: false,
             };
 
             this.assignments.push(this.assignmentRequest);
@@ -157,7 +155,6 @@ export default {
               studentId: student.id,
               internshipCourseId: this.internshipCourseId,
               status: "active",
-              isDelete: false,
             };
 
             this.assignments.push(this.assignmentRequest);

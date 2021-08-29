@@ -1,6 +1,6 @@
-<div class="row">
+<div class="row tab-students-assign">
   <div class="col-12">
-    <div class="card">
+    <div class="">
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
@@ -24,7 +24,8 @@
                 v-on:change="changeTeacherFromSelect()"
               >
                 <option value="">Chọn giáo viên</option>
-                <option v-for="(teacher, index) in teachers" :key="index" :value="teacher.id"
+                <option v-for="(teacher, index) in teachers"
+                  :key="index" :value="teacher.id"
                   >{{teacher.firstName}} {{teacher.lastName}}</option
                 >
               </select>

@@ -66,6 +66,4 @@ export default class TrainingSystemService extends ServicesBaseAPI {
     return this.result;
   }
 
-  // thay đổi trạng thái của isDelete
-
 }

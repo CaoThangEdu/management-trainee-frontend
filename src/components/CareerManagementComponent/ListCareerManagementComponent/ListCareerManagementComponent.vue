@@ -37,7 +37,6 @@ export default {
       trainingSystems: [],
       filter: {
         trainingSystemId: "",
-        isDelete: false,
         careersName: "",
         status: "",
       },
@@ -89,7 +88,6 @@ export default {
     async getTrainingSystemsFilterAsync() {
       let filterTrainingSystem = {
         trainingSystemName: "",
-        isDelete: false,
         status: "active",
       }
       // Call Api
@@ -124,10 +122,9 @@ export default {
 
     // Call api delete Career
     async deleteCareerConfirm(careerComfirm) {
-      careerComfirm.item.isDelete = true;
       this.showLoading();
       let api = new CareerService();
-      let response = await api.updateCareerAsync(careerComfirm.item); // Gọi Api
+      let response = await api.deleteCareerAsync(careerComfirm.item.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

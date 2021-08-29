@@ -38,7 +38,6 @@ export default {
         studentId: "",
         teacherId: "",
         status: "",
-        isDelete: ""
       },
       pageOfItems: [],
       customLabels: {
@@ -103,7 +102,6 @@ export default {
         id: this.instructorId,
         studentId : this.studentId,
         teacherId: this.teacherId,
-        isDelete: false,
         status: "active"     
       };
     

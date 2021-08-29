@@ -6,7 +6,6 @@ export default class ClassViewModel extends ViewModel {
       className: null,
       status: "active",
       internshipCourseId: null,
-      isDelete: false,
     }
   }
 

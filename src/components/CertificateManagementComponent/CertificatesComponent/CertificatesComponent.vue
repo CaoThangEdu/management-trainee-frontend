@@ -40,7 +40,6 @@ export default {
       filter: {
         status: "active",
         studentId: "",
-        isDelete: false
       },
       students: [],
     };
@@ -63,7 +62,6 @@ export default {
     async getStudentsAsync(){
       let filterStudent = {
         keyword: "",
-        isDelete: false,
         status: "active",
         classId: "",
       };

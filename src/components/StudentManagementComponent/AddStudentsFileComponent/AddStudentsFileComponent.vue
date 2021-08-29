@@ -36,7 +36,6 @@ export default {
       classroom: {},
       filter: {
         keyword: "",
-        isDelete: false,
         status: "active",
         classId: "",
       },
@@ -94,7 +93,6 @@ export default {
         return;
       }
       this.classroom.status = "active";
-      this.classroom.isDelete = "false";
       this.createClassLoading = true;
       let api = new ClassService();
       let response = await api.createClassAsync(this.classroom);
@@ -236,7 +234,6 @@ export default {
           this.classroom.courseId = courseDaChonId;
           this.classroom.className = this.students[i].classId;
           this.classroom.status = 'active';
-          this.classroom.isDelete = false;
           let api = new ClassService();
           let response = await api.createClassAsync(this.classroom);
           this.showLoading(false);

@@ -10,7 +10,6 @@ export default class PlanViewModel extends ViewModel {
       careersId: null,
       courseName: null,
       status: 'active',
-      isDelete: false
     }
   }
 

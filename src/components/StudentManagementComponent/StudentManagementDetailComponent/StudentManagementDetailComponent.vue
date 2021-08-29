@@ -86,7 +86,6 @@ export default {
         return;
       }
       this.classroom.status = "active";
-      this.classroom.isDelete = "false";
       this.createClassLoading = true;
       let api = new ClassService();
       let response = await api.createClassAsync(this.classroom);

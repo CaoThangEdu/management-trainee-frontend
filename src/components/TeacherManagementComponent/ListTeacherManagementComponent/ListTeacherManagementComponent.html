@@ -114,7 +114,7 @@
       <ConfirmDialog :data="confirmTeacher" @agree="deleteTeacherConfirm"></ConfirmDialog>
 
       <div class="card-footer d-flex justify-content-center text--blue">
-        <JwPagination :items="teachers" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
+        <JwPagination :items="teachers" @changePage="onChangePage" :labels="customLabels" :pageSize="10">
         </JwPagination>
       </div>
     </div>

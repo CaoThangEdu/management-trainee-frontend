@@ -36,9 +36,8 @@ export default {
         next: ">",
       },
       filter: {
-        trainingSystemId: "",
-        isDelete: false,
-        careersName: "",
+        lastName: "",
+        facultyId: "",
         status: "active"
       },
       isActiveStep:"3",
@@ -52,7 +51,6 @@ export default {
   methods: {
     async getFacultiesFilterAsync() {
       let facultyFilter = {
-        isDelete: false,
       };
       // Call Api
       this.showLoading();
@@ -118,7 +116,6 @@ export default {
     // Call api delete teacher
     async updateIsDeleteStatus(index) {
       let teacher = this.pageOfItems[index];
-      teacher.isDelete = true;
       this.showLoading();
       let api = new TeacherService();
       let response = await api.updateTeacherAsync(teacher);
@@ -140,7 +137,6 @@ export default {
     },
 
     async deleteTeacherConfirm(teacherComfirm) {
-      teacherComfirm.isDelete = true;
       this.showLoading();
       let api = new TeacherService();
       let response = await api.updateTeacherAsync(teacherComfirm); // Gọi Api

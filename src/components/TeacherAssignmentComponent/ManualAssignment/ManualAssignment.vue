@@ -73,7 +73,6 @@ export default {
         studentId: "",
         internshipCourseId: "",
         status: "active",
-        isDelete: false,
         index: 0,
       },
       listInstructorRequest: [],
@@ -122,7 +121,6 @@ export default {
           studentId: studentId,
           internshipCourseId: this.internshipCourseId,
           status: "active",
-          isDelete: false,
         };
         instructor = this.instructorRequest;
       }
@@ -130,7 +128,7 @@ export default {
       const response = await api.createInstructorAsync(instructor);
       this.$emit("change-instructors", true);
       this.showLoading(false);
-      if (response.isOK == true) {
+      if (response.isOK) {
         this.students.splice(index, 1);
       }
       if (!response.isOK) {
