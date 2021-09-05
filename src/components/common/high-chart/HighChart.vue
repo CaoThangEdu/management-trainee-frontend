@@ -22,11 +22,11 @@ let drilldownChart,
 export default {
   name: "high-chart",
   props: {
-    studentsAssigned: {
+    assignedStudents: {
       type: Array,
       default: null,
     },
-    studentsUnAssign: {
+    unassignStudents: {
       type: Array,
       default: null,
     },
@@ -127,20 +127,20 @@ export default {
             type: "column",
             name: "Số sinh viên đã phân công",
             color: "rgb(128, 183, 255)",
-            data: this.studentsAssigned,
+            data: this.assignedStudents,
           },
           {
             type: "column",
             name: "Số sinh viên chưa phân công",
             color: "#EF5350",
-            data: this.studentsUnAssign,
+            data: this.unassignStudents,
           },
         ],
       };
     },
   },
   watch: {
-    studentsAssigned() {
+    assignedStudents() {
       this.renderChartBar();
     },
   },

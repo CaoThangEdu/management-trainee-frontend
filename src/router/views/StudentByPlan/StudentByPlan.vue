@@ -396,7 +396,6 @@ export default {
           await this.getClassesFilterAsync();
           this.classes = this.classes.filter(
             classroom => classroom.internshipCourseId == this.guid);
-          // this.students[i].classId = this.getInfoObjectByName(this.students[i].classId, this.classes).id;
         }
         this.students[i].status = 'active';
         this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;

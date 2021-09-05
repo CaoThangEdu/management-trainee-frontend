@@ -9,10 +9,10 @@ export default {
   props: ["chartData", "options", "numbers", 
     "labelsProps", "labelChart"],
   mounted() {
-    this.renderChartBar();
+    this.renderBarChart();
   },
   methods: {
-    renderChartBar() {
+    renderBarChart() {
       this.renderChart(
         {
           labels: this.labelsProps,
@@ -30,7 +30,7 @@ export default {
   },
   watch: {
     numbers() {
-      this.renderChartBar();
+      this.renderBarChart();
     },
   },
 };

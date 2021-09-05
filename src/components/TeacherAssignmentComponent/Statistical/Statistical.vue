@@ -3,7 +3,6 @@
 <script>
 import ClassService from "../../../services/class/classServices";
 import AppConfig from "../../../../src/app.config.json";
-import ChartBar from "../../common/chart/chart-bar/ChartBar.vue";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import crudMixin from "../../../helpers/mixins/crudMixin";
 import Highcharts from "../../common/high-chart/HighChart.vue";
@@ -12,7 +11,6 @@ export default {
   name: "Statistical",
   extends: ComponentBase,
   components: {
-    ChartBar,
     Highcharts,
   },
   mixins: [crudMixin],
@@ -55,8 +53,8 @@ export default {
       labelsProps: null,
       chartDataStatisticsStudentInClass: [],
       labelsDataStatisticsStudentInClass: [],
-      studentsAssigned: [],
-      studentsUnAssign: [],
+      assignedStudents: [],
+      unassignStudents: [],
     };
    
   },
@@ -85,16 +83,16 @@ export default {
       for (let student of this.statistiesStudentInClass) {
         let totalStudents = this.studentInInternshipCourse.filter(
           studentInIntern => studentInIntern.className == student.className).length;
-        let studentAssigned = {
+        let assignedStudent = {
           name: student.className,
           y: totalStudents - student.number,
         }
-        this.studentsAssigned.push(studentAssigned);
-        let studentUnAssign = {
+        this.assignedStudents.push(assignedStudent);
+        let unassignedStudent = {
           name: student.className,
           y: student.number,
         }
-        this.studentsUnAssign.push(studentUnAssign);
+        this.unassignStudents.push(unassignedStudent);
         this.chartDataStatisticsStudentInClass.push(student.number);
         this.labelsDataStatisticsStudentInClass.push(student.className);
       }

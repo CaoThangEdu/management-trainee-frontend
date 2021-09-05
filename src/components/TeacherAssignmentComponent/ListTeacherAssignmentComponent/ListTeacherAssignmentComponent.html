@@ -57,13 +57,12 @@
                 <td v-on:click="changeStudentId(instructor)">
                   <SelectTeacher
                     :teachers="teachers"            
-                     @change="(event) => {teacherSelect = event.id}"
-                     @changeTeacher="changeTeacher"
+                    @change="(event) => {teacherSelect = event.id}"
+                    @changeTeacher="changeTeacher"
                     :isRequired="false"
                     :defaultText="'Chọn giáo viên'"       
                     >
                   </SelectTeacher>
-                  <!-- changeTeacher="changeAsignmantWhileChooseTeacher(instructor)" -->  
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">

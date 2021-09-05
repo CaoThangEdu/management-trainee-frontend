@@ -8,6 +8,7 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import BaseModal from "../../common/base-modal/BaseModal";
 import JwPagination from "jw-vue-pagination";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
+import ComponentBase from "../../common/component-base/ComponentBase";
 
 export default {
   name: "ListTeacherAssignmentComponent",
@@ -18,6 +19,7 @@ export default {
     JwPagination,
     ConfirmDialog,
   },
+  extends: ComponentBase,
   data() {
     return {
       instructors: [],
@@ -90,9 +92,9 @@ export default {
       this.instructorId = instructor.instructorId       
     },
 
-    changeTeacher(teacher){
-      this.teacherId = teacher.id     
-      this.updateInstructorAsync()
+    async changeTeacher(teacher){
+      this.teacherId = teacher.id;
+      await this.updateInstructorAsync();
     },
 
     async updateInstructorAsync() {
@@ -104,8 +106,9 @@ export default {
         teacherId: this.teacherId,
         status: "active"     
       };
-    
+      this.showLoading();
       const response = await api.updateInstructorAsync(this.updateInstructor);
+      this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
           "error",
@@ -113,6 +116,11 @@ export default {
           response.errorMessages
         );
       }
+      this.showNotifications(
+        "success",
+        'Thay đổi giáo viên thành công',
+        response.errorMessages
+      );
       this.$emit("change-instructors", true);
       this.instructors = response.data;
     },  

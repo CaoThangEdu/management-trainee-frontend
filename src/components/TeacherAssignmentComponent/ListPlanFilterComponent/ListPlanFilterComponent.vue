@@ -12,7 +12,7 @@ import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ListPlanFilterComponent",
-   extends: ComponentBase,
+  extends: ComponentBase,
   components: {
     BaseModal,
     AlertMessages,
