@@ -144,7 +144,6 @@ export default {
       classroom: {},
       filter: {
         keyword: "",
-        isDelete: false,
         status: "active",
         classId: "",
       },
@@ -228,7 +227,6 @@ export default {
     async createClassAsync() {
       this.classroom.internshipCourseId = this.guid;
       this.classroom.status = "active";
-      this.classroom.isDelete = "false";
       let viewModel = new ClassViewModel();
       viewModel.setFields(this.classroom);
       this.errorMessages = viewModel.isValid();
@@ -280,7 +278,6 @@ export default {
         classId: "",
         internshipCourseId: this.guid,
         status: "active",
-        isDelete: false
       };
       // Call Api
       this.showLoading();
@@ -323,7 +320,6 @@ export default {
     async getClassesFilterAsync() {
       let classFilter = {
         internshipCourseId: "",
-        isDelete: false,
         className: "",
         status: "active",
       };
@@ -356,23 +352,19 @@ export default {
           classroom => classroom.internshipCourseId == this.guid);
         this.classIdSelected = this.classCreated;
       }
-      // let courseDaChonId = this.getInfoObject(this.classIdSelected, this.classes).courseId;
       this.students = this.metaDataFile;
       let studentLengthCallApi = this.studentLengthBanDau;
       var idClass = this.classIdSelected;
       for (let i = 0; i < this.students.length; i++) {
         let vtSV = i + 1;
+        let isCheckStudentExist = false;
         for (const index in this.studentsCallApi) {
           if (this.students[i].studentId == this.studentsCallApi[index].studentId) {
-            this.showNotifications(
-              "error",
-              `${AppConfig.notification.title_default}`,
-              'Mã số sinh viên thứ ' + vtSV + ' đã tồn tại!' +
-              "<br/> Đã thêm được " + i + " sinh viên"
-            );
-            return;
+            isCheckStudentExist = true;
           }
         }
+
+        if(isCheckStudentExist) continue;
 
         // Kiểm tra lớp đã trùng với lớp đã chọn hay chưa
         let classOfStudent = this.getInfoObjectByName(this.students[i].classId, this.classes);
@@ -389,7 +381,6 @@ export default {
           this.classroom.internshipCourseId = this.guid;
           this.classroom.className = this.students[i].classId;
           this.classroom.status = 'active';
-          this.classroom.isDelete = false;
           let api = new ClassService();
           let response = await api.createClassAsync(this.classroom);
           this.showLoading(false);
@@ -405,7 +396,6 @@ export default {
           await this.getClassesFilterAsync();
           this.classes = this.classes.filter(
             classroom => classroom.internshipCourseId == this.guid);
-          // this.students[i].classId = this.getInfoObjectByName(this.students[i].classId, this.classes).id;
         }
         this.students[i].status = 'active';
         this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;

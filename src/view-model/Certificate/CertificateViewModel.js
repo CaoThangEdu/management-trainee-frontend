@@ -10,7 +10,6 @@ export default class CertificateViewModel extends ViewModel {
       phoneNumberOfCompany: null,
       phoneNumberOfStudent: null,
       studentId: null,
-      isDelete: false,
       status: 'unconfirmed', //confirmed, unconfirmed, complete
       registrationDate: null,
     }

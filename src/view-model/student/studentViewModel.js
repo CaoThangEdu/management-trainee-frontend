@@ -11,7 +11,6 @@ export default class StudentViewModel extends ViewModel {
       dayOfBirth: null,
       role: 0,
       classId: null,
-      isDelete: false,
     }
   }
 

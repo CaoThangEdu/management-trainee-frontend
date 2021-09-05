@@ -6,7 +6,6 @@ export default class CareerViewModel extends ViewModel {
       careersName: null,
       status: "active",
       trainingSystemId: "",
-      IsDelete: false
     }
   }
 

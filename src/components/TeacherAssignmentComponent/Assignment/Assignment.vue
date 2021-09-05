@@ -50,7 +50,6 @@ export default {
         className: "",
         status: "",
         internshipCourseId: "",
-        isDelete: false,
       },
       filterTeacher: {
         internshipCourseId: "",
@@ -59,7 +58,7 @@ export default {
       reloadAutomaticAssignment: true,
       classId: "",
       teacherId: "",
-      statisticalPlan: {},
+      statisticalPlan: null,
     };
   },
   created() {},

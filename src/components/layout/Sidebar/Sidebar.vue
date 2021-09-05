@@ -29,7 +29,6 @@
 
 <script>
 import nav from "././_nav";
-
 import { mapGetters, mapActions } from "vuex";
 import localStorageMixin from "../../../helpers/mixins/localStorageMixin";
 
@@ -37,6 +36,12 @@ export default {
   name: "Sidebar",
   nav,
   mixins: [localStorageMixin],
+  props: {
+    navLinkProps: {
+      type: Array,
+      default: null,
+    },
+  },
   data() {
     return {
       roles: '',
@@ -72,10 +77,7 @@ export default {
     },
   },
   created() {
-    if (!localStorageMixin.methods.getLocalStorage('nav-link')){
-      localStorageMixin.methods.setLocalStorage('nav-link', nav);
-    }
-    this.navOrigins = JSON.parse(JSON.stringify(localStorageMixin.methods.getLocalStorage('nav-link')));
+    this.navOrigins = JSON.parse(JSON.stringify(this.navLinkProps));
     this.navFilter = JSON.parse(JSON.stringify(this.navOrigins[0]._children));
     let tokenInfo = localStorageMixin.methods.getLocalStorage('AUTH_TOKEN');
     if(!tokenInfo) {
@@ -103,6 +105,6 @@ export default {
       }
     }
     nav[0]._children = JSON.parse(JSON.stringify(this.navFilter));
-  }
+  },
 };
 </script>

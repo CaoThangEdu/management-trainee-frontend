@@ -32,7 +32,6 @@ export default {
         phoneNumberOfCompany: "",
         phoneNumberOfStudent: "",
         studentId: "9e0a3237-1d62-4b92-1c4f-08d94f842d55",
-        isDelete: false,
         status: 'unconfirmed', //confirmed, unconfirmed, complete
       },
     }

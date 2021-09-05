@@ -34,7 +34,6 @@ export default {
       },
       filter: {
         trainingSystemName: "",
-        isDelete: false,
         status: "active",
       },
       faculties: [],
@@ -77,7 +76,6 @@ export default {
 
     async getFacultiesFilterAsync() {
       let facultyFilter = {
-        "isDelete": false
       };
       // Call Api
       this.showLoading();
@@ -115,10 +113,9 @@ export default {
 
     // Call api delete TrainingSystem
     async deleteTrainingSystemConfirm(trainingSystem) {
-      trainingSystem.item.isDelete = true;
       this.showLoading();
       let api = new TrainingSystemService();
-      let response = await api.updateTrainingSystemAsync(trainingSystem.item);
+      let response = await api.deleteTrainingSystemAsync(trainingSystem.item.id);
       this.showLoading(false);
 
       if (!response.isOK) {

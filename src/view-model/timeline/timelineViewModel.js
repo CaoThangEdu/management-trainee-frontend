@@ -9,7 +9,6 @@ export default class TimeLineViewModel extends ViewModel {
       endDay: null,
       internshipCourseId: null,
       status: 'active',
-      isDelete: false,
     }
   }
 

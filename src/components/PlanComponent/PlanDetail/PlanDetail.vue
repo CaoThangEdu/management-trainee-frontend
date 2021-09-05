@@ -73,7 +73,7 @@
                             <a
                               @submit.prevent
                               :class="{
-                                activeTrainingSystem:
+                                active:
                                   currentFaqTrainingSystem == i,
                               }"
                               @click="openComponentTrainingSystem(i)"
@@ -170,7 +170,7 @@
                                 </div>
                                 <div class="col-md-2 col-sm-2">
                                   <button
-                                    class="btn btn-vimeo"
+                                    class="btn btn-linkedin"
                                     @click="createTrainingSystemAsync()"
                                   >
                                     +<i
@@ -200,13 +200,15 @@
                     <div class="wrapCollapse">
                       <div v-for="(faq, i) in faqs" :key="i">
                         <dt>
-                          <a
-                            @submit.prevent
-                            :class="{ active: currentFaq == i }"
-                            @click="openComponet(i)"
-                          >
-                            {{ faq.title }}
-                          </a>
+                          <div class="title-collapse">
+                            <a
+                              @submit.prevent
+                              :class="{ active: currentFaq == i }"
+                              @click="openComponet(i)"
+                            >
+                              {{ faq.title }}
+                            </a>
+                          </div>
                         </dt>
                         <dd
                           class="display-hidden"
@@ -347,11 +349,9 @@
 
 <script>
 import ComponentBase from "../../../components/common/component-base/ComponentBase";
-// import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import PlanService from "../../../services/plan/planServices";
 import PlanViewModel from "../../../view-model/plan/planViewModel";
 import AppConfig from "../../../../src/app.config.json";
-import CrudMixin from "../../../helpers/mixins/crudMixin";
 import CareerService from "../../../services/career/careerServices";
 import CareerViewModel from "../../../view-model/career/careerViewModel";
 import TrainingSystemService from "../../../services/trainingsystem/trainingsystemServices";
@@ -461,7 +461,6 @@ export default {
   methods: {
     async getFacultiesFilterAsync() {
       let facultyFilter = {
-        isDelete: false,
       };
       // Call Api
       this.showLoading();
@@ -484,7 +483,6 @@ export default {
     async getPlansAsync() {
       let planFilter = {
         status: "",
-        isDelete: false,
       };
       // Call Api
       this.showLoading();
@@ -534,7 +532,6 @@ export default {
     async getTrainingSystemsFilterAsync() {
       let filterTrainingSystem = {
         trainingSystemName: "",
-        isDelete: false,
         status: "active",
       };
       // Call Api
@@ -560,7 +557,6 @@ export default {
     async getCareersFilterAsync() {
       let filterCareer = {
         trainingSystemId: "",
-        isDelete: false,
         careersName: "",
         status: "active",
       };
@@ -609,12 +605,11 @@ export default {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          this.errorMessages
+          this.errorMessages.join('<br />')
         );
         return;
       }
       this.career.status = "active";
-      this.career.isDelete = "false";
       this.createCareerLoading = true;
       let api = new CareerService();
       let response = await api.createCareerAsync(this.career);
@@ -707,7 +702,6 @@ export default {
 
     async createTrainingSystemAsync() {
       this.trainingSystem.status = "active";
-      this.trainingSystem.isDelete = "false";
       this.trainingSystem.facultyId = this.faculties[0].id;
       let viewModel = new TrainingSystemViewModel();
       viewModel.setFields(this.trainingSystem);
@@ -717,7 +711,7 @@ export default {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          this.errorMessages
+          this.errorMessages.join('<br />')
         );
         return;
       }
@@ -754,7 +748,7 @@ export default {
     },
 
     getInfoObject(id, list) {
-      return CrudMixin.methods.getInfo(id, list);
+      return crudMixin.methods.getInfo(id, list);
     },
 
     async pressKeyEnter() {
@@ -909,7 +903,7 @@ export default {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          this.errorMessages
+          this.errorMessages.join('<br />')
         );
         return;
       }
