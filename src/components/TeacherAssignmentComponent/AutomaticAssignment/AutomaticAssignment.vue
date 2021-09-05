@@ -128,8 +128,7 @@ export default {
             this.assignments.push(this.assignmentRequest);
           });
 
-          this.addStatistics(teacher.teacherId, count)  
-
+          this.addStatistics(teacher.id, count)       
         });
       } 
       // Phân công tiếp tục 
@@ -193,12 +192,27 @@ export default {
     },
 
     async teacherAssignment() {
-       this.assignments.forEach((assignment) => {
-        this.createInstructorAsync(assignment);
-      });
-       this.$emit("change-instructors", true);
+      this.createInstructorsAsync()     
+      this.$emit("change-instructors", true);
       this.assignments = [];  
-      this.statistics = []   
+      this.statistics = []     
+    },
+
+    // Phân công cho 1 danh sách
+    async createInstructorsAsync() {
+      this.showLoading();
+      const api = new InstructorService();
+      // Phân công từng sinh viên
+      const response = await api.createInstructorsAsync(this.assignments);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
     },
 
     async createInstructorAsync(assignment) {
