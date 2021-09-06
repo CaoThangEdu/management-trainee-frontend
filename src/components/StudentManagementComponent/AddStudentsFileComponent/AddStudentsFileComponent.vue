@@ -15,6 +15,7 @@ import ClassViewModel from "../../../view-model/class/classViewModel"
 import StudentViewModel from "../../../view-model/student/studentViewModel"
 import { ADD_STUDENT } from "../../../config/constant";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import createUserMixin from "../../../helpers/mixins/createUserMixin";
 
 export default {
   name: 'AddStudentsFileComponent',
@@ -23,11 +24,12 @@ export default {
     BaseModal,
     AlertMessages,
   },
-  mixins: [ CrudMixin ],
+  mixins: [ CrudMixin,createUserMixin ],
   data() {
     return {
       isShowAddFile: false,
       students: [],
+      studentsForCreate: [],
       studentsCallApi: [],
       studentLengthBanDau: 0,
       metaDataFile: [],
@@ -36,6 +38,7 @@ export default {
       classroom: {},
       filter: {
         keyword: "",
+        isDelete: false,
         status: "active",
         classId: "",
       },
@@ -52,6 +55,13 @@ export default {
       currentFaq: 0,
       classCreated: null,
       createClassLoading: false,
+      dataForCreateUser: {
+        username: "",
+        name: "",
+        surname: "",
+        emailAddress: "",
+      },
+      dataForCreateUsers: []
     }
   },
   props: {
@@ -93,6 +103,7 @@ export default {
         return;
       }
       this.classroom.status = "active";
+      this.classroom.isDelete = "false";
       this.createClassLoading = true;
       let api = new ClassService();
       let response = await api.createClassAsync(this.classroom);
@@ -234,6 +245,7 @@ export default {
           this.classroom.courseId = courseDaChonId;
           this.classroom.className = this.students[i].classId;
           this.classroom.status = 'active';
+          this.classroom.isDelete = false;
           let api = new ClassService();
           let response = await api.createClassAsync(this.classroom);
           this.showLoading(false);
@@ -259,10 +271,17 @@ export default {
         if (this.errorMessages.length > 0) {
           return;
         }
-        this.showLoading();
-        let api = new StudentService();
-        let response = await api.createStudentAsync(this.students[i]);
-        if(!response.isOK){
+        console.log(i)
+        this.studentsForCreate.push(this.students[i]);    
+        this.closeModal(true);
+      }
+
+       this.showLoading();
+       let api = new StudentService();
+       let response = await api.createStudentsAsync(this.studentsForCreate);
+       //let createUserResponse = await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.students[i], 'STUDENT', 0);
+
+       if(!response.isOK){
           this.showNotifications(
             "error",
             `${AppConfig.notification.title_default}`,
@@ -270,10 +289,9 @@ export default {
           );
           return;
         }
-        // Tạo thành công
-        this.closeModal(true);
-      }
+       
       this.showLoading(false);
+
       await this.getStudentsAsync();
       if(studentLengthCallApi == this.studentLengthBanDau){
         this.showNotifications(

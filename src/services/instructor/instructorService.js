@@ -57,6 +57,17 @@ export default class InstructorService extends ServicesBaseAPI {
     return this.result;
   }
 
+  async createInstructorsAsync(array) {
+    try {
+      const response = await this.http.post(`${this.url}/CreateInstructors`, array);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+  
+
   async updateInstructorAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);

@@ -7,6 +7,9 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import TeacherService from "../../../services/teacher/teacherServices";
 import AppConfig from "../../../../src/app.config.json";
 import TeacherViewModel from "../../../view-model/teacher/teacherViewModel";
+import crudMixin from "../../../helpers/mixins/crudMixin";
+import createUserMixin from "../../../helpers/mixins/createUserMixin";
+
 export default {
   name: "TeacherDetail",
   extends: ComponentBase,
@@ -14,11 +17,18 @@ export default {
     BaseModal,
     AlertMessages,
   },
+  mixins: [ crudMixin, createUserMixin ],
   data() {
     return {
       isShow: false,
       teacher: {},
       errorMessages: [],
+      dataForCreateUser: {
+        username: "",
+        name: "",
+        surname: "",
+        emailAddress: "",
+      }
     };
   },
   props: {
@@ -61,8 +71,26 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
+      // Map data create teacher to create account 
+      this.mapDataCreateTeacherToCreateAccount();
       this.closeModal(true);
     },
+
+    async mapDataCreateTeacherToCreateAccount(){
+      this.showLoading();
+      //bắn event tạo account ngay đây truyền đi (teacher, TEACHER, 0)
+      let createUserResponse = await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.teacher, 'TEACHER', 0);
+      this.showLoading(false);
+      if(!createUserResponse.isOk) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          createUserResponse.errorMessages,
+        );
+      }
+      // kết thúc tạo user
+    },
+
     async updateTeacherAsync() {
       this.showLoading();
       let api = new TeacherService();
@@ -95,9 +123,9 @@ export default {
 
       if (this.teacher.id === undefined) {
         await this.createTeacherAsync();
-      } else {
-        await this.updateTeacherAsync();
+        return;
       }
+      await this.updateTeacherAsync();
     },
   },
   watch: {

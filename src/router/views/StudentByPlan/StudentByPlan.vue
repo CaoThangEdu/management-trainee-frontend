@@ -124,11 +124,12 @@ import {
 } from "../../../config/constant";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import PlanningStepsComponent from '../../../components/planningStepsComponent/planningStepsComponent.vue';
+import createUserMixin from "../../../helpers/mixins/createUserMixin";
 
 export default {
   name: 'AddStudentsFileByPlan',
   extends: ComponentBase,
-  mixins: [CrudMixin],
+  mixins: [CrudMixin,createUserMixin],
   components: {
     PlanningStepsComponent,
   },
@@ -136,6 +137,7 @@ export default {
     return {
       isShowAddFile: false,
       students: [],
+      studentsForCreate: [],
       studentsCallApi: [],
       studentLengthBanDau: 0,
       metaDataFile: [],
@@ -144,6 +146,7 @@ export default {
       classroom: {},
       filter: {
         keyword: "",
+        isDelete: false,
         status: "active",
         classId: "",
       },
@@ -227,6 +230,7 @@ export default {
     async createClassAsync() {
       this.classroom.internshipCourseId = this.guid;
       this.classroom.status = "active";
+      this.classroom.isDelete = "false";
       let viewModel = new ClassViewModel();
       viewModel.setFields(this.classroom);
       this.errorMessages = viewModel.isValid();
@@ -278,6 +282,7 @@ export default {
         classId: "",
         internshipCourseId: this.guid,
         status: "active",
+        isDelete: false
       };
       // Call Api
       this.showLoading();
@@ -320,6 +325,7 @@ export default {
     async getClassesFilterAsync() {
       let classFilter = {
         internshipCourseId: "",
+        isDelete: false,
         className: "",
         status: "active",
       };
@@ -352,19 +358,23 @@ export default {
           classroom => classroom.internshipCourseId == this.guid);
         this.classIdSelected = this.classCreated;
       }
+      // let courseDaChonId = this.getInfoObject(this.classIdSelected, this.classes).courseId;
       this.students = this.metaDataFile;
       let studentLengthCallApi = this.studentLengthBanDau;
       var idClass = this.classIdSelected;
       for (let i = 0; i < this.students.length; i++) {
         let vtSV = i + 1;
-        let isCheckStudentExist = false;
         for (const index in this.studentsCallApi) {
           if (this.students[i].studentId == this.studentsCallApi[index].studentId) {
-            isCheckStudentExist = true;
+            this.showNotifications(
+              "error",
+              `${AppConfig.notification.title_default}`,
+              'Mã số sinh viên thứ ' + vtSV + ' đã tồn tại!' +
+              "<br/> Đã thêm được " + i + " sinh viên"
+            );
+            return;
           }
         }
-
-        if(isCheckStudentExist) continue;
 
         // Kiểm tra lớp đã trùng với lớp đã chọn hay chưa
         let classOfStudent = this.getInfoObjectByName(this.students[i].classId, this.classes);
@@ -381,6 +391,7 @@ export default {
           this.classroom.internshipCourseId = this.guid;
           this.classroom.className = this.students[i].classId;
           this.classroom.status = 'active';
+          this.classroom.isDelete = false;
           let api = new ClassService();
           let response = await api.createClassAsync(this.classroom);
           this.showLoading(false);
@@ -396,6 +407,7 @@ export default {
           await this.getClassesFilterAsync();
           this.classes = this.classes.filter(
             classroom => classroom.internshipCourseId == this.guid);
+          // this.students[i].classId = this.getInfoObjectByName(this.students[i].classId, this.classes).id;
         }
         this.students[i].status = 'active';
         this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;
@@ -407,10 +419,14 @@ export default {
         if (this.errorMessages.length > 0) {
           return;
         }
-        this.showLoading();
-        let api = new StudentService();
-        let response = await api.createStudentAsync(this.students[i]);
-        if (!response.isOK) {
+        this.studentsForCreate.push(this.students[i]);      
+      }
+       this.showLoading();
+       let api = new StudentService();
+       let response = await api.createStudentsAsync(this.studentsForCreate);
+       await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.studentsForCreate, 'STUDENT', 1);   
+
+       if(!response.isOK ){
           this.showNotifications(
             "error",
             `${AppConfig.notification.title_default}`,
@@ -418,9 +434,8 @@ export default {
           );
           return;
         }
-        // Tạo thành công
-      }
       this.showLoading(false);
+
       await this.getStudentsAsync();
       if (studentLengthCallApi == this.studentLengthBanDau) {
         this.showNotifications(
