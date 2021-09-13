@@ -118,11 +118,10 @@ export default {
       }
       this.showNotifications(
         "success",
+        `${AppConfig.notification.title_default}`,
         'Thay đổi giáo viên thành công',
-        response.errorMessages
       );
       this.$emit("change-instructors", true);
-      this.instructors = response.data;
     },  
 
     changeClassName() {

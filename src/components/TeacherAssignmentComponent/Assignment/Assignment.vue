@@ -61,7 +61,6 @@ export default {
       statisticalPlan: null,
     };
   },
-  created() {},
   async mounted() {
     await this.getInstructorsAsync();
     await this.getClassesAsync();
@@ -76,7 +75,7 @@ export default {
       if (changeInstructors) {
         await this.getInstructorsAsync();
         await this.getStudentsUnassigned();
-        await this.getPlanService();
+        await this.getStudentsInInternshipCourseAsync();
         this.reloadAutomaticAssignment = false;
         this.$nextTick(() => {
           this.reloadAutomaticAssignment = true;

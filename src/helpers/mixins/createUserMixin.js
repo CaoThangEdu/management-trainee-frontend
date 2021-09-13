@@ -32,8 +32,6 @@ export default {
 
     async eventCreateAccountWhenCreateStudentOrCreateTeacher(userData, role, status){
       if(status == 0){
-        console.log("Data ben mixin 1 people", userData)
-
         // tạo account cho từng người
         let dataForCreateUser = {
           username: userData.email,

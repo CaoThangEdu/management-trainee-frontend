@@ -11,29 +11,11 @@
           <img
             src="img/avatars/6.jpg"
             class="c-avatar-img "
+            alt="avatar"
           />
         </div>
       </CHeaderNavLink>
     </template>
-    <!-- <CDropdownHeader tag="div" class="text-center" color="light">
-      <strong>Account</strong>
-    </CDropdownHeader> -->
-    <!-- <CDropdownItem>
-      <CIcon name="cil-bell"/> Updates
-      <CBadge color="info" class="mfs-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem> -->
-    <!-- <CDropdownItem>
-      <CIcon name="cil-envelope-open" /> Messages
-      <CBadge color="success" class="mfs-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-task" /> Tasks
-      <CBadge color="danger" class="mfs-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-comment-square" /> Comments
-      <CBadge color="warning" class="mfs-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem> -->
     <CDropdownHeader
       tag="div"
       class="text-center"
@@ -42,7 +24,13 @@
       <strong>Settings</strong>
     </CDropdownHeader>
     <CDropdownItem>
-      <CIcon name="cil-user" /> Profile
+      <CIcon name="cil-user" /> Thông tin cá nhân
+    </CDropdownItem>
+    <CDropdownItem>
+      <CIcon name="cil-shield-alt" />
+        <router-link :to="{name:'changePassword'}">
+          Đổi mật khẩu
+        </router-link>
     </CDropdownItem>
     <CDropdownItem>
       <CIcon name="cil-settings" /> Settings
@@ -56,11 +44,8 @@
       <CBadge color="primary" class="mfs-auto">{{ itemsCount }}</CBadge>
     </CDropdownItem>
     <CDropdownDivider/>
-    <CDropdownItem>
-      <CIcon name="cil-shield-alt" /> Lock Account
-    </CDropdownItem>
     <CDropdownItem @click="logoutAccount">
-      <CIcon name="cil-lock-locked" /> Logout
+      <CIcon name="cil-lock-locked" /> Đăng xuất
     </CDropdownItem>
   </CDropdown>
 </template>
@@ -87,11 +72,8 @@ export default {
 
   computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
-    ...mapGetters("user", {
-      userProfile: "getUserInfo",
-      tokenInfo: "getTokenInfo",
-    })
-  }
+    ...mapGetters("user", { userProfile: "getUserInfo", tokenKey: "getTokenKey" }),
+  },
 }
 </script>
 

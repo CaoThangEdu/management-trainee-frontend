@@ -1,5 +1,4 @@
 import store from '../../store/index'
-// import axios from 'axios'
 import AccountService from "../../services/account/accountServices"
 
 const stateDefault = {
