@@ -117,6 +117,15 @@ export default {
       this.statistiesStudentInClass = response.data;
     },
   },
+
+  watch: {
+    async studentInInternshipCourse() {
+      this.assignedStudents = [];
+      this.unassignStudents = [];
+      await this.getStatisticsStudentInClass();
+      this.getChartStatisticsStudentInClass();
+    }
+  }
 };
 </script>
 

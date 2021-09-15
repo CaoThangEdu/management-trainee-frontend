@@ -95,6 +95,17 @@ const routes = [
     },
   },
   {
+    path: "/change-password",
+    name: "changePassword",
+    component: () =>
+      import(
+        "../router/views/ChangePasswordPage/ChangePasswordPage.vue"
+      ),
+      meta: {
+        breadcrumbName: "Đổi mật khẩu",
+      },
+  },
+  {
     path: "/user-manage",
     name: "user-manage",
     component: () =>

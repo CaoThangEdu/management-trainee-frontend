@@ -141,7 +141,8 @@ export default {
   },
   watch: {
     assignedStudents() {
-      this.renderChartBar();
+      this.renderHighChart();
+      this.$forceUpdate();
     },
   },
 };

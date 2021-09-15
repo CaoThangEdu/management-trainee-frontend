@@ -271,7 +271,6 @@ export default {
         if (this.errorMessages.length > 0) {
           return;
         }
-        console.log(i)
         this.studentsForCreate.push(this.students[i]);    
         this.closeModal(true);
       }

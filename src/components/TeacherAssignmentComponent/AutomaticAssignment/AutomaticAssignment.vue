@@ -192,7 +192,9 @@ export default {
     },
 
     async teacherAssignment() {
-      this.createInstructorsAsync()     
+      this.showLoading();
+      await this.createInstructorsAsync();
+      this.showLoading(false);
       this.$emit("change-instructors", true);
       this.assignments = [];  
       this.statistics = []     
@@ -200,11 +202,9 @@ export default {
 
     // Phân công cho 1 danh sách
     async createInstructorsAsync() {
-      this.showLoading();
       const api = new InstructorService();
       // Phân công từng sinh viên
       const response = await api.createInstructorsAsync(this.assignments);
-      this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
           "error",
@@ -213,6 +213,12 @@ export default {
         );
         return;
       }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `Phân công tự động thành công <br />
+        Chuyển hướng qua <strong> Danh sách sinh viên đã được phân công</strong> để xem chi tiết`
+      );
     },
 
     async createInstructorAsync(assignment) {

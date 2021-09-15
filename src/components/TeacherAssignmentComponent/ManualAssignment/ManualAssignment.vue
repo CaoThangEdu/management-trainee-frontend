@@ -139,6 +139,12 @@ export default {
         );
         return;
       }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `Phân công thành công <br />
+        Chuyển hướng qua <strong> Danh sách sinh viên đã được phân công</strong> để xem chi tiết`
+      );
     },
 
     async getStudentsUnassigned() {
