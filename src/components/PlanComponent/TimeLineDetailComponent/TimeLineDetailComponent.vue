@@ -70,7 +70,6 @@ export default {
     async getPlansAsync(){
       let filterPlan = {
         status: "",
-        isDelete: false
       };
       // Call Api
       this.showLoading();
@@ -198,7 +197,6 @@ export default {
             .toDate(),
           internshipCourseId: "",
           status: "active",
-          isDelete: true,
         };
         return;
       }

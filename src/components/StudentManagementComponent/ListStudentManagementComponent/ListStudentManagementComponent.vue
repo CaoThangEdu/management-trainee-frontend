@@ -44,7 +44,6 @@ export default {
         classId: "",
         internshipCourseId: "",
         status: "active",
-        isDelete: false
       },
     };
   },
@@ -130,7 +129,6 @@ export default {
     // Call api delete Student
     async updateIsDeleteStatus(index) {
       let student = this.pageOfItems[index];
-      student.isDelete = true;
       this.showLoading();
       let api = new StudentService();
       let response = await api.updateStudentAsync(student);
@@ -188,10 +186,9 @@ export default {
 
     // Call api delete student
     async deleteStudentConfirm(studentComfirm) {
-      studentComfirm.isDelete = true;
       this.showLoading();
       let api = new StudentService();
-      let response = await api.updateStudentAsync(studentComfirm); // Gọi Api
+      let response = await api.deleteStudentAsync(studentComfirm.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

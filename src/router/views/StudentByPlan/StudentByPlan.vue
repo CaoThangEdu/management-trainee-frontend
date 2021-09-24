@@ -124,11 +124,12 @@ import {
 } from "../../../config/constant";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import PlanningStepsComponent from '../../../components/planningStepsComponent/planningStepsComponent.vue';
+import createUserMixin from "../../../helpers/mixins/createUserMixin";
 
 export default {
   name: 'AddStudentsFileByPlan',
   extends: ComponentBase,
-  mixins: [CrudMixin],
+  mixins: [CrudMixin,createUserMixin],
   components: {
     PlanningStepsComponent,
   },
@@ -136,6 +137,7 @@ export default {
     return {
       isShowAddFile: false,
       students: [],
+      studentsForCreate: [],
       studentsCallApi: [],
       studentLengthBanDau: 0,
       metaDataFile: [],
@@ -417,10 +419,14 @@ export default {
         if (this.errorMessages.length > 0) {
           return;
         }
-        this.showLoading();
-        let api = new StudentService();
-        let response = await api.createStudentAsync(this.students[i]);
-        if (!response.isOK) {
+        this.studentsForCreate.push(this.students[i]);      
+      }
+       this.showLoading();
+       let api = new StudentService();
+       let response = await api.createStudentsAsync(this.studentsForCreate);
+       await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.studentsForCreate, 'STUDENT', 1);   
+
+       if(!response.isOK ){
           this.showNotifications(
             "error",
             `${AppConfig.notification.title_default}`,
@@ -428,9 +434,8 @@ export default {
           );
           return;
         }
-        // Tạo thành công
-      }
       this.showLoading(false);
+
       await this.getStudentsAsync();
       if (studentLengthCallApi == this.studentLengthBanDau) {
         this.showNotifications(

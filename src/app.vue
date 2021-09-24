@@ -1,6 +1,7 @@
 <template>
   <div class="app">
-    <Sidebar v-if="!$route.meta.hideSidebar" />
+    <Sidebar v-if="!$route.meta.hideSidebar && navLinkProps.length != 0"
+      :navLinkProps="navLinkProps" />
     <CWrapper>
       <Header v-if="!$route.meta.hideHeader" />
       <div class="c-body">
@@ -27,12 +28,13 @@ import Footer from './components/layout/Footer/Footer'
 import TheLoading from "./components/common/loading/TheLoading"
 import TheNotifications from "./components/common/notification/TheNotifications"
 import ComponentBase from "./components/common/component-base/ComponentBase"
-
 import { mapGetters, mapActions } from "vuex";
+import nav from "./components/layout/Sidebar/_nav";
 
 export default {
   name: 'App',
   extends: ComponentBase,
+  nav,
   components: {
     Sidebar,
     Header,
@@ -40,7 +42,16 @@ export default {
     TheNotifications,
     TheLoading
   },
-  
+  data() {
+    return {
+      navLinkProps: [],
+    };
+  },
+
+  created() {
+    this.navLinkProps = JSON.parse(JSON.stringify(nav));
+  },
+
   async mounted() {
     await this.getUserProfile();
   },

@@ -10,6 +10,7 @@ import '@babel/polyfill';
 import Notifications from 'vue-notification';
 import Vuelidate from 'vuelidate';
 import 'regenerator-runtime/runtime';
+import HighchartsVue from 'highcharts-vue';
 
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true });
 Vue.config.productionTip = false;
@@ -18,6 +19,7 @@ Vue.use(CoreuiVue);
 Vue.use(Notifications);
 Vue.use(Vuelidate);
 Vue.prototype.$log = console.log.bind(console);
+Vue.use(HighchartsVue);
 
 new Vue({
     el: '#app',

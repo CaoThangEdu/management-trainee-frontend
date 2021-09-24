@@ -17,6 +17,16 @@ export default class UserService extends ServicesBaseAPI {
     return this.result;
   }
 
+  async createUsersAsync(array) {
+    try {
+      const response = await this.http.post(`${this.url}/CreateUsers`, array);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
   async updateUserAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);

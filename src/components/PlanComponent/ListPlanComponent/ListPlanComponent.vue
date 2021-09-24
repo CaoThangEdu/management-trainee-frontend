@@ -35,7 +35,6 @@ export default {
       showDetail: null,
       filter: {
         status: "",
-        isDelete: false
       },
       pageOfItems: [],
       customLabels: {
@@ -64,7 +63,6 @@ export default {
 
     // Call api delete Plan
     async deletePlanConfirm(planComfirm) {
-      planComfirm.item.isDelete = true;
       this.showLoading();
       let api = new PlanService();
       let response = await api.updatePlanAsync(planComfirm.item); // Gọi Api

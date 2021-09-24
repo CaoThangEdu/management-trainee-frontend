@@ -8,13 +8,16 @@ import AppConfig from '../../../../src/app.config.json'
 import ComponentBase from "../../common/component-base/ComponentBase"
 import BaseModal from '../../common/base-modal/BaseModal'
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
+import CrudMixin from "../../../helpers/mixins/crudMixin";
+
 export default {
   name: "ListPlanFilterComponent",
-   extends: ComponentBase,
+  extends: ComponentBase,
   components: {
     BaseModal,
     AlertMessages,
   },
+  mixins: [CrudMixin],
   data() {
     return {
       teachers: [],
@@ -22,7 +25,6 @@ export default {
       internshipCourse: [],
       internshipCourseFilter: {
         status: "",
-        isDelete: false, 
       }
     
     };

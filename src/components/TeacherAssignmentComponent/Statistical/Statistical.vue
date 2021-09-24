@@ -3,23 +3,31 @@
 <script>
 import ClassService from "../../../services/class/classServices";
 import AppConfig from "../../../../src/app.config.json";
-
 import ComponentBase from "../../common/component-base/ComponentBase";
+import crudMixin from "../../../helpers/mixins/crudMixin";
+import Highcharts from "../../common/high-chart/HighChart.vue";
+
 export default {
   name: "Statistical",
   extends: ComponentBase,
-  components: {},
+  components: {
+    Highcharts,
+  },
+  mixins: [crudMixin],
   props: {
     internshipCourseId: {
       type: String,
       default: "",
     },
-     teachers: {
+    teachers: {
       type: Array,
     },
     statisticalPlan: {
       type: Object,        
-    }
+    },
+    studentInInternshipCourse: {
+      type: Array,
+    },
   },
 
   data() {
@@ -34,21 +42,62 @@ export default {
         courseName: "",
         trainingSystemName: "",
         careersName: "",
-        numberStudentsUnassigned: 0,
+        numberstudentsUnAssigned: 0,
         numberTeachersInInternshipCourse: 0,
         numberOfStudentsInInternshipCourse: 0,
       },
        statisticalRequest: {
         internshipCourseId: "",
       },
+      chartData: null,
+      labelsProps: null,
+      chartDataStatisticsStudentInClass: [],
+      labelsDataStatisticsStudentInClass: [],
+      assignedStudents: [],
+      unassignStudents: [],
     };
    
   },
   async mounted() {
-      this.getStatisticsStudentInClass();
+    this.labelsProps = [
+      'Tổng số giáo viên',
+      'Tổng số sinh viên',
+      'Sinh viên chưa được phân công',
+      'Sinh viên đã được phân công',
+    ];
+    let assigned = this.statisticalPlan.numberStudentsInInternshipCourse 
+      - this.statisticalPlan.numberstudentsUnAssigned;
+    this.chartData = [
+      this.statisticalPlan.numberTeachersInInternshipCourse,
+      this.statisticalPlan.numberStudentsInInternshipCourse,
+      this.statisticalPlan.numberstudentsUnAssigned,
+      assigned,
+    ];
+    this.$forceUpdate();
+    await this.getStatisticsStudentInClass();
+    this.getChartStatisticsStudentInClass();
   },
 
   methods: {
+    getChartStatisticsStudentInClass() {
+      for (let student of this.statistiesStudentInClass) {
+        let totalStudents = this.studentInInternshipCourse.filter(
+          studentInIntern => studentInIntern.className == student.className).length;
+        let assignedStudent = {
+          name: student.className,
+          y: totalStudents - student.number,
+        }
+        this.assignedStudents.push(assignedStudent);
+        let unassignedStudent = {
+          name: student.className,
+          y: student.number,
+        }
+        this.unassignStudents.push(unassignedStudent);
+        this.chartDataStatisticsStudentInClass.push(student.number);
+        this.labelsDataStatisticsStudentInClass.push(student.className);
+      }
+    },
+    
     async getStatisticsStudentInClass() {
       this.showLoading();
       const api = new ClassService();
@@ -68,6 +117,15 @@ export default {
       this.statistiesStudentInClass = response.data;
     },
   },
+
+  watch: {
+    async studentInInternshipCourse() {
+      this.assignedStudents = [];
+      this.unassignStudents = [];
+      await this.getStatisticsStudentInClass();
+      this.getChartStatisticsStudentInClass();
+    }
+  }
 };
 </script>
 

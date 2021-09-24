@@ -30,7 +30,6 @@ export default {
         studentId: "",
         internshipCourseId: "",
         status: "active",
-        isDelete: false,
         index: 0,
       },
       averageNumber: 0,
@@ -124,14 +123,12 @@ export default {
               studentId: student.id,
               internshipCourseId: this.internshipCourseId,
               status: "active",
-              isDelete: false,
             };
 
             this.assignments.push(this.assignmentRequest);
           });
 
-          this.addStatistics(teacher.teacherId, count)  
-
+          this.addStatistics(teacher.id, count)       
         });
       } 
       // Phân công tiếp tục 
@@ -157,7 +154,6 @@ export default {
               studentId: student.id,
               internshipCourseId: this.internshipCourseId,
               status: "active",
-              isDelete: false,
             };
 
             this.assignments.push(this.assignmentRequest);
@@ -196,12 +192,33 @@ export default {
     },
 
     async teacherAssignment() {
-       this.assignments.forEach((assignment) => {
-        this.createInstructorAsync(assignment);
-      });
-       this.$emit("change-instructors", true);
+      this.showLoading();
+      await this.createInstructorsAsync();
+      this.showLoading(false);
+      this.$emit("change-instructors", true);
       this.assignments = [];  
-      this.statistics = []   
+      this.statistics = []     
+    },
+
+    // Phân công cho 1 danh sách
+    async createInstructorsAsync() {
+      const api = new InstructorService();
+      // Phân công từng sinh viên
+      const response = await api.createInstructorsAsync(this.assignments);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `Phân công tự động thành công <br />
+        Chuyển hướng qua <strong> Danh sách sinh viên đã được phân công</strong> để xem chi tiết`
+      );
     },
 
     async createInstructorAsync(assignment) {

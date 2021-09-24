@@ -24,16 +24,6 @@
                 <select
                   class="form-control"
                   @change="getInternshipCourseAsync"
-                  v-model="internshipCourseFilter.isDelete"
-                >
-                  <option value="false">Hoạt động</option>
-                  <option value="true">Đã dừng động</option>
-                </select>
-              </div>
-              <div class="col-xl-2 col-md-4 col-sm-12 mb-sm-2">
-                <select
-                  class="form-control"
-                  @change="getInternshipCourseAsync"
                   v-model="internshipCourseFilter.status"
                 >
                   <option value="">Tất cả</option>
@@ -48,10 +38,10 @@
                 <button
                   type="submit"
                   id="btn-search"
-                  class="btn btn-primary"
+                  class="btn btn-stack-overflow"
                   @click="getInternshipCourseAsync"
-                >
-                  Tìm kiếm
+                  title="Tìm kiếm">
+                  <i class="fas fa-search"></i>
                 </button>
               </div>
             </div>
@@ -73,14 +63,22 @@
               <tr v-for="(item, index) in internshipCourse" :key="index">
                 <th scope="row">{{index + 1}}</th>
                 <td>{{item.internshipCourseName}}</td>
-                <td>{{item.startDay}}</td>
-                <td>{{item.endDay}}</td>
+                <td>{{convertTime(item.startDay, 'DD/MM/YYYY')}}</td>
+                <td>{{convertTime(item.endDay, 'DD/MM/YYYY')}}</td>
                 <td>{{item.status}}</td>
                 <td>
-                  <router-link :to="{name:'phan-cong-dot', params: { internshipCourseId: item.id } }">
-                    Chi tiết
+                  <router-link
+                    class="btn btn-info"
+                    :to="{name:'phan-cong-dot', params: { internshipCourseId: item.id } }"
+                    title="Chi tiết">
+                    <i class="fas fa-search-plus"></i>                    
                   </router-link>
                 </td>
+              </tr>
+              <tr v-show="internshipCourse == null || internshipCourse.length === 0">
+                <th colspan="6" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
               </tr>
             </tbody>
           </table>

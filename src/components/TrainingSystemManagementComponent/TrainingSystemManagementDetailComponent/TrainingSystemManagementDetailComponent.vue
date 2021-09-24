@@ -149,39 +149,4 @@ export default {
 
 <style lang='scss'>
 @import './TrainingSystemManagementDetailComponent.scss';
-.wrapCollapse {
-  dt {
-    display: block;
-
-    a {
-      display: block;
-      padding: 15px;
-      background-color: #adadad;
-      color: #fff;
-
-      &:hover {
-        text-decoration: none;
-      }
-
-      &.active {
-        background-color: #3c6382;
-        color: #fff;
-      }
-    }
-  }
-
-  dd {
-    padding: 0 20px;
-    height: 0;
-    transition: all 0.5s ease;
-    overflow: hidden;
-    opacity: 0;
-
-    &.active {
-      height: auto;
-      padding: 10px 0px;
-      opacity: 1;
-    }
-  }
-}
 </style>

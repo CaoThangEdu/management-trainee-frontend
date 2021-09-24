@@ -20,6 +20,13 @@ export default [{
           ],
       },
       {
+        _name: 'CSidebarNavItem',
+        name: 'Quản lý tài khoản',
+        to: '/user-manage',
+        icon: 'cil-drop',
+        role: "Admin",
+      },
+      {
           _name: "CSidebarNavItem",
           name: "Phân công giáo viên",
           to: "/teacher-assignment",

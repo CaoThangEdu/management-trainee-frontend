@@ -33,7 +33,6 @@ export default {
         classId: "",
         internshipCourseId: "",
         status: "active",
-        isDelete: false
       },
     };
   },
@@ -52,7 +51,6 @@ export default {
     async getClassesFilterAsync() {
       let filterClass = {
         courseId: "",
-        isDelete: false,
         className: "",
         status: "active",
       };
@@ -77,7 +75,6 @@ export default {
     async getPlansFilterAsync() {
       let filterPlan = {
         status: "",
-        isDelete: false
       };
       // Call Api
       this.showLoading();

@@ -35,7 +35,6 @@ export default {
       },
       filter: {
         internshipCourseId: "",
-        isDelete: false,
         className: "",
         status: "active",
       },
@@ -52,7 +51,6 @@ export default {
     async getPlansAsync(){
       let planFilter = {
         status: "",
-        isDelete: false
       };
       // Call Api
       this.showLoading();
@@ -151,10 +149,9 @@ export default {
 
     // Call api delete Class
     async deleteClassConfirm(classComfirm) {
-      classComfirm.isDelete = true;
       this.showLoading();
       let api = new ClassService();
-      let response = await api.updateClassAsync(classComfirm); // Gọi Api
+      let response = await api.deleteClassAsync(classComfirm.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

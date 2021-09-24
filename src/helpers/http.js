@@ -1,10 +1,8 @@
 import axios from 'axios'
-import store from '../store/index'
 import router from '../router/index'
 import { options } from './options'
-
-import moment from 'moment'
 import { STORAGE_KEY } from '../config/constant'
+import moment from 'moment'
 
 const esc = encodeURIComponent
 const DEFAULT_HEADERS = {
@@ -182,7 +180,7 @@ export default class Http {
     }
     // If http status code is unauthorized (401)
     if (error.request.status === options.httpStatusCode.unauthorized) {
-      await store.dispatch("user/clearTokenAndResetStoreDataAsync");
+      localStorage.removeItem(STORAGE_KEY.AUTH_TOKEN);
       e.errorMessages = "Phiên làm việc của bạn đã hết hạn."
       router.push({ name: "login" });
     }

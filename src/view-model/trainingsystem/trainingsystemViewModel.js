@@ -4,7 +4,6 @@ export default class TrainingSystemViewModel extends ViewModel {
     super()
     this.fields = {
       trainingSystemName: null,
-      isDelete: false,
       status: 'active',
       facultyId: null,
     }

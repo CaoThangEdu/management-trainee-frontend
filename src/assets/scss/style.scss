@@ -59,7 +59,7 @@
       display: block;
       padding: 4px 15px;
       background-color: #adadad;
-      color: #fff;
+      color: #302b2b;
 
       &:hover {
         text-decoration: none;
@@ -104,4 +104,8 @@
   &:hover {
     text-decoration: underline;
   }
+}
+
+.title-collapse {
+  cursor: pointer;
 }
