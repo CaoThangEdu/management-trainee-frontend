@@ -42,15 +42,22 @@ export default {
         studentId: "",
         isDelete: false,
       },
-      students: [],
+      studentsByMssv: [],
       classById: [],
-      companiesByTaxCode:{},
-      company:{}
+      companiesByTaxCode: {},
+      company: {},
+      selectCertificate: -1,
+      filterCerticate: {
+        mssv: "",
+        status: "",
+        classId: "",
+      },
+      selectUpdateCertificates:[]
     };
   },
 
   async mounted() {
-    await this.getCertificatesAsync();
+    await this.getCertificatesAsync(this.filterCerticate);
     await this.getStudentsAsync();
     await this.getClassesAsync();
     await this.getCompaniesAsync();
@@ -88,7 +95,10 @@ export default {
         );
         return;
       }
-      this.students = response.data;
+      this.studentsByMssv = this.convertArrayToObject(
+        response.data,
+        "studentId"
+      );
     },
 
     onChangePage(pageOfItems) {
@@ -100,12 +110,12 @@ export default {
       this.editCertificate = {};
     },
 
-    async getCertificatesAsync() {
+    async getCertificatesAsync(filterCerticate) {
       // Call Api
       this.showLoading();
       const api = new CertificateSevice();
 
-      const response = await api.getCertificatesAsync();
+      const response = await api.getCertificatesAsync(filterCerticate);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -120,6 +130,7 @@ export default {
     },
 
     updateCertificate(index) {
+      this.selectCertificate = index;
       this.editCertificate = Object.assign({}, this.certificates[index]);
     },
 
@@ -127,9 +138,12 @@ export default {
       this.editCertificates = Object.assign({}, this.pageOfItems[index]);
     },
 
-    async changeData() {
-      this.$emit("change-certificate");
-      await this.getCertificatesAsync();
+    async changeData(certificate, action) {
+      if (action === "create") {
+        return this.certificates.unshift(certificate);
+      }
+      this.$set(this.certificates, this.selectCertificate, certificate);
+      this.selectCertificate = -1;
     },
 
     deleteCertificate(id, index) {
@@ -160,15 +174,22 @@ export default {
       );
     },
 
-    changeStatus(event, index){
+    changeStatus(event, index) {
       this.certificates[index].status = event.target.value;
     },
 
     getNameClass(classId) {
-      if(this.classById[classId] === undefined){
+      if (this.classById[classId] === undefined) {
         return "";
       }
       return this.classById[classId].className;
+    },
+
+    getStudent(mssv) {
+      if (this.studentsByMssv[mssv] === undefined) {
+        return "";
+      }
+      return this.studentsByMssv[mssv];
     },
 
     async getClassesAsync() {
@@ -217,7 +238,7 @@ export default {
       }
 
       this.$set(this.certificates, index, response.data);
-      if(response.data.status === "confirmed"){
+      if (response.data.status === "confirmed") {
         this.company.taxCode = response.data.taxCode;
         this.company.title = response.data.companyName;
         this.company.companyAddress = response.data.companyAddress;
@@ -235,8 +256,8 @@ export default {
     },
 
     async createCompanyAsync(company) {
-      if(this.companiesByTaxCode[company.taxCode]){
-          return ;
+      if (this.companiesByTaxCode[company.taxCode]) {
+        return;
       }
       this.showLoading();
       let api = new CompanyService();
@@ -257,15 +278,19 @@ export default {
       );
     },
 
-    async getCompaniesAsync(){
+    async getCompaniesAsync() {
+      const filterCompany = {
+        keyword: "",
+        status: "active",
+      };
       // Call Api
       this.showLoading();
-      const api = new CompanyService()
+      const api = new CompanyService();
 
-      const response = await api.getCompaniesAsync()
+      const response = await api.getCompaniesAsync(filterCompany);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -273,10 +298,32 @@ export default {
         );
         return;
       }
-      let companies = response.data.items
-      companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
+      let companies = response.data;
+      companies = companies.reduce(
+        (map, obj) => ((map[obj.taxCode] = obj), map),
+        {}
+      );
       this.companiesByTaxCode = companies;
     },
+
+    confirmationCompany(taxCode) {
+      if (this.companiesByTaxCode[taxCode]) {
+        return "Hoạt động";
+      }
+      return "Không hoạt động";
+    },
+
+    changeCompanies(company) {
+      this.companiesByTaxCode[company.taxCode] = company;
+    },
+
+    selectUpdateCertificate(certificate){
+      if(certificate === "all"){
+        this.selectUpdateCertificates = this.certificates;
+        return;
+      }
+      this.selectUpdateCertificates.push(certificate);
+    }
   },
 };
 </script>

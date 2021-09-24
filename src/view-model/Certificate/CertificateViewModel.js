@@ -10,7 +10,7 @@ export default class CertificateViewModel extends ViewModel {
       phoneNumberOfCompany: null,
       phoneNumberOfStudent: null,
       studentId: null,
-      isDelete: false,
+      career:null,
       status: 'unconfirmed', //confirmed, unconfirmed, complete
     }
   }
@@ -63,7 +63,16 @@ export default class CertificateViewModel extends ViewModel {
         }
       },
       phoneNumberOfStudent: {
-        label: 'Số điện thoại',
+        label: 'Số điện thoại sinh viên',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      career: {
+        label: 'Ngành nghề',
         rules: {
           require: '',
           maxLength: {

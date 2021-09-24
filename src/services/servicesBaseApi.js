@@ -1,4 +1,5 @@
 import Http from '../helpers/http'
+import { map } from 'lodash'
 
 export default class ServicesBaseAPI {
   constructor() {
@@ -20,5 +21,18 @@ export default class ServicesBaseAPI {
         this.result.data = response.data.result;
       }
     }
+  }
+
+  getUrlFromParams(urlParams) {
+    const params = new URLSearchParams();
+
+    map(urlParams, (value, key) => {
+      if (Array.isArray(urlParams[key])) {
+        map(value, item => params.append(key, item));
+      } else {
+        params.append(key, value);
+      }
+    });
+    return params;
   }
 }

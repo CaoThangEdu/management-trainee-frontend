@@ -24,16 +24,19 @@ export default {
       errorMessages: [],
       companiesByTaxCode:{},
       certificate:{
-        taxCode: "0313041477",
-        companyName: "Công Ty TNHH Một Thành Viên Phần Mềm Ebk",
-        companyAddress:"L11 - L12 Miếu Nổi - Quận Bình Thạnh - TP Hồ Chí Minh",
-        owner:"Ngô Đình Minh Đức",
-        phoneNumberOfCompany: "094552446",
-        phoneNumberOfStudent: "01234567890",
+        taxCode: "",
+        companyName: "",
+        companyAddress:"",
+        owner:"",
+        phoneNumberOfCompany: "",
+        phoneNumberOfStudent: "",
+        career:"",
         status: 'unconfirmed', //confirmed, unconfirmed, complete
-        studentId: "c41ed77c-10e5-4aef-1e78-08d95f740042",
-        isDelete: false
+        mssv: "0306181003",
+        classId:"bb8fb04a-dea5-4521-9729-08d970127ad5",
       },
+      company:{},
+      isCompanyConfirmation: false,
     }
   },
   props: {
@@ -52,16 +55,25 @@ export default {
       await this.save();
     },
 
-    closeModal(changeData, certificate) {
+    closeModal(changeData, certificate, action) {
       this.isShow = false;
-      this.certificate = {};
-
       if (changeData) {
-        this.$emit("change-data", certificate);
+        this.$emit("change-data", certificate, action);
       }
     },
 
     async createCertificateAsync() {
+      if(this.isCompanyConfirmation === true){
+        this.company.taxCode = this.certificate.taxCode;
+        this.company.title = this.certificate.companyName;
+        this.company.companyAddress = this.certificate.companyAddress;
+        this.company.owner = this.certificate.owner;
+        this.company.phoneNumber = this.certificate.phoneNumberOfCompany;
+        this.company.career = this.certificate.career;
+        this.company.status = "active";
+
+        await this.createCompanyAsync(this.company);
+      }
       this.showLoading();
       let api = new CertificateService();
       let response = await api.createCertificateAsync(this.certificate);
@@ -79,7 +91,8 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-      this.closeModal(true, response.data);
+      this.isCompanyConfirmation = false;
+      this.closeModal(true, response.data, 'create');
     },
 
     async updateCertificateAsync() {
@@ -103,7 +116,7 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-        this.closeModal(true, response.data);
+        this.closeModal(true, response.data, 'update');
     },
 
     async save() {
@@ -126,11 +139,15 @@ export default {
     },
 
     async getCompaniesAsync(){
+       const filterCompany = {
+        keyword:"",
+        status:"active"
+      };
       // Call Api
       this.showLoading();
       const api = new CompanyService()
 
-      const response = await api.getCompaniesAsync()
+      const response = await api.getCompaniesAsync(filterCompany)
       this.showLoading(false);
 
       if(!response.isOK){
@@ -141,7 +158,7 @@ export default {
         );
         return;
       }
-      let companies = response.data.items;
+      let companies = response.data;
       if(companies.length !== 0 || companies !== undefined){
         companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
         this.companiesByTaxCode = companies;
@@ -171,30 +188,63 @@ export default {
         this.certificate.owner = this.companiesByTaxCode[this.certificate.taxCode].owner;
         this.certificate.companyAddress = this.companiesByTaxCode[this.certificate.taxCode].companyAddress;
         this.certificate.phoneNumberOfCompany = this.companiesByTaxCode[this.certificate.taxCode].phoneNumber;
+        this.certificate.career = this.companiesByTaxCode[this.certificate.taxCode].career;
         return ;
       }
       
-
       let company = await this.getCompanieByTaxCodeAsync(this.certificate.taxCode);
-      if(Object.keys(company).length !== 0){
+      if(company.taxCode !== null || company.title !== null 
+      || company.owner !== null || company.companyAddress !== null){
       this.certificate.companyName = company.title;
       this.certificate.owner = company.owner;
       this.certificate.companyAddress = company.companyAddress;
       this.certificate.phoneNumberOfCompany = company.phoneNumber;
+      this.certificate.career = company.career;
+      this.isCompanyConfirmation = true;
       return;
       }
+
       return this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
           "Không tìm thấy công ty vui lòng nhập thông tin công ty!"
         );
-    }
+    },
+
+     async createCompanyAsync(company) {
+      this.showLoading();
+      let api = new CompanyService();
+      let response = await api.createCompanyAsync(company);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.$emit("changeCompanies",response.data );
+    },
   },
   watch: {
     data() {
       this.isShow = true;
-      if(Object.keys(this.data).length !== 0)
-      this.certificate = this.data;
+      if(Object.keys(this.data).length !== 0){
+        this.certificate = this.data;
+        return;
+      }
+      this.certificate = {
+        taxCode: "",
+        companyName: "",
+        companyAddress:"",
+        owner:"",
+        phoneNumberOfCompany: "",
+        phoneNumberOfStudent: "",
+        status: 'unconfirmed', //confirmed, unconfirmed, complete
+        mssv: "0306181003",
+        classId:"bb8fb04a-dea5-4521-9729-08d970127ad5",
+        };
     }
   }
 }

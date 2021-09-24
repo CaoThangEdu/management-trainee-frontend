@@ -59,15 +59,15 @@ export default class CompanyViewModel extends ViewModel {
           }
         }
       },
-      // career: {
-      //   label: 'Ngành nghề',
-      //   rules: {
-      //     require: '',
-      //     maxLength: {
-      //       max_value: 200
-      //     }
-      //   }
-      // },
+      career: {
+        label: 'Ngành nghề',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
     }
     return validations
   }

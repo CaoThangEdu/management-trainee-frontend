@@ -46,11 +46,15 @@ export default {
     },
 
       async getCompaniesAsync(){
+      const filterCompany = {
+        keyword:"",
+        status:""
+      };
       // Call Api
       this.showLoading();
       const api = new CompanyService()
 
-      const response = await api.getCompaniesAsync()
+      const response = await api.getCompaniesAsync(filterCompany)
       this.showLoading(false);
 
       if(!response.isOK){
@@ -61,7 +65,7 @@ export default {
         );
         return;
       }
-      let companies = response.data.items
+      let companies = response.data;
       companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
       this.companiesByTaxCode = companies;
     },
@@ -101,6 +105,7 @@ export default {
           "Công ty đã tồn tại trong danh sách!"
         );
       }
+      this.company.status =  "active";
       this.showLoading();
       let api = new CompanyService();
       let response = await api.createCompanyAsync(this.company);

@@ -16,11 +16,33 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
-                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+                <label for="">Lớp:</label>
+                <select
+                  class="form-control form-select form-select-class" v-model="filterCerticate.classId">
+                  <option  value="">Tất cả</option>
+                  <option v-for="(item, index) in classById" :key="index" :value="item.id"
+                  >{{item.className}}</option>
+                </select>
+              </div>
+              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+                <label for="">Trạng thái:</label>
+                <select
+                  class="form-control form-select form-select-class" v-model="filterCerticate.status">
+                  <option  value="">Tất cả</option>
+                  <option value="unconfirmed">Đang duyệt</option>
+                  <option value="confirmed">Đã duyệt</option>
+                  <option value="complete">Đã in</option>
+                </select>
+              </div>
+              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                <label for="">Từ khóa:</label>
+                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" v-model="filterCerticate.keyword"/>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
-                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+                <label for="">&ensp;</label>
+                <div class="mb-2">&ensp;</div>
+                <button @click="getCertificatesAsync(filterCerticate)" type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
               </div>
             </div>
           </div>
@@ -29,33 +51,47 @@
           <table class="table">
             <thead class="">
               <tr>
-                <th scope="col" class="align-middle">STT</th>
+                <th v-if="isAdmin === true" scope="col" class="align-middle">
+                  <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" @change="selectUpdateCertificate('all')">
+                  <label class="form-check-label" for="inlineCheckbox1">STT</label>
+                </div></th>
+                <th v-if="isAdmin === false" scope="col">STT</th>
                 <th scope="col" class="align-middle">Thông tin sinh viên</th>
                 <th scope="col" class="align-middle">Thông tin công ty</th>
-                <th scope="col" class="align-middle">Ngày đăng ký</th>
                 <th scope="col" class="align-middle">Trạng thái</th>
                 <th scope="col" class="align-middle">Hoạt động</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in pageOfItems" :key="index">
-                <th scope="row">{{ index + 1 }}</th>
+                <th scope="row">
+                  <div v-if="isAdmin === true" class="form-check form-check-inline">
+                    <input class="form-check-input" 
+                    @change="selectUpdateCertificate(item)" 
+                    type="checkbox" id="inlineCheckbox1">
+                    <label class="form-check-label" for="inlineCheckbox1"> {{index + 1}}</label>
+                    </div>
+                    <div v-if="isAdmin === false">{{index + 1}}</div>
+                </th>
                 <td>
-                  <div><strong>MSSV:</strong> {{
-                    getInfoObject(item.studentId, students).studentId}}
-                  </div>
+                  <div><strong>MSSV:</strong> {{item.mssv}}</div>
                   <div>
                     <strong>Họ tên sinh viên:</strong>
-                    {{ getInfoObject(item.studentId, students).firstName }}
-                    {{getInfoObject(item.studentId, students).lastName}}.
+                    {{ getStudent(item.mssv).firstName }}
+                    {{getStudent(item.mssv).lastName}}
                   </div>
                   <div>
                     <strong>lớp:</strong>
-                    {{ getNameClass(getInfoObject(item.studentId, students).classId) }}.
+                    {{ getNameClass(item.classId) }}
                   </div>
                   <div>
                     <strong>Số điện thoại:</strong>
-                    {{ item.phoneNumberOfStudent }}.
+                    {{ item.phoneNumberOfStudent }}
+                  </div>
+                  <div>
+                    <strong>Ngày đăng ký giấy: </strong>
+                    {{ convertTime(item.creationTime) }}
                   </div>
                 </td>
                 <td>
@@ -65,8 +101,10 @@
                   <div>
                     <strong>Tên công ty:</strong> {{ item.companyName }}.
                   </div>
+                  <div>
+                    <strong>Xác nhận công ty:</strong> {{ confirmationCompany(item.taxCode) }}.
+                  </div>
                 </td>
-                <td>{{ convertTime(item.registrationDate) }}</td>
                 <td v-if="isAdmin === false">
                   <button 
                       v-if="item.status === 'unconfirmed'"
@@ -93,13 +131,13 @@
                 <td :class="{'text-center':isAdmin === true}">
                   <button 
                     v-if="isAdmin === false"
-                    :disabled="item.status === 'confirmed' && item.status === 'complete' " 
+                    :disabled="item.status !== 'unconfirmed'" 
                     class="btn btn-primary mr-1"
                     @click="updateCertificate(index)"> <em class="fa fa-edit"></em>
                   </button>
                   <button
                     v-if="isAdmin === false" 
-                    :disabled="item.status === 'confirmed' && item.status === 'complete'" 
+                    :disabled="item.status !== 'unconfirmed'" 
                     class="btn btn-danger"
                     @click="deleteCertificate(item.id, index)"> <em class="fa fa-trash"></em>
                   </button>
@@ -120,7 +158,7 @@
           </table>
         </div>
       </div>
-      <CertificateDetailComponent :data="editCertificate" />
+      <CertificateDetailComponent :data="editCertificate" @change-data="changeData" @changeCompanies="changeCompanies"/>
 
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems == null || pageOfItems.length === 0">

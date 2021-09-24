@@ -145,7 +145,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
-        "../router/views/ConfirmReferralFile/ConfirmReferralFile.vue"
+        '../router/views/ConfirmReferralFile/ConfirmReferralFile.vue'
       ),
     meta: {
       breadcrumbName: "Duyệt phiếu giới thiệu",
