@@ -35,10 +35,14 @@ export default {
       type: Object,
       default: null,
     },
+    planGuid: {
+      type: String,
+      default: null,
+    },
   },
 
   async mounted(){
-    await this.getPlansAsync()
+    await this.getPlansAsync();
   },
 
   methods:{
@@ -169,6 +173,7 @@ export default {
     },
 
     async save() {
+      this.timeline.internshipCourseId = this.planGuid;
       // validate
       let viewModel = new TimeLineViewModel();
       viewModel.setFields(this.timeline);
@@ -207,7 +212,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-@import './TimeLineDetailComponent.scss';
-</style>

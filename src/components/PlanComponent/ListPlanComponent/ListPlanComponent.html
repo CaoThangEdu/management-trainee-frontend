@@ -1,4 +1,4 @@
-<div class="row mt-4">
+<div class="row">
   <div class="col-12">
     <div class="card">
       <header class="card-header">
@@ -50,8 +50,13 @@
                 <td>{{ convertTime(plan.startDay, 'DD/MM/YYYY') }}</td>
                 <td>{{ convertTime(plan.endDay, 'DD/MM/YYYY') }}</td>
                 <td class="text-lg-center">
+                  <router-link class="btn btn-instagram mr-2" 
+                    title="Chi tiết kế hoạch"
+                    :to="{name:'chi-tiet-ke-hoach', params: { guid: plan.id } }">
+                    <i class="fas fa-info-circle"></i>
+                  </router-link>
                   <router-link class="btn btn-info mr-2" 
-                    title="Tiếp tục thêm sinh viên"
+                    title="Thêm sinh viên"
                     :to="{name:'them-sv-cua-dot', params: { guid: plan.id } }">
                     <i class="fa fa-arrow-alt-circle-right"></i>
                   </router-link>

@@ -80,6 +80,16 @@ const routes = [
         breadcrumbName: 'Chỉnh sửa',
       },
     },
+    {
+      path: 'detail-and-timeline/:guid',
+      name: 'chi-tiet-ke-hoach',
+      props: true,
+      component: () =>
+        import("../components/PlanComponent/PlanDetailAndTimeLine/PlanDetailAndTimeLine.vue"),
+      meta: {
+        breadcrumbName: 'Chi tiết',
+      },
+    },
   ]
   },
   {

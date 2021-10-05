@@ -1,28 +1,32 @@
 <div class="row">
   <div class="col-12">
-    <planningStepsComponent :isActiveStep="isActiveStep"/>
-    <div class="row card mt-4">
-      <header class="card-header">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
-          <path fill="var(--ci-primary-color, currentColor)"
-            d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
-            class="ci-primary"
-          ></path>
-        </svg>
-        Danh sách giáo viên
-        <button
-          class="btn btn-primary float-right"
-          @click="createTeacher"
-          title="Thêm mới"
-        >
-          <i class="fa fa-plus-square"></i>
-        </button>
-        <button class="btn btn-instagram float-right btn-add-file"
-          @click="createFileTeacher"
-          title="Thêm file"
-        >
-        <i class="fa fa-file-excel"></i>
-        </button>
+    <div class="row card">
+      <header class="card-header d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512" role="img" class="c-icon">
+            <path fill="var(--ci-primary-color, currentColor)"
+              d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+              class="ci-primary"
+            ></path>
+          </svg>
+          <span class="ml-1">Danh sách giáo viên</span>
+        </div>
+        <div>
+          <button
+            class="btn btn-primary float-right"
+            @click="createTeacher"
+            title="Thêm mới"
+          >
+            <i class="fa fa-plus-square"></i>
+          </button>
+          <button class="btn btn-instagram float-right btn-add-file"
+            @click="createFileTeacher"
+            title="Thêm file"
+          >
+            <i class="fa fa-file-excel"></i>
+          </button>
+        </div>
       </header>
       <div class="card-body">
         <div class="row mb-3">
