@@ -1,18 +1,20 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <PlanningStepsComponent :isActiveStep="isActiveStep" />
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4"
+        v-if="!plan.id">
+        <PlanningStepsComponent
+          :isActiveStep="isActiveStep" />
       </div>
       <div class="row">
-        <div class="col-12 mt-4">
+        <div class="col-12">
           <div class="card">
             <header class="card-header">
               {{ isCreate ? "Thêm mới kế hoạch" : "Chỉnh sửa kế hoạch" }}
             </header>
             <div class="card-body">
               <form @submit.prevent>
-                <div class="form-row pt-3">
+                <div class="form-row">
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
                     <label>Ngày bắt đầu
                       (<span class="text--red">*</span>)

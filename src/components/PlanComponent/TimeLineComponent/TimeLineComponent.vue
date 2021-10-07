@@ -24,6 +24,10 @@ export default {
       type: Array,
       default: null,
     },
+    planGuid: {
+      type: String,
+      default: null,
+    },
   },
   data() {
     return {
@@ -113,6 +117,6 @@ export default {
 }
 </script>
 
-<style lang='scss'>
-@import './TimeLineComponent.scss';
+<style lang="scss">
+@import "./TimeLineComponent.scss";
 </style>

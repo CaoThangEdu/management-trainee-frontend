@@ -10,7 +10,6 @@ import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import AppConfig from "../../../../src/app.config.json";
 import FacultyServices from "../../../services/faculty/facultyServices";
-import planningStepsComponent from "../../planningStepsComponent/planningStepsComponent";
 
 export default {
   extends: ComponentBase,
@@ -19,7 +18,6 @@ export default {
     AddTeacherFileComponent,
     ConfirmDialog,
     JwPagination,
-    planningStepsComponent
   },
   mixins: [CrudMixin],
   data() {

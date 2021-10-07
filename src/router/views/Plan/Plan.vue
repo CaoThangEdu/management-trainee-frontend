@@ -3,10 +3,7 @@
   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
     <PlanningStepsComponent :isActiveStep="isActiveStep" />
   </div>
-  <div class="col-lg-4 col-md-4 col-sm-12 col-12">
-    <TimeLineComponent :plans="plans" />
-  </div>
-  <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-4">
     <ListPlanComponent :plans="plans"
       @change-data-plan-component="updateDataPlan"
       @change-page="changePage" />
@@ -16,7 +13,6 @@
 
 <script>
 import ListPlanComponent from '../../../components/PlanComponent/ListPlanComponent/ListPlanComponent';
-import TimeLineComponent from '../../../components/PlanComponent/TimeLineComponent/TimeLineComponent';
 import ComponentBase from '../../../components/common/component-base/ComponentBase.vue';
 import PlanService from '../../../services/plan/planServices';
 import AppConfig from '../../../../src/app.config.json';
@@ -28,7 +24,6 @@ export default {
   components: {
     ListPlanComponent,
     PlanningStepsComponent,
-    TimeLineComponent
   },
 
   data() {
