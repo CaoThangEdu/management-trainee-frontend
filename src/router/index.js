@@ -159,6 +159,18 @@ const routes = [
       },
     },
   ]
+  },  
+  {
+    path: "/user-manage",
+    name: "user-manage",
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        "../router/views/UserManagement/UserManagement.vue"
+      ),
+    meta: {
+      breadcrumbName: "Quản lý tài khoản",
+    },
   },
   {
     path: "/confirm-referra-file",
@@ -166,7 +178,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
-        "../router/views/ConfirmReferralFile/ConfirmReferralFile.vue"
+        '../router/views/ConfirmReferralFile/ConfirmReferralFile.vue'
       ),
     meta: {
       breadcrumbName: "Duyệt phiếu giới thiệu",

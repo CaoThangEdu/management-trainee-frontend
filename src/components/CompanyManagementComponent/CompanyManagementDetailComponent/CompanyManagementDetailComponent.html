@@ -16,7 +16,7 @@
         />
       </div>
       <div class="col-md-2 col-sm-8 pl-0">
-        <button @click="checkCompany()" class="btn btn-primary float-right ml-2">Kiểm tra</button>
+        <button @click="getCompanieByTaxCodeAsync()" class="btn btn-primary float-right ml-2">Kiểm tra</button>
       </div>
     </div>
     <div class="form-group row">
@@ -27,7 +27,6 @@
           class="form-control"
           id="name"
           v-model="company.title"
-          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>
@@ -39,7 +38,6 @@
           class="form-control"
           id="name"
           v-model="company.owner"
-          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>
@@ -51,7 +49,6 @@
           class="form-control"
           id="name"
           v-model="company.companyAddress"
-          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>
@@ -63,7 +60,6 @@
           class="form-control"
           id="name"
           v-model="company.phoneNumber"
-          :readonly="isConfirmed && !company.id"
         />
       </div>
     </div>
@@ -75,23 +71,7 @@
           class="form-control"
           id="name"
           v-model="company.career"
-          :readonly="isConfirmed && !company.id"
         />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái </label>
-      <div class="col-md-8 col-sm-8">
-        <div class="input-group mb-3">
-          <select
-            class="form-control form-select form-select-class"
-            id="inputGroupSelect02"
-            v-model="company.status"
-          >
-            <option value="Hoạt động">Hoạt động</option>
-            <option value="Không hoạt động">Không hoạt động</option>
-          </select>
-        </div>
       </div>
     </div>
   </div>

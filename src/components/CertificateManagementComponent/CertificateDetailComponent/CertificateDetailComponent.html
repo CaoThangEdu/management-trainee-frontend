@@ -1,6 +1,4 @@
-<BaseModal 
-  @mouse-click-outside="closeModal(false)" :modalName="`CertificateDetailComponent`"
-  :isShow="isShow"
+<BaseModal @mouse-click-outside="closeModal(false)" :modalName="`CertificateDetailComponent`" :isShow="isShow"
   size="lg">
   <div class="">
     <div class="form-group row">
@@ -8,9 +6,7 @@
         Mã số thuế (<span class="text--red">*</span>)
       </label>
       <div class="col-md-6 col-sm-8 pr-0">
-        <input type="text" class="form-control"
-          v-model="certificate.taxCode" />
-         
+        <input type="text" class="form-control" v-model="certificate.taxCode" />
       </div>
       <div class="col-md-2 col-sm-8 pl-0">
         <button @click="checkCompany()" class="btn btn-primary float-right ml-2">Kiểm tra</button>
@@ -19,49 +15,45 @@
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Tên công ty </label>
       <div class="col-md-8 col-sm-8">
-        <input :readonly="isConfirmed" type="text" class="form-control"
-          v-model="certificate.companyName" />
+        <input type="text" class="form-control" v-model="certificate.companyName" />
       </div>
     </div>
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Chủ sở hữu </label>
       <div class="col-md-8 col-sm-8">
-        <input :readonly="isConfirmed" type="text" class="form-control"
-          v-model="certificate.owner" />
+        <input type="text" class="form-control" v-model="certificate.owner" />
       </div>
     </div>
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Địa chỉ</label>
       <div class="col-md-8 col-sm-8">
-        <input :readonly="isConfirmed" type="text" class="form-control"
-          v-model="certificate.companyAddress" />
+        <input type="text" class="form-control" v-model="certificate.companyAddress" />
       </div>
     </div>
-
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Số điện thoại công ty</label>
       <div class="col-md-8 col-sm-8">
-        <input :readonly="isConfirmed" type="text" class="form-control"
-          v-model="certificate.phoneNumberOfCompany" />
+        <input type="text" class="form-control" v-model="certificate.phoneNumberOfCompany" />
       </div>
     </div>
-
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">Ngành nghề</label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" v-model="certificate.career" />
+      </div>
+    </div>
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">Số điện thoại sinh viên</label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control"
-          v-model="certificate.phoneNumberOfStudent" />
+        <input type="text" class="form-control" v-model="certificate.phoneNumberOfStudent" />
       </div>
     </div>
   </div>
-
   <template #header>
     <h5>Đăng ký giấy giới thiệu thực tập</h5>
-    <button class="close" style="color: red;" 
-      @click="closeModal(false)">&times;
+    <button class="close" style="color: red;" @click="closeModal(false)">&times;
     </button>
   </template>
-
   <template #footer>
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
@@ -69,11 +61,14 @@
         <AlertMessages :messages="errorMessages" />
       </div>
     </div>
-
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
-        <button @click="save()" class="btn btn-primary float-right ml-2">Đăng ký</button>
+        <button @click="save()" class="btn btn-primary float-right ml-2"> {{certificate.id ? "Cập nhật" : "Đăng
+          ký"}}</button>
+        <button class="btn btn-dark float-right" @click="closeModal(false)">
+          Hủy
+        </button>
       </div>
     </div>
   </template>

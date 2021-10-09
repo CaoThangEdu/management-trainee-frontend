@@ -7,16 +7,6 @@ export default class CompanyService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/Company`
   }
 
-  async getCompaniesAsync() {
-    try {
-      const response = await this.http.get(`${this.url}/GetAll`);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
-
   async createCompanyAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);
@@ -50,6 +40,20 @@ export default class CompanyService extends ServicesBaseAPI {
   async getCompanieByTaxCodeAsync(taxCode) {
     try {
       const response = await this.http.get(`${this.url}/GetCompany?TaxCode=${taxCode}`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async getCompaniesAsync(object) {
+    const query = {
+      Keyword: object.keyword,
+      Status: object.status ?? ''
+    };
+    try {
+      const response = await this.http.post(`${this.url}/Filter`, query);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

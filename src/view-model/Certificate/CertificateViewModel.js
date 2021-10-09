@@ -10,8 +10,8 @@ export default class CertificateViewModel extends ViewModel {
       phoneNumberOfCompany: null,
       phoneNumberOfStudent: null,
       studentId: null,
+      career:null,
       status: 'unconfirmed', //confirmed, unconfirmed, complete
-      registrationDate: null,
     }
   }
 
@@ -22,7 +22,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },
@@ -31,7 +31,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },
@@ -40,7 +40,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },
@@ -49,7 +49,7 @@ export default class CertificateViewModel extends ViewModel {
         rules: {
           require: '',
           maxLength: {
-            max_value: 200
+            max_value: 500
           }
         }
       },
@@ -63,7 +63,16 @@ export default class CertificateViewModel extends ViewModel {
         }
       },
       phoneNumberOfStudent: {
-        label: 'Số điện thoại',
+        label: 'Số điện thoại sinh viên',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      career: {
+        label: 'Ngành nghề',
         rules: {
           require: '',
           maxLength: {

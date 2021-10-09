@@ -5,6 +5,13 @@
 <script>
 
 export default {
+
+    name:"InternshipConfirmationComponent",
+    data(){
+        return{
+            intership: 'false'
+        }
+    }
     
 }
 </script>

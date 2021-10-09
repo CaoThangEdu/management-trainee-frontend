@@ -9,7 +9,7 @@ export default class ClassService extends ServicesBaseAPI {
 
   async getClassesAsync() {
     try {
-      const response = await this.http.post(`${this.url}/FilterAll`);
+      const response = await this.http.get(`${this.url}/GetAll`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

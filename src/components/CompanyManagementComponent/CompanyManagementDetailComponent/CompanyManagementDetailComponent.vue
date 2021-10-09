@@ -19,7 +19,6 @@ export default {
       isShow: false,
       company: {},
       errorMessages: [],
-      isConfirmed:true,
       companiesByTaxCode:{}
     };
   },
@@ -38,21 +37,24 @@ export default {
       await this.save();
     },
 
-    closeModal(changeData) {
+    closeModal(changeData, company, action) {
       this.isShow = false;
       this.company = {};
-
       if (changeData) {
-        this.$emit("change-data");
+        this.$emit("change-data", company, action);
       }
     },
 
       async getCompaniesAsync(){
+      const filterCompany = {
+        keyword:"",
+        status:""
+      };
       // Call Api
       this.showLoading();
       const api = new CompanyService()
 
-      const response = await api.getCompaniesAsync()
+      const response = await api.getCompaniesAsync(filterCompany)
       this.showLoading(false);
 
       if(!response.isOK){
@@ -63,7 +65,7 @@ export default {
         );
         return;
       }
-      let companies = response.data.items
+      let companies = response.data;
       companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
       this.companiesByTaxCode = companies;
     },
@@ -82,25 +84,17 @@ export default {
           `${AppConfig.notification.title_default}`,
           response.errorMessages
         );
-        return;
       }
-      return response.data
-    },
-
-    async checkCompany(){
-
-      let company = await this.getCompanieByTaxCodeAsync();
-      if(!company){
-        this.isConfirmed = false;
+      if(response.data.taxCode === null && response.data.title === null 
+        && response.data.companyAddress === null && response.data.owner === null
+        && response.data.career === null && response.data.phoneNumber === null){
          return this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
           "Không tìm thấy công ty vui lòng nhập thông tin công ty!"
         );
-       
-      }
-        return this.company = company;
-      
+        }
+      return this.company = response.data
     },
 
     async createCompanyAsync() {
@@ -111,6 +105,7 @@ export default {
           "Công ty đã tồn tại trong danh sách!"
         );
       }
+      this.company.status =  "active";
       this.showLoading();
       let api = new CompanyService();
       let response = await api.createCompanyAsync(this.company);
@@ -128,8 +123,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-
-      this.closeModal(true);
+      this.closeModal(true, response.data, "create");
     },
 
     async updateCompanyAsync() {
@@ -152,7 +146,7 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-      this.closeModal(true);
+     this.closeModal(true, response.data, "update");
     },
 
     async save() {

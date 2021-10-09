@@ -7,7 +7,6 @@ import AlertMessages from "../common/alert/alert-messages/AlertMessages";
 import JwPagination from "jw-vue-pagination";
 import UserService from "../../services/user/userService";
 import AppConfig from "../../../src/app.config.json";
-
 export default {
   name: "UserManagementComponent",
   extends: ComponentBase,
@@ -78,7 +77,6 @@ export default {
         this.createUserAsync(this.dataForCreateUser);     
       }); 
     },
-
     async createUserAsync(user) {
       // Call Api
       this.showLoading();
@@ -93,7 +91,6 @@ export default {
         );
       }
     },
-
     async getUserAsync() {
       // Call Api
       this.showLoading();
@@ -110,12 +107,10 @@ export default {
       }
       this.users = response.data.items;
     },
-
      onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
-
     changePage(currentPage) {
       this.$emit("change-page", currentPage);
     },
