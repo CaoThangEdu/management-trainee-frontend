@@ -233,7 +233,6 @@ export default {
           `${AppConfig.notification.title_default}`,
           response.errorMessages
         );
-        return;
       }
     },
 

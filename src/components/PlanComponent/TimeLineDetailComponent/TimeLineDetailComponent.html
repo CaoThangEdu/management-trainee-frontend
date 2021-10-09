@@ -3,19 +3,6 @@
   <div class="">
     <div class="form-group row">
       <label class="col-md-4 col-sm-4 col-form-label">
-        Đợt thực tập (<span class="text--red">*</span>)
-      </label>
-      <div class="col-md-8 col-sm-8">
-        <select class="form-control" v-model="timeline.internshipCourseId"
-          @change="changeTimeLineDay()">
-          <option v-for="(item, index) in plans" :key="index" 
-            :value="item.id">{{ item.internshipCourseName }}</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">
         Tiêu đề (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
@@ -65,7 +52,7 @@
   </div>
 
   <template #header>
-    <h5>{{timeline.id ? "Cập nhật lớp" : "Thêm mới lớp"}}</h5>
+    <h5>{{timeline.id ? "Cập nhật timeline" : "Thêm mới timeline"}}</h5>
     <button class="close" style="color: red;" @click="closeModal(false)">&times;</button>
   </template>
 
