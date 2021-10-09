@@ -52,7 +52,7 @@ export default {
         status: "",
         classId: "",
       },
-      selectUpdateCertificates:[]
+      selectUpdateCertificates:[],
     };
   },
 
@@ -317,13 +317,28 @@ export default {
       this.companiesByTaxCode[company.taxCode] = company;
     },
 
-    selectUpdateCertificate(certificate){
-      if(certificate === "all"){
+    selectUpdateCertificate(event){
+      // select all
+      if(event.target.value === "-1"){
+        if(event.target.checked === false){
+          this.selectUpdateCertificates = [];
+          return;
+        }
         this.selectUpdateCertificates = this.certificates;
         return;
       }
-      this.selectUpdateCertificates.push(certificate);
+      //select item
+      if(event.target.checked === false){
+        for(let i = 0; i <= this.selectUpdateCertificates.length - 1; i++){
+          if(this.certificates[event.target.value].id === this.selectUpdateCertificates[i].id){
+            this.selectUpdateCertificates.splice(i, 1);
+          }
+        }
+        return;
+      }
+      this.selectUpdateCertificates.push(this.certificates[event.target.value]);
     }
+    
   },
 };
 </script>

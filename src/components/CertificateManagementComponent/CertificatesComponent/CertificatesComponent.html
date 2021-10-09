@@ -53,8 +53,8 @@
               <tr>
                 <th v-if="isAdmin === true" scope="col" class="align-middle">
                   <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" @change="selectUpdateCertificate('all')">
-                  <label class="form-check-label" for="inlineCheckbox1">STT</label>
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox" :value="-1" @change="selectUpdateCertificate">
+                  <label class="form-check-label" for="inlineCheckbox">STT</label>
                 </div></th>
                 <th v-if="isAdmin === false" scope="col">STT</th>
                 <th scope="col" class="align-middle">Thông tin sinh viên</th>
@@ -68,9 +68,10 @@
                 <th scope="row">
                   <div v-if="isAdmin === true" class="form-check form-check-inline">
                     <input class="form-check-input" 
-                    @change="selectUpdateCertificate(item)" 
-                    type="checkbox" id="inlineCheckbox1">
-                    <label class="form-check-label" for="inlineCheckbox1"> {{index + 1}}</label>
+                    @change="selectUpdateCertificate" 
+                    :value="index"
+                    type="checkbox" :id="'inlineCheckbox' + index" >
+                    <label class="form-check-label" :for="'inlineCheckbox' + index" > {{index + 1}}</label>
                     </div>
                     <div v-if="isAdmin === false">{{index + 1}}</div>
                 </th>
