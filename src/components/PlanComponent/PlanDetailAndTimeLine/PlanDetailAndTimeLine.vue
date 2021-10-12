@@ -75,6 +75,30 @@
             </div>
           </div>
         </div>
+        <div class="col-12">
+          <div class="card">
+            <header class="card-header">
+              <h4 class="float-left">Phân công</h4>
+              <div class="float-right">
+                <router-link
+                    class="btn btn-info"
+                    :to="{name:'phan-cong-dot', params: { internshipCourseId: guid } }"
+                    title="Chi tiết">
+                    <i class="fas fa-search-plus"></i>                    
+                  </router-link>
+              </div>
+            </header>
+            <div class="card-body">
+              <Highcharts 
+                v-if="assignedStudents.length!=0 && unassignStudents.length!=0"
+                :assignedStudents="assignedStudents"
+                :unassignStudents="unassignStudents"
+                :labelsProps="'Số sinh viên'"
+                :labelChart="'Thống kê phân công'"
+                />
+             </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -92,6 +116,8 @@ import crudMixin from "../../../helpers/mixins/crudMixin";
 import FacultyServices from "../../../services/faculty/facultyServices";
 import TimeLineComponent from "../TimeLineComponent/TimeLineComponent.vue";
 import moment from "moment";
+import ClassServices from "../../../services/class/classServices";
+import Highcharts from "../../common/high-chart/HighChart.vue";
 
 export default {
   name: "PlanDetail",
@@ -100,10 +126,10 @@ export default {
   mixins: [localStorageMixin, crudMixin],
   components: {
     TimeLineComponent,
+    Highcharts,
   },
   data() {
     return {
-      isCreate: true,
       plan: {},
       isThemNganh: false,
       career: {},
@@ -145,6 +171,11 @@ export default {
       plans: [],
       isNotification: null,
       faculties: [],
+      statistiesStudentInClass: [],
+      chartDataStatisticsStudentInClass: [],
+      labelsDataStatisticsStudentInClass: [],
+      assignedStudents: [],
+      unassignStudents: [],
     };
   },
 
@@ -157,7 +188,6 @@ export default {
       return;
     }
     this.plans = this.plans.filter((plan) => plan.id != this.guid);
-    this.isCreate = false;
     await this.getPlanByIdAsync(this.guid);
     this.planId = this.plan.id;
     this.trainingSystemId = this.getInfoObject(
@@ -167,17 +197,46 @@ export default {
     this.plan.startDay =  new Date(this.plan.startDay);
     this.plan.endDay = new Date(this.plan.endDay);
     this.filterCareer();
-    let idPlanStore = localStorageMixin.methods.getLocalStorage("ID_PLAN");
-    if (!idPlanStore) {
-      return;
-    }
-    if (!this.planId) {
-      this.planId = idPlanStore;
-      await this.getPlanByIdAsync(this.planId);
-    }
+    await this.getStatisticsStudentInClass();
   },
 
   methods: {
+    getChartStatisticsStudentInClass() {
+      for (let student of this.statistiesStudentInClass) {
+        let assignedStudent = {
+          name: student.className,
+          y: student.numberOfStudentAssigned,
+        }
+        this.assignedStudents.push(assignedStudent);
+        let unassignedStudent = {
+          name: student.className,
+          y: student.numberOfStudentUnAssign,
+        }
+        this.unassignStudents.push(unassignedStudent);
+        this.chartDataStatisticsStudentInClass.push(student.numberOfStudentAssigned);
+        this.labelsDataStatisticsStudentInClass.push(student.className);
+      }
+    },
+
+    async getStatisticsStudentInClass() {
+      this.showLoading();
+      const api = new ClassServices();
+      const response = await api.getStatisticalClassUnassigned(
+        {internshipCourseId: this.guid}
+      );
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.statistiesStudentInClass = response.data;
+      this.getChartStatisticsStudentInClass();
+    },
+
     convertDateToString(date) {
       return moment(date).format('DD/MM/YYYY');
     },

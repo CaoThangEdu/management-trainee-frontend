@@ -1,5 +1,5 @@
 <div class="auto_assignment tab-students-assign">
-  <div class="notification" v-if="instructors.length == students.length">
+  <div class="notification" v-if="studentsRemain==0">
     <h5>Bạn đã phân công cho sinh viên trong đợt thực tập này</h5>
   </div>
   <div class="restore_assign" v-if="instructors.length>0">
@@ -60,8 +60,9 @@
     </figure>
   </div>
 
-  <div class="continue-assignment">
-    <hr>    
+  <div class="continue-assignment"
+    v-if="studentsRemain>0">
+    <hr v-if="instructors.length>0">    
     <div class="col-sm-4 col-md-4 col-lg-4">
       <label>Số lượng sinh viên mà mỗi giáo viên sẽ quản lý {{averageNumber}}
         (<span class="text--red">*</span>)

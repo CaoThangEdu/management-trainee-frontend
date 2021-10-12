@@ -7,6 +7,7 @@
       v-bind:classes="classes"
       v-bind:teachers="teachers"
       v-bind:statisticalPlan="statisticalPlan"
+      :statistiesStudentInClass="statistiesStudentInClass"
      />
   </div>
   <div class="student-assignment mb-4">
@@ -43,6 +44,7 @@
           v-bind:students="students"
           v-bind:numberOfStudentInInternshipCourse="studentInInternshipCourse.length"
           @change-instructors="changeInstructors"
+          :statistiesStudentInClass="statistiesStudentInClass"
         />
       </Tab>
     </Tabs>
