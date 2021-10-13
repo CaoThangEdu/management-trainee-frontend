@@ -70,7 +70,7 @@ export default [{
       },
       {
           _name: "CSidebarNavItem",
-          name: "Quản lý hệ - ngành",
+          name: "Quản lý khoa - hệ - ngành",
           to: "/trainingsystem-management",
           icon: "cil-calculator",
           role: "Admin",
@@ -110,5 +110,12 @@ export default [{
           icon: "cil-pencil",
           role: "STUDENT",
       },
+      {
+        _name: "CSidebarNavItem",
+        name: "Thông kê xác nhận thực tập",
+        to: "/internship-confirmation-statistics",
+        icon: "cil-pencil",
+        role: "Admin",
+    },
   ],
 }, ];

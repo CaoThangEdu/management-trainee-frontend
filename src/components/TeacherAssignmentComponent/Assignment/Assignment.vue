@@ -188,6 +188,14 @@ export default {
         return;
       }
       this.teachers = response.data;
+
+      if(this.teachers.length === 0){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Hiện tại chưa có giáo viên. Vui lòng thêm giáo viên !"
+        );
+      }
     },
 
     async getStudentsInInternshipCourseAsync() {

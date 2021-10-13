@@ -1,15 +1,18 @@
 import ServicesBaseAPI from '../servicesBaseApi'
 import AppConfig from '../../app.config.json'
 
-export default class UserService extends ServicesBaseAPI {
+export default class InternshipConfirmationServices extends ServicesBaseAPI {
   constructor() {
     super();
-    this.url = `${AppConfig.apiHost}/Faculty`
+    this.url = `${AppConfig.apiHost}/InternshipConfirmation`
   }
 
-  async getFacultiesFilterAsync(object) {
+
+
+  async internshipConfirmationAsync(query) {
+
     try {
-      const response = await this.http.post(`${this.url}/FilterAll`, object);
+      const response = await this.http.post(`${this.url}/Create`, query);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -17,17 +20,7 @@ export default class UserService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async createFacultyAsync(object) {
-    try {
-      const response = await this.http.post(`${this.url}/Create`, object);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
-
-  async updateFacultyAsync(object) {
+  async updateInternshipConfirmationAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);
       this.setResult(response);
@@ -37,9 +30,19 @@ export default class UserService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async deleteFacultyAsync(id) {
+  async deleteInternshipConfirmationAsync(id) {
     try {
       const response = await this.http.delete(`${this.url}/Delete?id=${id}`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async fliterInternshipConfirmationAsync() {
+    try {
+      const response = await this.http.get(`${this.url}/GetAll`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

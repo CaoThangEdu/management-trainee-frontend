@@ -67,7 +67,136 @@
                     />
                   </div>
 
-                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <div class="wrapCollapse">
+                      <div v-for="(faq, i) in faqFaculties" :key="i">
+                        <dt>
+                          <div class="title-collapse">
+                            <a
+                              @submit.prevent
+                              :class="{
+                                active:
+                                  currentFaqTrainingSystem == i,
+                              }"
+                              @click="openComponentFaculty(i)"
+                            >
+                              {{ faq.title }}
+                            </a>
+                          </div>
+                        </dt>
+                        <dd
+                          class="display-hidden"
+                          :class="{ active: currentFaqFaculty == i }"
+                        >
+                          <div
+                            class="col-xl-12 col-md-12 col-sm-12 col-12"
+                            v-if="faq.text == 'khoa'"
+                          >
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                              v-if="!plan.id"
+                            >
+                              <label>Khoa
+                                (<span class="text--red">*</span>)
+                              </label>
+                              <div class="input-group mb-3">
+                                <select
+                                  class="
+                                    form-control form-select form-select-class
+                                  "
+                                  v-model="facultyId"
+                                  @change="filterCareer"
+                                >
+                                  <option
+                                    v-for="(item, index) in faculties"
+                                    :key="index"
+                                    :value="item.id"
+                                  >
+                                    {{ item.facultyName }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                              v-if="
+                                plan.id &&
+                                faculties !=0 &&
+                                careers.length != 0 &&
+                                trainingSystems.length != 0
+                              "
+                            >
+                              <label>Khoa
+                                (<span class="text--red">*</span>)
+                              </label>
+                              <div class="input-group mb-3">
+                                <select
+                                  class="
+                                    form-control form-select form-select-class
+                                  "
+                                  v-model="facultyId"
+                                  @change="filterCareer"
+                                >
+                                  <option
+                                    v-for="(item, index) in faculties"
+                                    :key="index"
+                                    :value="item.id"
+                                  >
+                                    {{ item.facultyName }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="col-xl-12 col-md-12 col-sm-12 col-12"
+                            v-if="faq.text == 'themKhoa'"
+                          >
+                            <div
+                              class="form-group col-sm-12 col-md-12 col-lg-12"
+                            >
+                              <label
+                                >Tên khoa (<span class="text--red"
+                                  >*</span
+                                >)
+                              </label>
+                              <div class="row">
+                                <div class="col-md-10 col-sm-10">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    v-model="
+                                      keyFaculty.facultyName
+                                    "
+                                  />
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                  <button
+                                    class="btn btn-linkedin"
+                                    @click="createFacultyAsync()"
+                                  >
+                                    +<em class="fa fa-praying-hands" style="color: white"></em>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div
+                                v-if="createTrainingLoading"
+                                role="status"
+                                aria-hidden="false"
+                                aria-label="Loading"
+                                class="spinner-border text-primary"
+                                style="width: 3rem; height: 3rem"
+                              ></div>
+                            </div>
+                          </div>
+                        </dd>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
                     <div class="wrapCollapse">
                       <div v-for="(faq, i) in faqTrainingSystems" :key="i">
                         <dt>
@@ -198,7 +327,7 @@
                     </div>
                   </div>
 
-                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
                     <div class="wrapCollapse">
                       <div v-for="(faq, i) in faqs" :key="i">
                         <dt>
@@ -416,6 +545,17 @@ export default {
           text: "themHe",
         },
       ],
+      faqFaculties: [
+        {
+          title: "Khoa",
+          text: "khoa",
+        },
+        {
+          title: "Thêm mới khoa",
+          text: "themKhoa",
+        },
+      ],
+      currentFaqFaculty:0,
       currentFaq: 0,
       currentFaqTrainingSystem: 0,
       careersFilter: [],
@@ -428,6 +568,10 @@ export default {
       plans: [],
       isNotification: null,
       faculties: [],
+      facultyId: null,
+      keyFaculty:{
+        facultyName:""
+      }
     };
   },
 
@@ -463,6 +607,7 @@ export default {
   methods: {
     async getFacultiesFilterAsync() {
       let facultyFilter = {
+        facultyName:"",
       };
       // Call Api
       this.showLoading();
@@ -590,6 +735,9 @@ export default {
     openComponentTrainingSystem(i) {
       this.currentFaqTrainingSystem = i;
     },
+    openComponentFaculty(i) {
+      this.currentFaqFaculty = i;
+    },
 
     filterCareer() {
       this.careersFilter = this.careers.filter(
@@ -626,6 +774,7 @@ export default {
       }
       this.plan.careersId = response.data.id;
       this.careerNamePlan = response.data.careersName;
+      this.openComponet(0);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -731,6 +880,7 @@ export default {
       }
       this.trainingSystemId = response.data.id;
       this.trainingSystems.push(response.data);
+      this.openComponentTrainingSystem(0);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -892,6 +1042,36 @@ export default {
         "success",
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_success_default}`
+      );
+    },
+
+     async createFacultyAsync() {
+       if(this.keyFaculty.facultyName === ""){
+         return this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Vui lòng nhập tên khoa."
+        );
+       }
+      this.showLoading();
+      let api = new FacultyServices();
+      let response = await api.createFacultyAsync(this.keyFaculty);
+      this.showLoading(false);
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.faculties.push(response.data);
+      this.facultyId = response.data.id;
+      this.openComponentFaculty(0);
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default}`
       );
     },
 

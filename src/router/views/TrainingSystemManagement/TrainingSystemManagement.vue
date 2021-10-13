@@ -12,10 +12,17 @@
             >
             <div
               class="col-xl-12 col-md-12 col-sm-12 col-12"
+              v-if="faq.text == 'ListFacultyManagementComponent'"
+            >
+              <ListFacultyManagementComponent 
+              @change-training-system="changeTrainingSystem" />
+            </div>
+            <div
+              class="col-xl-12 col-md-12 col-sm-12 col-12"
               v-if="faq.text == 'ListTrainingSystemManagementComponent'"
             >
               <ListTrainingSystemManagementComponent 
-                @change-training-system="changeTrainingSystem" />
+                v-if="renderCareerComponent" />
             </div>
             <div
               class="col-xl-12 col-md-12 col-sm-12 col-12"
@@ -34,14 +41,20 @@
 <script>
 import ListTrainingSystemManagementComponent from "../../../components/TrainingSystemManagementComponent/ListTrainingSystemManagementComponent/ListTrainingSystemManagementComponent";
 import ListCareerManagementComponent from "../../../components/CareerManagementComponent/ListCareerManagementComponent/ListCareerManagementComponent";
+import ListFacultyManagementComponent from "../../../components/FacultyManagementComponent/ListFacultyManagementComponent/ListFacultyManagementComponent.vue"
 export default {
   components: {
     ListTrainingSystemManagementComponent,
     ListCareerManagementComponent,
+    ListFacultyManagementComponent
   },
   data() {
     return {
       faqs: [
+        {
+          title: "Danh sách khoa",
+          text: "ListFacultyManagementComponent",
+        },
         {
           title: "Danh sách hệ",
           text: "ListTrainingSystemManagementComponent",
