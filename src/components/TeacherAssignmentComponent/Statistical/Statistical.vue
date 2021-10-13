@@ -21,18 +21,24 @@ export default {
     },
     teachers: {
       type: Array,
+      default: [],
     },
     statisticalPlan: {
-      type: Object,        
+      type: Object, 
+      default: {},       
     },
     studentInInternshipCourse: {
       type: Array,
+      default: [],
     },
+    statistiesStudentInClass: {
+      type: Array,
+      default: [],
+    }
   },
 
   data() {
     return {
-      statistiesStudentInClass: [],
       statistical: {
         description: "",
         internshipCourseName: "",
@@ -74,55 +80,31 @@ export default {
       assigned,
     ];
     this.$forceUpdate();
-    await this.getStatisticsStudentInClass();
-    this.getChartStatisticsStudentInClass();
   },
 
   methods: {
     getChartStatisticsStudentInClass() {
       for (let student of this.statistiesStudentInClass) {
-        let totalStudents = this.studentInInternshipCourse.filter(
-          studentInIntern => studentInIntern.className == student.className).length;
         let assignedStudent = {
           name: student.className,
-          y: totalStudents - student.number,
+          y: student.numberOfStudentAssigned,
         }
         this.assignedStudents.push(assignedStudent);
         let unassignedStudent = {
           name: student.className,
-          y: student.number,
+          y: student.numberOfStudentUnAssign,
         }
         this.unassignStudents.push(unassignedStudent);
-        this.chartDataStatisticsStudentInClass.push(student.number);
+        this.chartDataStatisticsStudentInClass.push(student.numberOfStudentAssigned);
         this.labelsDataStatisticsStudentInClass.push(student.className);
       }
-    },
-    
-    async getStatisticsStudentInClass() {
-      this.showLoading();
-      const api = new ClassService();
-      this.statisticalRequest.internshipCourseId = this.internshipCourseId;
-      const response = await api.getStatisticalClassUnassigned(
-        this.statisticalRequest
-      );
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.statistiesStudentInClass = response.data;
     },
   },
 
   watch: {
-    async studentInInternshipCourse() {
+    statistiesStudentInClass() {
       this.assignedStudents = [];
       this.unassignStudents = [];
-      await this.getStatisticsStudentInClass();
       this.getChartStatisticsStudentInClass();
     }
   }

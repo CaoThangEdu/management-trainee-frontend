@@ -18,7 +18,7 @@ export default class ClassService extends ServicesBaseAPI {
   }
   async getStatisticalClassUnassigned(object){
     try {
-      const response = await this.http.post(`${this.url}/GetStatisticalClassUnassigned`, object);
+      const response = await this.http.post(`${this.url}/GetStatistical`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

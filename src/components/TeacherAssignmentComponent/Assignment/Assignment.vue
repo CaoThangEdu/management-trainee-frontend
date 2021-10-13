@@ -59,6 +59,7 @@ export default {
       classId: "",
       teacherId: "",
       statisticalPlan: null,
+      statistiesStudentInClass: [],
     };
   },
   async mounted() {
@@ -68,9 +69,27 @@ export default {
     await this.getStudentsUnassigned();
     await this.getStudentsInInternshipCourseAsync();
     await this.getPlanService();
+    await this.getStatisticsStudentInClass();
   },
 
   methods: {
+    async getStatisticsStudentInClass() {
+      this.showLoading();
+      const api = new ClassService();
+      const response = await api.getStatisticalClassUnassigned(
+        {internshipCourseId: this.internshipCourseId}
+      );
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.statistiesStudentInClass = response.data;
+    },
     async changeInstructors(changeInstructors) {
       if (changeInstructors) {
         await this.getInstructorsAsync();

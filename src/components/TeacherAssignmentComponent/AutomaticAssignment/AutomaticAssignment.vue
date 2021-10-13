@@ -40,9 +40,9 @@ export default {
       numberOfTeacher: 0,
       statistics: [],
       isShowAssignment: false,
-        pageOfItems: [],
-        pageOfItemsInstructor: [],
-        customLabels: {
+      pageOfItems: [],
+      pageOfItemsInstructor: [],
+      customLabels: {
         first: "<<",
         last: ">>",
         previous: "<",
@@ -51,6 +51,7 @@ export default {
       confirmInternshipCourseId: null,
       isShowContinueAssignment: false,
       showCreateAssignments: false,
+      studentsRemain: 0,
     };
   },
   props: {
@@ -60,18 +61,28 @@ export default {
     },
     students: {
       type: Array,
+      default: [],
     },
     classes: {
       type: Array,
+      default: [],
     },
     teachers: {
       type: Array,
+      default: [],
     },
     instructors: {
       type: Array,
+      default: [],
     },
-    numberOfStudentInInternshipCourse: Number,
-
+    numberOfStudentInInternshipCourse: {
+      type: Number,
+      default: 0,
+    },
+    statistiesStudentInClass: {
+      type: Array,
+      default: [],
+    }
   },
 
   methods: {
@@ -286,6 +297,13 @@ export default {
     changePage(currentPage) {
       this.$emit("change-page", currentPage);
     },
+  },
+
+  watch: {
+    statistiesStudentInClass() {
+      const reducer = (previousValue, currentValue) => previousValue + currentValue.numberOfStudentUnAssign;
+      this.studentsRemain = this.statistiesStudentInClass.reduce(reducer, 0);
+    }
   },
 };
 </script>
