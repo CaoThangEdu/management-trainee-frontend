@@ -89,14 +89,22 @@ const actions = {
   async updateUserInfoDataAsync({
     commit
   }) {
-    let token = localStorage.getItem('AUTH_TOKEN');
-    let tokenKey = JSON.parse(token);
     let api = new AccountService();
-    let userResult = await api.getUserAsync(tokenKey.userId);
+    let userResult = await api.getUserLoggedAsync();
     if (userResult.isOK) {
       commit('setUserInfo', userResult.data)
     }
     return userResult;
+  },
+
+  /**
+    * SetUserInfo bằng rỗng khi logout
+    * @param {Object} param0 commit to mutations
+    */
+  updateUserInfoDataWhileLogout({
+    commit
+  }) {
+    commit('setUserInfo', '')
   },
 
   /**

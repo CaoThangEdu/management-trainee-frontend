@@ -47,13 +47,16 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-md-12 text-left">
+                  <div class="col-md-12">
                     <button 
                       @click.prevent.stop="login" 
                       class="btn px-4 btn-primary">
                       Đăng nhập
                     </button>
                   </div>
+                </div>
+                <div class="col-12 pl-0 pr-0">
+                  <AlertMessages :messages="errorMessages" />
                 </div>
               </form>
             </div>
@@ -91,15 +94,17 @@
 import { mapActions } from "vuex";
 import AuthenticateService from "../../../services/authentication/authenticationServices";
 import ComponentBase from "../../../components/common/component-base/ComponentBase";
-// import AlertMessages from "../../components/common/alert/alert-messages/AlertMessages";
+import AlertMessages from "../../../components/common/alert/alert-messages/AlertMessages";
 import AppConfig from "../../../app.config.json";
+import localStorageMixin from "../../../helpers/mixins/localStorageMixin";
 
 export default {
   name: "LoginPage",
   extends: ComponentBase,
   components: {
-    // AlertMessages,
+    AlertMessages,
   },
+  mixins: [ localStorageMixin ],
   data() {
     return {
       requestInfo: {
@@ -120,17 +125,15 @@ export default {
     //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
     ...mapActions("user", ["updateUserInfoDataAsync", "setTokenInfoData"]),
 
-    /**
-     * Validate data login
-     */
-    validateLogin: function () {
+    // Validate data login
+    validateLogin () {
       this.errorMessages = [];
 
       if (!this.requestInfo.username) {
-        // display err
+        this.errorMessages.push('Vui lòng nhập tên đăng nhập')
       }
       if (!this.requestInfo.password) {
-        // display err
+        this.errorMessages.push('Vui lòng nhập mật khẩu')
       }
     },
 
@@ -162,9 +165,14 @@ export default {
         `${AppConfig.notification.title_default}`,
         'Đăng nhập thành công'
       );
-
+      let roles =
+        localStorageMixin.methods.parseJwt(response.data.accessToken)['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
       // goto the next page
-      this.$router.push({ name: 'them-ke-hoach'});
+      if (roles.toUpperCase() == 'ADMIN') {
+        this.$router.push({ name: 'them-ke-hoach'});
+      } else {
+        this.$router.push({ name: 'xac-nhan-thuc-tap'});
+      }
     },
   },
   computed: {
