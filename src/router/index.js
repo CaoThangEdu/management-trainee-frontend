@@ -326,6 +326,18 @@ const routes = [
     },
   },
   {
+    path: '/internship-confirmation-statistics',
+    name: 'Thông kê xác nhận thực tập',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../router/views/InternshipConfirmationStatistics/InternshipConfirmationStatistics.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Thống kê xác nhận thực tập',
+    },
+  },
+  {
     path: '/upload-file',
     name: 'Upload file',
     component: () =>
