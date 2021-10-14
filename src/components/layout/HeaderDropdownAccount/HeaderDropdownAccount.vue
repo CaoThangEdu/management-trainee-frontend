@@ -23,7 +23,8 @@
     >
       <strong>Settings</strong>
     </CDropdownHeader>
-    <CDropdownItem>
+    <CDropdownItem
+      @click="$router.push({ name: 'ProfileUserLogged' })">
       <CIcon name="cil-user" /> Thông tin cá nhân
     </CDropdownItem>
     <CDropdownItem
