@@ -4,13 +4,14 @@
       <div class="card">
         <header class="card-header">Đổi mật khẩu</header>
         <div class="card-body">
-          <div class="form-group row">
+          <div class="form-group row"
+            v-if="userProfile.user">
             <label class="col-form-label col-md-12 col-lg-3 col-xl-3 text-lg-right">
-              Tên lớp:
+              Email:
             </label>
             <div class="col-md-12 col-lg-6 col-xl-6">
               <input type="text" class="form-control" id="email"
-                v-model="userProfile.emailAddress"
+                v-model="userProfile.user.emailAddress"
                 readonly>
             </div>
           </div>
@@ -167,7 +168,7 @@ export default {
   },
 
   async mounted() {
-    if (this.userProfile.emailAddress) return;
+    if (this.userProfile) return;
     await this.getUserProfile();
   },
 };

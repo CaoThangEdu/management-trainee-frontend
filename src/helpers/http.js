@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../router/index'
+import store from '../store/index'
 import { options } from './options'
 import { STORAGE_KEY } from '../config/constant'
 import moment from 'moment'
@@ -181,6 +182,7 @@ export default class Http {
     // If http status code is unauthorized (401)
     if (error.request.status === options.httpStatusCode.unauthorized) {
       localStorage.removeItem(STORAGE_KEY.AUTH_TOKEN);
+      store.dispatch('user/updateUserInfoDataWhileLogout');
       e.errorMessages = "Phiên làm việc của bạn đã hết hạn."
       router.push({ name: "login" });
     }

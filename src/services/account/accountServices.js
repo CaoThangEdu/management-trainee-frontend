@@ -19,8 +19,17 @@ export default class UserService extends ServicesBaseAPI {
 
   async getUserAsync(id) {
     try {
-      // em test lại api chỗ này nha, bị 404 dư s á anh
       const response = await this.http.get(`${this.url}/Get?Id=${id}`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async getUserLoggedAsync() {
+    try {
+      const response = await this.http.get(`${AppConfig.apiHost}/Session/GetCurrentLoginInformations`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

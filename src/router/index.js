@@ -315,7 +315,7 @@ const routes = [
   },
   {
     path: '/internship-confirmation',
-    name: 'Xác nhận thực tập',
+    name: 'xac-nhan-thuc-tap',
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
