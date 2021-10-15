@@ -9,7 +9,8 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import AppConfig from '../../../../src/app.config.json'
 import CertificateViewModel from "../../../view-model/Certificate/CertificateViewModel"
 import CertificateService from '../../../services/certificate/CertificateServices'
-import CompanyService from '../../../services/company/companyServices'
+import CompanyService from '../../../services/company/companyServices';
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: 'CertificateDetailComponent',
@@ -32,8 +33,8 @@ export default {
         phoneNumberOfStudent: "",
         career:"",
         status: 'unconfirmed', //confirmed, unconfirmed, complete
-        mssv: "0306181003",
-        classId:"bb8fb04a-dea5-4521-9729-08d970127ad5",
+        mssv: "",
+        classId:"",
       },
       company:{},
       isCompanyConfirmation: false,
@@ -48,9 +49,31 @@ export default {
 
   async mounted(){
     await this.getCompaniesAsync();
+    if (!this.userProfile) {
+      await this.getUserProfile();
+    }
+    this.certificate.mssv = this.userProfile.mssv;
+    this.certificate.classId = this.userProfile.classId;
+  },
+
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
   },
 
   methods: {
+    async getUserProfile() {
+      if (this.tokenKey) {
+        if (!this.userProfile || !this.userProfile.id) {
+          await this.updateUserInfoDataAsync();
+        }
+      }
+    },
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
     async pressKeyEnter() {
       await this.save();
     },
