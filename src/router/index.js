@@ -116,6 +116,17 @@ const routes = [
       },
   },
   {
+    path: "/profile-user-logged",
+    name: "ProfileUserLogged",
+    component: () =>
+      import(
+        "../router/views/ProfileUserLogged/ProfileUserLogged"
+      ),
+      meta: {
+        breadcrumbName: "Thông tin cá nhân",
+      },
+  },
+  {
     path: "/user-manage",
     name: "user-manage",
     component: () =>
@@ -316,7 +327,7 @@ const routes = [
   },
   {
     path: '/internship-confirmation',
-    name: 'Xác nhận thực tập',
+    name: 'xac-nhan-thuc-tap',
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */

@@ -4,40 +4,41 @@
       <div class="card">
         <header class="card-header">Đổi mật khẩu</header>
         <div class="card-body">
-          <div class="form-group row">
+          <div class="form-group row"
+            v-if="userProfile.user">
             <label class="col-form-label col-md-12 col-lg-3 col-xl-3 text-lg-right">
-              Tên lớp:
+              Email:
             </label>
             <div class="col-md-12 col-lg-6 col-xl-6">
               <input type="text" class="form-control" id="email"
-                v-model="userProfile.emailAddress"
+                v-model="userProfile.user.emailAddress"
                 readonly>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-12 col-lg-3 col-xl-3 text-lg-right">
-              Mật khẩu cũ *:
+              Mật khẩu cũ (<span class="text--red">*</span>):
             </label>
             <div class="col-md-12 col-lg-6 col-xl-6">
-              <input type="text" class="form-control" id="password"
+              <input type="password" class="form-control" id="password"
                 v-model="passwordInfo.oldPassword">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-12 col-lg-3 col-xl-3 text-lg-right">
-              Mật khẩu mới *:
+              Mật khẩu mới (<span class="text--red">*</span>):
               </label>
             <div class="col-md-12 col-lg-6 col-xl-6">
-              <input type="text" class="form-control" id="newPassword"
+              <input type="password" class="form-control" id="newPassword"
                 v-model="passwordInfo.newPassword">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-12 col-lg-3 col-xl-3 text-lg-right">
-              Xác nhận mật khẩu mới *:
+              Xác nhận mật khẩu mới (<span class="text--red">*</span>):
               </label>
             <div class="col-md-12 col-lg-6 col-xl-6">
-              <input type="text" class="form-control" id="confirmNewPassword"
+              <input type="password" class="form-control" id="confirmNewPassword"
                 v-model="passwordInfo.confirmNewPassword">
             </div>
           </div>
@@ -167,7 +168,7 @@ export default {
   },
 
   async mounted() {
-    if (this.userProfile.emailAddress) return;
+    if (this.userProfile) return;
     await this.getUserProfile();
   },
 };

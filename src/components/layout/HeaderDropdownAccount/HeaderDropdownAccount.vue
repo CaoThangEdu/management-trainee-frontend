@@ -23,14 +23,14 @@
     >
       <strong>Settings</strong>
     </CDropdownHeader>
-    <CDropdownItem>
+    <CDropdownItem
+      @click="$router.push({ name: 'ProfileUserLogged' })">
       <CIcon name="cil-user" /> Thông tin cá nhân
     </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-shield-alt" />
-        <router-link :to="{name:'changePassword'}">
-          Đổi mật khẩu
-        </router-link>
+    <CDropdownItem
+      @click="$router.push({ name: 'changePassword' })">
+      <CIcon name="cil-lock-locked" />
+        Đổi mật khẩu
     </CDropdownItem>
     <CDropdownItem>
       <CIcon name="cil-settings" /> Settings
@@ -45,13 +45,13 @@
     </CDropdownItem>
     <CDropdownDivider/>
     <CDropdownItem @click="logoutAccount">
-      <CIcon name="cil-lock-locked" /> Đăng xuất
+      <CIcon name="cil-account-logout" /> Đăng xuất
     </CDropdownItem>
   </CDropdown>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: 'HeaderDropdownAccount',
@@ -61,10 +61,14 @@ export default {
     }
   },
   methods: {
+    ...mapActions("user", {
+      logout: "updateUserInfoDataWhileLogout",
+    }),
     /**
      * Logout Account Event
      */
     logoutAccount() {
+      this.logout();
       localStorage.removeItem('AUTH_TOKEN');
       this.$router.push({ name: "login" })
     }
