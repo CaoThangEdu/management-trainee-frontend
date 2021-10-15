@@ -292,6 +292,7 @@ const routes = [
   {
     path: "/teacher-management",
     name: "quan-ly-giao-vien",
+    props: true,
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */

@@ -10,7 +10,7 @@ import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import AppConfig from "../../../../src/app.config.json";
 import FacultyServices from "../../../services/faculty/facultyServices";
-
+import PlanningStepsComponent from "../../../components/planningStepsComponent/planningStepsComponent.vue";
 export default {
   extends: ComponentBase,
   components: {
@@ -18,8 +18,10 @@ export default {
     AddTeacherFileComponent,
     ConfirmDialog,
     JwPagination,
+    PlanningStepsComponent,
   },
   mixins: [CrudMixin],
+  props: ["internshipCourseId"],
   data() {
     return {
       teachers: [],
@@ -36,9 +38,9 @@ export default {
       filter: {
         lastName: "",
         facultyId: "",
-        status: "active"
+        status: "active",
       },
-      isActiveStep:"3",
+      isActiveStep: "3",
       faculties: [],
     };
   },
@@ -47,9 +49,22 @@ export default {
     await this.getFacultiesFilterAsync();
   },
   methods: {
+    teacherAssignment() {
+      if (this.teachers.length === 0) {
+        return this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Vui lòng thêm giáo viên !"
+        );
+      }
+      this.$router.push({
+        name: "phan-cong-dot",
+        params: { internshipCourseId: this.internshipCourseId },
+      });
+    },
+
     async getFacultiesFilterAsync() {
-      let facultyFilter = {
-      };
+      let facultyFilter = {};
       // Call Api
       this.showLoading();
       const api = new FacultyServices();
@@ -207,7 +222,7 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 @import "./ListTeacherManagementComponent.scss";
 .btn-add-file {
   margin-right: 10px;

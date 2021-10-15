@@ -126,7 +126,7 @@ export default {
         );
         return;
       }
-      this.certificates = response.data.items;
+      this.certificates = response.data;
     },
 
     updateCertificate(index) {
@@ -281,7 +281,7 @@ export default {
     async getCompaniesAsync() {
       const filterCompany = {
         keyword: "",
-        status: "active",
+        status: "",
       };
       // Call Api
       this.showLoading();

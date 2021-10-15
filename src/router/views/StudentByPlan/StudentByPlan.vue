@@ -16,8 +16,8 @@
             <strong>"{{ plan.internshipCourseName }}"</strong>
             <router-link
               class="btn btn-info float-right"
-              :to="{name:'phan-cong-dot', params: { internshipCourseId: guid } }">
-              Phân công giáo viên
+              :to="{name:'quan-ly-giao-vien', params: { internshipCourseId: guid } }">
+              Danh sách giáo viên giáo viên
             </router-link>
           </header>
           <div class="card-body">
