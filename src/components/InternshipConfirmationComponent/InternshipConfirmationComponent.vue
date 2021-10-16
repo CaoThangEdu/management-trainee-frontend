@@ -4,7 +4,9 @@
 import InternshipConfirmationServices from "../../services/internshipconfirmation/InternshipConfirmationServices";
 import ComponentBase from "../common/component-base/ComponentBase";
 import IntershipConfirmationViewModel from "../../view-model/intershipconfirmation/IntershipConfirmationViewModel"
-import AlertMessages from "../common/alert/alert-messages/AlertMessages"
+import AlertMessages from "../common/alert/alert-messages/AlertMessages";
+import { mapGetters } from "vuex";
+import AppConfig from '../../../src/app.config.json'
 export default {
   name: "InternshipConfirmationComponent",
   extends: ComponentBase,
@@ -27,6 +29,10 @@ export default {
       errorMessages: [],
     };
   },
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", { userProfile: "getUserInfo", tokenKey: "getTokenKey" }),
+  },
   methods: {
     changeStatusInternship(){
       if(this.intership === "false"){
@@ -37,32 +43,33 @@ export default {
     },
 
     async pressKeyEnter() {
-      
+      await this.internshipConfirmationAsync();
     },
 
-    internshipConfirmation(){
-      this.validInternshipConfirmation();
+    async internshipConfirmation(){
+       await this.internshipConfirmationAsync();
     },
 
     validInternshipConfirmation(){
       if(this.intership === "false" && this.keyInternshipConfirmation.companiesInterviewed === ""){
         this.errorMessages = ["Vui lòng nhập <span>Những công ty đã phỏng vấn</span>."]
-        return;
-      }
-      let viewModel = new IntershipConfirmationViewModel();
-      viewModel.setFields(this.keyInternshipConfirmation);
-      this.errorMessages = viewModel.isValid();
-      if (this.errorMessages.length > 0) {
-        return;
+      }else{
+        let viewModel = new IntershipConfirmationViewModel();
+        viewModel.setFields(this.keyInternshipConfirmation);
+        this.errorMessages = viewModel.isValid();
       }
     },
 
     async internshipConfirmationAsync() {
+      
+      this.validInternshipConfirmation();
+      if (this.errorMessages.length > 0) {
+        return;
+      }
+      this.keyInternshipConfirmation.studentId = this.userProfile.mssv;
       this.showLoading();
       let api = new InternshipConfirmationServices();
-      let response = await api.internshipConfirmationAsync(
-        this.keyInternshipConfirmation
-      );
+      let response = await api.internshipConfirmationAsync(this.keyInternshipConfirmation);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
