@@ -40,9 +40,9 @@ export default class InternshipConfirmationServices extends ServicesBaseAPI {
     return this.result;
   }
 
-  async fliterInternshipConfirmationAsync() {
+  async fliterInternshipConfirmationAsync(object) {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/Filter`,object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
