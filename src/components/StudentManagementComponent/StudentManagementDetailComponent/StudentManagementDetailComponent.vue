@@ -95,6 +95,7 @@ export default {
       }
       this.classroom.status = "active";
       this.classroom.isDelete = "false";
+      this.classroom.internshipStatus = "";
       this.createClassLoading = true;
       let api = new ClassService();
       let response = await api.createClassAsync(this.classroom);

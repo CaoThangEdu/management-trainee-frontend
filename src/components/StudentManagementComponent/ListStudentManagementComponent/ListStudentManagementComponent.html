@@ -14,41 +14,41 @@
         <!-- <button class="btn btn-secondary float-right btn-search mr-2" @click="createStudentsFile">+ Thêm file</button> -->
       </header>
       <div class="card-body">
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 mb-3">
-                <SelectClassroom
-                  :isRequired="false"
-                  v-model="filter.classId"
-                  :plans="plans"
-                  :classrooms="classes" :defaultText="'Chọn lớp'"
-                  @change="(event) => {filter.classId = event.id}">
-                </SelectClassroom>
-              </div>
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 mb-3"
-                v-if="filter.classId == '' || filter.classId == -1">
-                <SelectPlan
-                  :isRequired="false"
-                  v-model="filter.internshipCourseId"
-                  :plans="plans" :defaultText="'Chọn đợt thực tập'"
-                  @change="(event) => {filter.internshipCourseId = event.id}">
-                </SelectPlan>
-              </div>
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
-                <input type="text" class="form-control" id="keywords"
-                  v-model="filter.keyword"
-                  placeholder="Nhập từ khóa" />
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12 ">
-                <button type="submit" id="btn-search" 
-                  class="btn btn-stack-overflow"
-                  title="Tìm kiếm"
-                  @click="searchStudent()">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </div>
+        <div class="form-row mb-2 filter-wrapper">
+          <div class="col-sm-12 col-md-6 col-lg-3">
+            <label>Chọn lớp</label>
+            <SelectClassroom
+              :isRequired="false"
+              v-model="filter.classId"
+              :plans="plans"
+              :classrooms="classes" :defaultText="'Tất cả'"
+              @change="(event) => {filter.classId = event.id}">
+            </SelectClassroom>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-3"
+            v-if="filter.classId == '' || filter.classId == -1">
+            <label>Chọn đợt thực tập</label>
+            <SelectPlan
+              :isRequired="false"
+              v-model="filter.internshipCourseId"
+              :plans="plans" :defaultText="'Tất cả'"
+              @change="(event) => {filter.internshipCourseId = event.id}">
+            </SelectPlan>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-3">
+            <label>Nhập từ khóa</label>
+            <input type="text" class="form-control" id="keywords"
+              v-model="filter.keyword"
+              placeholder="Nhập từ khóa" />
+          </div>
+          <div class="col-auto">
+            <label class="d-sm-block d-none" style="height: 21px;">&nbsp;</label>
+            <button type="submit" id="btn-search" 
+              class="btn btn-stack-overflow"
+              title="Tìm kiếm"
+              @click="searchStudent()">
+              <em class="fas fa-search"></em>
+            </button>
           </div>
         </div>
         <div class="table-responsive">

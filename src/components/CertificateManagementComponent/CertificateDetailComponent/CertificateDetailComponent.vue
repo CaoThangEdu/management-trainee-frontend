@@ -49,7 +49,7 @@ export default {
 
   async mounted(){
     await this.getCompaniesAsync();
-    if (!this.userProfile) {
+    if (!this.userProfile.user) {
       await this.getUserProfile();
     }
     this.certificate.mssv = this.userProfile.mssv;

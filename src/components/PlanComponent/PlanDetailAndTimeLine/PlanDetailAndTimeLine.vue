@@ -2,11 +2,11 @@
   <div class="row">
     <div class="col-12">
       <div class="row">
-        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <TimeLineComponent :plans="plans"
             :planGuid="guid" />
         </div>
-        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <div class="card">
             <header class="card-header">
               <h4 class="float-left">Chi tiết kế hoạch</h4>
@@ -75,7 +75,8 @@
             </div>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12"
+          v-if="assignedStudents.length!=0 && unassignStudents.length!=0">
           <div class="card">
             <header class="card-header">
               <h4 class="float-left">Phân công</h4>
@@ -89,8 +90,7 @@
               </div>
             </header>
             <div class="card-body">
-              <Highcharts 
-                v-if="assignedStudents.length!=0 && unassignStudents.length!=0"
+              <Highcharts
                 :assignedStudents="assignedStudents"
                 :unassignStudents="unassignStudents"
                 :labelsProps="'Số sinh viên'"

@@ -208,10 +208,3 @@ export default {
   }
 }
 </script>
-
-<style lang='scss'>
-@import './ListStudentManagementComponent.scss';
-.btn-add-file{
-  margin-right: 10px;
-}
-</style>

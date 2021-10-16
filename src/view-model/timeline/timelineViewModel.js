@@ -3,12 +3,13 @@ export default class TimeLineViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      timeLineName: null,
-      description: null,
-      startDay: null,
-      endDay: null,
-      internshipCourseId: null,
+      timeLineName: '',
+      description: '',
+      startDay: '',
+      endDay: '',
+      internshipCourseId: '',
       status: 'active',
+      isActive: true
     }
   }
 

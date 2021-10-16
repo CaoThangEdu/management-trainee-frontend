@@ -7,50 +7,52 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Time line
-        <button class="btn btn-primary float-right" 
-          @click="createTimeLine"
-          title="Thêm mới">
-          <i class="fa fa-plus-square"></i></button>
+        <button class="btn btn-primary float-right" @click="createTimeLine" title="Thêm mới">
+          <em class="fa fa-plus-square"></em></button>
       </header>
       <div class="card-body">
-        <div class="main-card mb-3 card">
-          <div class="card-body">
-            <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column"
-              v-for="(item, index) in timeLines">
-              <div class="vertical-timeline-item vertical-timeline-element">
-                <div>
-                  <span class="vertical-timeline-element-icon bounce-in">
-                    <i class="fas fa-circle"></i>
+        <div class='wrapper'>
+          <div class='steps' id='steps'>
+            <div class='step'
+              v-for="(timeLine, index) in timeLines"
+              :key="index + 'time-line'"
+              :class="{ 'step-unactive': !checkTimeLineExpired(timeLine.endDay) }">
+              <div class='number completed'
+                v-if="checkTimeLineExpired(timeLine.endDay)">
+                <svg viewBox="0 0 512 512" width="100" title="check">
+                  <path
+                    d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z" />
+                </svg>
+              </div>
+              <div class='number' v-else>{{index + 1}}</div>
+              <div class='info'>
+                <p class='title'>{{ timeLine.timeLineName }}</p>
+                <div class="info-timeline"
+                  @click="updateTimeLine(index)"
+                  :title="'Nhấn để thay đổi time line'">
+                  <span>
+                    {{ convertTime(timeLine.startDay, 'DD/MM/YYYY') }} - {{ convertTime(timeLine.endDay, 'DD/MM/YYYY') }}
                   </span>
-                  <div class="vertical-timeline-element-content bounce-in"
-                    :key="index">
-                    <h4 class="timeline-title link-detail"
-                      @click="updateTimeLine(index)"
-                      title="Xem">{{ item.timeLineName }}</h4>
-                    <p>{{ item.description }}</p>
-                    <div class="button__edit text-right">
-                      <button class="btn btn-danger" 
-                        @click="deleteTimeLine(item.id)" title="Xóa">
-                        <i class="fa fa-trash"></i></button>
-                    </div>
-                    <span class="vertical-timeline-element-date text-left">
-                      {{ convertTime(item.startDay, 'DD/MM/YYYY') }}-<br />
-                      {{ convertTime(item.endDay, 'DD/MM/YYYY') }}</span>
-                  </div>
                 </div>
+                <p class='text'>
+                  {{ timeLine.description }}
+                </p>
               </div>
             </div>
             <div v-if="timeLines.length==0"
               class="font-weight-bolder">
-            Không có dữ liệu được tìm thấy
-          </div>
+              Không có dữ liệu được tìm thấy
+            </div>
           </div>
         </div>
       </div>
-      <TimeLineDetailComponent 
+      <TimeLineDetailComponent
         :planGuid="planGuid"
-        :data="editTimeLine" @change-data="changeData" />
-      <ConfirmDialog :data="confirmTimeline" @agree="deleteTimelineConfirm"></ConfirmDialog>
+        :data="editTimeLine"
+        @change-data="changeData" />
+      <ConfirmDialog
+        :data="confirmTimeline"
+        @agree="deleteTimelineConfirm" />
     </div>
   </div>
 </div>
