@@ -36,6 +36,9 @@ export default {
     },
 
     convertTime(time, typeFormat) {
+      if (JSON.stringify(new Date(time)) === 'null' || !time) {
+        return null;
+      }
       return moment(new Date(time).toISOString()).format(typeFormat);
     },
   },

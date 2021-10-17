@@ -19,6 +19,7 @@
         "@coreui/utils": "^1.3.1",
         "@coreui/vue": "^3.2.9",
         "@coreui/vue-chartjs": "^1.0.6",
+        "@fortawesome/fontawesome-free": "^5.15.4",
         "axios": "^0.21.1",
         "babel-runtime": "^6.26.0",
         "chart.js": "^2.9.4",

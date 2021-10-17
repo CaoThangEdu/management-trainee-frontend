@@ -45,6 +45,10 @@ export default {
   },
 
   methods:{
+    checkTimeLineExpired(time) {
+      return new Date('2021/10/10') > new Date();
+    },
+
     createTimeLine() {
       this.editTimeLine = {};
     },

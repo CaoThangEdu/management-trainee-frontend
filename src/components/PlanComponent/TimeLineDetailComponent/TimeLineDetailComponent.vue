@@ -54,10 +54,10 @@ export default {
       let planStartDay = new Date(this.getPlanName(this.timeline.internshipCourseId).startDay);
       this.timeline.startDay = planStartDay;
       if (planStartDay < new Date()) {
-        this.timeline.endDay = moment().add(+4, "M").toDate();
+        this.timeline.endDay = moment().add(+2, "M").toDate();
         return;
       }
-      let dob = moment().add(+4, "M").toDate();
+      let dob = moment().add(+2, "M").toDate();
       dob.setDate((new Date(planStartDay).getDate()));
       dob.setFullYear((new Date(planStartDay).getFullYear()));
       this.timeline.endDay = new Date(moment(new Date(dob)).format('DD/MM/YYYY'));
@@ -127,6 +127,7 @@ export default {
 
     async createTimeLineAsync() {
       this.timeline.status = 'active';
+      this.timeline.isActive = true;
       this.showLoading();
       let api = new TimeLineService();
       let response = await api.createTimeLineAsync(this.timeline);
@@ -198,7 +199,7 @@ export default {
           description: "",
           startDay: new Date(),
           endDay: moment()
-            .add(+4, "M")
+            .add(+2, "M")
             .toDate(),
           internshipCourseId: "",
           status: "active",
