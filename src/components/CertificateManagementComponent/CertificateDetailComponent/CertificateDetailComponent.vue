@@ -257,16 +257,17 @@ export default {
         this.certificate = this.data;
         return;
       }
+      
       this.certificate = {
         taxCode: "",
         companyName: "",
-        companyAddress:"",
-        owner:"",
+        companyAddress: "",
+        owner: "",
         phoneNumberOfCompany: "",
         phoneNumberOfStudent: "",
         status: 'unconfirmed', //confirmed, unconfirmed, complete
-        mssv: "0306181003",
-        classId:"bb8fb04a-dea5-4521-9729-08d970127ad5",
+        mssv: this.userProfile.mssv,
+        classId: this.userProfile.classId,
         };
     }
   }
