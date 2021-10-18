@@ -1,8 +1,6 @@
 <template src="./Statistical.html"></template>
 
 <script>
-import ClassService from "../../../services/class/classServices";
-import AppConfig from "../../../../src/app.config.json";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import crudMixin from "../../../helpers/mixins/crudMixin";
 import Highcharts from "../../common/high-chart/HighChart.vue";

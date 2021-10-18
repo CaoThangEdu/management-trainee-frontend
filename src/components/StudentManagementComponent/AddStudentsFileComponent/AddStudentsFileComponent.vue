@@ -278,7 +278,6 @@ export default {
        this.showLoading();
        let api = new StudentService();
        let response = await api.createStudentsAsync(this.studentsForCreate);
-       //let createUserResponse = await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.students[i], 'STUDENT', 0);
 
        if(!response.isOK){
           this.showNotifications(

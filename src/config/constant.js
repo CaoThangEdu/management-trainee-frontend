@@ -199,3 +199,9 @@ export const ADD_STUDENT = {
 export const STORAGE_KEY = {
   AUTH_TOKEN: "AUTH_TOKEN"
 }
+
+export const ROLE_ENUM = {
+  STUDENT: "STUDENT",
+  TEACHER: "TEACHER",
+  ADMIN: "ADMIN",
+}

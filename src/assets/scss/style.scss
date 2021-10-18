@@ -7,6 +7,10 @@
 // If you want to add something do it here
 @import "custom";
 
+.app {
+  position: relative;
+}
+
 .card-header:not(.content-center) > .c-icon:first-child {
   margin-right: 0.1rem;
   margin-top: 0.1rem;
@@ -24,6 +28,10 @@
   &--blue {
     color: blue;
   }
+}
+
+#v-spinner {
+  z-index: 10000;
 }
 
 .mx-datepicker .mx-input-wrapper:hover .mx-icon-clear {

@@ -22,7 +22,7 @@ export default [{
       {
         _name: 'CSidebarNavItem',
         name: 'Quản lý tài khoản',
-        to: '/user-manage',
+        to: '/user-management',
         icon: 'cil-drop',
         role: "Admin",
       },

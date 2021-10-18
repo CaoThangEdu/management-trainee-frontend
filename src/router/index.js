@@ -7,7 +7,7 @@ const routes = [
   //homePage
   {
     path: "/",
-    name: "home",
+    name: "trang-chu",
     component: () =>
       import(
         "../router/views/Home/Home.vue"
@@ -127,18 +127,6 @@ const routes = [
       },
   },
   {
-    path: "/user-manage",
-    name: "user-manage",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/UserManagement/UserManagement.vue"
-      ),
-    meta: {
-      breadcrumbName: "Quản lý tài khoản",
-    },
-  },
-  {
     path: "/teacher-assignment",
     name: "phan-cong-giao-vien",
     redirect: '/teacher-assignment/list',
@@ -170,10 +158,10 @@ const routes = [
       },
     },
   ]
-  },  
+  },
   {
-    path: "/user-manage",
-    name: "user-manage",
+    path: "/user-management",
+    name: "quan-ly-tai-khoan",
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
@@ -252,7 +240,7 @@ const routes = [
         "../router/views/CareerManagement/CareerManagement.vue"
       ),
     meta: {
-      breadcrumbName: "Quản lý khóa",
+      breadcrumbName: "Quản lý ngành",
     },
   },
   {
@@ -314,7 +302,7 @@ const routes = [
   },
   {
     path: '/certificate-management',
-    name: 'Đăng ký giấy giới thiệu thực tập',
+    name: 'dang-ky-giay-gioi-thi-thuc-tap',
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
@@ -338,7 +326,7 @@ const routes = [
   },
   {
     path: '/internship-confirmation-statistics',
-    name: 'Thông kê xác nhận thực tập',
+    name: 'thong-ke-thuc-tap-sinh-vien',
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
@@ -350,7 +338,7 @@ const routes = [
   },
   {
     path: '/upload-file',
-    name: 'Upload file',
+    name: 'upload-file',
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */

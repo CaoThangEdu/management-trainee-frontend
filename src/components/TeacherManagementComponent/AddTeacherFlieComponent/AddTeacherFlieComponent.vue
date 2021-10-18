@@ -86,15 +86,17 @@ export default {
           `${AppConfig.notification.title_default}`,
           response.errorMessages
         );
-        return;
+        return false;
       }
       this.closeModal(true);
+      return true;
     },
   
     async save() {
+      this.teachersForCreate = [];
       this.teachers = this.metadataFile;
       var teacherLength = this.teachers.length;
-      for (let i = 0; i < this.teachers.length; i++) {
+      for (let i in this.teachers) {
         // duyệt danh sách teacher từ file
         this.dataForCreateUser ={
           username: this.teachers[i].firstName + this.teachers[i].lastName,
@@ -103,33 +105,13 @@ export default {
           emailAddress : this.teachers[i].email
         };
         this.dataForCreateUsers.push(this.dataForCreateUser);
-
-        // validate
-        // let viewModel = new TeacherViewModel();
-        // viewModel.setFields(this.teachers[i]);
-        // this.errorMessages = viewModel.isValid();
-
-        // if (this.errorMessages.length > 0) {
-        //   return;
-        // }      
         this.teachers[i].facultyId = this.faculties[0].id;
         this.teachersForCreate.push(this.teachers[i])
       }
 
-      this.createTeachersAsync();
-      // Gọi hàm bắn event ngay đây
-      let createUserResponse = await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.teachers, 'TEACHER', 1);
+      let createUserResponse = await this.createTeachersAsync();
       this.showLoading(false);
-      if(!createUserResponse.isOk) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          createUserResponse.errorMessages,
-        );
-      }
-      // Data gửi đi (this.dataForCreateUsers, TEACHER, 1)
-
-      if (teacherLength != this.teachers.length) {
+      if (!createUserResponse) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,

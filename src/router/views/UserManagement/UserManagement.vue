@@ -1,13 +1,13 @@
 <template>
   <div class="row">
     <div class="col-12">      
-         <UserManagementComponent  />
+      <UserManagementComponent  />
     </div>            
   </div>
 </template>
 
 <script>
-import UserManagementComponent from "../../../components/UserManagementComponent/UserManagementComponent.vue"
+import UserManagementComponent from "../../../components/UserManagementComponent/ListUserManagementComponent/UserManagementComponent.vue"
 export default {
   components: {
     UserManagementComponent,
