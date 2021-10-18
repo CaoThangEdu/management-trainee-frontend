@@ -1,7 +1,11 @@
 import moment from "moment";
+import { ROLE_ENUM } from "../../config/constant";
+
 export default {
   data() {
-    return {}
+    return {
+      roleEnums: ROLE_ENUM,
+    }
   },
   methods: {
     getStatusIcon(status) {
@@ -40,6 +44,17 @@ export default {
         return null;
       }
       return moment(new Date(time).toISOString()).format(typeFormat);
+    },
+
+    getRoleName(role) {
+      if(role == this.roleEnums.STUDENT) {
+        return 'Sinh viên';
+      }
+
+      if(role == this.roleEnums.TEACHER) {
+        return 'Giáo viên';
+      }
+      return 'Quản trị viên';
     },
   },
 }

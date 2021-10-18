@@ -95,6 +95,7 @@ export default {
         await this.getInstructorsAsync();
         await this.getStudentsUnassigned();
         await this.getStudentsInInternshipCourseAsync();
+        await this.getStatisticsStudentInClass();
         this.reloadAutomaticAssignment = false;
         this.$nextTick(() => {
           this.reloadAutomaticAssignment = true;

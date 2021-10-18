@@ -52,6 +52,10 @@ export default {
       isShowContinueAssignment: false,
       showCreateAssignments: false,
       studentsRemain: 0,
+      instructorsProps: '',
+      studentsProps: '',
+      numberOfStudentInInternshipCourseProps: '',
+
     };
   },
   props: {
@@ -108,18 +112,18 @@ export default {
       this.showCreateAssignments = true;
       //Phân công từ đầu
       this.statistics = [];
-      this.studentTempDelete = JSON.parse(JSON.stringify(this.students));
+      this.studentTempDelete = JSON.parse(JSON.stringify(this.studentsProps));
       this.assignments = [];
 
       this.averageNumber = Math.round(
-        this.numberOfStudentInInternshipCourse / this.teachers.length
+        this.numberOfStudentInInternshipCourseProps / this.teachers.length
       );
 
       if(this.numberOfTeacher != 0 && this.numberOfTeacher != this.averageNumber ){
         this.averageNumber = this.numberOfTeacher
       }    
       
-      if (this.instructors.length == 0) {
+      if (this.instructorsProps.length == 0) {
         this.teachers.forEach((teacher) => {
           this.studentTemp = [];
 
@@ -188,7 +192,7 @@ export default {
       this.teacherTemp = [];
       this.teachers.forEach((teacher) => {
         var count = 0;
-        this.instructors.forEach((instructor) => {
+        this.instructorsProps.forEach((instructor) => {
           if (teacher.id == instructor.teacherId)
           {
             count++;
@@ -253,14 +257,17 @@ export default {
       };
     },
 
-    async restoreAssignment(confirmInternshipCourseId) {
-      await this.getInstructorsAsync(confirmInternshipCourseId);
+    async restoreAssignment() {
+      await this.getInstructorsAsync();
     },
 
-    async getInstructorsAsync(confirmInternshipCourseId) {
+    async getInstructorsAsync() {
       this.showLoading();
       const api = new InstructorService();
-      this.instructorRequest = confirmInternshipCourseId;
+      this.instructorRequest = {
+        internshipCourseId: this.internshipCourseId,
+      };
+      console.log('object', this.instructorRequest);
       const response = await api.restoreInstructors(this.instructorRequest);
       this.showLoading(false);
       if (!response.isOK) {
@@ -303,7 +310,19 @@ export default {
     statistiesStudentInClass() {
       const reducer = (previousValue, currentValue) => previousValue + currentValue.numberOfStudentUnAssign;
       this.studentsRemain = this.statistiesStudentInClass.reduce(reducer, 0);
-    }
+    },
+
+    instructors() {
+      this.instructorsProps = this.instructors;
+    },
+
+    students() {
+      this.studentsProps = this.students;
+    },
+
+    numberOfStudentInInternshipCourse() {
+      this.numberOfStudentInInternshipCourseProps = this.numberOfStudentInInternshipCourse;
+    },
   },
 };
 </script>

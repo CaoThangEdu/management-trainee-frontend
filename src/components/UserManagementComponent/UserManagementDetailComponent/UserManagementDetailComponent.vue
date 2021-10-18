@@ -1,17 +1,18 @@
-<template src='./TeacherManagementDetailComponent.html'></template>
+<template src='./UserManagementDetailComponent.html'></template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
 import BaseModal from "../../common/base-modal/BaseModal";
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
-import TeacherService from "../../../services/teacher/teacherServices";
+import UserService from "../../../services/user/userService";
 import AppConfig from "../../../../src/app.config.json";
-import TeacherViewModel from "../../../view-model/teacher/teacherViewModel";
+import UserViewModel from "../../../view-model/user/userViewModel";
 import crudMixin from "../../../helpers/mixins/crudMixin";
 import createUserMixin from "../../../helpers/mixins/createUserMixin";
+import { ROLE_ENUM } from "../../../config/constant";
 
 export default {
-  name: "TeacherDetail",
+  name: "UserDetail",
   extends: ComponentBase,
   components: {
     BaseModal,
@@ -21,18 +22,19 @@ export default {
   data() {
     return {
       isShow: false,
-      teacher: {},
+      user: {},
       errorMessages: [],
       dataForCreateUser: {
         username: "",
         name: "",
         surname: "",
         emailAddress: "",
-      }
+      },
+      roleEnum: ROLE_ENUM,
     };
   },
   props: {
-    data: {
+    dataUser: {
       type: Object,
       default: null,
     },
@@ -45,18 +47,20 @@ export default {
     async pressKeyEnter() {
       await this.save();
     },
+
     closeModal(changeData) {
       this.isShow = false;
-      this.teacher = {};
+      this.user = {};
       if (changeData) {
-        this.$emit("change-data");
+        this.$emit("change-data-user");
       }
     },
-    async createTeacherAsync() {
-      this.teacher.status = 'active';
+    
+    async createUserAsync() {
+      this.user.isActive = true;
       this.showLoading();
-      let api = new TeacherService();
-      let response = await api.createTeacherAsync(this.teacher);
+      let api = new UserService();
+      let response = await api.createUserAsync(this.user);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -74,10 +78,10 @@ export default {
       this.closeModal(true);
     },
 
-    async updateTeacherAsync() {
+    async updateUserAsync() {
       this.showLoading();
-      let api = new TeacherService();
-      let response = await api.updateTeacherAsync(this.teacher);
+      let api = new UserService();
+      let response = await api.updateUserAsync(this.user);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -94,32 +98,30 @@ export default {
       );
       this.closeModal(true);
     },
+
     async save() {
-      this.teacher.facultyId = this.faculties[0].id;
       //validate
-      let viewModel = new TeacherViewModel();
-      viewModel.setFields(this.teacher);
+      this.user.userName = this.user.emailAddress;
+      let viewModel = new UserViewModel();
+      viewModel.setFields(this.user);
       this.errorMessages = viewModel.isValid();
       if (this.errorMessages.length > 0) {
         return;
       }
+      this.user.roleNames = [this.user.roleNames];
 
-      if (this.teacher.id === undefined) {
-        await this.createTeacherAsync();
+      if (this.user.id === undefined) {
+        await this.createUserAsync();
         return;
       }
-      await this.updateTeacherAsync();
+      await this.updateUserAsync();
     },
   },
   watch: {
-    data() {
+    dataUser() {
       this.isShow = true;
-      this.teacher = this.data;
+      this.user = this.dataUser;
     },
   },
 };
 </script>
-
-<style lang='scss'>
-@import "./TeacherManagementDetailComponent.scss";
-</style>

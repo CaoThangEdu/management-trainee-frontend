@@ -429,7 +429,6 @@ export default {
         this.showLoading();
         let api = new StudentService();
         response = await api.createStudentsAsync(this.studentsForCreate);
-        await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.studentsForCreate, 'STUDENT', 1);
         this.showLoading(false);
       }
 

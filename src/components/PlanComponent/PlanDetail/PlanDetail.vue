@@ -173,10 +173,10 @@
                                 </div>
                                 <div class="col-md-2 col-sm-2">
                                   <button
-                                    class="btn btn-linkedin"
+                                    class="btn btn-primary"
                                     @click="createFacultyAsync()"
                                   >
-                                    +<em class="fa fa-praying-hands" style="color: white"></em>
+                                    <em class="fas fa-plus"></em>
                                   </button>
                                 </div>
                               </div>
@@ -301,13 +301,10 @@
                                 </div>
                                 <div class="col-md-2 col-sm-2">
                                   <button
-                                    class="btn btn-linkedin"
+                                    class="btn btn-primary"
                                     @click="createTrainingSystemAsync()"
                                   >
-                                    +<i
-                                      class="fa fa-praying-hands"
-                                      style="color: white"
-                                    ></i>
+                                    <em class="fas fa-plus"></em>
                                   </button>
                                 </div>
                               </div>
@@ -397,10 +394,10 @@
                                 </div>
                                 <div class="col-md-2 col-sm-2">
                                   <button
-                                    class="btn btn-linkedin"
+                                    class="btn btn-primary"
                                     @click="createCareerAsync()"
                                   >
-                                    +<i class="fa fa-chalkboard"></i>
+                                    <em class="fas fa-plus"></em>
                                   </button>
                                 </div>
                               </div>
