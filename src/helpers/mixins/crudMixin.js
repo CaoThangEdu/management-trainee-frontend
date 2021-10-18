@@ -45,7 +45,16 @@ export default {
       }
       return moment(new Date(time).toISOString()).format(typeFormat);
     },
-
+    // Convert array to object
+    convertArrayToObject(arr, key) {
+      const initialValue = {};
+      return arr.reduce((obj, item) => {
+        return {
+          ...obj,
+          [item[key]]: item,
+        };
+      }, initialValue);
+    },
     getRoleName(role) {
       if(role == this.roleEnums.STUDENT) {
         return 'Sinh viên';
@@ -56,5 +65,5 @@ export default {
       }
       return 'Quản trị viên';
     },
-  },
+  }
 }

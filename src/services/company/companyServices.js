@@ -60,4 +60,14 @@ export default class CompanyService extends ServicesBaseAPI {
     }
     return this.result;
   }
+
+  async getAllCompaniesAsync() {
+    try {
+      const response = await this.http.get(`${this.url}/GetAll`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
 }

@@ -38,23 +38,14 @@ export default class CertificateService extends ServicesBaseAPI {
     return this.result;
   }
 
-  // async getCertificatesAsync(object) {
-  //   const query = {
-  //     mssv: object.keyword ?? '',
-  //     status: object.status ?? '',
-  //     classId:object.status ?? ''
-  //   };
-  //   try {
-  //     const response = await this.http.post(`${this.url}/Filter`, query);
-  //     this.setResult(response);
-  //   } catch (e) {
-  //     return this.http.loadError(e);
-  //   }
-  //   return this.result;
-  // }
-  async getCertificatesAsync() {
+  async getCertificatesAsync(object) {
+    const query = {
+      mssv: object.keyword ?? '',
+      status: object.status ?? '',
+      classId:object.classId ?? ''
+    };
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/Filter`, query);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

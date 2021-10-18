@@ -279,8 +279,7 @@ export default {
         keyword: "",
         classId: "",
         internshipCourseId: "",
-        status: "active",
-        isDelete: false,
+        status: "",
       };
       // Call Api
       this.showLoading();
@@ -328,7 +327,7 @@ export default {
         );
         return;
       }
-      this.certificates = response.data.items;
+      this.certificates = response.data;
     },
 
     updateCertificate(index) {
@@ -482,15 +481,11 @@ export default {
     },
 
     async getCompaniesAsync() {
-      const filterCompany = {
-        keyword: "",
-        status: "active",
-      };
       // Call Api
       this.showLoading();
       const api = new CompanyService();
 
-      const response = await api.getCompaniesAsync(filterCompany);
+      const response = await api.getAllCompaniesAsync();
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -501,7 +496,7 @@ export default {
         );
         return;
       }
-      let companies = response.data;
+      let companies = response.data.items;
       companies = companies.reduce(
         (map, obj) => ((map[obj.taxCode] = obj), map),
         {}

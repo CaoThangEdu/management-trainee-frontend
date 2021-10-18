@@ -11,6 +11,7 @@ import CertificateViewModel from "../../../view-model/Certificate/CertificateVie
 import CertificateService from '../../../services/certificate/CertificateServices'
 import CompanyService from '../../../services/company/companyServices';
 import { mapGetters, mapActions } from "vuex";
+import CrudMixin from "../../../helpers/mixins/crudMixin"
 
 export default {
   name: 'CertificateDetailComponent',
@@ -19,6 +20,7 @@ export default {
     BaseModal,
     AlertMessages,
   },
+  mixins:[CrudMixin],
   data() {
     return {
       isShow: false,
@@ -94,7 +96,6 @@ export default {
         this.company.phoneNumber = this.certificate.phoneNumberOfCompany;
         this.company.career = this.certificate.career;
         this.company.status = "active";
-
         await this.createCompanyAsync(this.company);
       }
       this.showLoading();
@@ -162,15 +163,11 @@ export default {
     },
 
     async getCompaniesAsync(){
-       const filterCompany = {
-        keyword:"",
-        status:"active"
-      };
       // Call Api
       this.showLoading();
       const api = new CompanyService()
 
-      const response = await api.getCompaniesAsync(filterCompany)
+      const response = await api.getAllCompaniesAsync();
       this.showLoading(false);
 
       if(!response.isOK){
@@ -181,9 +178,8 @@ export default {
         );
         return;
       }
-      let companies = response.data;
-      if(companies.length !== 0 || companies !== undefined){
-        companies = companies.reduce((map, obj) => (map[obj.taxCode] = obj, map), {});
+      if(response.data !== undefined || response.data.items.length !== 0){
+        let companies = CrudMixin.methods.convertArrayToObject(response.data.items, "taxCode");
         this.companiesByTaxCode = companies;
       }
     },
@@ -235,6 +231,9 @@ export default {
     },
 
      async createCompanyAsync(company) {
+      if(this.companiesByTaxCode[company.taxCode] !== undefined){
+        return;
+      }
       this.showLoading();
       let api = new CompanyService();
       let response = await api.createCompanyAsync(company);
