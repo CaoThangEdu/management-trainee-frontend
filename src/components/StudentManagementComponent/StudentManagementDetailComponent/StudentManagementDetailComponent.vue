@@ -95,6 +95,7 @@ export default {
       }
       this.classroom.status = "active";
       this.classroom.isDelete = "false";
+      this.classroom.internshipStatus = "";
       this.createClassLoading = true;
       let api = new ClassService();
       let response = await api.createClassAsync(this.classroom);
@@ -167,24 +168,8 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-      this.mapDataCreateStudentToCreateAccount(this.student);
       this.closeModal(true);
-    },
-
-    async mapDataCreateStudentToCreateAccount(student){
-      this.showLoading();
-      //bắn event tạo account ngay đây truyền đi (teacher, TEACHER, 0)
-      let createUserResponse = await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(student, 'STUDENT', 0);
-      this.showLoading(false);
-      if(!createUserResponse.isOk) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          createUserResponse.errorMessages,
-        );
-      }
-      // kết thúc tạo user
-    },   
+    },  
 
     async updateStudentAsync() {
       this.showLoading();

@@ -85,8 +85,6 @@ export default {
     };
   },
 
-  created() {},
-
   async mounted() {
     await this.getStudentsUnassigned();
   },
@@ -96,17 +94,18 @@ export default {
       this.studentId = id;
       this.index = index;
     },
-    changeTeacher(teacher) {
-      this.createInstructorAsync(teacher.id, this.studentId, null, this.index);
+    async changeTeacher(teacher) {
+      await this.createInstructorAsync(teacher.id, this.studentId, null, this.index);
+      this.$emit("change-instructors", true);
     },
 
     async assignment() {
-      this.listInstructorRequest.forEach((instructor) => {
+      for(let instructor of this.listInstructorRequest) {
         // Phân công theo danh sách sinh viên
         this.showLoading(true);
-        this.createInstructorAsync(-1, -1, instructor, instructor.index);
+        await this.createInstructorAsync(-1, -1, instructor, instructor.index);
         this.showLoading(false);
-      });
+      }
       await this.getInstructorsAsync();
       this.listInstructorRequest = [];
     },
@@ -126,7 +125,6 @@ export default {
       }
       this.showLoading();
       const response = await api.createInstructorAsync(instructor);
-      this.$emit("change-instructors", true);
       this.showLoading(false);
       if (response.isOK) {
         this.students.splice(index, 1);

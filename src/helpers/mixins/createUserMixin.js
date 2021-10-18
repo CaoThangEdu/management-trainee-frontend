@@ -51,7 +51,7 @@ export default {
       // Tạo user cho 1 list
       let createUserResponse;
       let users=[];
-      await userData.forEach(user => {
+      userData.forEach(user => {
         let dataForCreateUser = {
           username: user.email,
           name : user.firstName,
@@ -64,9 +64,9 @@ export default {
         users.push(dataForCreateUser);       
       }); 
       
-      createUserResponse = this.createUsersAsync(users);
+      createUserResponse = await this.createUsersAsync(users);
       return {
-        isOk: createUserResponse.isOK,
+        isOk: createUserResponse.isOk,
         errorMessages: createUserResponse.errorMessages,
       };
     },

@@ -3,14 +3,15 @@ export default class StudentViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      firstName: null,
-      lastName: null,
-      studentId: null,
-      status: null,
-      email: null,
-      dayOfBirth: null,
+      firstName: '',
+      lastName: '',
+      studentId: '',
+      status: '',
+      email: '',
+      dayOfBirth: '',
       role: 0,
-      classId: null,
+      classId: '',
+      internshipStatus: '',
     }
   }
 

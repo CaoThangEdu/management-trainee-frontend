@@ -24,6 +24,7 @@ export default {
         companiesInterviewed: "",
         status: "notPracticed", //notPracticed, practiced
         phoneNumber: "",
+        internshipCourseId:""
       },
       intership: "false",
       confirmed: false,
@@ -90,6 +91,7 @@ export default {
         return;
       }
       this.keyInternshipConfirmation.studentId = this.userProfile.mssv;
+      this.keyInternshipConfirmation.internshipCourseId = this.userProfile.internshipCourseId;
       this.showLoading();
       let api = new InternshipConfirmationServices();
       let response = await api.internshipConfirmationAsync(

@@ -65,7 +65,7 @@ export default {
     async getUserProfile() {
       // Check: if has token => get profile else push to LoginPage
       if (this.tokenKey) {
-        if (!this.userProfile || !this.userProfile.id) {
+        if (!this.userProfile || !this.userProfile.user) {
           await this.updateUserInfoDataAsync();
         }
       } else {

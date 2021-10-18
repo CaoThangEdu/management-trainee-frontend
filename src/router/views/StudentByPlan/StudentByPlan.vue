@@ -365,26 +365,21 @@ export default {
           classroom => classroom.internshipCourseId == this.guid);
         this.classIdSelected = this.classCreated;
       }
-      // let courseDaChonId = this.getInfoObject(this.classIdSelected, this.classes).courseId;
       this.students = this.metaDataFile;
       let studentLengthCallApi = this.studentLengthBanDau;
       var idClass = this.classIdSelected;
-      for (let i = 0; i < this.students.length; i++) {
-        let vtSV = i + 1;
-        for (const index in this.studentsCallApi) {
-          if (this.students[i].studentId == this.studentsCallApi[index].studentId) {
-            this.showNotifications(
-              "error",
-              `${AppConfig.notification.title_default}`,
-              'Mã số sinh viên thứ ' + vtSV + ' đã tồn tại!' +
-              "<br/> Đã thêm được " + i + " sinh viên"
-            );
-            return;
-          }
-        }
+      this.studentsForCreate = [];
+      for (let i in this.students) {
+        let isCheckStudentExist = this.studentsCallApi.find(({
+          studentId
+        }) => studentId == this.students[i].studentId);
+        if (isCheckStudentExist) continue;
 
         // Kiểm tra lớp đã trùng với lớp đã chọn hay chưa
         let classOfStudent = this.getInfoObjectByName(this.students[i].classId, this.classes);
+        let classIdExist = this.classes.find(({
+          className
+        }) => className == this.students[i].classId);
         if (classOfStudent) {
           // nếu tồn tại lớp
           this.students[i].classId = classOfStudent.classId;
@@ -394,27 +389,28 @@ export default {
           } else {
             this.students[i].classId = classOfStudent.id;
           }
+        } else if (classIdExist) {
+          this.students[i].classId = classIdExist.id;
         } else {
           this.classroom.internshipCourseId = this.guid;
           this.classroom.className = this.students[i].classId;
           this.classroom.status = 'active';
           this.classroom.isDelete = false;
-          let api = new ClassService();
-          let response = await api.createClassAsync(this.classroom);
+          let apiClass = new ClassService();
+          let responseCreateClass = await apiClass.createClassAsync(this.classroom);
           this.showLoading(false);
-          if (response.isOK) {
+          if (responseCreateClass.isOK) {
             this.showNotifications(
               "success",
               `${AppConfig.notification.title_default}`,
               `${AppConfig.notification.content_created_success_default}` +
               ' Lớp ' + this.students[i].classId
             );
-            this.students[i].classId = response.data.id;
+            this.students[i].classId = responseCreateClass.data.id;
           }
           await this.getClassesFilterAsync();
           this.classes = this.classes.filter(
             classroom => classroom.internshipCourseId == this.guid);
-          // this.students[i].classId = this.getInfoObjectByName(this.students[i].classId, this.classes).id;
         }
         this.students[i].status = 'active';
         this.students[i].email = this.students[i].studentId + ADD_STUDENT.EMAIL;
@@ -428,20 +424,22 @@ export default {
         }
         this.studentsForCreate.push(this.students[i]);      
       }
-       this.showLoading();
-       let api = new StudentService();
-       let response = await api.createStudentsAsync(this.studentsForCreate);
-       await createUserMixin.methods.eventCreateAccountWhenCreateStudentOrCreateTeacher(this.studentsForCreate, 'STUDENT', 1);   
+      let response = false;
+      if(this.studentsForCreate.length != 0) {
+        this.showLoading();
+        let api = new StudentService();
+        response = await api.createStudentsAsync(this.studentsForCreate);
+        this.showLoading(false);
+      }
 
-       if(!response.isOK ){
-          this.showNotifications(
-            "error",
-            `${AppConfig.notification.title_default}`,
-            response.errorMessages
-          );
-          return;
-        }
-      this.showLoading(false);
+      if(!response || !response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages ?? "Thêm mới sinh viên thất bại"
+        );
+        return;
+      }
 
       await this.getStudentsAsync();
       if (studentLengthCallApi == this.studentLengthBanDau) {
@@ -457,7 +455,6 @@ export default {
           `${AppConfig.notification.content_created_success_default}` + ' sinh viên'
         );
       }
-      await this.getStudentsAsync();
       await this.getPlanByIdAsync(this.guid);
       this.classes = this.classes.filter(
         classroom => classroom.internshipCourseId == this.guid);

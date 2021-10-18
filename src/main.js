@@ -20,6 +20,7 @@ Vue.use(Notifications);
 Vue.use(Vuelidate);
 Vue.prototype.$log = console.log.bind(console);
 Vue.use(HighchartsVue);
+import '@fortawesome/fontawesome-free/js/all.js';
 
 new Vue({
     el: '#app',

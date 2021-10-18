@@ -90,7 +90,7 @@
                   <div class="col-md-6 col-sm-6">
                     <div class="input-group mb-3">
                       <select class="form-control form-select form-select-class" v-model="classroom.internshipCourseId">
-                        <option value="" v-for="(plan, index) in plans" :key="index" :value="plan.id">
+                        <option v-for="(plan, index) in plans" :key="index" :value="plan.id">
                           {{ plan.internshipCourseName }}
                         </option>
                       </select>

@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <header class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+          <path fill="var(--ci-primary-color, currentColor)"
+            d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+            class="ci-primary"></path>
+        </svg> Danh sách tài khoản
+        <button class="btn btn-primary float-right btn-search"          
+          title="Thêm mới"
+          @click="createUser" >
+          <em class="fa fa-plus-square"></em>
+        </button>
+      </header>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="">
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Tên đăng nhập</th>
+                <th scope="col" class="text-center">Tên và tên đệm</th>
+                <th scope="col" class="text-center">Họ</th>
+                <th scope="col">Email</th>
+                <th scope="col" class="text-center">Họ và tên</th>
+                <th scope="col">Đăng nhập lần cuối</th>
+                <th scope="col" class="text-center">Quyền hạn</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(user, index) in pageOfItems" :key="index">
+                <th scope="row">{{index + 1}}</th>
+                <td>{{user.userName}}</td>
+                <td class="text-center">{{user.name}}</td>
+                <td class="text-center">{{user.surname}}</td>
+                <td>{{user.emailAddress}}</td>
+                <td class="text-center">{{user.fullName}}</td>
+                <td>{{user.lastLoginTime}}</td>
+                <td class="text-center">{{getRoleName(user.roleNames[0])}}</td>               
+              </tr>
+              <tr v-show="pageOfItems == null || pageOfItems.length === 0">
+                <th colspan="8" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <UserManagementDetailComponent
+        :dataUser="editUser"
+        @change-data-user="changeDataUser" />
+      <div class="card-footer d-flex justify-content-center text--blue">
+        <JwPagination
+        :items="users"
+        @changePage="onChangePage"
+        :labels="customLabels"
+        :pageSize="10"
+        >
+        </JwPagination>
+      </div>
+    </div>
+  </div>
+</div>
