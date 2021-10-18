@@ -6,9 +6,7 @@ export default class CertificateService extends ServicesBaseAPI {
     super();
     this.url = `${AppConfig.apiHost}/Certificate`
   }
-
-
-
+  
   async createCertificateAsync(query) {
 
     try {
@@ -48,6 +46,19 @@ export default class CertificateService extends ServicesBaseAPI {
     };
     try {
       const response = await this.http.post(`${this.url}/Filter`, query);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async getStatisticalCertificateAsync(query) {
+    let dataSend = {
+      internshipCourseId: query.internshipCourseId,
+    }
+    try {
+      const response = await this.http.post(`${this.url}/GetStatisticalCertificate`, dataSend);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

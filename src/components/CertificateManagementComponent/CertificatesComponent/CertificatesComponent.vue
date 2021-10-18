@@ -12,6 +12,17 @@ import StudentService from "../../../services/student/studentServices";
 import ClassService from "../../../services/class/classServices";
 import CompanyService from "../../../services/company/companyServices";
 import moment from "moment";
+import Highcharts from "highcharts";
+import dataModule from "highcharts/modules/data";
+import drilldown from "highcharts/modules/drilldown";
+import SelectPlan from '../../common/form/select-plan/SelectPlan.vue';
+import PlanService from '../../../services/plan/planServices';
+
+drilldown(Highcharts);
+dataModule(Highcharts);
+let drilldownChart,
+  drilldownEvent,
+  drilldownLevel = 0;
 
 export default {
   name: "CertificatesComponent",
@@ -20,6 +31,7 @@ export default {
     CertificateDetailComponent,
     ConfirmDialog,
     JwPagination,
+    SelectPlan,
   },
   props: {
     isAdmin: Boolean,
@@ -53,6 +65,19 @@ export default {
         classId: "",
       },
       selectUpdateCertificates:[],
+      chartOptions: {},
+      drilldownChart,
+      drilldownEvent,
+      drilldownLevel,
+      filterChart: {
+        internshipCourseId: ''
+      },
+      plans: [],
+      statisticalCertificate: [],
+      unconfirmedData: [],
+      confirmedData: [],
+      completeData: [],
+      notRegisteredData: [],
     };
   },
 
@@ -61,9 +86,186 @@ export default {
     await this.getStudentsAsync();
     await this.getClassesAsync();
     await this.getCompaniesAsync();
+    await this.getPlansFilterAsync();
   },
 
   methods: {
+    async showchartAsnyc() {
+      if (!this.filterChart.internshipCourseId) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          'Vui lòng chọn đợt để xem thống kê'
+        );
+        return;
+      }
+      await this.getStatisticalCertificateAsync();
+      this.renderHighChart();
+    },
+
+    async getPlansFilterAsync() {
+      let filterPlan = {
+        status: "",
+      };
+      // Call Api
+      this.showLoading();
+      const api = new PlanService()
+
+      const response = await api.getPlansAsync(filterPlan)
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.plans = response.data
+    },
+
+    async getStatisticalCertificateAsync() {
+      // Call Api
+      this.showLoading();
+      const api = new CertificateSevice()
+
+      const response = await api.getStatisticalCertificateAsync(this.filterChart);
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.statisticalCertificate = response.data;
+    },
+
+    getChart() {
+      this.unconfirmedData = [];
+      this.confirmedData = [];
+      this.completeData = [];
+      this.notRegisteredData = [];
+      for (let res of this.statisticalCertificate) {
+        this.unconfirmedData.push(res.unconfirmed);
+        this.confirmedData.push(res.confirmed);
+        this.completeData.push(res.complete);
+        this.notRegisteredData.push(res.notRegistered);
+      }
+    },
+
+    renderHighChart() {
+      this.getChart();
+      this.chartOptions = {
+        chart: {
+          type: "column",
+          events: {
+            drilldown: function (e) {
+              if (!e.seriesOptions) {
+                this.vueRef.updateGraph(true, this, e);
+              }
+            },
+            drillup: function (e) {
+              if (!e.seriesOptions.flag) {
+                this.vueRef.drilldownLevel = e.seriesOptions._levelNumber;
+                this.vueRef.updateGraph(false);
+              }
+            },
+          },
+        },
+        credits: {
+          enabled: false,
+        },
+        plotOptions: {
+          column: {
+            stacking: "normal",
+            events: {
+              click: function (event) {
+                return false;
+              },
+            },
+          },
+          series: {
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true,
+              style: {
+                textShadow: false,
+                fontSize: "10px",
+              },
+            },
+          },
+        },
+        legend: {
+          enabled: false,
+        },
+        yAxis: {
+          stackLabels: {
+            enabled: false,
+            style: {
+              fontWeight: "bold",
+              color: "gray",
+            },
+          },
+        },
+        title: {
+          text: "Thống kê giấy giới thiệu của sinh viên",
+          fontWeight: "bold",
+        },
+        xAxis: {
+          title: {},
+          type: "category",
+        },
+        yAxis: [
+          {
+            title: {
+              text: "Số lượng giấy",
+            },
+            min: 0,
+            allowDecimals: false,
+          },
+        ],
+        tooltip: {
+          headerFormat:
+            '<span style="font-size:10px">{point.key}</span><table>',
+          pointFormat:
+            '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y}</b></td></tr>',
+          footerFormat: "</table>",
+          shared: true,
+          useHTML: true,
+        },
+        series: [
+          {
+            type: "column",
+            name: "Số phiếu giới thiệu đang duyệt",
+            color: "#EF5350",
+            data: this.unconfirmedData,
+          },
+          {
+            type: "column",
+            name: "Số phiếu giới thiệu đã duyệt",
+            color: "rgb(128, 183, 255)",
+            data: this.confirmedData,
+          },
+          {
+            type: "column",
+            name: "Số phiếu giới thiệu đã in",
+            color: "#33691E",
+            data: this.completeData,
+          },
+          {
+            type: "column",
+            name: "Số sinh viên không đăng ký",
+            color: "#FF6F00",
+            data: this.notRegisteredData,
+          },
+        ],
+      };
+    },
     convertTime(time) {
       return moment(time).format("DD/MM/YYYY");
     },
@@ -252,6 +454,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_success_default}`
       );
+      await this.showchartAsnyc();
     },
 
     async createCompanyAsync(company) {

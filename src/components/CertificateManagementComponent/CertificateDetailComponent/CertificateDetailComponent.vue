@@ -256,16 +256,17 @@ export default {
         this.certificate = this.data;
         return;
       }
+      
       this.certificate = {
         taxCode: "",
         companyName: "",
-        companyAddress:"",
-        owner:"",
+        companyAddress: "",
+        owner: "",
         phoneNumberOfCompany: "",
         phoneNumberOfStudent: "",
         status: 'unconfirmed', //confirmed, unconfirmed, complete
-        mssv : this.userProfile.mssv,
-        classId : this.userProfile.classId
+        mssv: this.userProfile.mssv,
+        classId: this.userProfile.classId,
         };
     }
   }
