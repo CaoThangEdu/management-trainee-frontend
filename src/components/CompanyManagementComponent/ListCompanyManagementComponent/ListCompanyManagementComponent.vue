@@ -39,7 +39,7 @@ export default {
     };
   },
   async mounted() {
-    await this.getCompaniesAsync();
+    await this.getAllCompaniesAsync();
   },
   methods: {
     createCompany() {
@@ -52,11 +52,11 @@ export default {
       this.companyFile = {};
     },
 
-    async getCompaniesAsync() {
+    async getAllCompaniesAsync() {
       // Call Api
       this.showLoading();
       const api = new CompanyService();
-      const response = await api.getCompaniesAsync(this.filterCompany);
+      const response = await api.getAllCompaniesAsync();
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -67,7 +67,7 @@ export default {
         );
         return;
       }
-      this.companies = response.data;
+      this.companies = response.data.items;
     },
 
     async changePage(currentPage) {
@@ -154,13 +154,13 @@ export default {
     },
 
     async searchCompany() {
+      if(this.filterCompany.keyword === "" && this.filterCompany.status ===""){
+        return this.getAllCompaniesAsync();
+      }
       // Call Api
       this.showLoading();
       const api = new CompanyService();
-      const response = await api.getCompaniesAsync(
-        this.filterCompany,
-        this.status
-      );
+      const response = await api.getCompaniesAsync(this.filterCompany);
       this.showLoading(false);
 
       if (!response.isOK) {

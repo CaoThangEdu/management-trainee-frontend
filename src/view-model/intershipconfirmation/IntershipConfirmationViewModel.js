@@ -11,6 +11,7 @@ export default class CertificateViewModel extends ViewModel {
       manager:null,
       phoneNumber: null,
       website:null,
+      companiesInterviewed:null,
       status: 'notPracticed', //notPracticed, practiced
     }
   }
@@ -18,7 +19,7 @@ export default class CertificateViewModel extends ViewModel {
   getValidations() {
     let validations = {
       taxCode: {
-        label: 'Mã sô thuế',
+        label: 'Mã số thuế',
         rules: {
           require: '',
           maxLength: {
@@ -53,8 +54,8 @@ export default class CertificateViewModel extends ViewModel {
           }
         }
       },
-      phoneNumber: {
-        label: 'Số điện thoại cán bộ hướng dẫn',
+      website: {
+        label: 'Link công ty',
         rules: {
           require: '',
           maxLength: {
@@ -71,8 +72,17 @@ export default class CertificateViewModel extends ViewModel {
           }
         }
       },
-      website: {
-        label: 'Link công ty',
+      phoneNumber: {
+        label: 'Số điện thoại cán bộ hướng dẫn',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
+      companiesInterviewed: {
+        label: 'Công ty đã phỏng vấn',
         rules: {
           require: '',
           maxLength: {
