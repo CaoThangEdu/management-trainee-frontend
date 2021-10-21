@@ -267,7 +267,6 @@ export default {
       this.instructorRequest = {
         internshipCourseId: this.internshipCourseId,
       };
-      console.log('object', this.instructorRequest);
       const response = await api.restoreInstructors(this.instructorRequest);
       this.showLoading(false);
       if (!response.isOK) {

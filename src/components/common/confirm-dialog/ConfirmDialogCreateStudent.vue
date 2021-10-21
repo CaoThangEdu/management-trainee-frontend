@@ -9,7 +9,36 @@
     <template #header>
       <h5 class="mb-0">{{ title ? title : "Thông báo" }}</h5>
     </template>
-    {{ message ? message : "Bạn có chắc chắn muốn xóa?" }}
+    <div class="text--red mb-2 text--italic">
+      {{ message ? message : "Bạn có chắc chắn thêm sinh viên đã từng tồn tại ở đợt thực tập trước đó?" }}
+    </div>
+    <div v-if="dataDisplay.length > 0">
+      <figure class="mb-0">
+        <figcaption class="caption-table mb-2">
+          Danh sách sinh viên đã từng tồn tại ở đợt thực tập trước đó
+        </figcaption>
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead class="">
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">MSSV</th>
+                <th scope="col">Họ</th>
+                <th scope="col">Tên</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(dataItem, index) in dataDisplay" :key="index + 'dataDisplay'">
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{ dataItem.studentId }}</td>
+                <td>{{dataItem.lastName }}</td>
+                <td>{{ dataItem.firstName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </figure>
+    </div>
     <template #footer>
       <input
         type="button"
@@ -67,12 +96,12 @@ export default {
 
     agreeConfirm() {
       this.isShow = false;
-      this.$emit("agree", this.data);
+      this.$emit("agree");
     },
 
     cancelConfirm() {
       this.isShow = false;
-      this.$emit("cancel", this.data);
+      this.$emit("cancel");
     },
   },
   watch: {

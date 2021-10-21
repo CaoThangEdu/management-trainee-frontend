@@ -9,7 +9,6 @@ export default class StudentViewModel extends ViewModel {
       status: '',
       email: '',
       dayOfBirth: '',
-      role: 0,
       classId: '',
       internshipStatus: '',
     }
