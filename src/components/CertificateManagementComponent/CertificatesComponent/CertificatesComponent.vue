@@ -17,7 +17,7 @@ import dataModule from "highcharts/modules/data";
 import drilldown from "highcharts/modules/drilldown";
 import SelectPlan from '../../common/form/select-plan/SelectPlan.vue';
 import PlanService from '../../../services/plan/planServices';
-
+import { mapGetters } from "vuex";
 drilldown(Highcharts);
 dataModule(Highcharts);
 let drilldownChart,
@@ -82,13 +82,15 @@ export default {
   },
 
   async mounted() {
-    await this.getCertificatesAsync(this.filterCerticate);
     await this.getStudentsAsync();
     await this.getClassesAsync();
     await this.getCompaniesAsync();
     await this.getPlansFilterAsync();
   },
-
+ computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", { userProfile: "getUserInfo", tokenKey: "getTokenKey" }),
+  },
   methods: {
     async showchartAsnyc() {
       if (!this.filterChart.internshipCourseId) {
@@ -279,7 +281,7 @@ export default {
         keyword: "",
         classId: "",
         internshipCourseId: "",
-        status: "",
+        status: "active",
       };
       // Call Api
       this.showLoading();
@@ -296,7 +298,7 @@ export default {
         );
         return;
       }
-      this.studentsByMssv = this.convertArrayToObject(
+      this.studentsByMssv = CrudMixin.methods.convertArrayToObject(
         response.data,
         "studentId"
       );
@@ -312,6 +314,9 @@ export default {
     },
 
     async getCertificatesAsync(filterCerticate) {
+      if(this.userProfile !== undefined && this.isAdmin === false){
+        filterCerticate.mssv = this.userProfile.mssv;
+      }
       // Call Api
       this.showLoading();
       const api = new CertificateSevice();
@@ -409,19 +414,10 @@ export default {
         );
         return;
       }
-      this.classById = this.convertArrayToObject(response.data.items, "id");
+      this.classById = CrudMixin.methods.convertArrayToObject(response.data.items, "id");
     },
 
-    // Convert array to object
-    convertArrayToObject(arr, key) {
-      const initialValue = {};
-      return arr.reduce((obj, item) => {
-        return {
-          ...obj,
-          [item[key]]: item,
-        };
-      }, initialValue);
-    },
+   
 
     async updateCertificateAsync(index) {
       this.showLoading();
@@ -481,11 +477,15 @@ export default {
     },
 
     async getCompaniesAsync() {
+      let filter ={
+          status: "",
+          keyword: ""
+        }
       // Call Api
       this.showLoading();
       const api = new CompanyService();
 
-      const response = await api.getAllCompaniesAsync();
+      const response = await api.getCompaniesAsync(filter);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -496,12 +496,7 @@ export default {
         );
         return;
       }
-      let companies = response.data.items;
-      companies = companies.reduce(
-        (map, obj) => ((map[obj.taxCode] = obj), map),
-        {}
-      );
-      this.companiesByTaxCode = companies;
+      this.companiesByTaxCode = CrudMixin.methods.convertArrayToObject(response.data, "taxCode");
     },
 
     confirmationCompany(taxCode) {
@@ -535,9 +530,17 @@ export default {
         return;
       }
       this.selectUpdateCertificates.push(this.certificates[event.target.value]);
+    },
+
+    async changeStatus(){
+      await this.getCertificatesAsync(this.filterCerticate)
     }
-    
   },
+  watch:{
+    async userProfile(){
+      await this.getCertificatesAsync(this.filterCerticate)
+    }
+  }
 };
 </script>
 

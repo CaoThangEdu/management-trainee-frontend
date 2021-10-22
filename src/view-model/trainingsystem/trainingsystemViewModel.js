@@ -20,6 +20,15 @@ export default class TrainingSystemViewModel extends ViewModel {
           }
         }
       },
+      facultyId: {
+        label: 'Khoa',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        }
+      },
     }
     return validations
   }

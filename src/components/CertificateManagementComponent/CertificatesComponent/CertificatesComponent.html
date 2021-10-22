@@ -16,14 +16,14 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+              <div v-if = "isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
                 <label for="">Lớp:</label>
                 <select class="form-control form-select form-select-class" v-model="filterCerticate.classId">
                   <option value="">Tất cả</option>
                   <option v-for="(item, index) in classById" :key="index" :value="item.id">{{item.className}}</option>
                 </select>
               </div>
-              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+              <div v-if = "isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
                 <label for="">Trạng thái:</label>
                 <select class="form-control form-select form-select-class" v-model="filterCerticate.status">
                   <option value="">Tất cả</option>
@@ -32,12 +32,21 @@
                   <option value="complete">Đã in</option>
                 </select>
               </div>
-              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2" @change="changeStatus()">
+                <label for="">Trạng thái:</label>
+                <select class="form-control form-select form-select-class" v-model="filterCerticate.status">
+                  <option value="">Tất cả</option>
+                  <option value="unconfirmed">Đang duyệt</option>
+                  <option value="confirmed">Đã duyệt</option>
+                  <option value="complete">Đã in</option>
+                </select>
+              </div>
+              <div v-if = "isAdmin" class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
                 <label for="">Từ khóa:</label>
                 <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa"
                   v-model="filterCerticate.keyword" />
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 " v-if = "isAdmin">
                 <label for="">&ensp;</label>
                 <div class="mb-2">&ensp;</div>
                 <button @click="getCertificatesAsync(filterCerticate)" type="submit" id="btn-search"

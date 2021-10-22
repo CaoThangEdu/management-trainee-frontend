@@ -40,7 +40,7 @@ export default class CertificateService extends ServicesBaseAPI {
 
   async getCertificatesAsync(object) {
     const query = {
-      mssv: object.keyword ?? '',
+      mssv: object.mssv ?? '',
       status: object.status ?? '',
       classId:object.classId ?? ''
     };

@@ -10,6 +10,7 @@ import FacultyServices from '../../../services/faculty/facultyServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import crudMixin from '../../../helpers/mixins/crudMixin'
 
 export default {
   name: "ListTrainingSystemManagementComponent",
@@ -107,8 +108,8 @@ export default {
       this.editTrainingSystem = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteTrainingSystem(item) {
-      this.confirmTrainingSystem = {item: item};
+    deleteTrainingSystem(item, index) {
+      this.confirmTrainingSystem = {item: item, index: index};
     },
 
     // Call api delete TrainingSystem
@@ -126,8 +127,7 @@ export default {
         );
         return;
       }
-      this.trainingSystems = this.trainingSystems.filter(
-      trainingSystem => trainingSystem.id != response.data.id);
+      this.trainingSystems.splice(trainingSystem.index, 1);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -172,6 +172,14 @@ export default {
       this.$emit("change-training-system");
       await this.getTrainingSystemsFilterAsync();
     },
+
+    getFaculty(facultyId){
+      let facultyById = crudMixin.methods.convertArrayToObject(this.faculties, "id");
+      if(facultyById[facultyId] === undefined){
+        return {facultyName: ""}
+      }
+      return facultyById[facultyId];
+    }
   }
 }
 </script>

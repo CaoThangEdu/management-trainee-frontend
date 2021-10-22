@@ -44,6 +44,7 @@
               <tr>
                 <th scope="col">STT</th>
                 <th scope="col">Tên hệ đào tạo</th>
+                <th scope="col">Khoa</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>                
               </tr>
@@ -54,6 +55,7 @@
                 <td @click="updateTrainingSystem(index)"
                   class="link-detail"
                   title="Xem">{{ item.trainingSystemName }}</td>
+                  <td>{{ getFaculty(item.facultyId).facultyName }}</td>
                 <td>
                   <button class="btn btn-danger mr-2"
                     @click="updateStatus(index)"
@@ -65,13 +67,13 @@
                     @click="updateStatus(index)"
                     v-if="item.status == 'active'"
                     title="Hoạt động">
-                    <i :class="getStatusIcon(item.status)"></i>
+                    <em :class="getStatusIcon(item.status)"></em>
                   </button>
                 </td>
                 <td>
                   <button class="btn btn-danger" title="Xóa"
-                    @click="deleteTrainingSystem(item)">
-                    <i class="fa fa-trash"></i>
+                    @click="deleteTrainingSystem(item, index)">
+                    <em class="fa fa-trash"></em>
                   </button>
                 </td>
               </tr>
