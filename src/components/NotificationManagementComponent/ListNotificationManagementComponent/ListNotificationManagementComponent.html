@@ -7,7 +7,11 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Thông báo
-        <button class="btn btn-primary float-right" @click="createBrand">+ Thêm mới</button>
+        <!-- <button class="btn btn-primary float-right" @click="createBrand">+ Thêm mới</button> -->
+        <router-link :to="{name:'them-thong-bao'}" class="btn btn-primary float-right"
+          title="Thêm mới">
+          <i class="fa fa-plus-square"></i>
+        </router-link>
       </header>
       <div class="card-body">
         <div class="row mb-3">
@@ -43,41 +47,27 @@
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
-                <th scope="col">Mô tả</th>
-                <th scope="col">Sinh viên</th>
-                <th scope="col">Đợt thực tập</th>
-                <th scope="col">Giáo viên</th>
-                <th scope="col">Ngày thông báo</th>
-                <th scope="col">Trạng thái</th>
+                <th scope="col">Tiêu đề</th>
+                <th scope="col">Nội dung</th>
+                <th scope="col">Đối tượng</th>
                 <th scope="col">Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Bắt đầu tính thời gian thực tập</td>
-                <td>Tất cả</td>
-                <td class="text-center">1</td>
-                <td>Tất cả</td>
-                <td>09/02/2020</td>
-                <td>Thông báo</td>
+              <tr v-for="(notify, index) in notifications" :key="index + 'notification'">
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{notify.title}}</td>
+                <td>{{notify.content}}</td>
+                <td class="text-center">{{notify.receiver}}</td>
                 <td>
                   <button class="btn btn-primary mr-2">Sửa</button>
                   <button class="btn btn-danger">Xóa</button>
                 </td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Kết thúc thực tập</td>
-                <td>Tất cả</td>
-                <td class="text-center">1</td>
-                <td>Tất cả</td>
-                <td>09/04/2020</td>
-                <td>Chưa thông báo</td>
-                <td>
-                  <button class="btn btn-primary mr-2">Sửa</button>
-                  <button class="btn btn-danger">Xóa</button>
-                </td>
+              <tr v-show="notifications == null || notifications.length === 0">
+                <th colspan="5" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
               </tr>
             </tbody>
           </table>
