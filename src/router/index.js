@@ -93,6 +93,38 @@ const routes = [
   ]
   },
   {
+    path: "/notification-management",
+    name: "quan-ly-thong-bao",
+    redirect: '/notification-management/list',
+    component: {
+      render(c) {
+        return c('router-view');
+      }
+    },
+    meta: {
+      breadcrumbName: 'Thông báo'
+    },
+    children: [{
+      path: 'list',
+      name: 'ds-thong-bao',
+      component: () =>
+        import("../router/views/NotificationManagement/NotificationManagement.vue"),
+      meta: {
+        breadcrumbName: 'Danh sách',
+      },
+    },
+    {
+      path: 'create',
+      name: 'them-thong-bao',
+      component: () =>
+        import("../components/NotificationManagementComponent/CreateNotificationManagementComponent/CreateNotificationManagementComponent"),
+      meta: {
+        breadcrumbName: 'Thêm mới',
+      },
+    },
+  ]
+  },
+  {
     path: "/login",
     name: "login",
     component: () =>
@@ -205,18 +237,6 @@ const routes = [
       ),
     meta: {
       breadcrumbName: "Quản lý công ty",
-    },
-  },
-  {
-    path: "/notification-management",
-    name: "quan-ly-thong-bao",
-    component: () =>
-      import(
-        /* webpackChunkName: "ControlExample" */
-        "../router/views/NotificationManagement/NotificationManagement.vue"
-      ),
-    meta: {
-      breadcrumbName: "Quản lý thông báo",
     },
   },
   {

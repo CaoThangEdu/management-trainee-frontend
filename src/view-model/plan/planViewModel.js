@@ -3,18 +3,19 @@ export default class PlanViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      internshipCourseName: null,
-      startDay: null,
-      endDay: null,
-      description: null,
-      careersId: null,
-      courseName: null,
+      internshipCourseName: '',
+      startDay: '',
+      endDay: '',
+      description: '',
+      careersId: '',
+      courseName: '',
       status: 'active',
+      facultyId: '',
     }
   }
 
   getValidations() {
-    let validations = {
+    return {
       startDay: {
         label: 'Ngày bắt đầu',
         rules: {
@@ -51,8 +52,13 @@ export default class PlanViewModel extends ViewModel {
           require: '',
         }
       },
+      facultyId: {
+        label: 'Khoa',
+        rules: {
+          require: '',
+        }
+      },
     }
-    return validations
   }
   isValid() {
     return super.isValid(this.getValidations())
