@@ -22,11 +22,15 @@
 
 .text {
   &--red{
-    color: red;
+    color: rgb(240, 59, 59);
   }
 
   &--blue {
     color: blue;
+  }
+
+  &--italic {
+    font-style: italic;
   }
 }
 

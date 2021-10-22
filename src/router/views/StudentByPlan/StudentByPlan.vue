@@ -54,7 +54,7 @@
             Thêm mới sinh viên của đợt
             <strong>"{{ plan.internshipCourseName }}"</strong>
           </header>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-12">
               <div class="wrapCollapse">
                 <div v-for="(faq, i) in faqs" :key="i">
@@ -89,7 +89,9 @@
                         <div class="col-md-2 col-sm-2">
                           <button class="btn btn-linkedin" @click="createClassAsync()">+<i class="fa fa-book-reader"></i></button>
                         </div>
-                        <div v-if="createClassLoading" role="status" aria-hidden="false" aria-label="Loading" class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+                        <div v-if="createClassLoading" role="status"
+                          aria-hidden="false" aria-label="Loading"
+                          class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
                       </div>
 
                     </div>
@@ -97,8 +99,8 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="form-group row">
+          </div> -->
+          <div class="form-group row mt-3">
             <label class="col-md-4 col-sm-4 col-form-label ml-3">Chọn file excel</label>
             <div class="col-md-6 col-sm-6">
               <div class="input-group mb-3">
@@ -111,6 +113,11 @@
             <button @click="save" id="submit" class="btn btn-success">Lưu</button>
           </div>
         </div>
+        <ConfirmDialogCreateStudent
+          :data="confirmCreateStudentExist"
+          @agree="createStudentExist"
+          @cancel="createStudentNotExist"
+          :dataDisplay="studentExistInDB" ></ConfirmDialogCreateStudent>
       </div>
     </div>
   </div>
@@ -126,6 +133,7 @@ import XLSX from 'xlsx';
 import ClassService from '../../../services/class/classServices';
 import ClassViewModel from "../../../view-model/class/classViewModel";
 import StudentViewModel from "../../../view-model/student/studentViewModel";
+import ConfirmDialogCreateStudent from "../../../components/common/confirm-dialog/ConfirmDialogCreateStudent";
 import {
   ADD_STUDENT
 } from "../../../config/constant";
@@ -139,6 +147,7 @@ export default {
   mixins: [CrudMixin,createUserMixin],
   components: {
     PlanningStepsComponent,
+    ConfirmDialogCreateStudent,
   },
   data() {
     return {
@@ -173,6 +182,11 @@ export default {
       plan: {},
       planName: null,
       isActiveStep:"2",
+      classInNameFile: '',
+      confirmCreateStudentExist: {},
+      studentNoExistInDB: [],
+      studentExistInDB: [],
+      studentLengthCallApi: 0,
     }
   },
   props: {
@@ -199,10 +213,9 @@ export default {
       if (!this.studentsCallApi) {
         return 0;
       }
-      let result = this.studentsCallApi.reduce((total, student) => {
+      return this.studentsCallApi.reduce((total, student) => {
         return student.classId == classId ? total + 1 : total
       }, 0);
-      return result;
     },
 
     async getPlanByIdAsync(guid) {
@@ -287,7 +300,7 @@ export default {
       let studentFilter = {
         keyword: "",
         classId: "",
-        internshipCourseId: this.guid,
+        internshipCourseId: "",
         status: "active",
         isDelete: false
       };
@@ -315,13 +328,14 @@ export default {
         f = files[0];
       var reader = new FileReader();
       var vm = this;
+      this.classInNameFile = files[0].name.split('-').shift();
 
       reader.onload = async function (e) {
         var data = new Uint8Array(e.target.result);
         var workbook = XLSX.read(data, {
           type: 'array'
         });
-        let sheetName = workbook.SheetNames[0]
+        let sheetName = workbook.SheetNames[0];
         /* DO SOMETHING WITH workbook HERE */
         let worksheet = workbook.Sheets[sheetName];
         vm.metaDataFile = XLSX.utils.sheet_to_json(worksheet);
@@ -358,7 +372,140 @@ export default {
       await this.save();
     },
 
+    showConfirmCreateStudentExist(item) {
+      this.confirmCreateStudentExist = { item: item };
+    },
+
+    async createStudentExist() {
+      await this.createStudentAfterWhileReadAsync(this.studentsForCreate);
+    },
+
+    async createStudentNotExist() {
+      if(this.studentNoExistInDB.length == 0) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Thêm mới sinh viên thất bại<br/ >Do bị trùng file đã được thêm trước đó"
+        );
+        return;
+      }
+      await this.createStudentAfterWhileReadAsync(this.studentNoExistInDB);
+    },
+
+    async createStudentAfterWhileReadAsync(students) {
+      let response = false;
+      if(this.studentsForCreate.length != 0) {
+        this.showLoading();
+        let api = new StudentService();
+        response = await api.createStudentsAsync(students);
+        this.showLoading(false);
+      }
+      if(!response || !response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages ?? "Thêm mới sinh viên thất bại"
+        );
+        return;
+      }
+
+      await this.getStudentsAsync();
+      if (this.studentLengthCallApi == this.studentLengthBanDau) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Thêm mới sinh viên thất bại"
+        );
+      } else {
+        this.showNotifications(
+          "success",
+          `${AppConfig.notification.title_default}`,
+          `${AppConfig.notification.content_created_success_default}` + ' sinh viên'
+        );
+      }
+      this.classes = this.classes.filter(
+        classroom => classroom.internshipCourseId == this.guid);
+    },
+
     async save() {
+      this.students = this.metaDataFile;
+      this.studentLengthCallApi = this.studentLengthBanDau;
+      this.studentsForCreate = [];
+      this.studentNoExistInDB = [];
+      this.studentExistInDB = [];
+      for (let i in this.students) {
+        if(!this.students[i]['__EMPTY'] || 
+          (this.students[i]['__EMPTY'] && isNaN(parseInt(this.students[i]['__EMPTY'])))) continue;
+        let viewModel = new StudentViewModel();
+        let isStudentExist = this.studentsCallApi.find(({
+          studentId
+        }) => studentId == this.students[i]['__EMPTY']);
+        viewModel.fields.studentId = this.students[i]['__EMPTY'];
+        viewModel.fields.lastName = this.students[i]['__EMPTY_1'];
+        viewModel.fields.firstName = this.students[i]['__EMPTY_2'];
+        viewModel.fields.dayOfBirth = this.students[i]['__EMPTY_3'];
+        viewModel.fields.status = 'active';
+        viewModel.fields.email = viewModel.fields.studentId + ADD_STUDENT.EMAIL;
+        // Kiểm tra lớp đã trùng với lớp đã có trong database chưa
+        let classIdExist = this.classes.find(({
+          className
+        }) => className == this.classInNameFile);
+        if (classIdExist) {
+          viewModel.fields.classId = classIdExist.id;
+        } else {
+          this.classroom.internshipCourseId = this.guid;
+          this.classroom.className = this.classInNameFile;
+          this.classroom.status = 'active';
+          this.classroom.isDelete = false;
+          let apiClass = new ClassService();
+          let responseCreateClass = await apiClass.createClassAsync(this.classroom);
+          this.showLoading(false);
+          if (responseCreateClass.isOK) {
+            this.showNotifications(
+              "success",
+              `${AppConfig.notification.title_default}`,
+              `${AppConfig.notification.content_created_success_default}` +
+              ' Lớp ' + this.classInNameFile
+            );
+            viewModel.fields.classId = responseCreateClass.data.id;
+          }
+          await this.getClassesFilterAsync();
+          this.classes = this.classes.filter(
+            classroom => classroom.internshipCourseId == this.guid);
+        }
+        // validate
+        viewModel.setFields(viewModel.fields);
+        this.errorMessages = viewModel.isValid();
+        if(this.errorMessages.length > 0) {
+          return;
+        }
+
+        if(isStudentExist) {
+          viewModel.fields.studentId = viewModel.fields.studentId + '-duplicate';
+          this.studentExistInDB.push(isStudentExist);
+        } else {
+          this.studentNoExistInDB.push(viewModel.fields);
+        }
+        this.studentsForCreate.push(viewModel.fields);      
+      }
+
+      if(this.studentsForCreate.length == 0 && this.studentNoExistInDB.length == 0) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Thêm mới sinh viên thất bại<br/ >File thêm không đúng định dạng!"
+        );
+        return;
+      }
+
+      if(this.studentNoExistInDB.length < this.studentsForCreate.length) {
+        this.showConfirmCreateStudentExist(this.studentsForCreate);
+        return;
+      }
+      await this.createStudentAfterWhileReadAsync(this.studentsForCreate);
+    },
+
+    async saveStudentBefore() {
       if (this.classCreated) {
         await this.getClassesFilterAsync();
         this.classes = this.classes.filter(
@@ -370,10 +517,10 @@ export default {
       var idClass = this.classIdSelected;
       this.studentsForCreate = [];
       for (let i in this.students) {
-        let isCheckStudentExist = this.studentsCallApi.find(({
+        let isStudentExist = this.studentsCallApi.find(({
           studentId
         }) => studentId == this.students[i].studentId);
-        if (isCheckStudentExist) continue;
+        if (isStudentExist) continue;
 
         // Kiểm tra lớp đã trùng với lớp đã chọn hay chưa
         let classOfStudent = this.getInfoObjectByName(this.students[i].classId, this.classes);
