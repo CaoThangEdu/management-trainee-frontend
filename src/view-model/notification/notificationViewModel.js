@@ -3,14 +3,15 @@ export default class NotificationViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      title: null,
-      content: "active",
-      internshipCourseId: null,
+      title: "",
+      content: "",
+      internshipCourseId: "",
+      isActive: true,
     }
   }
 
   getValidations() {
-    let validations = {
+    return {
       title: {
         label: 'Tiêu đề',
         rules: {
@@ -23,14 +24,13 @@ export default class NotificationViewModel extends ViewModel {
           require: '',
         }
       },
-      receiver: {
-        label: 'Đối tượng nhận thông báo',
+      internshipCourseId: {
+        label: 'Đợt thực tập',
         rules: {
           require: '',
         }
       },
-    }
-    return validations
+    };
   }
   isValid() {
     return super.isValid(this.getValidations())

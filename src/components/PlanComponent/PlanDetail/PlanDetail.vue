@@ -1,11 +1,10 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <div
-        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4"
-        v-if="!plan.id"
-      >
-        <PlanningStepsComponent :isActiveStep="isActiveStep" />
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4"
+        v-if="!plan.id">
+        <PlanningStepsComponent
+          :isActiveStep="isActiveStep" />
       </div>
       <div class="row">
         <div class="col-12">
@@ -17,8 +16,8 @@
               <form @submit.prevent>
                 <div class="form-row">
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                    <label
-                      >Ngày bắt đầu (<span class="text--red">*</span>)
+                    <label>Ngày bắt đầu
+                      (<span class="text--red">*</span>)
                     </label>
                     <DatePicker
                       v-model="plan.startDay"
@@ -28,12 +27,12 @@
                       :default-value="new Date()"
                       :disabled-date="hidePastDates"
                       class="w-100"
-                    ></DatePicker>
+                    ></DatePicker>                  
                   </div>
 
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                    <label class="mr-4"
-                      >Ngày kết thúc (<span class="text--red">*</span>)
+                    <label class="mr-4">Ngày kết thúc 
+                      (<span class="text--red">*</span>)
                     </label>
                     <DatePicker
                       v-model="plan.endDay"
@@ -76,7 +75,8 @@
                             <a
                               @submit.prevent
                               :class="{
-                                active: currentFaqTrainingSystem == i,
+                                active:
+                                  currentFaqTrainingSystem == i,
                               }"
                               @click="openComponentFaculty(i)"
                             >
@@ -96,8 +96,8 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="!plan.id"
                             >
-                              <label
-                                >Khoa (<span class="text--red">*</span>)
+                              <label>Khoa
+                                (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -105,7 +105,7 @@
                                     form-control form-select form-select-class
                                   "
                                   v-model="facultyId"
-                                  @change="filterTranningSystem"
+                                  @change="filterTrainingSystems"
                                 >
                                   <option
                                     v-for="(item, index) in faculties"
@@ -116,18 +116,23 @@
                                   </option>
                                 </select>
                               </div>
+                              <div class="text--italic text--red"
+                                v-if="!facultyId"
+                                >
+                                Vui lòng chọn khoa trước khi chọn Hệ đào tạo
+                              </div>
                             </div>
                             <div
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="
                                 plan.id &&
-                                  faculties != 0 &&
-                                  careers.length != 0 &&
-                                  trainingSystems.length != 0
+                                faculties !=0 &&
+                                careers.length != 0 &&
+                                trainingSystems.length != 0
                               "
                             >
-                              <label
-                                >Khoa (<span class="text--red">*</span>)
+                              <label>Khoa
+                                (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -135,7 +140,7 @@
                                     form-control form-select form-select-class
                                   "
                                   v-model="facultyId"
-                                  @change="filterCareer"
+                                  @change="filterTrainingSystems"
                                 >
                                   <option
                                     v-for="(item, index) in faculties"
@@ -156,7 +161,9 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                             >
                               <label
-                                >Tên khoa (<span class="text--red">*</span>)
+                                >Tên khoa (<span class="text--red"
+                                  >*</span
+                                >)
                               </label>
                               <div class="row">
                                 <div class="col-md-10 col-sm-10">
@@ -164,7 +171,9 @@
                                     type="text"
                                     class="form-control"
                                     id="name"
-                                    v-model="keyFaculty.facultyName"
+                                    v-model="
+                                      keyFaculty.facultyName
+                                    "
                                   />
                                 </div>
                                 <div class="col-md-2 col-sm-2">
@@ -192,7 +201,10 @@
                     </div>
                   </div>
 
-                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4"
+                    :class="{
+                      'disable-wapper-content': checkFacultyIdExist,
+                    }">
                     <div class="wrapCollapse">
                       <div v-for="(faq, i) in faqTrainingSystems" :key="i">
                         <dt>
@@ -200,7 +212,8 @@
                             <a
                               @submit.prevent
                               :class="{
-                                active: currentFaqTrainingSystem == i,
+                                active:
+                                  currentFaqTrainingSystem == i,
                               }"
                               @click="openComponentTrainingSystem(i)"
                             >
@@ -220,8 +233,8 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="!plan.id"
                             >
-                              <label
-                                >Hệ đào tạo (<span class="text--red">*</span>)
+                              <label>Hệ đào tạo
+                                (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -232,7 +245,7 @@
                                   @change="filterCareer"
                                 >
                                   <option
-                                    v-for="(item, index) in trainingSystems"
+                                    v-for="(item, index) in trainingSystemsFilter"
                                     :key="index"
                                     :value="item.id"
                                   >
@@ -240,17 +253,22 @@
                                   </option>
                                 </select>
                               </div>
+                              <div class="text--italic text--red"
+                                v-if="!trainingSystemId"
+                                >
+                                Vui lòng chọn Hệ đào tạo trước khi chọn Ngành
+                              </div>
                             </div>
                             <div
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="
                                 plan.id &&
-                                  careers.length != 0 &&
-                                  trainingSystems.length != 0
+                                careers.length != 0 &&
+                                trainingSystems.length != 0
                               "
                             >
-                              <label
-                                >Hệ đào tạo (<span class="text--red">*</span>)
+                              <label>Hệ đào tạo
+                                (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -279,7 +297,8 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                             >
                               <label
-                                >Tên hệ đào tạo (<span class="text--red">*</span
+                                >Tên hệ đào tạo (<span class="text--red"
+                                  >*</span
                                 >)
                               </label>
                               <div class="row">
@@ -288,7 +307,9 @@
                                     type="text"
                                     class="form-control"
                                     id="name"
-                                    v-model="trainingSystem.trainingSystemName"
+                                    v-model="
+                                      trainingSystem.trainingSystemName
+                                    "
                                   />
                                 </div>
                                 <div class="col-md-2 col-sm-2">
@@ -316,7 +337,10 @@
                     </div>
                   </div>
 
-                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4"
+                    :class="{
+                      'disable-wapper-content': checkTrainingSystemIdExist,
+                    }">
                     <div class="wrapCollapse">
                       <div v-for="(faq, i) in faqs" :key="i">
                         <dt>
@@ -341,8 +365,8 @@
                             <div
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                             >
-                              <label
-                                >Ngành (<span class="text--red">*</span>)
+                              <label>Ngành
+                                (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -354,7 +378,7 @@
                                   v-model="plan.careersId"
                                 >
                                   <option
-                                    v-for="(item, index) in careers"
+                                    v-for="(item, index) in careersFilter"
                                     :key="index"
                                     :value="item.id"
                                   >
@@ -408,8 +432,7 @@
                     </div>
                   </div>
 
-                  <div
-                    class="form-group col-sm-12 col-md-6 col-lg-6"
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6"
                     v-if="planId"
                   >
                     <label
@@ -428,25 +451,18 @@
                     </div>
                   </div>
 
-                  <div
-                    class="form-group col-sm-12 col-md-6 col-lg-6"
-                    v-if="planId"
-                  >
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6"
+                    v-if="planId">
                     <div class="button-continue">
                       <router-link
                         class="btn-continue"
-                        :to="{
-                          name: 'them-sv-cua-dot',
-                          params: { guid: planId },
-                        }"
+                        :to="{ name: 'them-sv-cua-dot', params: { guid: planId } }"
                       >
                         Tiếp tục thêm sinh viên
                       </router-link>
-                    </div>
+                    </div>                    
                   </div>
-                  <div
-                    class="form-group col-sm-12 col-md-12 col-lg-12 text-center"
-                  >
+                  <div class="form-group col-sm-12 col-md-12 col-lg-12 text-center">
                     <button
                       @click="$router.go(-1)"
                       id="cancel"
@@ -516,7 +532,7 @@ export default {
       errorMessages: [],
       isThemNganh: false,
       career: {},
-      trainingSystemId: null,
+      trainingSystemId: '',
       trainingSystems: [],
       confirmPlan: {},
       careers: [],
@@ -565,16 +581,17 @@ export default {
       plans: [],
       isNotification: null,
       faculties: [],
-      facultyId: null,
+      facultyId: '',
       keyFaculty:{
         facultyName:""
-      }
+      },
+      trainingSystemsFilter: [],
     };
   },
 
   async mounted() {
-    // await this.getTrainingSystemsFilterAsync();
-    // await this.getCareersFilterAsync();
+    await this.getTrainingSystemsFilterAsync();
+    await this.getCareersFilterAsync();
     await this.getPlansAsync();
     await this.getFacultiesFilterAsync();
     if (!this.guid) {
@@ -590,7 +607,12 @@ export default {
     ).trainingSystemId;
     this.plan.startDay =  new Date(this.plan.startDay);
     this.plan.endDay = new Date(this.plan.endDay);
-    this.filterCareer();
+    this.careersFilter = this.careers.filter(
+      (career) => career.trainingSystemId == this.trainingSystemId
+    );
+    this.trainingSystemsFilter = this.trainingSystems.filter(
+      (trainingSystem) => trainingSystem.trainingSystemId == this.facultyId
+    );
     let idPlanStore = localStorageMixin.methods.getLocalStorage("ID_PLAN");
     if (!idPlanStore) {
       return;
@@ -602,11 +624,6 @@ export default {
   },
 
   methods: {
-
-    async filterTranningSystem(){
-      await this.getTrainingSystemsFilterAsync();
-    },
-
     async getFacultiesFilterAsync() {
       let facultyFilter = {
         facultyName:"",
@@ -676,12 +693,12 @@ export default {
         return;
       }
       this.plan = response.data;
+      this.facultyId = this.plan.facultyId;
     },
 
     async getTrainingSystemsFilterAsync() {
       let filterTrainingSystem = {
         trainingSystemName: "",
-        facultyId: this.facultyId,
         status: "active",
       };
       // Call Api
@@ -706,7 +723,7 @@ export default {
 
     async getCareersFilterAsync() {
       let filterCareer = {
-        trainingSystemId: this.trainingSystemId,
+        trainingSystemId: "",
         careersName: "",
         status: "active",
       };
@@ -742,8 +759,19 @@ export default {
       this.currentFaqFaculty = i;
     },
 
-    async filterCareer() {
-     await this.getCareersFilterAsync()
+    filterCareer() {
+      this.careersFilter = this.careers.filter(
+        (career) => career.trainingSystemId == this.trainingSystemId
+      );
+      this.plan.careersId = '';
+    },
+
+    filterTrainingSystems() {
+      this.trainingSystemsFilter = this.trainingSystems.filter(
+        (trainingSystem) => trainingSystem.facultyId == this.facultyId
+      );
+      this.trainingSystemId = '';
+      this.plan.careersId = '';
     },
 
     async createCareerAsync() {
@@ -854,7 +882,7 @@ export default {
 
     async createTrainingSystemAsync() {
       this.trainingSystem.status = "active";
-      this.trainingSystem.facultyId = this.faculties[0].id;
+      this.trainingSystem.facultyId = this.facultyId;
       let viewModel = new TrainingSystemViewModel();
       viewModel.setFields(this.trainingSystem);
       this.errorMessages = viewModel.isValid();
@@ -1046,8 +1074,8 @@ export default {
       );
     },
 
-     async createFacultyAsync() {
-       if(this.keyFaculty.facultyName === ""){
+    async createFacultyAsync() {
+      if(this.keyFaculty.facultyName === ""){
          return this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -1077,6 +1105,7 @@ export default {
     },
 
     async save() {
+      this.plan.facultyId = this.facultyId;
       // validate
       let viewModel = new PlanViewModel();
       viewModel.setFields(this.plan);
@@ -1097,7 +1126,15 @@ export default {
       }
     },
   },
+  
+  computed: {
+    checkFacultyIdExist() {
+      return !this.facultyId;
+    },
+
+    checkTrainingSystemIdExist() {
+      return !this.trainingSystemId;
+    },
+  },
 };
 </script>
-
-<style></style>
