@@ -28,6 +28,16 @@ export default class CertificateService extends ServicesBaseAPI {
     return this.result;
   }
 
+  async updateStatusCertificatesAsync(object) {
+    try {
+      const response = await this.http.put(`${this.url}/UpdateCertificateStatus`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
   async deleteCertificateAsync(id) {
     try {
       const response = await this.http.delete(`${this.url}/Delete?id=${id}`);
@@ -40,7 +50,7 @@ export default class CertificateService extends ServicesBaseAPI {
 
   async getCertificatesAsync(object) {
     const query = {
-      mssv: object.keyword ?? '',
+      mssv: object.mssv ?? '',
       status: object.status ?? '',
       classId:object.classId ?? ''
     };

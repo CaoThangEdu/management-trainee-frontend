@@ -1,10 +1,18 @@
-<BaseModal 
-  @mouse-click-outside="closeModal(false)" 
-  :modalName="`TrainingSystemDetailComponent`" 
-  :isShow="isShow"
+<BaseModal @mouse-click-outside="closeModal(false)" :modalName="`TrainingSystemDetailComponent`" :isShow="isShow"
   size="lg">
   <div class="">
     <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label mb-3">
+        Khoa (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8 mb-3">
+        <select class="form-control form-select form-select-class"
+          name="trainingSystemId" id="trainingSystemId" v-model="trainingsystem.facultyId">
+          <option v-for="(item,index) in faculties" :key="index" :value="item.id">
+            {{item.facultyName}}</option>
+        </select>
+      </div>
+
       <label class="col-md-4 col-sm-4 col-form-label">
         Tên hệ đào tạo (<span class="text--red">*</span>)
       </label>
@@ -31,8 +39,8 @@
     <div class="form-inline form-group col-md-12 pr-0">
       <div class="col-form-label col-md-4 col-sm-4"></div>
       <div class="col-md-8 col-sm-8 pl-0 pr-0">
-        <button @click="save"
-          class="btn btn-primary float-right ml-2">{{trainingsystem.id ? "Cập nhật" : "Thêm mới"}}</button>
+        <button @click="save" class="btn btn-primary float-right ml-2">{{trainingsystem.id ? "Cập nhật" : "Thêm
+          mới"}}</button>
         <button class="btn btn-dark float-right" @click="closeModal(false)">Hủy</button>
       </div>
     </div>

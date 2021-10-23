@@ -9,7 +9,6 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import TrainingSystemViewModel from "../../../view-model/trainingsystem/trainingsystemViewModel"
 import AppConfig from '../../../../src/app.config.json'
-
 export default {
   name: 'TrainingSystemManagementDetailComponent',
   extends: ComponentBase,
@@ -120,7 +119,6 @@ export default {
     },
 
     async save() {
-      this.trainingsystem.facultyId = this.faculties[0].id;
       // validate
       let viewModel = new TrainingSystemViewModel();
       viewModel.setFields(this.trainingsystem);
@@ -142,6 +140,9 @@ export default {
     data() {
       this.isShow = true;
       this.trainingsystem = this.data;
+    },
+    isShow(){
+      this.errorMessages = []
     }
   }
 }

@@ -13,14 +13,14 @@
         <div class="row mb-3">
           <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-12 mb-3">
             <label for="">Đợt thực tập:</label>
-            <select class="form-control form-select form-select-class" v-model ="internshipCourseId">
+            <select class="form-control form-select form-select-class" v-model ="filterStudent.internshipCourseId">
               <option value="">Chọn đợt thực tập</option>
               <option v-for= "(plan, index) in plans" :key="index" :value="plan.id">{{plan.internshipCourseName}}</option>
             </select>
           </div>
           <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-12">
             <label for="">Lớp:</label>
-            <select class="form-control form-select form-select-class" v-model="classId">
+            <select class="form-control form-select form-select-class" v-model="filterStudent.classId">
               <option value="">Tất cả</option>
               <option v-for= "(statistic, index) in statistics" :key="index" :value="statistic.classId">{{statistic.className}}</option>
             </select>
@@ -35,18 +35,19 @@
             <div class="form-row filter-wrapper ml-0 mr-0">
               <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
                 <label for="">Từ khóa:</label>
-                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+                <input type="text" class="form-control" id="filterStudent.keywords" placeholder="Nhập từ khóa" />
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
                 <label for="">&ensp;</label>
                 <div class="mb-2">&ensp;</div>
-                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+                <button @click ="searchStudent" type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
               </div>
             </div>
           </div>
         </div>
         <div class="table-responsive">
           <table class="table">
+            <caption></caption>
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
@@ -57,45 +58,50 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in internshipConfirmations" :key="index">
+              <tr v-for="(student, index) in pageOfItems" :key="index">
                 <th scope="row">
                   <div>{{index + 1}}</div>
                 </th>
                 <td>
-                  <div><strong>MSSV:</strong> {{item.studentId}}</div>
+                  <div><strong>MSSV:</strong>{{student.studentId}}</div>
                   <div>
                     <strong>Họ tên sinh viên:</strong>
-                    {{ getStudent(item.studentId).firstName }}
-                    {{getStudent(item.studentId).lastName}}
+                     {{student.firstName}} {{student.lastName}}
                   </div>
                   <div>
-                    <strong>lớp:</strong>
-                    {{ getNameClass(item.studentId) }}
+                    <strong>lớp:</strong> {{student.className}}
                   </div>
                 </td>
                 <td>
                   <div>
-                    <strong>Mã số thuế:</strong> {{ item.taxCode }}.
+                    <strong>Mã số thuế:</strong> 
+                    {{getInternshipConfirmationByStudentId(student.studentId).taxCode}}
                   </div>
                   <div>
-                    <strong>Tên công ty:</strong> {{ item.title }}.
+                    <strong>Tên công ty:</strong> 
+                    {{getInternshipConfirmationByStudentId(student.studentId).title}}
                   </div>
                 </td>
                 <td>
-                  <button v-if="item.status === 'practiced'" class="btn btn-success not-active">
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === 'practiced'" class="btn btn-success not-active">
                     Đang thực tập
                   </button>
-                  <button v-if="item.status === 'notPracticed'" class="btn btn-danger not-active">
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === 'notPracticed'" class="btn btn-warning not-active text-white">
                     Chưa thực tập
+                  </button>
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === ''" class="btn btn-danger not-active">
+                    Chưa xác nhận
                   </button>
                 </td>
                 <td>
-                  <button class="btn btn-primary">
+                  <button class="btn btn-primary" 
+                  @click="detailInternshipConfirmation(
+                    getInternshipConfirmationByStudentId(student.studentId))">
                     Xem chi tiết
                   </button>
                 </td>
               </tr>
-              <tr v-show="internshipConfirmations == null || internshipConfirmations.length === 0">
+              <tr v-show="students == null || students.length === 0">
                 <th colspan="5" class="text-left">
                   Không có dữ liệu nào được tìm thấy.
                 </th>
@@ -104,9 +110,12 @@
           </table>
         </div>
       </div>
+      <IntershipConfirmationDetailComponent
+      :intershipConfirmation ="intershipConfirmation"
+      />
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems == null || pageOfItems.length === 0">
-        <JwPagination :items="internshipConfirmations" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
+        <JwPagination :items="students" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
         </JwPagination>
       </div>
     </div>
