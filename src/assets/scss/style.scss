@@ -9,6 +9,12 @@
 
 .app {
   position: relative;
+  .select2-container {
+    width: 100%;
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
 }
 
 .card-header:not(.content-center) > .c-icon:first-child {
@@ -120,4 +126,9 @@
 
 .title-collapse {
   cursor: pointer;
+}
+
+.disable-wapper-content {
+  opacity: 0.6;
+  pointer-events: none;
 }

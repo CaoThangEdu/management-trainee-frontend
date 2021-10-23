@@ -172,7 +172,7 @@ export default class Http {
    * @param {Object} error Object Error of axios while call api
    */
   async loadError(error) {
-    let message = error.response?error.response.data.error.message:'';
+    let message = error.response ? (error.response?.data?.error?.message) : '';
     let errorMessageDisplay = message?message:[error.message];
     let e = {
       data: null,

@@ -143,7 +143,6 @@ export default {
         studentId: this.userProfile.mssv,
         status: "",
       };
-      console.log(filter);
       this.showLoading();
       let api = new InternshipConfirmationServices();
       let response = await api.fliterInternshipConfirmationAsync(filter);

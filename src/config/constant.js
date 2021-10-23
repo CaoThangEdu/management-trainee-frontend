@@ -205,3 +205,30 @@ export const ROLE_ENUM = {
   TEACHER: "TEACHER",
   ADMIN: "ADMIN",
 }
+
+export const NOTIFY_OBJECT_ENUM = {
+  ALL: {
+    value: "ALL",
+    name: "Tất cả",
+  },
+  TEACHERS: {
+    value: "TEACHERS",
+    name: "Tất cả giáo viên",
+  },
+  STUDENTS: {
+    value: "STUDENTS",
+    name: "Tất cả sinh viên",
+  },
+  CLASSID: {
+    value: "CLASSID",
+    name: "Chọn lớp"
+  },
+  EMAILTEACHERS: {
+    value: "EMAILTEACHERS",
+    name: "Chọn giáo viên"
+  },
+  EMAILSTUDENTS: {
+    value: "EMAILSTUDENTS",
+    name: "Chọn sinh viên"
+  },
+}
