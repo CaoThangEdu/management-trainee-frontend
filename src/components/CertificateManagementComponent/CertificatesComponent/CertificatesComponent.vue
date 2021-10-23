@@ -15,9 +15,10 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import dataModule from "highcharts/modules/data";
 import drilldown from "highcharts/modules/drilldown";
-import SelectPlan from '../../common/form/select-plan/SelectPlan.vue';
-import PlanService from '../../../services/plan/planServices';
+import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
+import PlanService from "../../../services/plan/planServices";
 import { mapGetters } from "vuex";
+import lodash from "lodash";
 drilldown(Highcharts);
 dataModule(Highcharts);
 let drilldownChart,
@@ -40,6 +41,7 @@ export default {
   data() {
     return {
       certificates: [],
+      defaultCertificates: [],
       editCertificate: {},
       confirmedCertificate: null,
       pageOfItems: [],
@@ -64,13 +66,16 @@ export default {
         status: "",
         classId: "",
       },
-      selectUpdateCertificates:[],
+      selectUpdateCertificates: {
+        certificationId: [],
+        status: "unconfirmed",
+      },
       chartOptions: {},
       drilldownChart,
       drilldownEvent,
       drilldownLevel,
       filterChart: {
-        internshipCourseId: ''
+        internshipCourseId: "",
       },
       plans: [],
       statisticalCertificate: [],
@@ -82,14 +87,19 @@ export default {
   },
 
   async mounted() {
+    if (this.userProfile !== "") {
+      await this.getCertificatesAsync(this.filterCerticate);
+    }
     await this.getStudentsAsync();
     await this.getClassesAsync();
     await this.getCompaniesAsync();
     await this.getPlansFilterAsync();
   },
- computed: {
+  computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
-    ...mapGetters("user", { userProfile: "getUserInfo", tokenKey: "getTokenKey" }),
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+    }),
   },
   methods: {
     async showchartAsnyc() {
@@ -97,7 +107,7 @@ export default {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          'Vui lòng chọn đợt để xem thống kê'
+          "Vui lòng chọn đợt để xem thống kê"
         );
         return;
       }
@@ -111,12 +121,12 @@ export default {
       };
       // Call Api
       this.showLoading();
-      const api = new PlanService()
+      const api = new PlanService();
 
-      const response = await api.getPlansAsync(filterPlan)
+      const response = await api.getPlansAsync(filterPlan);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -124,18 +134,20 @@ export default {
         );
         return;
       }
-      this.plans = response.data
+      this.plans = response.data;
     },
 
     async getStatisticalCertificateAsync() {
       // Call Api
       this.showLoading();
-      const api = new CertificateSevice()
+      const api = new CertificateSevice();
 
-      const response = await api.getStatisticalCertificateAsync(this.filterChart);
+      const response = await api.getStatisticalCertificateAsync(
+        this.filterChart
+      );
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -165,12 +177,12 @@ export default {
         chart: {
           type: "column",
           events: {
-            drilldown: function (e) {
+            drilldown: function(e) {
               if (!e.seriesOptions) {
                 this.vueRef.updateGraph(true, this, e);
               }
             },
-            drillup: function (e) {
+            drillup: function(e) {
               if (!e.seriesOptions.flag) {
                 this.vueRef.drilldownLevel = e.seriesOptions._levelNumber;
                 this.vueRef.updateGraph(false);
@@ -185,7 +197,7 @@ export default {
           column: {
             stacking: "normal",
             events: {
-              click: function (event) {
+              click: function(event) {
                 return false;
               },
             },
@@ -314,7 +326,7 @@ export default {
     },
 
     async getCertificatesAsync(filterCerticate) {
-      if(this.userProfile !== undefined && this.isAdmin === false){
+      if (this.userProfile !== undefined && this.isAdmin === false) {
         filterCerticate.mssv = this.userProfile.mssv;
       }
       // Call Api
@@ -333,6 +345,7 @@ export default {
         return;
       }
       this.certificates = response.data;
+      this.defaultCertificates = lodash.cloneDeep(this.certificates);
     },
 
     updateCertificate(index) {
@@ -380,8 +393,9 @@ export default {
       );
     },
 
-    changeStatus(event, index) {
+    async changeStatus(event, index) {
       this.certificates[index].status = event.target.value;
+      await this.updateCertificateAsync(index);
     },
 
     getNameClass(classId) {
@@ -414,10 +428,11 @@ export default {
         );
         return;
       }
-      this.classById = CrudMixin.methods.convertArrayToObject(response.data.items, "id");
+      this.classById = CrudMixin.methods.convertArrayToObject(
+        response.data.items,
+        "id"
+      );
     },
-
-   
 
     async updateCertificateAsync(index) {
       this.showLoading();
@@ -452,6 +467,44 @@ export default {
       );
       await this.showchartAsnyc();
     },
+    async updateStatusCertificatesAsync() {
+      if(this.selectUpdateCertificates.certificationId.length === 0){
+        return this.showNotifications(
+          "success",
+          `${AppConfig.notification.title_default}`,
+          `${AppConfig.notification.content_updated_success_default}`
+        );
+      }
+      this.showLoading();
+      let api = new CertificateSevice();
+      let response = await api.updateStatusCertificatesAsync(this.selectUpdateCertificates);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      for (let i = 0; i <= this.certificates.length - 1; i++) {
+        if(document.getElementById(i).checked === true){
+          console.log("vô")
+          this.certificates[i].status = this.selectUpdateCertificates.status;
+          document.getElementById(i).checked = false;
+        }
+      }
+      this.selectUpdateCertificates.status = "unconfirmed";
+      this.selectUpdateCertificates.certificationId = [];
+      document.getElementById("all").checked = false;
+  
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+    },
 
     async createCompanyAsync(company) {
       if (this.companiesByTaxCode[company.taxCode]) {
@@ -477,10 +530,10 @@ export default {
     },
 
     async getCompaniesAsync() {
-      let filter ={
-          status: "",
-          keyword: ""
-        }
+      let filter = {
+        status: "",
+        keyword: "",
+      };
       // Call Api
       this.showLoading();
       const api = new CompanyService();
@@ -496,7 +549,10 @@ export default {
         );
         return;
       }
-      this.companiesByTaxCode = CrudMixin.methods.convertArrayToObject(response.data, "taxCode");
+      this.companiesByTaxCode = CrudMixin.methods.convertArrayToObject(
+        response.data,
+        "taxCode"
+      );
     },
 
     confirmationCompany(taxCode) {
@@ -510,37 +566,51 @@ export default {
       this.companiesByTaxCode[company.taxCode] = company;
     },
 
-    selectUpdateCertificate(event){
+    selectUpdateCertificate(event) {
       // select all
-      if(event.target.value === "-1"){
-        if(event.target.checked === false){
-          this.selectUpdateCertificates = [];
+      if (event.target.value === "-1") {
+        if (event.target.checked === false) {
+          this.selectUpdateCertificates.certificationId = [];
+          this.certificates = lodash.cloneDeep(this.defaultCertificates);
+          for (let i = 0; i <= this.certificates.length - 1; i++) {
+            document.getElementById(i).checked = false;
+          }
           return;
         }
-        this.selectUpdateCertificates = this.certificates;
+        for (let i = 0; i <= this.certificates.length - 1; i++) {
+          document.getElementById(i).checked = true;
+          this.certificates[i].status = "";
+          this.selectUpdateCertificates.certificationId.push(this.certificates[i].id);
+        }
         return;
       }
       //select item
-      if(event.target.checked === false){
-        for(let i = 0; i <= this.selectUpdateCertificates.length - 1; i++){
-          if(this.certificates[event.target.value].id === this.selectUpdateCertificates[i].id){
-            this.selectUpdateCertificates.splice(i, 1);
+      let index = parseInt(event.target.id);
+      if (event.target.checked === false) {
+        document.getElementById("all").checked = false;
+        for (let i = 0;i <= this.selectUpdateCertificates.certificationId.length - 1;i++) {
+          if (
+            this.selectUpdateCertificates.certificationId[i] === event.target.value
+          ) {
+            this.selectUpdateCertificates.certificationId.splice(i, 1);
           }
         }
-        return;
+        this.certificates[index].status = this.defaultCertificates[index].status;
+      } else {
+        this.selectUpdateCertificates.certificationId.push(event.target.value);
+        this.certificates[index].status = "";
       }
-      this.selectUpdateCertificates.push(this.certificates[event.target.value]);
     },
 
-    async changeStatus(){
-      await this.getCertificatesAsync(this.filterCerticate)
-    }
+    async changeStatusFilterCerticate() {
+      await this.getCertificatesAsync(this.filterCerticate);
+    },
   },
-  watch:{
-    async userProfile(){
-      await this.getCertificatesAsync(this.filterCerticate)
-    }
-  }
+  watch: {
+    async userProfile() {
+      await this.getCertificatesAsync(this.filterCerticate);
+    },
+  },
 };
 </script>
 

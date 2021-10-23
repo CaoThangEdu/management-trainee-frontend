@@ -1,10 +1,11 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4"
-        v-if="!plan.id">
-        <PlanningStepsComponent
-          :isActiveStep="isActiveStep" />
+      <div
+        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4"
+        v-if="!plan.id"
+      >
+        <PlanningStepsComponent :isActiveStep="isActiveStep" />
       </div>
       <div class="row">
         <div class="col-12">
@@ -16,8 +17,8 @@
               <form @submit.prevent>
                 <div class="form-row">
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                    <label>Ngày bắt đầu
-                      (<span class="text--red">*</span>)
+                    <label
+                      >Ngày bắt đầu (<span class="text--red">*</span>)
                     </label>
                     <DatePicker
                       v-model="plan.startDay"
@@ -27,12 +28,12 @@
                       :default-value="new Date()"
                       :disabled-date="hidePastDates"
                       class="w-100"
-                    ></DatePicker>                  
+                    ></DatePicker>
                   </div>
 
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                    <label class="mr-4">Ngày kết thúc 
-                      (<span class="text--red">*</span>)
+                    <label class="mr-4"
+                      >Ngày kết thúc (<span class="text--red">*</span>)
                     </label>
                     <DatePicker
                       v-model="plan.endDay"
@@ -75,8 +76,7 @@
                             <a
                               @submit.prevent
                               :class="{
-                                active:
-                                  currentFaqTrainingSystem == i,
+                                active: currentFaqTrainingSystem == i,
                               }"
                               @click="openComponentFaculty(i)"
                             >
@@ -96,8 +96,8 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="!plan.id"
                             >
-                              <label>Khoa
-                                (<span class="text--red">*</span>)
+                              <label
+                                >Khoa (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -105,7 +105,7 @@
                                     form-control form-select form-select-class
                                   "
                                   v-model="facultyId"
-                                  @change="filterCareer"
+                                  @change="filterTranningSystem"
                                 >
                                   <option
                                     v-for="(item, index) in faculties"
@@ -121,13 +121,13 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="
                                 plan.id &&
-                                faculties !=0 &&
-                                careers.length != 0 &&
-                                trainingSystems.length != 0
+                                  faculties != 0 &&
+                                  careers.length != 0 &&
+                                  trainingSystems.length != 0
                               "
                             >
-                              <label>Khoa
-                                (<span class="text--red">*</span>)
+                              <label
+                                >Khoa (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -156,9 +156,7 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                             >
                               <label
-                                >Tên khoa (<span class="text--red"
-                                  >*</span
-                                >)
+                                >Tên khoa (<span class="text--red">*</span>)
                               </label>
                               <div class="row">
                                 <div class="col-md-10 col-sm-10">
@@ -166,9 +164,7 @@
                                     type="text"
                                     class="form-control"
                                     id="name"
-                                    v-model="
-                                      keyFaculty.facultyName
-                                    "
+                                    v-model="keyFaculty.facultyName"
                                   />
                                 </div>
                                 <div class="col-md-2 col-sm-2">
@@ -204,8 +200,7 @@
                             <a
                               @submit.prevent
                               :class="{
-                                active:
-                                  currentFaqTrainingSystem == i,
+                                active: currentFaqTrainingSystem == i,
                               }"
                               @click="openComponentTrainingSystem(i)"
                             >
@@ -225,8 +220,8 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="!plan.id"
                             >
-                              <label>Hệ đào tạo
-                                (<span class="text--red">*</span>)
+                              <label
+                                >Hệ đào tạo (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -250,12 +245,12 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                               v-if="
                                 plan.id &&
-                                careers.length != 0 &&
-                                trainingSystems.length != 0
+                                  careers.length != 0 &&
+                                  trainingSystems.length != 0
                               "
                             >
-                              <label>Hệ đào tạo
-                                (<span class="text--red">*</span>)
+                              <label
+                                >Hệ đào tạo (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -284,8 +279,7 @@
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                             >
                               <label
-                                >Tên hệ đào tạo (<span class="text--red"
-                                  >*</span
+                                >Tên hệ đào tạo (<span class="text--red">*</span
                                 >)
                               </label>
                               <div class="row">
@@ -294,9 +288,7 @@
                                     type="text"
                                     class="form-control"
                                     id="name"
-                                    v-model="
-                                      trainingSystem.trainingSystemName
-                                    "
+                                    v-model="trainingSystem.trainingSystemName"
                                   />
                                 </div>
                                 <div class="col-md-2 col-sm-2">
@@ -349,8 +341,8 @@
                             <div
                               class="form-group col-sm-12 col-md-12 col-lg-12"
                             >
-                              <label>Ngành
-                                (<span class="text--red">*</span>)
+                              <label
+                                >Ngành (<span class="text--red">*</span>)
                               </label>
                               <div class="input-group mb-3">
                                 <select
@@ -362,7 +354,7 @@
                                   v-model="plan.careersId"
                                 >
                                   <option
-                                    v-for="(item, index) in careersFilter"
+                                    v-for="(item, index) in careers"
                                     :key="index"
                                     :value="item.id"
                                   >
@@ -416,7 +408,8 @@
                     </div>
                   </div>
 
-                  <div class="form-group col-sm-12 col-md-6 col-lg-6"
+                  <div
+                    class="form-group col-sm-12 col-md-6 col-lg-6"
                     v-if="planId"
                   >
                     <label
@@ -435,18 +428,25 @@
                     </div>
                   </div>
 
-                  <div class="form-group col-sm-12 col-md-6 col-lg-6"
-                    v-if="planId">
+                  <div
+                    class="form-group col-sm-12 col-md-6 col-lg-6"
+                    v-if="planId"
+                  >
                     <div class="button-continue">
                       <router-link
                         class="btn-continue"
-                        :to="{ name: 'them-sv-cua-dot', params: { guid: planId } }"
+                        :to="{
+                          name: 'them-sv-cua-dot',
+                          params: { guid: planId },
+                        }"
                       >
                         Tiếp tục thêm sinh viên
                       </router-link>
-                    </div>                    
+                    </div>
                   </div>
-                  <div class="form-group col-sm-12 col-md-12 col-lg-12 text-center">
+                  <div
+                    class="form-group col-sm-12 col-md-12 col-lg-12 text-center"
+                  >
                     <button
                       @click="$router.go(-1)"
                       id="cancel"
@@ -573,8 +573,8 @@ export default {
   },
 
   async mounted() {
-    await this.getTrainingSystemsFilterAsync();
-    await this.getCareersFilterAsync();
+    // await this.getTrainingSystemsFilterAsync();
+    // await this.getCareersFilterAsync();
     await this.getPlansAsync();
     await this.getFacultiesFilterAsync();
     if (!this.guid) {
@@ -602,6 +602,11 @@ export default {
   },
 
   methods: {
+
+    async filterTranningSystem(){
+      await this.getTrainingSystemsFilterAsync();
+    },
+
     async getFacultiesFilterAsync() {
       let facultyFilter = {
         facultyName:"",
@@ -676,6 +681,7 @@ export default {
     async getTrainingSystemsFilterAsync() {
       let filterTrainingSystem = {
         trainingSystemName: "",
+        facultyId: this.facultyId,
         status: "active",
       };
       // Call Api
@@ -700,7 +706,7 @@ export default {
 
     async getCareersFilterAsync() {
       let filterCareer = {
-        trainingSystemId: "",
+        trainingSystemId: this.trainingSystemId,
         careersName: "",
         status: "active",
       };
@@ -736,10 +742,8 @@ export default {
       this.currentFaqFaculty = i;
     },
 
-    filterCareer() {
-      this.careersFilter = this.careers.filter(
-        (career) => career.trainingSystemId == this.trainingSystemId
-      );
+    async filterCareer() {
+     await this.getCareersFilterAsync()
     },
 
     async createCareerAsync() {
@@ -1096,5 +1100,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -16,14 +16,14 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div v-if = "isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+              <div v-if="isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
                 <label for="">Lớp:</label>
                 <select class="form-control form-select form-select-class" v-model="filterCerticate.classId">
                   <option value="">Tất cả</option>
                   <option v-for="(item, index) in classById" :key="index" :value="item.id">{{item.className}}</option>
                 </select>
               </div>
-              <div v-if = "isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+              <div v-if="isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
                 <label for="">Trạng thái:</label>
                 <select class="form-control form-select form-select-class" v-model="filterCerticate.status">
                   <option value="">Tất cả</option>
@@ -32,7 +32,7 @@
                   <option value="complete">Đã in</option>
                 </select>
               </div>
-              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2" @change="changeStatus()">
+              <div v-if="!isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2" @change="changeStatusFilterCerticate()">
                 <label for="">Trạng thái:</label>
                 <select class="form-control form-select form-select-class" v-model="filterCerticate.status">
                   <option value="">Tất cả</option>
@@ -41,12 +41,12 @@
                   <option value="complete">Đã in</option>
                 </select>
               </div>
-              <div v-if = "isAdmin" class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+              <div v-if="isAdmin" class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
                 <label for="">Từ khóa:</label>
                 <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa"
                   v-model="filterCerticate.keyword" />
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 " v-if = "isAdmin">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 " v-if="isAdmin">
                 <label for="">&ensp;</label>
                 <div class="mb-2">&ensp;</div>
                 <button @click="getCertificatesAsync(filterCerticate)" type="submit" id="btn-search"
@@ -56,30 +56,31 @@
           </div>
         </div>
         <div class="table-responsive">
-          <table class="table">
+          <table class="table table-hover">
+            <caption></caption>
             <thead class="">
               <tr>
                 <th v-if="isAdmin === true" scope="col" class="align-middle">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox" :value="-1"
+                    <input class="form-check-input" type="checkbox" id="all" :value="-1"
                       @change="selectUpdateCertificate">
-                    <label class="form-check-label" for="inlineCheckbox">STT</label>
+                    <label class="form-check-label" for="all">STT</label>
                   </div>
                 </th>
                 <th v-if="isAdmin === false" scope="col">STT</th>
                 <th scope="col" class="align-middle">Thông tin sinh viên</th>
                 <th scope="col" class="align-middle">Thông tin công ty</th>
                 <th scope="col" class="align-middle">Trạng thái</th>
-                <th scope="col" class="align-middle">Thao tác</th>
+                <th v-if="!isAdmin" scope="col" class="align-middle">Thao tác</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">
-                  <div v-if="isAdmin === true" class="form-check form-check-inline">
-                    <input class="form-check-input" @change="selectUpdateCertificate" :value="index" type="checkbox"
-                      :id="'inlineCheckbox' + index">
-                    <label class="form-check-label" :for="'inlineCheckbox' + index"> {{index + 1}}</label>
+                  <div v-if="isAdmin" class="form-check form-check-inline">
+                    <input class="form-check-input" @change="selectUpdateCertificate" :value="item.id" type="checkbox"
+                      :id="index">
+                    <label class="form-check-label" :for="index"> {{index + 1}}</label>
                   </div>
                   <div v-if="isAdmin === false">{{index + 1}}</div>
                 </th>
@@ -125,7 +126,7 @@
                   </button>
                 </td>
                 <td v-if="isAdmin === true">
-                  <select name="status" id="group" class="form-control mb-2 select-type"
+                  <select :disabled="item.status ===''" name="status" id="group" class="form-control mb-2 select-type"
                     @change="changeStatus($event, index)">
                     <option :selected="item.status === 'unconfirmed'" value="unconfirmed">Đang duyệt</option>
                     <option :selected="item.status === 'confirmed'" value="confirmed">Đã duyệt</option>
@@ -139,18 +140,24 @@
                   <button v-if="isAdmin === false" :disabled="item.status !== 'unconfirmed'" class="btn btn-danger"
                     @click="deleteCertificate(item.id, index)"> <em class="fa fa-trash"></em>
                   </button>
-                  <button @click="updateCertificateAsync(index)" v-if="isAdmin === true" class="btn btn-primary"><em
-                      class="fa fa-edit"></em></button>
-                  </button>
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-                <th colspan="5" class="text-left">
+                <th colspan="5" id="" class="text-left">
                   Không có dữ liệu nào được tìm thấy.
                 </th>
               </tr>
             </tbody>
           </table>
+          <hr>
+          <div class="form-group text-center d-flex justify-content-center">
+            <select class="form-control w-25" id="exampleFormControlSelect1" v-model="selectUpdateCertificates.status">
+              <option selected value="unconfirmed">Đang duyệt</option>
+              <option value="confirmed">Đã duyệt</option>
+              <option value="complete">Đã in</option>
+            </select>
+              <button @click="updateStatusCertificatesAsync" type="button" class="btn btn-primary ml-2 w-25">Cập nhật trạng thái</button>
+          </div>
         </div>
       </div>
       <CertificateDetailComponent :data="editCertificate" @change-data="changeData"
@@ -162,6 +169,7 @@
         </JwPagination>
         <ConfirmDialog :data="confirmedCertificate" @agree="agreeConfirm"></ConfirmDialog>
       </div>
+
     </div>
   </div>
   <div class="col-12">
