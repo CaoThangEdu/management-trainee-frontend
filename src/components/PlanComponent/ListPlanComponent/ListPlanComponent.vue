@@ -65,7 +65,7 @@ export default {
     async deletePlanConfirm(planComfirm) {
       this.showLoading();
       let api = new PlanService();
-      let response = await api.updatePlanAsync(planComfirm.item); // Gọi Api
+      let response = await api.deletePlanAsync(planComfirm.item.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

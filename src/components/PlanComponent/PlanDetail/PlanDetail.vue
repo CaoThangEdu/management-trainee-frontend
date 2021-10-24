@@ -279,7 +279,7 @@
                                   @change="filterCareer"
                                 >
                                   <option
-                                    v-for="(item, index) in trainingSystems"
+                                    v-for="(item, index) in trainingSystemsFilter"
                                     :key="index"
                                     :value="item.id"
                                   >
@@ -524,10 +524,16 @@ export default {
     return {
       isCreate: true,
       plan: {
+        internshipCourseName: '',
         startDay: new Date(),
         endDay: moment()
           .add(+4, "M")
           .toDate(),
+        description: '',
+        careersId: '',
+        courseName: '',
+        status: 'new',
+        facultyId: '',
       },
       errorMessages: [],
       isThemNganh: false,
@@ -607,11 +613,12 @@ export default {
     ).trainingSystemId;
     this.plan.startDay =  new Date(this.plan.startDay);
     this.plan.endDay = new Date(this.plan.endDay);
+    this.facultyId = this.plan.facultyId;
     this.careersFilter = this.careers.filter(
       (career) => career.trainingSystemId == this.trainingSystemId
     );
     this.trainingSystemsFilter = this.trainingSystems.filter(
-      (trainingSystem) => trainingSystem.trainingSystemId == this.facultyId
+      (trainingSystem) => trainingSystem.facultyId == this.facultyId
     );
     let idPlanStore = localStorageMixin.methods.getLocalStorage("ID_PLAN");
     if (!idPlanStore) {
@@ -669,7 +676,7 @@ export default {
     },
 
     hidePastDates(date) {
-      return date > this.plan.endDay || date < new Date();
+      return date > this.plan.endDay || date < new Date().setHours(0, 0, 0, 0);
     },
 
     displayBetweenFromDateAndPastDates(date) {
@@ -810,14 +817,15 @@ export default {
         `${AppConfig.notification.content_created_success_default}` + " ngành"
       );
       this.careers.push(response.data);
-      this.filterCareer();
+      this.careersFilter = this.careers.filter(
+        (career) => career.trainingSystemId == this.trainingSystemId
+      );
     },
 
     async changeConfirmPlan() {
       this.plan.internshipCourseName =
         this.plan.internshipCourseName +
-        "-" +
-        crudMixin.methods.convertTime(this.plan.startDay, "DD/MM");
+        "-" + 2;
       if (!this.isCreate) {
         this.showLoading();
         let api = new PlanService();
@@ -909,6 +917,9 @@ export default {
       }
       this.trainingSystemId = response.data.id;
       this.trainingSystems.push(response.data);
+      this.trainingSystemsFilter = this.trainingSystems.filter(
+        (trainingSystem) => trainingSystem.facultyId == this.facultyId
+      );
       this.openComponentTrainingSystem(0);
       this.showNotifications(
         "success",
@@ -950,7 +961,9 @@ export default {
         "-" +
         this.getInfoObject(this.plan.careersId, this.careers).careersName +
         "-" +
-        this.plan.courseName;
+        this.plan.courseName + 
+        ` (${crudMixin.methods.convertTime(this.plan.startDay, "DD/MM/YYYY")} - ` + 
+        `${crudMixin.methods.convertTime(this.plan.endDay, "DD/MM/YYYY")})`;
       let checkPlan = this.checkExistencePlan(this.plan.internshipCourseName);
       if (checkPlan) {
         if (
@@ -1016,7 +1029,9 @@ export default {
         "-" +
         this.getInfoObject(this.plan.careersId, this.careers).careersName +
         "-" +
-        this.plan.courseName;
+        this.plan.courseName + 
+        ` (${crudMixin.methods.convertTime(this.plan.startDay, "DD/MM/YYYY")} - ` + 
+        `${crudMixin.methods.convertTime(this.plan.endDay, "DD/MM/YYYY")})`;
       if (
         this.plan.internshipCourseName !=
         planNameNew +
@@ -1096,6 +1111,9 @@ export default {
       }
       this.faculties.push(response.data);
       this.facultyId = response.data.id;
+      this.trainingSystemsFilter = this.trainingSystems.filter(
+        (trainingSystem) => trainingSystem.facultyId == this.facultyId
+      );
       this.openComponentFaculty(0);
       this.showNotifications(
         "success",

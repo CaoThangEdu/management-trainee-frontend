@@ -1,0 +1,114 @@
+.navbar__item--has-notify:hover .nav__notify {
+    display: block;
+}
+/* Nav notify */
+.nav__notify {
+    position: absolute;
+    width: 404px;
+    top: 118%;
+    background-color: #fff;
+    right: 0;
+    border: 1px solid #ebe8e8;
+    border-radius: 2px;
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.08);
+    cursor: default;
+    transform-origin: calc(100% - 32px) top;
+    animation: navNotifyGrowth ease-in 0.2s;
+    -webkit-animation: navNotifyGrowth ease-in 0.2s;
+    will-change: opacity, transform;
+    display: none;
+    z-index: 1;
+
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        height: 25px;
+        width: 100%;
+        right: 0;
+        top: -16px;
+    }
+
+    &-header {
+        height: 40px;
+        background-color: #fff;
+        h3 {
+            color: #999;
+            margin: 0;
+            font-weight: 400;
+            font-size: 1.1rem;
+            line-height: 40px;
+            margin-left: 12px;
+            /* Không cho copy text */
+            user-select: none;
+        }
+    }
+
+    &-list {
+        padding-left: 0;
+    }
+
+    &-item {
+        list-style: none;
+
+        &:hover {
+            background-color: #f1f1f1;
+        }
+
+        &--viewed {
+            background-color: rgba(255, 47, 5, 0.08);
+        }
+    }
+
+    &-link {
+        display: flex;
+        padding: 12px;
+        text-decoration: none;
+        width: 100%;
+    }
+
+    &-info {
+        margin-left: 12px;
+    }
+
+    &-name {
+        display: block;
+        font-size: 0.8rem;
+        color: #333;
+        font-weight: 400;
+        line-height: 1rem;
+    }
+
+    &-description {
+        display: block;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        color: #756f6e;
+    }
+
+    &-footer {
+        display: flex;
+
+        &-btn {
+            text-decoration: none;
+            color: #333;
+            padding: 8px 0px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 400;
+        }
+    }
+}
+
+@keyframes navNotifyGrowth {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

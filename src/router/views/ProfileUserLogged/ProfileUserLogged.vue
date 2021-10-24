@@ -77,7 +77,7 @@ export default {
   },
 
   async mounted() {
-    if (this.userProfile) return;
+    if (this.userProfile.user) return;
     await this.getUserProfile();
   },
 };

@@ -1,8 +1,8 @@
 <template>
-  <div class="row book-steps">
-    <div class="col-sm-12 breadcrumb-wrap hidden-sm-down p-0">
+  <div class="book-steps">
+    <div class="col-sm-12 breadcrumb-wrap hidden-sm-down">
       <div class="booking-step">
-        <div class="row">
+        <div class="row booking-step-list">
           <div class="col-sm-6 col-md-4">
             <div
               :class="{ active: isActive === '1' }"
@@ -53,10 +53,10 @@ export default {
 <style lang="scss">
 .breadcrumb-wrap {
   background: white;
+  padding: 0;
+
   .booking-step {
     background: white;
-    border: solid 1px #3c4b64;
-    padding: 5px;
 
     .active {
       color: #0d86ff;
@@ -65,6 +65,11 @@ export default {
         border: solid 2px #0d86ff;
       }
     }
+
+    &-list {
+      padding: 8px 20px;
+    }
+    
     &__item {
       box-sizing: border-box;
       display: -webkit-box;

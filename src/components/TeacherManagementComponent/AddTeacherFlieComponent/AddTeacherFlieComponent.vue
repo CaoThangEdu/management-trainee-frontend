@@ -13,6 +13,7 @@
           type="file"
           class="btn btn-secondary float-right btn-add-file"
           @change="previewFiles"
+          accept="application/vnd.ms-excel" 
         />
       </div>
     </div>

@@ -7,9 +7,9 @@ export default class NotificationService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/Notify`
   }
 
-  async getNotificationsAsync() {
+  async getNotificationsAsync(datasend) {
     try {
-      const response = await this.http.get(`${this.url}/GetAll`);
+      const response = await this.http.post(`${this.url}/GetAllNotify`, datasend);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -17,9 +17,9 @@ export default class NotificationService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async getNotificationsFilterAsync(object) {
+  async getNotifyByEmail(email) {
     try {
-      const response = await this.http.post(`${this.url}/Filter`, object);
+      const response = await this.http.get(`${this.url}/GetNotifyByEmail?email=${email}`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

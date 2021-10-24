@@ -1,4 +1,49 @@
-<template src="./Statistical.html"></template>
+<template>
+  <div class="information">
+    <div class="card">
+      <header class="card-header">
+        <div class="float-left">
+          <div>
+            Đợt thực tập:
+            <strong>{{ statisticalPlan.internshipCourseName }}</strong>
+          </div>
+          <div>
+            Khóa: <strong>{{ statisticalPlan.courseName }}</strong>
+          </div>
+        </div>
+        <div class="float-right">
+          <div>
+            Ngày bắt đầu:
+            <strong>{{
+              convertTime(statisticalPlan.startDay, "DD/MM/YYYY")
+            }}</strong>
+          </div>
+          <div>
+            Ngày kết thúc:
+            <strong>{{
+              convertTime(statisticalPlan.endDay, "DD/MM/YYYY")
+            }}</strong>
+          </div>
+        </div>
+      </header>
+      <div class="card-body">
+        <div class="row col-12">
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+            <Highcharts
+              v-if="
+                assignedStudents.length != 0 && unassignStudents.length != 0
+              "
+              :assignedStudents="assignedStudents"
+              :unassignStudents="unassignStudents"
+              :labelsProps="'Số sinh viên'"
+              :labelChart="'Thống kê phân công của đợt thực tập '+ statisticalPlan.internshipCourseName"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
@@ -22,8 +67,8 @@ export default {
       default: [],
     },
     statisticalPlan: {
-      type: Object, 
-      default: {},       
+      type: Object,
+      default: {},
     },
     studentInInternshipCourse: {
       type: Array,
@@ -32,7 +77,7 @@ export default {
     statistiesStudentInClass: {
       type: Array,
       default: [],
-    }
+    },
   },
 
   data() {
@@ -50,7 +95,7 @@ export default {
         numberTeachersInInternshipCourse: 0,
         numberOfStudentsInInternshipCourse: 0,
       },
-       statisticalRequest: {
+      statisticalRequest: {
         internshipCourseId: "",
       },
       chartData: null,
@@ -60,17 +105,17 @@ export default {
       assignedStudents: [],
       unassignStudents: [],
     };
-   
   },
   async mounted() {
     this.labelsProps = [
-      'Tổng số giáo viên',
-      'Tổng số sinh viên',
-      'Sinh viên chưa được phân công',
-      'Sinh viên đã được phân công',
+      "Tổng số giáo viên",
+      "Tổng số sinh viên",
+      "Sinh viên chưa được phân công",
+      "Sinh viên đã được phân công",
     ];
-    let assigned = this.statisticalPlan.numberStudentsInInternshipCourse 
-      - this.statisticalPlan.numberstudentsUnAssigned;
+    let assigned =
+      this.statisticalPlan.numberStudentsInInternshipCourse -
+      this.statisticalPlan.numberstudentsUnAssigned;
     this.chartData = [
       this.statisticalPlan.numberTeachersInInternshipCourse,
       this.statisticalPlan.numberStudentsInInternshipCourse,
@@ -86,14 +131,16 @@ export default {
         let assignedStudent = {
           name: student.className,
           y: student.numberOfStudentAssigned,
-        }
+        };
         this.assignedStudents.push(assignedStudent);
         let unassignedStudent = {
           name: student.className,
           y: student.numberOfStudentUnAssign,
-        }
+        };
         this.unassignStudents.push(unassignedStudent);
-        this.chartDataStatisticsStudentInClass.push(student.numberOfStudentAssigned);
+        this.chartDataStatisticsStudentInClass.push(
+          student.numberOfStudentAssigned
+        );
         this.labelsDataStatisticsStudentInClass.push(student.className);
       }
     },
@@ -104,11 +151,7 @@ export default {
       this.assignedStudents = [];
       this.unassignStudents = [];
       this.getChartStatisticsStudentInClass();
-    }
-  }
+    },
+  },
 };
 </script>
-
-<style lang='scss'>
-@import "./Statistical.scss";
-</style> 
