@@ -1,17 +1,84 @@
-<template src='./CareerManagementDetailComponent.html'>
+<template>
+  <BaseModal
+    @mouse-click-outside="closeModal(false)"
+    :modalName="`CareerDetailComponent`"
+    :isShow="isShow"
+    size="lg"
+  >
+    <div class="">
+      <div class="form-group row">
+        <label class="col-md-4 col-sm-4 col-form-label">
+          Tên ngành (<span class="text--red">*</span>)
+        </label>
+        <div class="col-md-8 col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            v-model="career.careersName"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-sm-4 col-form-label">
+          Hệ đào tạo (<span class="text--red">*</span>)
+        </label>
+        <div class="col-md-8 col-sm-8" v-if="trainingSystems">
+          <select
+            class="form-control form-select form-select-class"
+            v-model="career.trainingSystemId"
+          >
+            <option
+              v-for="(item, index) in trainingSystems"
+              :key="index"
+              :value="item.id"
+              >{{ item.trainingSystemName }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
 
+    <template #header>
+      <h5>{{ career.id ? "Cập nhật ngành" : "Thêm mới ngành" }}</h5>
+      <button class="close" style="color: red;" @click="closeModal(false)">
+        &times;
+      </button>
+    </template>
+
+    <template #footer>
+      <div class="form-inline form-group col-md-12 pr-0">
+        <div class="col-form-label col-md-4 col-sm-4"></div>
+        <div class="col-md-8 col-sm-8 pl-0 pr-0">
+          <AlertMessages :messages="errorMessages" />
+        </div>
+      </div>
+
+      <div class="form-inline form-group col-md-12 pr-0">
+        <div class="col-form-label col-md-4 col-sm-4"></div>
+        <div class="col-md-8 col-sm-8 pl-0 pr-0">
+          <button @click="save" class="btn btn-primary float-right ml-2">
+            {{ career.id ? "Cập nhật" : "Thêm mới" }}
+          </button>
+          <button class="btn btn-dark float-right" @click="closeModal(false)">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </template>
+  </BaseModal>
 </template>
 
 <script>
-import ComponentBase from "../../common/component-base/ComponentBase"
-import BaseModal from '../../common/base-modal/BaseModal'
-import AlertMessages from "../../common/alert/alert-messages/AlertMessages"
-import CareerService from '../../../services/career/careerServices'
-import CareerViewModel from "../../../view-model/career/careerViewModel"
-import AppConfig from '../../../../src/app.config.json'
+import ComponentBase from "../../common/component-base/ComponentBase";
+import BaseModal from "../../common/base-modal/BaseModal";
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
+import CareerService from "../../../services/career/careerServices";
+import CareerViewModel from "../../../view-model/career/careerViewModel";
+import AppConfig from "../../../../src/app.config.json";
 
 export default {
-  name: 'CareerManagementDetailComponent',
+  name: "CareerManagementDetailComponent",
   extends: ComponentBase,
   components: {
     BaseModal,
@@ -22,7 +89,7 @@ export default {
       isShow: false,
       career: {},
       errorMessages: [],
-    }
+    };
   },
   props: {
     data: {
@@ -31,10 +98,10 @@ export default {
     },
     trainingSystems: {
       type: Array,
-      default: null
+      default: null,
     },
   },
-  
+
   methods: {
     async pressKeyEnter() {
       await this.save();
@@ -55,7 +122,7 @@ export default {
       let api = new CareerService();
       let response = await api.createCareerAsync(this.career);
       this.showLoading(false);
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -78,7 +145,7 @@ export default {
       let response = await api.updateCareerAsync(this.career);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -86,7 +153,7 @@ export default {
         );
         return;
       }
-      
+
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -106,23 +173,23 @@ export default {
         return;
       }
 
-      if(this.career.id === undefined){
+      if (this.career.id === undefined) {
         await this.createCareerAsync();
-      } else{
+      } else {
         await this.updateCareerAsync();
       }
     },
   },
-  
+
   watch: {
     data() {
       this.isShow = true;
       this.career = this.data;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style lang='scss'>
-@import './CareerManagementDetailComponent.scss';
+<style lang="scss">
+
 </style>

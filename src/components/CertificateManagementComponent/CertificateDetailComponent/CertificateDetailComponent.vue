@@ -1,5 +1,6 @@
 <template src='./CertificateDetailComponent.html'>
 
+
 </template>
 
 <script>
@@ -274,5 +275,5 @@ export default {
 </script>
 
 <style lang='scss'>
-@import './CertificateDetailComponent.scss';
+
 </style>
