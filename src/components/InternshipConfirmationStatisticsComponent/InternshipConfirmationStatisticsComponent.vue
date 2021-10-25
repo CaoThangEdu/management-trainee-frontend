@@ -1,4 +1,128 @@
-<template src="./InternshipConfirmationStatisticsComponent.html"> </template>
+<template>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <header class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+          <path fill="var(--ci-primary-color, currentColor)"
+            d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+            class="ci-primary"></path>
+        </svg>
+        <span>Thống kê xác nhận thực tập</span>
+      </header>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-12 mb-3">
+            <label for="">Đợt thực tập:</label>
+            <select class="form-control form-select form-select-class" v-model ="filterStudent.internshipCourseId">
+              <option value="">Chọn đợt thực tập</option>
+              <option v-for= "(plan, index) in plans" :key="index" :value="plan.id">{{plan.internshipCourseName}}</option>
+            </select>
+          </div>
+          <div class="col-xl-6 col-md-6 col-sm-12 mb-sm-12">
+            <label for="">Lớp:</label>
+            <select class="form-control form-select form-select-class" v-model="filterStudent.classId">
+              <option value="">Tất cả</option>
+              <option v-for= "(statistic, index) in statistics" :key="index" :value="statistic.classId">{{statistic.className}}</option>
+            </select>
+          </div>
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+            <Highcharts 
+              :options="pieChart"
+              ref="pieCharts"
+            />
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-row filter-wrapper ml-0 mr-0">
+              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                <label for="">Từ khóa:</label>
+                <input type="text" class="form-control" id="filterStudent.keywords" placeholder="Nhập từ khóa" />
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
+                <label for="">&ensp;</label>
+                <div class="mb-2">&ensp;</div>
+                <button @click ="searchStudent" type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <caption></caption>
+            <thead class="">
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col" class="align-middle">Thông tin sinh viên</th>
+                <th scope="col" class="align-middle">Thông tin công ty</th>
+                <th scope="col" class="align-middle">Trạng thái</th>
+                <th scope="col" class="align-middle">Hoạt động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(student, index) in pageOfItems" :key="index">
+                <th scope="row">
+                  <div>{{index + 1}}</div>
+                </th>
+                <td>
+                  <div><strong>MSSV:</strong>{{student.studentId}}</div>
+                  <div>
+                    <strong>Họ tên sinh viên:</strong>
+                     {{student.firstName}} {{student.lastName}}
+                  </div>
+                  <div>
+                    <strong>lớp:</strong> {{student.className}}
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <strong>Mã số thuế:</strong> 
+                    {{getInternshipConfirmationByStudentId(student.studentId).taxCode}}
+                  </div>
+                  <div>
+                    <strong>Tên công ty:</strong> 
+                    {{getInternshipConfirmationByStudentId(student.studentId).title}}
+                  </div>
+                </td>
+                <td>
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === 'practiced'" class="btn btn-success not-active">
+                    Đang thực tập
+                  </button>
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === 'notPracticed'" class="btn btn-warning not-active text-white">
+                    Chưa thực tập
+                  </button>
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === ''" class="btn btn-danger not-active">
+                    Chưa xác nhận
+                  </button>
+                </td>
+                <td>
+                  <button class="btn btn-primary" 
+                  @click="detailInternshipConfirmation(
+                    getInternshipConfirmationByStudentId(student.studentId))">
+                    Xem chi tiết
+                  </button>
+                </td>
+              </tr>
+              <tr v-show="students == null || students.length === 0">
+                <th colspan="5" class="text-left">
+                  Không có dữ liệu nào được tìm thấy.
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <IntershipConfirmationDetailComponent
+      :intershipConfirmation ="intershipConfirmation"
+      />
+      <div class="card-footer d-flex justify-content-center text--blue"
+        v-show="pageOfItems == null || pageOfItems.length === 0">
+        <JwPagination :items="students" @changePage="onChangePage" :labels="customLabels" :pageSize="5">
+        </JwPagination>
+      </div>
+    </div>
+  </div>
+</div> 
+</template>
 
 <script>
 import InternshipConfirmationServices from "../../services/internshipconfirmation/InternshipConfirmationServices";
@@ -239,5 +363,9 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./InternshipConfirmationStatisticsComponent.scss";
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+  }
 </style>

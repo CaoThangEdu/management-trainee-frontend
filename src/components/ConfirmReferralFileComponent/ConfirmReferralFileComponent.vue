@@ -1,5 +1,68 @@
-<template src='./ConfirmReferralFileComponent.html'>
-  
+<template >
+  <div class="row">
+    <div class="col-12">
+        <div class="card">
+            <header class="card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+                    <path fill="var(--ci-primary-color, currentColor)"
+                        d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+                        class="ci-primary"></path>
+                </svg> Danh sách phiếu giới thiệu
+            </header>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-row filter-wrapper ml-0 mr-0">
+                            <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12 ">
+                                <div class="input-group">
+                                    <select class="custom-select" id="inputGroupSelect04">
+                                        <option value="1">Đang diễn ra</option>
+                                        <option value="2">Đã diễn ra</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
+                                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+                            </div>
+                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
+                                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">MSSV</th>
+                                <th scope="col">Họ tên</th>
+                                <th scope="col">Ngày đăng ký</th>
+                                <th scope="col">Đợt thực tập</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>012345678</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>03/01/2021</td>
+                                <td>1</td>
+                                <td>Chưa xác nhận</td>
+                                <td>
+                                    <button class="btn btn-primary mr-2">Sửa</button>
+                                    <button class="btn btn-danger">Xóa</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
@@ -9,5 +72,4 @@ export default {
 </script>
 
 <style lang='scss'>
-@import './ConfirmReferralFileComponent.scss';
 </style>

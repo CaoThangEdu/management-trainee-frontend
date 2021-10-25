@@ -1,4 +1,58 @@
-<template src="./Assignment.html"  @getPlan="course = $event"></template>
+<template @getPlan="course = $event">
+<div class="assignment">
+  <div class="statistics-students">
+    <Statistical
+      v-if="statisticalPlan && studentInInternshipCourse"
+      v-bind:internshipCourseId="internshipCourseId"
+      v-bind:studentInInternshipCourse="studentInInternshipCourse"
+      v-bind:classes="classes"
+      v-bind:teachers="teachers"
+      v-bind:statisticalPlan="statisticalPlan"
+      :statistiesStudentInClass="statistiesStudentInClass"
+     />
+  </div>
+  <div class="student-assignment mb-4">
+    <Tabs>
+      <Tab name="Danh sách sinh viên đã được phân công" :selected="true">
+        <ListTeacherAssignmentComponent
+          class="tab-students-assign"
+          v-if="reloadAutomaticAssignment"
+          v-bind:studentInInternshipCourse="studentInInternshipCourse"
+          v-bind:internshipCourseId="internshipCourseId"
+          v-bind:classes="classes"
+          v-bind:teachers="teachers" 
+          @change-instructors="changeInstructors"         
+        />
+      </Tab>
+      <Tab name="Phân công">
+        <ManualAssignment 
+          class="tab-students-assign"
+          v-if="reloadAutomaticAssignment"
+          v-bind:internshipCourseId="internshipCourseId"
+          v-bind:classes="classes"
+          v-bind:teachers="teachers"
+          @change-instructors="changeInstructors"
+        />
+      </Tab>
+      <Tab name="Phân công tự động">
+        <AutomaticAssignment
+          class="tab-students-assign"
+          v-if="reloadAutomaticAssignment"
+          v-bind:internshipCourseId="internshipCourseId"
+          v-bind:classes="classes"
+          v-bind:teachers="teachers"
+          v-bind:instructors="instructors"
+          v-bind:students="students"
+          v-bind:numberOfStudentInInternshipCourse="studentInInternshipCourse.length"
+          @change-instructors="changeInstructors"
+          :statistiesStudentInClass="statistiesStudentInClass"
+        />
+      </Tab>
+    </Tabs>
+  </div>
+</div>
+
+</template>
 
 <script>
 import ListTeacherAssignmentComponent from "../ListTeacherAssignmentComponent/ListTeacherAssignmentComponent.vue";
@@ -244,5 +298,19 @@ export default {
 </script>
 
 <style lang='scss'>
-@import "./Assignment.scss";
+.is-active {
+    color: white;
+    background-color: #4e3bcd;
+    .nav-link {
+        border-color: #d8dbe0 #d8dbe0 #c4c9d0;
+    }
+}
+
+.student-assignment {
+    background-color: white;
+}
+
+.tab-students-assign {
+    transition: all 0.35s ease-in-out 0s;
+}
 </style> 

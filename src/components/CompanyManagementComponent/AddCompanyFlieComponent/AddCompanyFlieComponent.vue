@@ -1,4 +1,46 @@
-<template src='./AddCompanyFlieComponent.html'></template>
+<template>
+<BaseModal
+  @mouse-click-outside="closeModal(false)"
+  :modalName="`AddCompanyFlieComponent`"
+  :isShow="isShowFile"
+  size="lg"
+>
+  <div class="form-group row">
+    <label class="col-md-4 col-sm-4 col-form-label">Chọn file excel</label>
+    <div class="col-md-8 col-sm-8">
+      <div class="input-group mb-3">
+        <input type="file" class="btn btn-secondary float-right btn-add-file" @change="previewFiles" />
+      </div>
+    </div>
+  </div>
+
+  <template #header>
+    <h5>{{"Thêm công ty"}}</h5>
+    <button class="close" style="color: red;" @click="closeModal(false)">
+      &times;
+    </button>
+  </template>
+
+  <template #footer>
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0"></div>
+    </div>
+
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <button @click="addCompanyByFile" class="btn btn-primary float-right ml-2">
+          {{"Thêm mới"}}
+        </button>
+        <button class="btn btn-dark float-right" @click="closeModal(false)">
+          Hủy
+        </button>
+      </div>
+    </div>
+  </template>
+</BaseModal>
+</template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
@@ -111,7 +153,6 @@ export default {
 </script>
 
 <style lang='scss'>
-@import "./AddCompanyFlieComponent.scss";
 .form-select-class {
   width: 100%;
   height: 35px;

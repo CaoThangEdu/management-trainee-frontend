@@ -1,5 +1,172 @@
-<template src='./StudentManagementDetailComponent.html'>
+<template>
+<BaseModal
+  @mouse-click-outside="closeModal(false)"
+  :modalName="`StudentManagementDetail`" 
+  :isShow="isShow"
+  size="lg">
+  <div class="">
+    <div class="form-group row" v-if="!student.id">
+      <label for="name" class="col-md-4 col-sm-4 col-form-label">
+        MSSV (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control"
+        v-model="student.studentId" />
+      </div>
+    </div>
 
+    <div class="form-group row" v-if="student.id">
+      <label for="name" class="col-md-4 col-sm-4 col-form-label">
+        MSSV (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" v-model="student.studentId" readonly/>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Họ (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" 
+        v-model="student.firstName" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Tên đệm và tên (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" v-model="student.lastName" />
+      </div>
+    </div>
+
+    <div class="form-group row" v-if="student.id">
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Email (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" v-model="student.email" readonly/>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="wrapCollapse">
+          <div v-for="(faq, i) in faqs" :key="i">
+            <dt>
+              <a href="#" :class="{ active: currentFaq == i }" @click="openComponet(i)">
+                {{ faq.title }}
+              </a>
+            </dt>
+            <dd class="display-hidden" :class="{ active: currentFaq == i }">
+              <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'lop'">
+                <div class="form-group row" v-if="plans.length != 0">
+                  <label class="col-md-4 col-sm-4 col-form-label">
+                    Lớp (<span class="text--red">*</span>)
+                  </label>
+                  <div class="col-md-8 col-sm-8">
+                    <div class="input-group mb-3">
+                      <select class="form-control form-select form-select-class" v-model="student.classId">
+                        <option v-for="(item, index) in classes" :key="index" :value="item.id">
+                          {{ getInfoByCourseId(item.courseId, plans)? item.className + ' ('+ getInfoByCourseId(item.courseId, plans).internshipCourseName +')' : item.className }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-12 col-md-12 col-sm-12 col-12" v-if="faq.text == 'themLop'">
+                <div class="form-group row">
+                  <label class="col-md-4 col-sm-4 col-form-label">Tên lớp</label>
+                  <div class="col-md-8 col-sm-8">
+                    <input type="text" class="form-control" id="name" v-model="classroom.className" placeholder="Tên lớp cần tạo">
+                  </div>
+                </div>
+
+                <div class="form-group row" v-if="plans.length != 0">
+                  <label class="col-md-4 col-sm-4 col-form-label">Đợt</label>
+                  <div class="col-md-6 col-sm-6">
+                    <div class="input-group mb-3">
+                      <select class="form-control form-select form-select-class" v-model="classroom.internshipCourseId">
+                        <option v-for="(plan, index) in plans" :key="index" :value="plan.id">
+                          {{ plan.internshipCourseName }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-sm-2">
+                    <button class="btn btn-linkedin" @click="createClassAsync()">+<i
+                        class="fa fa-book-reader"></i></button>
+                  </div>
+                  <div v-if="createClassLoading" role="status" aria-hidden="false" aria-label="Loading"
+                    class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+                </div>
+              </div>
+            </dd>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group row" v-if="!student.id">
+      <label class="col-md-4 col-sm-4 col-form-label">Ngày sinh</label>
+      <div class="col-md-8 col-sm-8">
+        <input class="form-control brith-day" type="date"
+          v-model="student.dayOfBirth">
+      </div>
+    </div>
+
+    <div class="form-group row" v-if="student.id">
+      <label class="col-md-4 col-sm-4 col-form-label">Ngày sinh</label>
+      <div class="col-md-8 col-sm-8">
+        <input class="form-control brith-day" type="text"
+          v-model="student.dayOfBirth" readonly>
+      </div>
+    </div>
+
+    <div class="form-group row"
+      v-if="student.id">
+      <label class="col-md-4 col-sm-4 col-form-label">Trạng thái</label>
+      <div class="col-md-8 col-sm-8">
+        <div class="input-group mb-3">
+          <select class="form-control form-select form-select-class" v-model="student.status">
+            <option value="active">Hiển thị</option>
+            <option value="unactive">Ẩn</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <template #header>
+    <h5>{{student.id ? "Cập nhật sinh viên" : "Thêm mới sinh viên"}}</h5>
+    <button class="close text--red" @click="closeModal(false)">&times;</button>
+  </template>
+
+  <template #footer>
+    <div class="form-inline form-group col-md-12 pr-0"
+      v-show="errorMessages.length > 0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <AlertMessages :messages="errorMessages" />
+      </div>
+    </div>
+
+    <div class="form-inline form-group col-md-12 pr-0">
+      <div class="col-form-label col-md-4 col-sm-4"></div>
+      <div class="col-md-8 col-sm-8 pl-0 pr-0">
+        <button
+          @click="save"
+          class="btn btn-primary float-right ml-2">{{student.id ? "Cập nhật" : "Thêm mới"}}</button>
+        <button class="btn btn-dark float-right" @click="closeModal(false)">Hủy</button>
+      </div>
+    </div>
+  </template>
+</BaseModal>
 </template>
 
 <script>
@@ -226,9 +393,6 @@ export default {
 </script>
 
 <style lang='scss'>
-@import './StudentManagementDetailComponent.scss';
-.form-select-class{
-  width: 100%;
-  height: 35px;
-}
+@import '../../../assets/scss/style.scss'
+
 </style>

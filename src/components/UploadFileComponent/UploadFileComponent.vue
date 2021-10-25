@@ -1,4 +1,69 @@
-<template src="./UploadFileComponent.html"></template>
+<template>
+<div class="row">
+  <div class="col-12">
+    <div class="row card mt-4">
+      <header class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" class="c-icon">
+          <path fill="var(--ci-primary-color, currentColor)"
+            d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+            class="ci-primary"></path>
+        </svg>
+        Quản lý file
+        <div class="form-group row float-right">
+          <div class="col-md-12 col-sm-12">
+            <div class="input-group">
+              <input
+                type="file"
+                class="btn btn-secondary float-right btn-add-file"
+              />
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-row filter-wrapper ml-0 mr-0">
+              <div class="col-xl-3 col-md-3 col-sm-12 mb-sm-2">
+                <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+              </div>
+              <div class="col-xl-3 col-md-3 col-sm-12">
+                <button type="submit" id="btn-search" class="btn btn-stack-overflow" title="Tìm kiếm">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="">
+              <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Tên file</th>
+                <th scope="col">size</th>
+                <th scope="col">ngày upload</th>
+                <th scope="col">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>demo.txt</td>
+                <td>20kb</td>
+                <td>05/08/2021</td>
+                <td>
+                  <button type="button" class="btn btn-primary">Download</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
 
 <script>
 export default {
@@ -7,5 +72,5 @@ export default {
 </script>
 
 <style lang='scss'>
-@import "./UploadFileComponent.scss";
+
 </style>
