@@ -7,7 +7,6 @@ import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TimlineService from '../../../services/timeline/timelineServices'
 import AppConfig from '../../../../src/app.config.json'
-import SelectPlan from '../../common/form/select-plan/SelectPlan.vue';
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
@@ -16,7 +15,6 @@ export default {
   components: {
     TimeLineDetailComponent,
     ConfirmDialog,
-    SelectPlan,
   },
   mixins: [CrudMixin],
   props: {
@@ -46,7 +44,7 @@ export default {
 
   methods:{
     checkTimeLineExpired(time) {
-      return new Date('2021/10/10') > new Date();
+      return new Date(time) > new Date();
     },
 
     createTimeLine() {
@@ -54,11 +52,16 @@ export default {
     },
     
     async getTimeLinesAsync(){
+      let filterTimeLine = {
+        timeLineName: "",
+        internshipCourseId: this.planGuid,
+        status: "active",
+      };
       // Call Api
       this.showLoading();
       const api = new TimlineService()
 
-      const response = await api.getTimeLinesAsync()
+      const response = await api.getTimeLinesByInternshipCourseIdAsync(filterTimeLine);
       this.showLoading(false);
 
       if(!response.isOK){
@@ -69,7 +72,7 @@ export default {
         );
         return;
       }
-      this.timeLines = response.data.items
+      this.timeLines = response.data;
     },
 
     async changePage(currentPage) {

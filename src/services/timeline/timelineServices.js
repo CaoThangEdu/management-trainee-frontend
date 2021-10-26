@@ -17,6 +17,16 @@ export default class TimeLineService extends ServicesBaseAPI {
     return this.result;
   }
 
+  async getTimeLinesByInternshipCourseIdAsync(dataSend) {
+    try {
+      const response = await this.http.post(`${this.url}/Filter`, dataSend);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
   async createTimeLineAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);

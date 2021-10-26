@@ -59,7 +59,9 @@
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{notify.title}}</td>
                 <td>{{notify.content}}</td>
-                <td class="text-center">{{getPlanName(notify.internshipCourseId)}}</td>
+                <td class="text-center">
+                  {{notify.internshipCourseId?getPlanName(notify.internshipCourseId):''}}
+                </td>
                 <td>
                   <button class="btn btn-primary mr-2">Sửa</button>
                   <button class="btn btn-danger">Xóa</button>

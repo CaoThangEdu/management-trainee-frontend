@@ -16,6 +16,18 @@ const routes = [
       breadcrumbName: 'Trang chủ'
     },
   },
+  //homePage student
+  {
+    path: "/student-home-page",
+    name: "trang-chu-sinh-vien",
+    component: () =>
+      import(
+        "../router/views/NotificationOfStudent/NotificationOfStudent.vue"
+      ),
+    meta: {
+      breadcrumbName: 'Trang chủ'
+    },
+  },
   // template mail
   {
     path: "/template-mail",
