@@ -694,7 +694,6 @@ export default {
       }
       for (let i = 0; i <= this.certificates.length - 1; i++) {
         if(document.getElementById(i).checked === true){
-          console.log("vô")
           this.certificates[i].status = this.selectUpdateCertificates.status;
           document.getElementById(i).checked = false;
         }

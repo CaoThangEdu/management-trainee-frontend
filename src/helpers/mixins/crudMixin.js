@@ -1,10 +1,11 @@
 import moment from "moment";
-import { ROLE_ENUM } from "../../config/constant";
+import { ROLE_ENUM, INTERNSHIP_COURSE_STATUS } from "../../config/constant";
 
 export default {
   data() {
     return {
       roleEnums: ROLE_ENUM,
+      internshipCourseStatus: INTERNSHIP_COURSE_STATUS,
     }
   },
   methods: {
@@ -64,6 +65,12 @@ export default {
         return 'Giáo viên';
       }
       return 'Quản trị viên';
+    },
+    getPlanStatusName(status) {
+      for(let i in this.internshipCourseStatus) {
+        if(this.internshipCourseStatus[i].value == status) return this.internshipCourseStatus[i].name;
+      }
+      return '';
     },
   }
 }

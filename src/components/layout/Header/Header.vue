@@ -15,10 +15,11 @@
       </li>
     </ul>
     <ul class="c-header-nav mr-4">
-      <li class="c-header-nav-item d-md-down-none mx-2">
+      <li class="c-header-nav-item d-md-down-none mx-2 navbar__item--has-notify">
         <a href="#" class="c-header-nav-link">
           <CIcon name="cil-bell" />
         </a>
+        <NotificationsHeader />
       </li>
       <li class="c-header-nav-item d-md-down-none mx-2">
         <a href="#" class="c-header-nav-link">
@@ -40,13 +41,14 @@
 
 <script>
 import HeaderDropdownAccount from "../HeaderDropdownAccount/HeaderDropdownAccount";
-
 import { mapActions } from "vuex";
+import NotificationsHeader from './NotificationsHeader.vue';
 
 export default {
   name: "Header",
   components: {
     HeaderDropdownAccount,
+    NotificationsHeader,
   },
 
   data() {
@@ -89,8 +91,6 @@ export default {
           });
         });
         // Remove link duplicated
-        // E.g:  Quản lý vé  -> Chi tiết booking      -> Chi tiết booking
-        //       [/booking]     [/booking/detail/123]    [/booking/detail/123/]
         for (let index = this.breadCrumbList.length - 1; index > 0; index--) {
           if (this.breadCrumbList[index].to === (this.breadCrumbList[index - 1].to + '/')) {
             this.breadCrumbList.splice(index - 1, 1);
@@ -101,3 +101,6 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+@import './NotificationsHeader.scss';
+</style>

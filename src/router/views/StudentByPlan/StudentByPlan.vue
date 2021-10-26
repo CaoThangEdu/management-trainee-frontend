@@ -1,7 +1,7 @@
 <template>
 <div class="row">
   <div class="col-12">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+    <div>
       <PlanningStepsComponent :isActiveStep="isActiveStep" />
     </div>
     <div class="row mt-4">
@@ -104,7 +104,9 @@
             <label class="col-md-4 col-sm-4 col-form-label ml-3">Chọn file excel</label>
             <div class="col-md-6 col-sm-6">
               <div class="input-group mb-3">
-                <input type="file" class="btn btn-secondary float-right btn-add-file" @change="previewFiles" />
+                <input type="file" class="btn btn-secondary float-right btn-add-file"
+                  @change="previewFiles"
+                  accept="application/vnd.ms-excel" />
               </div>
             </div>
           </div>
@@ -310,7 +312,6 @@ export default {
 
       const response = await api.getStudentsAsync(studentFilter);
       this.showLoading(false);
-      this.studentLengthBanDau = response.data.length;
 
       if (!response.isOK) {
         this.showNotifications(
@@ -320,6 +321,7 @@ export default {
         );
         return;
       }
+      this.studentLengthBanDau = response.data.length;
       this.studentsCallApi = response.data;
     },
 
@@ -328,7 +330,6 @@ export default {
         f = files[0];
       var reader = new FileReader();
       var vm = this;
-      this.classInNameFile = files[0].name.split('-').shift();
 
       reader.onload = async function (e) {
         var data = new Uint8Array(e.target.result);
@@ -434,6 +435,10 @@ export default {
       this.studentNoExistInDB = [];
       this.studentExistInDB = [];
       for (let i in this.students) {
+        if (i == 0) {
+          this.classInNameFile = this.students[i]['__EMPTY_2'].split('-').shift();
+          continue;
+        }
         if(!this.students[i]['__EMPTY'] || 
           (this.students[i]['__EMPTY'] && isNaN(parseInt(this.students[i]['__EMPTY'])))) continue;
         let viewModel = new StudentViewModel();

@@ -232,3 +232,22 @@ export const NOTIFY_OBJECT_ENUM = {
     name: "Chọn sinh viên"
   },
 }
+
+export const INTERNSHIP_COURSE_STATUS = {
+  NEW: {
+    value: "new",
+    name: "Mới lập",
+  },
+  START: {
+    value: "start",
+    name: "Bắt đầu thực tập",
+  },
+  POINT: {
+    value: "point",
+    name: "Chấm điểm",
+  },
+  END: {
+    value: "end",
+    name: "Kết thúc thực tập",
+  },
+}

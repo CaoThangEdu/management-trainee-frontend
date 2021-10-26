@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row notifications">
   <div class="col-12">
     <div class="card">
       <header class="card-header">
@@ -19,26 +19,27 @@
             <div class="form-row filter-wrapper ml-0 mr-0">
               <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
                 <div class="input-group">
-                  <select class="custom-select" id="inputGroupSelect04">
-                    <option selected>...</option>
-                    <option value="1">Đang diễn ra</option>
-                    <option value="2">Đã diễn ra</option>
-                  </select>
+                  <input type="text" class="form-control" id="keywords"
+                    placeholder="Nhập từ khóa tiêu đề thông báo"
+                    v-model="filterNotify.title" />
                 </div>
               </div>
               <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                <div class="input-group">
-                  <select class="custom-select" id="inputGroupSelect04">
-                    <option selected>Đợt thực tập</option>
-                    <option value="1">Đợt 1</option>
-                    <option value="2">Đợt 2</option>
-                  </select>
+                <div class="input-group select-plan">
+                  <SelectPlan :isRequired="false"
+                    v-model="filterNotify.internshipCourseId"
+                    :plans="plans"
+                    :defaultText="'Đợt thực tập'"
+                    @change="(event) => {filterNotify.internshipCourseId = event.id}">
+                  </SelectPlan>
                 </div>
               </div>
               <div class="col-xl-2 col-md-4 col-sm-12">
-                <button type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+                <button type="submit"
+                  @click="getNotificationsAsync()"
+                  id="btn-search"
+                  class="btn btn-primary">Tìm kiếm</button>
               </div>
-
             </div>
           </div>
         </div>
@@ -49,16 +50,16 @@
                 <th scope="col">STT</th>
                 <th scope="col">Tiêu đề</th>
                 <th scope="col">Nội dung</th>
-                <th scope="col">Đối tượng</th>
+                <th scope="col" class="text-center">Đợt thực tập</th>
                 <th scope="col">Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(notify, index) in notifications" :key="index + 'notification'">
+              <tr v-for="(notify, index) in pageOfNotifications" :key="index + 'notification'">
                 <th scope="row">{{ index + 1 }}</th>
                 <td>{{notify.title}}</td>
                 <td>{{notify.content}}</td>
-                <td class="text-center">{{notify.receiver}}</td>
+                <td class="text-center">{{getPlanName(notify.internshipCourseId)}}</td>
                 <td>
                   <button class="btn btn-primary mr-2">Sửa</button>
                   <button class="btn btn-danger">Xóa</button>
@@ -73,6 +74,12 @@
           </table>
         </div>
       </div>
+    <div class="card-footer d-flex justify-content-center text--blue"
+      v-show="notifications == null || notifications.length === 0">
+      <JwPagination :items="notifications" @changePage="onChangePage"
+        :labels="customLabels" :pageSize="10">
+      </JwPagination>
+    </div>
     </div>
   </div>
   <NotificationManagementDetailComponent :data="editNoti" />

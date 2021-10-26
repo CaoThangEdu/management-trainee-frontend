@@ -59,7 +59,7 @@
 
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
                     <label>Trạng thái: </label>
-                    {{plan.courseName}}
+                    {{getPlanStatusName(plan.status)}}
                   </div>
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
                     <button
