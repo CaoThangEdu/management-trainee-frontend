@@ -101,7 +101,7 @@ export default {
 
       const response = await api.getStudentsAsync(filter)
       this.showLoading(false);
-
+      console.log('response', response);
       if(!response.isOK){
         this.showNotifications(
           "error",

@@ -10,9 +10,8 @@
         </svg> Danh sách sinh viên
         <button class="btn btn-primary float-right btn-search"          
           @click="createStudent" title="Thêm mới">
-          <i class="fa fa-plus-square"></i>
+          <em class="fa fa-plus-square"></em>
         </button>
-        <!-- <button class="btn btn-secondary float-right btn-search mr-2" @click="createStudentsFile">+ Thêm file</button> -->
       </header>
       <div class="card-body">
         <div class="form-row mb-2 filter-wrapper">
@@ -114,13 +113,6 @@
         :students="students"
         :plans="plans"/>
 
-      <AddStudentsFileComponent
-        :data="addStudents"
-        @change-data="changeData"
-        @change-data-class="changeDataClass"
-        :classes="classes"
-        :plans="plans"/>
-
       <ConfirmDialog
         :data="confirmStudent"
         @agree="deleteStudentConfirm">
@@ -142,7 +134,6 @@
 
 <script>
 import StudentManagementDetailComponent from "../StudentManagementDetailComponent/StudentManagementDetailComponent"
-import AddStudentsFileComponent from "../AddStudentsFileComponent/AddStudentsFileComponent"
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import StudentService from '../../../services/student/studentServices'
@@ -157,7 +148,6 @@ export default {
   extends: ComponentBase,
   components: {
     StudentManagementDetailComponent,
-    AddStudentsFileComponent,
     ConfirmDialog,
     JwPagination,
     SelectPlan,
