@@ -319,7 +319,6 @@ export default {
 
       const response = await api.getStudentsAsync(this.filter);
       this.showLoading(false);
-      this.studentLengthBanDau = response.data.length;
 
       if (!response.isOK) {
         this.showNotifications(
@@ -329,6 +328,7 @@ export default {
         );
         return;
       }
+      this.studentLengthBanDau = response.data.length;
       this.studentsCallApi = response.data;
     },
 

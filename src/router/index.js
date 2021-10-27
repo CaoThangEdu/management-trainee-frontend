@@ -280,11 +280,43 @@ const routes = [
     name: "quan-ly-lop",
     component: () =>
       import(
-        /* webpackChunkName: "ControlExample" */
         "../router/views/ClassManagement/ClassManagement.vue"
       ),
     meta: {
       breadcrumbName: "Quản lý lớp",
+    },
+  },
+  {
+    path: "/weekly-report-management",
+    name: "quan-ly-bao-cao-hang-tuan",
+    component: () =>
+      import(
+        "../router/views/WeeklyReportManagement/WeeklyReportManagement.vue"
+      ),
+    meta: {
+      breadcrumbName: "Quản lý báo cáo hàng tuần",
+    },
+  },
+  {
+    path: "/weekly-report-of-student",
+    name: "bao-cao-hang-tuan-cua-sinh-vien",
+    component: () =>
+      import(
+        "../components/WeeklyReportManagementComponent/ListWeeklyReportOfStudentComponent/ListWeeklyReportOfStudentComponent.vue"
+      ),
+    meta: {
+      breadcrumbName: "Báo cáo hàng tuần",
+    },
+  },
+  {
+    path: "/internship-data-management",
+    name: "quan-ly-bieu-mau",
+    component: () =>
+      import(
+        "../router/views/InternshipDataManagement/InternshipDataManagement.vue"
+      ),
+    meta: {
+      breadcrumbName: "Quản lý biểu mẫu",
     },
   },
   {

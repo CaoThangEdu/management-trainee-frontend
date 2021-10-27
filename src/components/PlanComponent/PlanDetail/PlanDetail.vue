@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4"
+      <div class="mb-4"
         v-if="!plan.id">
         <PlanningStepsComponent
           :isActiveStep="isActiveStep" />
