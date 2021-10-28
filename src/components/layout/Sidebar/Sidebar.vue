@@ -61,7 +61,7 @@ export default {
     },
     filterNavByRoles(navsFilter, roles) {
       return navsFilter.filter(itemNavLink => {
-        if(roles.includes(itemNavLink.role)) {
+        if(itemNavLink.role.includes(roles)) {
           return itemNavLink;
         }
       });
@@ -88,7 +88,7 @@ export default {
     this.roles = this.parseJwt(accessToken)['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     for (let index = 0; index < this.navFilter.length; index++) {
       if (this.navFilter[index].role) {
-        if(!this.roles.includes(this.navFilter[index].role)) {
+        if(!this.navFilter[index].role.includes(this.roles)) {
           this.navFilter.splice(index, 1);
           index = index - 1;
         }

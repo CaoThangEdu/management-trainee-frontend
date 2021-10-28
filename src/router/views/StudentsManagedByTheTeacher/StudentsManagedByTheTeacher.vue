@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ListStudentManagement 
+    <ListOfStudentsManagedByTheTeacher 
       :students="students"
       :plans="plans" :classes="classes"
       @change-data-student-component="changeDataStudentComponent"
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import ListStudentManagement from '../../../components/StudentManagementComponent/ListStudentManagementComponent/ListStudentManagementComponent.vue';
+import ListOfStudentsManagedByTheTeacher from '../../../components/StudentManagementComponent/ListOfStudentsManagedByTheTeacher/ListOfStudentsManagedByTheTeacher.vue';
 import ComponentBase from '../../../components/common/component-base/ComponentBase.vue';
 import StudentService from '../../../services/student/studentServices';
 import AppConfig from '../../../../src/app.config.json';
@@ -18,10 +18,10 @@ import PlanService from '../../../services/plan/planServices';
 import ClassService from '../../../services/class/classServices';
 
 export default {
-  name: "StudentManagement",
+  name: "StudentsManagedByTheTeacher",
   extends: ComponentBase,
   components: {
-    ListStudentManagement,
+    ListOfStudentsManagedByTheTeacher,
   },
   data() {
     return {

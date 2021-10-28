@@ -20,6 +20,13 @@ export default [{
       ],
     },
     {
+      _name: "CSidebarNavItem",
+      name: "Quản lý sinh viên của tôi",
+      to: "/student-management/students-managed-by-the-teacher",
+      icon: "cil-user-follow",
+      role: "TEACHER",
+    },
+    {
       _name: 'CSidebarNavItem',
       name: 'Trang chủ sinh viên',
       to: '/student-home-page',
@@ -59,7 +66,7 @@ export default [{
       name: "Quản lý công ty",
       to: "/company-management",
       icon: "cil-building",
-      role: "Admin",
+      role: ["Admin", "TEACHER"],
     },
     {
       _name: "CSidebarNavItem",
@@ -87,7 +94,7 @@ export default [{
       name: "Quản lý biểu mẫu",
       to: "/internship-data-management",
       icon: "cil-file",
-      role: "Admin",
+      role: ["Admin", "TEACHER"],
     },
     {
       _name: "CSidebarNavItem",
@@ -143,7 +150,7 @@ export default [{
       name: "Báo cáo hàng tuần",
       to: "/weekly-report-of-student",
       icon: "cil-book",
-      role: "STUDENT",
+      role: ["Admin", "TEACHER"],
     },
   ],
 },];

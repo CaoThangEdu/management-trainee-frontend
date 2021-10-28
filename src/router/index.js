@@ -341,6 +341,15 @@ const routes = [
         },
       },
       {
+        path: 'students-managed-by-the-teacher',
+        name: 'ds-sinh-vien',
+        component: () =>
+          import("../router/views/StudentsManagedByTheTeacher/StudentsManagedByTheTeacher.vue"),
+        meta: {
+          breadcrumbName: 'Quản lý sinh viên của tôi',
+        },
+      },
+      {
         path: 'create/:guid',
         name: 'them-sv-cua-dot',
         props: true,
