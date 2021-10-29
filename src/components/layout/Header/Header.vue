@@ -15,11 +15,40 @@
       </li>
     </ul>
     <ul class="c-header-nav mr-4">
-      <li class="c-header-nav-item d-md-down-none mx-2 navbar__item--has-notify">
+      <li class="c-header-nav-item d-md-down-none mx-2 navbar__item--has-notify"
+        @click="showNotify()">
         <a href="#" class="c-header-nav-link">
           <CIcon name="cil-bell" />
         </a>
-        <NotificationsHeader />
+        <div class="nav__notify"
+          :class="{'nav__notify--display': isShowNotify}"
+          id="notifications-box">
+          <header class="nav__notify-header">
+            <h3>Thông báo</h3>
+          </header>
+          <ul class="nav__notify-list">
+            <li class="nav__notify-item nav__notify-item--viewed"
+              v-for="(notify, index) in notificationsOfUser"
+              :key="index + 'notify'">
+              <router-link
+                class="nav__notify-link"
+                :to="{name:'thong-bao-cua-tai-khoan', params: { guid: notify.id } }">
+                <div class="nav__notify-info">
+                  <span class="nav__notify-name">{{ notify.title }}</span>
+                  <span class="nav__notify-description">
+                    {{ notify.content }}
+                  </span>
+                </div>
+              </router-link>
+              <div class="nav__notify-watched w-100 text-right">
+                Trạng thái: {{ notify.watched?'Đã xem':'Chưa xem' }}
+              </div>
+            </li>
+            <div class="nav__notify-footer">
+              <a href="" class="nav__notify-footer-btn"> Xem tất cả </a>
+            </div>
+          </ul>
+        </div>
       </li>
       <li class="c-header-nav-item d-md-down-none mx-2">
         <a href="#" class="c-header-nav-link">
@@ -41,20 +70,40 @@
 
 <script>
 import HeaderDropdownAccount from "../HeaderDropdownAccount/HeaderDropdownAccount";
-import { mapActions } from "vuex";
-import NotificationsHeader from './NotificationsHeader.vue';
+import { mapGetters, mapActions } from "vuex";
+import ComponentBase from "../../common/component-base/ComponentBase";
+import { STORAGE_KEY } from "../../../config/constant";
+import localStorageMixin from "../../../helpers/mixins/localStorageMixin";
+import axios from "axios";
+import Http from "../../../helpers/http";
+import AppConfig from "../../../app.config.json";
 
 export default {
   name: "Header",
+  extends: ComponentBase,
   components: {
     HeaderDropdownAccount,
-    NotificationsHeader,
   },
+  mixins: [localStorageMixin],
 
   data() {
     return {
-      breadCrumbList: []
+      breadCrumbList: [],
+      notificationsOfUser: [],
+      isShowNotify: false,
     }
+  },
+  created() {
+    let app = document.getElementById("app");
+    app.addEventListener('mouseup', () => {
+      let notificationsBox = document.getElementById('notifications-box');
+      notificationsBox.classList.remove('nav__notify--display');
+    });
+  },
+
+  async mounted() {
+    if (this.userProfile.user) return;
+    await this.updateUserInfoDataAsync();
   },
 
   methods: {
@@ -62,7 +111,52 @@ export default {
       "setToggleSidebarMobile",
       "setToggleSidebarDesktop",
     ]),
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
+    async getNotifyByEmail(){
+      let res;
+      let authToken = localStorageMixin.methods.getLocalStorage(STORAGE_KEY.AUTH_TOKEN);
+      let accessToken = authToken?.accessToken;
+      this.showLoading();
+      await axios.get(
+        `http://localhost:21021/api/services/app/Notify/GetNotifyByEmail?email=${this.userProfile?.user?.emailAddress}`, 
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        })
+        .then(response => {
+          if (response.data.success) {
+            res = response.data;
+            res.isOK = res.success;
+          }
+        })
+        .catch(async error => {
+          let http = new Http();
+          let errorResult = await http.loadError(error);
+          res = errorResult;
+        });
+      this.showLoading(false);
+      if(!res.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          res.errorMessages
+        );
+        return;
+      }
+      this.notificationsOfUser = res.result;
+    },
+    async showNotify() {
+      this.isShowNotify = !this.isShowNotify;
+      if(!this.isShowNotify) return;
+      await this.getNotifyByEmail();
+    }
   },
+
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", { userProfile: "getUserInfo", tokenKey: "getTokenKey" }),
+  },
+
   watch : {
     '$route': {
       immediate: true,

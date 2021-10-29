@@ -1,5 +1,6 @@
 <template>
-  <div class="app">
+  <div class="app"
+    id="app">
     <Sidebar v-if="!$route.meta.hideSidebar && navLinkProps.length != 0"
       :navLinkProps="navLinkProps" />
     <CWrapper>
