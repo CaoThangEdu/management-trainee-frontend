@@ -26,15 +26,6 @@ export default class CertificateViewModel extends ViewModel {
           }
         }
       },
-      owner: {
-        label: 'Chủ sở hữu',
-        rules: {
-          require: '',
-          maxLength: {
-            max_value: 500
-          }
-        }
-      },
       companyName: {
         label: 'Tên công ty',
         rules: {

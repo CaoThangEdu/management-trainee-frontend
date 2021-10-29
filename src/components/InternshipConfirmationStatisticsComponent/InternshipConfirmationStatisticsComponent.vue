@@ -85,17 +85,14 @@
                 </td>
                 <td>
                   <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === 'practiced'" class="btn btn-success not-active">
-                    Đang thực tập
+                    Xác nhận
                   </button>
-                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === 'notPracticed'" class="btn btn-warning not-active text-white">
-                    Chưa thực tập
-                  </button>
-                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === ''" class="btn btn-danger not-active">
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status !== 'practiced'" class="btn btn-danger not-active">
                     Chưa xác nhận
                   </button>
                 </td>
                 <td>
-                  <button class="btn btn-primary" 
+                  <button v-if="getInternshipConfirmationByStudentId(student.studentId).status === 'practiced'" class="btn btn-primary" 
                   @click="detailInternshipConfirmation(
                     getInternshipConfirmationByStudentId(student.studentId))">
                     Xem chi tiết
