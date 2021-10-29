@@ -28,6 +28,19 @@ const routes = [
       breadcrumbName: 'Trang chủ'
     },
   },
+  //notify of user
+  {
+    path: "/notify-of-user/:guid",
+    name: "thong-bao-cua-tai-khoan",
+    props: true,
+    component: () =>
+      import(
+        "../components/NotifyOfUser/NotifyOfUser/NotifyOfUser.vue"
+      ),
+    meta: {
+      breadcrumbName: 'Chi tiết thông báo của bạn'
+    },
+  },
   // template mail
   {
     path: "/template-mail",
