@@ -7,6 +7,18 @@ export default class NotificationService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/Notify`
   }
 
+  async getNotificationsReportAsync(datasend) {
+    try {
+      const response = await this.http.post(
+        `${this.url}/StatisticPeopleWatchedNotify?notificationId=${datasend.notificationId}`
+        , datasend);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
   async getNotificationsAsync(datasend) {
     try {
       const response = await this.http.post(`${this.url}/GetAllNotify`, datasend);
@@ -20,6 +32,26 @@ export default class NotificationService extends ServicesBaseAPI {
   async getNotifyByEmail(email) {
     try {
       const response = await this.http.get(`${this.url}/GetNotifyByEmail?email=${email}`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async getNotifyByIdAsync(id) {
+    try {
+      const response = await this.http.get(`${this.url}/GetNotifyById?id=${id}`);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async sendAnEmailUrgingYouToSeeTheAnnouncementAsync(datasend) {
+    try {
+      const response = await this.http.post(`${this.url}/SendAnEmailUrgingYouToSeeTheAnnouncement`, datasend);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

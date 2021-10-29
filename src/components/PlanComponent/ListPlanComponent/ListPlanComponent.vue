@@ -9,7 +9,6 @@ import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 
-
 export default {
   name: "ListPlan",
   extends: ComponentBase,
@@ -85,7 +84,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-@import "./ListPlanComponent.scss"
-</style>
