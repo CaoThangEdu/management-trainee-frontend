@@ -27,8 +27,9 @@
             <h3>Thông báo</h3>
           </header>
           <ul class="nav__notify-list">
-            <li class="nav__notify-item nav__notify-item--viewed"
+            <li class="nav__notify-item"
               v-for="(notify, index) in notificationsOfUser"
+              :class="{'nav__notify-item--viewed': notify.watched}"
               :key="index + 'notify'">
               <router-link
                 class="nav__notify-link"
@@ -43,6 +44,10 @@
               <div class="nav__notify-watched w-100 text-right">
                 Trạng thái: {{ notify.watched?'Đã xem':'Chưa xem' }}
               </div>
+            </li>
+            <li class="nav__notify-item--no-notidy font-weight-bold"
+              v-if="notificationsOfUser && notificationsOfUser.length==0">
+              Bạn chưa có thông báo nào
             </li>
             <div class="nav__notify-footer">
               <a href="" class="nav__notify-footer-btn"> Xem tất cả </a>
@@ -97,6 +102,7 @@ export default {
     let app = document.getElementById("app");
     app.addEventListener('mouseup', () => {
       let notificationsBox = document.getElementById('notifications-box');
+      if(!notificationsBox) return;
       notificationsBox.classList.remove('nav__notify--display');
     });
   },
@@ -114,6 +120,7 @@ export default {
     //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
     ...mapActions("user", ["updateUserInfoDataAsync"]),
     async getNotifyByEmail(){
+      if(!this.userProfile.user) return;
       let res;
       let authToken = localStorageMixin.methods.getLocalStorage(STORAGE_KEY.AUTH_TOKEN);
       let accessToken = authToken?.accessToken;

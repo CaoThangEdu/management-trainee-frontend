@@ -147,6 +147,16 @@ const routes = [
         breadcrumbName: 'Thêm mới',
       },
     },
+    {
+      path: 'report/:guid',
+      name: 'thong-ke-thong-bao',
+      props: true,
+      component: () =>
+        import("../components/NotificationManagementComponent/ReportNotificationComponent/ReportNotificationComponent.vue"),
+      meta: {
+        breadcrumbName: 'Thống kê',
+      },
+    },
   ]
   },
   {
