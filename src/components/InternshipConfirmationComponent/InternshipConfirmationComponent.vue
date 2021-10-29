@@ -18,42 +18,10 @@
           Xác nhận thực tập
         </header>
         <div class="card-body">
-          <div class="row mb-3">
-            <div class="form-check col-sm-12 col-md-6 col-lg-3 text-center">
-              <input
-                v-model="intership"
-                value="false"
-                class="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-                @change="changeStatusInternship"
-              />
-              <label class="form-check-label" for="flexRadioDefault1">
-                Chưa có công ty thực tập
-              </label>
-            </div>
-            <div class="form-check col-sm-12 col-md-6 col-lg-3 text-center">
-              <input
-                v-model="intership"
-                value="true"
-                class="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault2"
-                @change="changeStatusInternship"
-              />
-              <label class="form-check-label" for="flexRadioDefault2">
-                Đã có công ty thực tập
-              </label>
-            </div>
-          </div>
+          <div class="row mb-3"></div>
           <form @submit.prevent>
             <div class="form-row p-3">
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Mã số thuế</label>
                 <input
                   type="text"
@@ -61,10 +29,7 @@
                   v-model="keyInternshipConfirmation.taxCode"
                 />
               </div>
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Tên công ty</label>
                 <input
                   type="text"
@@ -72,10 +37,7 @@
                   v-model="keyInternshipConfirmation.title"
                 />
               </div>
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Giám đốc</label>
                 <input
                   type="text"
@@ -83,10 +45,7 @@
                   v-model="keyInternshipConfirmation.owner"
                 />
               </div>
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Địa chỉ</label>
                 <input
                   type="text"
@@ -94,10 +53,7 @@
                   v-model="keyInternshipConfirmation.companyAddress"
                 />
               </div>
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Website</label>
                 <input
                   type="text"
@@ -105,10 +61,7 @@
                   v-model="keyInternshipConfirmation.website"
                 />
               </div>
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Cán bộ hướng dẫn</label>
                 <input
                   type="text"
@@ -116,10 +69,7 @@
                   v-model="keyInternshipConfirmation.manager"
                 />
               </div>
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Số điện thoại cán bộ hướng dẫn</label>
                 <input
                   type="text"
@@ -127,27 +77,11 @@
                   v-model="keyInternshipConfirmation.phoneNumber"
                 />
               </div>
-              <div
-                class="form-group col-sm-12 col-md-6 col-lg-6"
-                v-if="intership === 'true'"
-              >
+              <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Các công ty đã phỏng vấn</label>
                 <textarea
                   name="name-companies"
                   cols="30"
-                  class="w-100"
-                  v-model="keyInternshipConfirmation.companiesInterviewed"
-                ></textarea>
-              </div>
-              <div
-                class="form-group col-sm-12 col-md-12 col-lg-12"
-                v-if="intership === 'false'"
-              >
-                <label>Những công ty đã phỏng vấn</label>
-                <textarea
-                  name="name-companies"
-                  cols="30"
-                  rows="10"
                   class="w-100"
                   v-model="keyInternshipConfirmation.companiesInterviewed"
                 ></textarea>
@@ -172,7 +106,7 @@
         </div>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -197,24 +131,15 @@ export default {
         owner: "",
         manager: "",
         companiesInterviewed: "",
-        status: "notPracticed", //notPracticed, practiced
+        status: "practiced",
         phoneNumber: "",
         internshipCourseId: "",
       },
-      intership: "false",
-      confirmed: false,
       errorMessages: [],
     };
   },
   async mounted() {
-    let keyConfirmation = await this.getInternshipConfirmationAsync();
-    if (keyConfirmation !== undefined) {
-      this.confirmed = true;
-      this.keyInternshipConfirmation = keyConfirmation;
-    }
-    if (this.keyInternshipConfirmation.status === "practiced") {
-      this.intership = "true";
-    }
+    this.keyInternshipConfirmation = await this.getInternshipConfirmationAsync();
   },
   computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
@@ -224,14 +149,6 @@ export default {
     }),
   },
   methods: {
-    changeStatusInternship() {
-      if (this.intership === "false") {
-        this.keyInternshipConfirmation.status = "notPracticed";
-        return;
-      }
-      this.keyInternshipConfirmation.status = "practiced";
-    },
-
     async pressKeyEnter() {
       await this.internshipConfirmationAsync();
     },
@@ -244,24 +161,10 @@ export default {
       await this.internshipConfirmationAsync();
     },
 
-    validInternshipConfirmation() {
-      if (
-        this.intership === "false" &&
-        this.keyInternshipConfirmation.companiesInterviewed === ""
-      ) {
-        this.errorMessages = [
-          "Vui lòng nhập <span>Những công ty đã phỏng vấn</span>.",
-        ];
-      }
-      if (this.intership === "true") {
-        let viewModel = new IntershipConfirmationViewModel();
-        viewModel.setFields(this.keyInternshipConfirmation);
-        this.errorMessages = viewModel.isValid();
-      }
-    },
-
     async internshipConfirmationAsync() {
-      this.validInternshipConfirmation();
+      let viewModel = new IntershipConfirmationViewModel();
+      viewModel.setFields(this.keyInternshipConfirmation);
+      this.errorMessages = viewModel.isValid();
       if (this.errorMessages.length > 0) {
         return;
       }
@@ -269,9 +172,7 @@ export default {
       this.keyInternshipConfirmation.internshipCourseId = this.userProfile.internshipCourseId;
       this.showLoading();
       let api = new InternshipConfirmationServices();
-      let response = await api.internshipConfirmationAsync(
-        this.keyInternshipConfirmation
-      );
+      let response = await api.internshipConfirmationAsync(this.keyInternshipConfirmation);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -304,7 +205,6 @@ export default {
           response.errorMessages
         );
       }
-      this.confirmed = true;
       this.keyInternshipConfirmation = response.data;
       this.showNotifications(
         "success",
@@ -337,12 +237,11 @@ export default {
 </script>
 
 <style lang="scss">
-.form-confirmation-infomation{
-margin: 30px 180px;
+.form-confirmation-infomation {
+  margin: 30px 180px;
 }
-.btn-confirmation{
-    float: right;
-    width: 65%;
+.btn-confirmation {
+  float: right;
+  width: 65%;
 }
-
 </style>

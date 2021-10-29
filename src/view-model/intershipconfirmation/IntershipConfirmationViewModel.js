@@ -3,21 +3,21 @@ export default class CertificateViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      studentId:null,
+      studentId: null,
       taxCode: null,
       title: null,
-      companyAddress:null,
-      owner:null,
-      manager:null,
+      companyAddress: null,
+      owner: null,
+      manager: null,
       phoneNumber: null,
-      website:null,
-      companiesInterviewed:null,
-      status: 'notPracticed', //notPracticed, practiced
+      website: null,
+      companiesInterviewed: null,
+      status: 'practiced',
     }
   }
 
   getValidations() {
-    let validations = {
+   return {
       taxCode: {
         label: 'Mã số thuế',
         rules: {
@@ -91,7 +91,6 @@ export default class CertificateViewModel extends ViewModel {
         }
       },
     }
-    return validations
   }
   isValid() {
     return super.isValid(this.getValidations())

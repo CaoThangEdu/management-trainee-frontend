@@ -10,6 +10,9 @@
           <NotifyComponent
             :userInfo="userInfo" />
         </div>
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <SearchInternshipCompany/>
+        </div>
       </div>
     </div>
   </div>
@@ -18,6 +21,7 @@
 <script>
 import TimeLineComponent from "../../../components/NotificationOfStudentComponent/TimeLineComponent/TimeLineComponent.vue";
 import NotifyComponent from "../../../components/NotificationOfStudentComponent/NotifyComponent/NotifyComponent.vue";
+import SearchInternshipCompany from "../../../components/SearchInternshipCompany/SearchInternshipCompany.vue"
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -25,6 +29,7 @@ export default {
   components: {
     TimeLineComponent,
     NotifyComponent,
+    SearchInternshipCompany
   },
   data() {
     return {
