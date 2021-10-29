@@ -3,16 +3,17 @@ export default class TeacherViewModel extends ViewModel {
   constructor() {
     super();
     this.fields = {
-      firstName: null,
-      lastName: null,
-      phoneNumber: null,
-      status: null,
-      facultyId: null,
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      status: '',
+      facultyId: '',
     };
   }
 
   getValidations() {
-    let validations = {
+    return {
       firstName: {
         label: 'Họ',
         rules: {
@@ -40,8 +41,22 @@ export default class TeacherViewModel extends ViewModel {
           }
         },
       },
+      phoneNumber: {
+        label: 'Số điện thoại',
+        rules: {
+          require: '',
+          maxLength: {
+            max_value: 200
+          }
+        },
+      },
+      facultyId: {
+        label: 'Khoa',
+        rules: {
+          require: '',
+        },
+      },
     }
-    return validations
   }
   isValid() {
     return super.isValid(this.getValidations())

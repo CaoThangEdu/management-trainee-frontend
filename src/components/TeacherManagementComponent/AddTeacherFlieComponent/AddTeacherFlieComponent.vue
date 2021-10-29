@@ -6,6 +6,24 @@
   size="lg"
 >
   <div class="form-group row">
+    <label class="col-md-4 col-sm-4 col-form-label">
+      Khoa
+      (<span class="text--red">*</span>)
+    </label>
+    <div class="col-md-8 col-sm-8">
+      <select class="form-control form-select form-select-class"
+        v-model="facultyIdModel">
+        <option
+          v-for="(faculty, index) in faculties"
+          :key="index + 'faculty'"
+          :value="faculty.id"
+        >
+          {{ faculty.facultyName }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
     <label class="col-md-4 col-sm-4 col-form-label">Chọn file excel</label>
     <div class="col-md-8 col-sm-8">
       <div class="input-group mb-3">
@@ -80,7 +98,8 @@ export default {
         surname: "",
         emailAddress: "",
       },
-      dataForCreateUsers: []
+      dataForCreateUsers: [],
+      facultyIdModel: '',
     };
   },
   props: {
@@ -152,7 +171,7 @@ export default {
           emailAddress : this.teachers[i].email
         };
         this.dataForCreateUsers.push(this.dataForCreateUser);
-        this.teachers[i].facultyId = this.faculties[0].id;
+        this.teachers[i].facultyId = this.facultyIdModel;
         this.teachersForCreate.push(this.teachers[i])
       }
 
