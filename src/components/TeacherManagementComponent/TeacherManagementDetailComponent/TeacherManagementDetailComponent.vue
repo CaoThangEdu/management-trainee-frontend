@@ -7,7 +7,10 @@
 >
   <div class="">
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Họ</label>
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Họ
+        (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
         <input
           type="text"
@@ -18,21 +21,53 @@
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Tên</label>
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Tên
+        (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" id="name" v-model="teacher.lastName" />
+        <input type="text" class="form-control" id="lastName" v-model="teacher.lastName" />
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Email</label>
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Email
+        (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" id="name" v-model="teacher.email" />
+        <input type="text" class="form-control" id="email"
+          v-model="teacher.email" />
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-md-4 col-sm-4 col-form-label">Số điện thoại</label>
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Số điện thoại
+        (<span class="text--red">*</span>)
+      </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" id="name" v-model="teacher.phoneNumber" />
+        <input type="text" class="form-control" id="phoneNumber"
+          v-model="teacher.phoneNumber"
+          maxlength="11" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-4 col-sm-4 col-form-label">
+        Khoa
+        (<span class="text--red">*</span>)
+      </label>
+      <div class="col-md-8 col-sm-8">
+        <select
+          class="form-control form-select form-select-class"
+          v-model="teacher.facultyId"
+        >
+          <option
+            v-for="(faculty, index) in faculties"
+            :key="index + 'faculty'"
+            :value="faculty.id"
+          >
+            {{ faculty.facultyName }}
+          </option>
+        </select>
       </div>
     </div>
     <div class="form-group row" v-if="teacher.id">
@@ -100,7 +135,14 @@ export default {
   data() {
     return {
       isShow: false,
-      teacher: {},
+      teacher: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        status: '',
+        facultyId: '',
+      },
       errorMessages: [],
       dataForCreateUser: {
         username: "",
@@ -174,7 +216,6 @@ export default {
       this.closeModal(true);
     },
     async save() {
-      this.teacher.facultyId = this.faculties[0].id;
       //validate
       let viewModel = new TeacherViewModel();
       viewModel.setFields(this.teacher);

@@ -28,6 +28,19 @@ const routes = [
       breadcrumbName: 'Trang chủ'
     },
   },
+  //notify of user
+  {
+    path: "/notify-of-user/:guid",
+    name: "thong-bao-cua-tai-khoan",
+    props: true,
+    component: () =>
+      import(
+        "../components/NotifyOfUser/NotifyOfUser/NotifyOfUser.vue"
+      ),
+    meta: {
+      breadcrumbName: 'Chi tiết thông báo của bạn'
+    },
+  },
   // template mail
   {
     path: "/template-mail",
@@ -338,6 +351,15 @@ const routes = [
           import("../router/views/StudentManagement/StudentManagement.vue"),
         meta: {
           breadcrumbName: 'Danh sách',
+        },
+      },
+      {
+        path: 'students-managed-by-the-teacher',
+        name: 'ds-sinh-vien',
+        component: () =>
+          import("../router/views/StudentsManagedByTheTeacher/StudentsManagedByTheTeacher.vue"),
+        meta: {
+          breadcrumbName: 'Quản lý sinh viên của tôi',
         },
       },
       {

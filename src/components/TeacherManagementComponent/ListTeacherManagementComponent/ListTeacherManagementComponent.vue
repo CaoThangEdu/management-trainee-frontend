@@ -2,9 +2,10 @@
 <div class="row">
   <div class="col-12">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
-      <PlanningStepsComponent v-if="internshipCourseId" :isActiveStep="isActiveStep" />
+      <PlanningStepsComponent v-if="internshipCourseId"
+        :isActiveStep="isActiveStep" />
     </div>
-    <div class="row mt-4">
+    <div class="row" :class="{'mt-4': internshipCourseId}">
       <div class="col-12">
         <div class="row card">
           <header class="card-header d-flex align-items-center justify-content-between">
@@ -96,8 +97,23 @@
           <AddTeacherFileComponent :data="teacherFile" @change-data="changeData" :faculties="faculties" />
           <ConfirmDialog :data="confirmTeacher" @agree="deleteTeacherConfirm"></ConfirmDialog>
 
-          <div class="card-footer d-flex justify-content-center text--blue">
-            <JwPagination :items="teachers" @changePage="onChangePage" :labels="customLabels" :pageSize="10">
+          <div class="card-footer d-flex justify-content-center align-items-center text--blue">
+            <div class="form-group d-flex page-size-group mb-0 mr-2">
+              <select class="form-control w-auto"
+                @change="changePageSize()"
+                v-model="pageSize">
+                <option value="10">10/ trang</option>
+                <option value="20">20/ trang</option>
+                <option value="30">30/ trang</option>
+                <option value="40">40/ trang</option>
+                <option value="50">50/ trang</option>
+              </select>
+            </div>
+            <JwPagination
+              :items="teachers"
+              @changePage="onChangePage"
+              :labels="customLabels"
+              :pageSize="Number(pageSize)">
             </JwPagination>
           </div>
         </div>
@@ -149,6 +165,7 @@ export default {
       },
       isActiveStep: "3",
       faculties: [],
+      pageSize: 10,
     };
   },
   async mounted() {
@@ -174,6 +191,10 @@ export default {
         return;
       }
       this.faculties = response.data;
+    },
+
+    async changePageSize() {
+      await this.getTeachersAsync();
     },
 
     onChangePage(pageOfItems) {
@@ -245,7 +266,7 @@ export default {
     async deleteTeacherConfirm(teacherComfirm) {
       this.showLoading();
       let api = new TeacherService();
-      let response = await api.updateTeacherAsync(teacherComfirm); // Gọi Api
+      let response = await api.deleteTeacherAsync(teacherComfirm.id); // Gọi Api
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -265,14 +286,6 @@ export default {
 
     async changeData() {
       await this.getTeachersAsync();
-    },
-
-    showNotification() {
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
     },
 
     getTrainingSystemName(careersId, careers) {
@@ -305,7 +318,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_success_default}`
       );
-      this.getTrainingSystemsAsync();
+      this.getTeachersAsync();
     },
 
     getStatusIcon(status) {

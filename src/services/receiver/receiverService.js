@@ -1,35 +1,15 @@
 import ServicesBaseAPI from '../servicesBaseApi'
 import AppConfig from '../../app.config.json'
 
-export default class TeacherService extends ServicesBaseAPI {
+export default class ReceiverService extends ServicesBaseAPI {
   constructor() {
     super();
-    this.url = `${AppConfig.apiHost}/Teacher`
+    this.url = `${AppConfig.apiHost}/Receiver`
   }
 
-  async getTeachersAsync(object) {
+  async updateStatusWatchedWhenUserClickView(datasend) {
     try {
-      const response = await this.http.post(`${this.url}/Filter`,object);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
-  
-  async getTeachersInInternshipCourse(object) {
-    try {
-      const response = await this.http.post(`${this.url}/GetTeacherInInternshipCourse`, object);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }    
-
-  async getFilterByCareersId(careersId) {
-    try {
-      const response = await this.http.post(`${this.url}/FilterByCareersId`, careersId);
+      const response = await this.http.put(`${this.url}/UpdateStatusWatchedWhenUserClickView`, datasend);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -37,9 +17,9 @@ export default class TeacherService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async createTeacherAsync(object) {
+  async getReceiversAsync(datasend) {
     try {
-      const response = await this.http.post(`${this.url}/CreateTeacher`, object);
+      const response = await this.http.post(`${this.url}/GetAllReceiver`, datasend);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -47,17 +27,27 @@ export default class TeacherService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async createTeachersAsync(array) {
+  async getReceiverByEmail(email) {
     try {
-      const response = await this.http.post(`${this.url}/CreateTeachers`, array);
+      const response = await this.http.get(`${this.url}/GetReceiverByEmail?email=${email}`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
     }
     return this.result;
   }
-  
-  async updateTeacherAsync(object) {
+
+  async createReceiverAsync(object) {
+    try {
+      const response = await this.http.post(`${this.url}/CreateReceiver`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async updateReceiverAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);
       this.setResult(response);
@@ -67,7 +57,7 @@ export default class TeacherService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async deleteTeacherAsync(id) {
+  async deleteReceiverAsync(id) {
     try {
       const response = await this.http.delete(`${this.url}/Delete?id=${id}`);
       this.setResult(response);
