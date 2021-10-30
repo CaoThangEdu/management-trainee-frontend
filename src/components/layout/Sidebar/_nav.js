@@ -142,7 +142,7 @@ export default [{
       _name: "CSidebarNavItem",
       name: "Thông kê xác nhận thực tập",
       to: "/internship-confirmation-statistics",
-      icon: "cil-calculator",
+      icon: "cil-chart-line",
       role: "Admin",
     },
     {

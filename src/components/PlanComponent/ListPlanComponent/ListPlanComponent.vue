@@ -1,9 +1,147 @@
-<template src="./ListPlanComponent.html">
+<template>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <header class="card-header">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            role="img"
+            class="c-icon"
+          >
+            <path
+              fill="var(--ci-primary-color, currentColor)"
+              d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
+              class="ci-primary"
+            ></path>
+          </svg>
+          Danh sách kế hoạch
+          <router-link
+            :to="{ name: 'them-ke-hoach' }"
+            class="btn btn-primary float-right"
+            title="Thêm mới"
+          >
+            <i class="fa fa-plus-square"></i>
+          </router-link>
+        </header>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+              <div class="form-row filter-wrapper ml-0 mr-0">
+                <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="keywords"
+                    placeholder="Nhập từ khóa"
+                  />
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12">
+                  <button
+                    type="submit"
+                    id="btn-search"
+                    class="btn btn-stack-overflow"
+                    title="Tìm kiếm"
+                  >
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="">
+                <tr>
+                  <th scope="col">STT</th>
+                  <th scope="col">Tên đợt</th>
+                  <th scope="col">Ngày bắt đầu</th>
+                  <th scope="col">Ngày kết thúc</th>
+                  <th scope="col" class="text-center">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(plan, index) in pageOfItems" :key="index">
+                  <th scope="row">{{ index + 1 }}</th>
+                  <th scope="row" title="Xem">
+                    <router-link
+                      :to="{ name: 'sua-ke-hoach', params: { guid: plan.id } }"
+                    >
+                      {{ plan.internshipCourseName }}
+                    </router-link>
+                  </th>
+                  <td>{{ convertTime(plan.startDay, "DD/MM/YYYY") }}</td>
+                  <td>{{ convertTime(plan.endDay, "DD/MM/YYYY") }}</td>
+                  <td class="text-lg-center">
+                    <router-link
+                      class="btn btn-instagram mr-2"
+                      title="Chi tiết kế hoạch"
+                      :to="{
+                        name: 'chi-tiet-ke-hoach',
+                        params: { guid: plan.id },
+                      }"
+                    >
+                      <i class="fas fa-info-circle"></i>
+                    </router-link>
+                    <router-link
+                      class="btn btn-info mr-2"
+                      title="Thêm sinh viên"
+                      :to="{
+                        name: 'them-sv-cua-dot',
+                        params: { guid: plan.id },
+                      }"
+                    >
+                      <i class="fa fa-arrow-alt-circle-right"></i>
+                    </router-link>
+                    <button
+                      class="btn btn-danger"
+                      @click="deletePlan(plan)"
+                      title="Xóa"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr v-show="pageOfItems == null || pageOfItems.length === 0">
+                  <th colspan="5" class="text-left">
+                    Không có dữ liệu nào được tìm thấy.
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ConfirmDialog :data="confirmPlan" @agree="deletePlanConfirm">
+        </ConfirmDialog>
+        <div class="card-footer d-flex justify-content-center text--blue"
+          v-show="pageOfItems.length !== 0">
+          <div class="form-group d-flex page-size-group mb-0 mr-2">
+            <select class="form-control w-auto"
+              @change="changePageSize()"
+              v-model="pageSize">
+              <option value="10">10/ trang</option>
+              <option value="20">20/ trang</option>
+              <option value="30">30/ trang</option>
+              <option value="40">40/ trang</option>
+              <option value="50">50/ trang</option>
+            </select>
+          </div>
+          <JwPagination
+            :items="plans"
+            @changePage="onChangePage"
+            :labels="customLabels"
+            :pageSize="Number(pageSize)"
+          >
+          </JwPagination>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
-import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog" ;
+import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import PlanService from "../../../services/plan/planServices";
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
@@ -37,15 +175,20 @@ export default {
       },
       pageOfItems: [],
       customLabels: {
-        first: '<<',
-        last: '>>',
-        previous: '<',
-        next: '>'
+        first: "<<",
+        last: ">>",
+        previous: "<",
+        next: ">",
       },
+      pageSize: 10,
     };
   },
 
-  methods:{
+  methods: {
+    async changePageSize() {
+      await this.$emit("change-page", 1);
+    },
+
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
@@ -66,7 +209,7 @@ export default {
       let api = new PlanService();
       let response = await api.deletePlanAsync(planComfirm.item.id); // Gọi Api
       this.showLoading(false);
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -78,9 +221,9 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default}`,
+        `${AppConfig.notification.content_deleted_success_default}`
       );
     },
-  }
-}
+  },
+};
 </script>

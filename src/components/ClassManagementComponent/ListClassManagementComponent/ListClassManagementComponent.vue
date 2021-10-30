@@ -130,11 +130,22 @@
           class="card-footer d-flex justify-content-center text--blue"
           v-show="pageOfItems == null || pageOfItems.length === 0"
         >
+          <div class="form-group d-flex page-size-group mb-0 mr-2">
+            <select class="form-control w-auto"
+              @change="changePageSize()"
+              v-model="pageSize">
+              <option value="10">10/ trang</option>
+              <option value="20">20/ trang</option>
+              <option value="30">30/ trang</option>
+              <option value="40">40/ trang</option>
+              <option value="50">50/ trang</option>
+            </select>
+          </div>
           <JwPagination
             :items="classes"
             @changePage="onChangePage"
             :labels="customLabels"
-            :pageSize="5"
+            :pageSize="Number(pageSize)"
           >
           </JwPagination>
         </div>
@@ -180,6 +191,7 @@ export default {
         status: "active",
       },
       plans: [],
+      pageSize: 10,
     };
   },
 
@@ -189,6 +201,10 @@ export default {
   },
 
   methods: {
+    async changePageSize() {
+      await this.getClassesFilterAsync();
+    },
+
     async getPlansAsync() {
       let planFilter = {
         status: "",
