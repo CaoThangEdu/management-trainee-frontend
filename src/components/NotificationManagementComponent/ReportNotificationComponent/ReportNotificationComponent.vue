@@ -28,7 +28,7 @@
               <div class="table-responsive">
                 <figure class="mb-0">
                   <figcaption class="caption-table mb-2">
-                    <h5>Danh sách mail đã gửi</h5>
+                    <h5>Danh sách mail chưa xem thông báo</h5>
                   </figcaption>
                   <table class="table">
                     <thead class="">
@@ -40,7 +40,7 @@
                     </thead>
                     <tbody>
                       <tr
-                        v-for="(emailsPeopleSend, index) in notifyReport.emailsPeopleSend"
+                        v-for="(emailsPeopleSend, index) in pageOfItemsSendMail"
                         :key="index + 'emailsPeopleSend'"
                       >
                         <th scope="row">{{ index + 1 }}</th>
@@ -68,6 +68,15 @@
                   @agree="sendAnEmailUrgingYouToSeeTheAnnouncementConfirm"
                   :message="'Bạn có muốn gửi mail hối thúc cho mail '+ sendAnEmailUrgingYouToSeeTheAnnouncementModel.email">
                 </ConfirmDialog>
+                <div class="card-footer d-flex justify-content-center text--blue"
+                  v-show="pageOfItemsSendMail.length !== 0">
+                  <JwPagination
+                    :items="notifyReport.emailsPeopleSend"
+                    @changePage="onChangePageSendMail"
+                    :labels="customLabels"
+                    :pageSize="10">
+                  </JwPagination>
+                </div>
               </div>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -87,7 +96,7 @@
                       <tr
                         v-for="(
                           emailPeopleWatched, index
-                        ) in notifyReport.emailPeopleWatched"
+                        ) in pageOfItemsSeenMail"
                         :key="index + 'emailPeopleWatched'"
                       >
                         <th scope="row">{{ index + 1 }}</th>
@@ -106,6 +115,15 @@
                     </tbody>
                   </table>
                 </figure>
+                <div class="card-footer d-flex justify-content-center text--blue"
+                  v-show="pageOfItemsSeenMail.length !== 0">
+                  <JwPagination
+                    :items="notifyReport.emailPeopleWatched"
+                    @changePage="onChangePageSeenMail"
+                    :labels="customLabels"
+                    :pageSize="10">
+                  </JwPagination>
+                </div>
               </div>
             </div>
           </div>
@@ -120,12 +138,14 @@ import NotificationService from "../../../services/notification/notificationServ
 import AppConfig from "../../../../src/app.config.json";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog" ;
+import JwPagination from 'jw-vue-pagination';
 
 export default {
   name: "ReportNotificationComponent",
   extends: ComponentBase,
   components: {
     ConfirmDialog,
+    JwPagination,
   },
   props: {
     guid: {
@@ -141,7 +161,15 @@ export default {
         email: "",
         notifycationId: "",
         linkNotity: "",
-      }
+      },
+      pageOfItemsSendMail: [],
+      pageOfItemsSeenMail: [],
+      customLabels: {
+        first: '<<',
+        last: '>>',
+        previous: '<',
+        next: '>'
+      },
     }
   },
 
@@ -154,6 +182,16 @@ export default {
   },
   
   methods: {
+    onChangePageSendMail(pageOfItemsSendMail) {
+      // update page of items
+      this.pageOfItemsSendMail = pageOfItemsSendMail;
+    },
+
+    onChangePageSeenMail(pageOfItemsSeenMail) {
+      // update page of items
+      this.pageOfItemsSeenMail = pageOfItemsSeenMail;
+    },
+
     showSendAnEmailUrgingYouToSeeTheAnnouncement(email) {
       this.sendAnEmailUrgingYouToSeeTheAnnouncementModel = {};
       this.sendAnEmailUrgingYouToSeeTheAnnouncementModel.notifycationId = this.guid;
@@ -179,7 +217,7 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `Gửi mail hối thúc hành công cho mail ${this.sendAnEmailUrgingYouToSeeTheAnnouncementModel.email}`
+        `Gửi mail nhắc nhở thành công cho mail ${this.sendAnEmailUrgingYouToSeeTheAnnouncementModel.email}`
       );
     },
 

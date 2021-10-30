@@ -104,7 +104,7 @@
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems == null || pageOfItems.length === 0">
         <JwPagination :items="careers" @changePage="onChangePage"
-          :labels="customLabels" :pageSize="5">
+          :labels="customLabels" :pageSize="10">
         </JwPagination>
       </div>
     </div>

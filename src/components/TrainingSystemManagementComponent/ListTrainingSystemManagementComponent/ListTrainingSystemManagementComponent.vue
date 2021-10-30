@@ -99,7 +99,7 @@
           :items="trainingSystems"
           @changePage="onChangePage" 
           :labels="customLabels" 
-          :pageSize="5">
+          :pageSize="10">
         </JwPagination>
       </div>
     </div>
