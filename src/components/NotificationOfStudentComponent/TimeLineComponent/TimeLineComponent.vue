@@ -79,7 +79,7 @@ export default {
   props: {
     userInfo: {
       type: Object,
-      default: null,
+      default: {},
     },
   },
   data() {
@@ -129,14 +129,6 @@ export default {
 
     async changePage(currentPage) {
       await this.getTimeLinesAsync(currentPage);
-    },
-
-    showNotification() {
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
     },
   },
 

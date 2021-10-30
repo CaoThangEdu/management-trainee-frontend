@@ -6,16 +6,14 @@
         <div class="card-body"
           v-if="userProfile.user">
           <div class="form-row">
-              <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                  <label>Tiêu đề thông báo: </label>
-                  {{notify.title}}                
-              </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                  <label>Nội dung thông báo: </label>
-                  {{notify.content}}                
-              </div>
+            <div class="col-sm-12 col-md-12 col-lg-12">
+              <label>Tiêu đề thông báo: </label>
+              {{notify.title}}                
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12">
+              <label>Nội dung thông báo: </label>
+              {{notify.content}}                
+            </div>
           </div>
         </div>
       </div>
@@ -108,6 +106,13 @@ export default {
         );
       }
     },
+  },
+
+  async beforeRouteUpdate(to, from, next) {
+    this.$route.params.name = to.params.name
+    next();
+    await this.sendNotify();
+    this.notify = this.notificationsOfUser.find(noti => noti.id == this.guid);
   },
 
   async mounted() {

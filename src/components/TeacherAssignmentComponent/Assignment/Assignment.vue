@@ -3,11 +3,11 @@
   <div class="statistics-students">
     <Statistical
       v-if="statisticalPlan && studentInInternshipCourse"
-      v-bind:internshipCourseId="internshipCourseId"
-      v-bind:studentInInternshipCourse="studentInInternshipCourse"
-      v-bind:classes="classes"
-      v-bind:teachers="teachers"
-      v-bind:statisticalPlan="statisticalPlan"
+      :internshipCourseId="internshipCourseId"
+      :studentInInternshipCourse="studentInInternshipCourse"
+      :classes="classes"
+      :teachers="teachers"
+      :statisticalPlan="statisticalPlan"
       :statistiesStudentInClass="statistiesStudentInClass"
      />
   </div>
@@ -17,10 +17,10 @@
         <ListTeacherAssignmentComponent
           class="tab-students-assign"
           v-if="reloadAutomaticAssignment"
-          v-bind:studentInInternshipCourse="studentInInternshipCourse"
-          v-bind:internshipCourseId="internshipCourseId"
-          v-bind:classes="classes"
-          v-bind:teachers="teachers" 
+          :studentInInternshipCourse="studentInInternshipCourse"
+          :internshipCourseId="internshipCourseId"
+          :classes="classes"
+          :teachers="teachers" 
           @change-instructors="changeInstructors"         
         />
       </Tab>
@@ -28,9 +28,9 @@
         <ManualAssignment 
           class="tab-students-assign"
           v-if="reloadAutomaticAssignment"
-          v-bind:internshipCourseId="internshipCourseId"
-          v-bind:classes="classes"
-          v-bind:teachers="teachers"
+          :internshipCourseId="internshipCourseId"
+          :classes="classes"
+          :teachers="teachers"
           @change-instructors="changeInstructors"
         />
       </Tab>
@@ -38,12 +38,12 @@
         <AutomaticAssignment
           class="tab-students-assign"
           v-if="reloadAutomaticAssignment"
-          v-bind:internshipCourseId="internshipCourseId"
-          v-bind:classes="classes"
-          v-bind:teachers="teachers"
-          v-bind:instructors="instructors"
-          v-bind:students="students"
-          v-bind:numberOfStudentInInternshipCourse="studentInInternshipCourse.length"
+          :internshipCourseId="internshipCourseId"
+          :classes="classes"
+          :teachers="teachers"
+          :instructors="instructors"
+          :students="students"
+          :numberOfStudentInInternshipCourse="studentInInternshipCourse.length"
           @change-instructors="changeInstructors"
           :statistiesStudentInClass="statistiesStudentInClass"
         />
@@ -262,13 +262,21 @@ export default {
         return;
       }
       this.teachers = response.data;
-
+      this.countStudentAssignForTeacher();
       if(this.teachers.length === 0){
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
           "Hiện tại chưa có giáo viên. Vui lòng thêm giáo viên !"
         );
+      }
+    },
+
+    countStudentAssignForTeacher() {
+      for(let teacher of this.teachers) {
+        teacher.sumStudents = this.instructors.filter(
+          student => student.teacherId == teacher.id
+        ).length;
       }
     },
 

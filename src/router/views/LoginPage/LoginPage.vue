@@ -170,9 +170,13 @@ export default {
       // goto the next page
       if (roles.toUpperCase() == 'ADMIN') {
         this.$router.push({ name: 'them-ke-hoach'});
-      } else {
-        this.$router.push({ name: 'xac-nhan-thuc-tap'});
+        return;
       }
+      if (roles.toUpperCase() == 'STUDENT') {
+        this.$router.push({ name: 'trang-chu-sinh-vien'});
+        return;
+      }
+      this.$router.push({ name: 'trang-chu'});
     },
   },
   computed: {

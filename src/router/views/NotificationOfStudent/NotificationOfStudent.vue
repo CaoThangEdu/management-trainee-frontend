@@ -38,9 +38,9 @@ export default {
   },
 
   async mounted() {
-    this.userInfo = this.userProfile;
-    if (this.userProfile.user) return;
-    await this.getUserProfile();
+    if (!this.userProfile.user) {
+      await this.getUserProfile();
+    }    
     this.userInfo = this.userProfile;
   },
 
