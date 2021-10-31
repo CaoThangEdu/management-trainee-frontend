@@ -1067,9 +1067,8 @@ export default {
     },
 
     async exportPdfFile(item) {
-      this.keyCertificate = await item;
       this.keyStudent =  await this.studentsByMssv[item.mssv];
-      console.log(this.keyStudent)
+      this.keyCertificate = await item;
       // const doc = new jsPDF();
 
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");

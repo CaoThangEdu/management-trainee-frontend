@@ -47,19 +47,22 @@ import ComponentBase from "../common/component-base/ComponentBase";
 import BaseModal from "../../components/common/base-modal/BaseModal.vue";
 import CertificateService from "../../services/certificate/CertificateServices";
 import AppConfig from "../../../src/app.config.json";
+import CompanyService from "../../services/company/companyServices";
+import CrudMixin from "../../helpers/mixins/crudMixin"
 export default {
   name: "ConfirmationCertificate",
   extends: ComponentBase,
   components: {
     BaseModal,
   },
+  mixins:[CrudMixin],
   props: {
     isShow: Boolean,
     keyCompany: Object,
-    userProfile:Object
+    userProfile: Object,
   },
-  data(){
-    return{
+  data() {
+    return {
       certificate: {
         taxCode: "",
         companyName: "",
@@ -72,14 +75,18 @@ export default {
         mssv: "",
         classId: "",
       },
-    }
+      companiesByTaxCode:{}
+    };
   },
+  async mounted(){
+    this.companiesByTaxCode = await this.getCompaniesAsync();
+  },
+
   methods: {
     closeModal() {
       this.$emit("closeModal", false);
     },
-      async createCertificateAsync() {
-
+    async createCertificateAsync() {
       this.certificate.mssv = this.userProfile.mssv;
       this.certificate.classId = this.userProfile.classId;
       this.certificate.taxCode = this.keyCompany.taxCode;
@@ -105,7 +112,65 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
+      await this.createCompanyAsync();
       this.closeModal();
+    },
+
+    async getCompaniesAsync(){
+      const filterCompany = {
+        keyword:"",
+        status:""
+      };
+      // Call Api
+      this.showLoading();
+      const api = new CompanyService()
+
+      const response = await api.getCompaniesAsync(filterCompany)
+      this.showLoading(false);
+
+      if(!response.isOK){
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      return CrudMixin.methods.convertArrayToObject(response.data, "taxCode");
+    },
+
+    async getCompanieByTaxCodeAsync() {
+      // Call Api
+      this.showLoading();
+      const api = new CompanyService();
+
+      const response = await api.getCompanieByTaxCodeAsync(this.keyCompany.taxCode);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+      }
+      return response.data;
+    },
+
+    async createCompanyAsync() {
+      let company = await this.getCompanieByTaxCodeAsync();
+      if(this.companiesByTaxCode[company.taxCode] !== undefined) return;
+      this.showLoading();
+      let api = new CompanyService();
+      let response = await api.createCompanyAsync(company);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+      }
     },
   },
 };

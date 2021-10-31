@@ -152,7 +152,7 @@ export default {
       }
     },
 
-      async getCompaniesAsync(){
+    async getCompaniesAsync(){
       const filterCompany = {
         keyword:"",
         status:""
