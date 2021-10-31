@@ -285,7 +285,7 @@
             </div>
           </div>
         </div>
-        <div id="certificate-pdf">
+        <div id="certificate-pdf" class="d-none">
           <div>
             <span style="opacity: 0;">---------</span> BỘ CÔNG THƯƠNG
             <span style="opacity: 0;">-----------------------------</span>
