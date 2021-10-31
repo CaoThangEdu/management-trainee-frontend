@@ -25,24 +25,19 @@
           <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
-                <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                  <select
-                    class="form-control form-select form-select-class"
-                    v-model="filter.status"
-                  >
-                    <option value="">Tất cả</option>
-                    <option value="active">Đang hoạt động</option>
-                    <option value="unactive">Không hoạt động</option>
-                  </select>
-                </div>
                 <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="keywords"
-                    placeholder="Nhập từ khóa"
-                    v-model="filter.className"
-                  />
+                  <SelectPlan
+                    :isRequired="false"
+                    v-model="filter.internshipCourseId"
+                    :plans="plans"
+                    :defaultText="'Tất cả đợt thực tập'"
+                    @change="
+                      (event) => {
+                        filter.internshipCourseId = event.id;
+                      }
+                    "
+                  >
+                  </SelectPlan>
                 </div>
                 <div class="col-xl-2 col-md-4 col-sm-12">
                   <button type="submit" id="btn-search" 
@@ -80,7 +75,11 @@
                     }}
                   </td>
                   <td>{{item.description}}</td>
-                  <td>{{item.link}}</td>
+                  <td>
+                    <a :href="item.link" target="_blank">
+                      {{item.link}}
+                    </a>
+                  </td>
                   <td>
                     <button class="btn btn-danger" title="Xóa"
                       @click="deleteInternshipData(item)">
@@ -145,6 +144,7 @@ import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import PlanService from "../../../services/plan/planServices";
+import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
 
 export default {
   name: "ListInternshipDataManagementComponent",
@@ -153,6 +153,7 @@ export default {
     InternshipDataDetailComponent,
     ConfirmDialog,
     JwPagination,
+    SelectPlan,
   },
   mixins: [CrudMixin],
   data() {
@@ -169,8 +170,6 @@ export default {
       },
       filter: {
         internshipCourseId: "",
-        className: "",
-        status: "active",
       },
       plans: [],
       pageSize: 10,
@@ -231,7 +230,7 @@ export default {
       this.showLoading();
       const api = new InternshipDataService();
 
-      const response = await api.getInternshipDataAllAsync();
+      const response = await api.getInternshipDatasAsync(this.filter);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -242,7 +241,7 @@ export default {
         );
         return;
       }
-      this.internshipData = response.data.items;
+      this.internshipData = response.data;
     },
 
     async changePage(currentPage) {

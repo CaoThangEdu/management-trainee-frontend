@@ -134,6 +134,7 @@ import CrudMixin from "../../../helpers/mixins/crudMixin";
 import AppConfig from "../../../../src/app.config.json";
 import FacultyServices from "../../../services/faculty/facultyServices";
 import PlanningStepsComponent from "../../../components/planningStepsComponent/planningStepsComponent.vue";
+
 export default {
   extends: ComponentBase,
   components: {

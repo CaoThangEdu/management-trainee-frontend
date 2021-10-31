@@ -15,9 +15,10 @@
             </svg> Danh sách lớp của đợt
             <strong>"{{ plan.internshipCourseName }}"</strong>
             <router-link
+              v-show="teachers.length != 0"
               class="btn btn-info float-right"
               :to="{name:'phan-cong-dot', params: { internshipCourseId: guid } }">
-              Danh sách giáo viên giáo viên
+              Đi đến phân công
             </router-link>
           </header>
           <div class="card-body">
@@ -45,6 +46,43 @@
           </div>
         </div>
 
+      </div>
+    </div>
+    <div class="row"
+      v-show="teachers.length == 0">
+      <div class="col-12">
+        <div class="card">
+          <header class="card-header h5">
+            <span class="text--red">Bạn vui lòng thêm giáo viên cho đợt thực tập </span>
+            <strong>"{{ plan.internshipCourseName }}"</strong>
+          </header>
+          <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-4 col-sm-4 col-form-label">Chọn file excel</label>
+              <div class="col-md-8 col-sm-8">
+                <div class="input-group mb-3">
+                  <input
+                    type="file"
+                    class="btn btn-secondary float-right btn-add-file"
+                    @change="previewFilesTeachers"
+                    accept="application/vnd.ms-excel" 
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-sm-4 col-form-label"></label>
+              <div class="col-md-8 col-sm-8">
+                <div class="input-group mb-3">
+                  <button @click="saveCreateTeachers"
+                    class="btn btn-primary float-right">
+                    Thêm mới giáo viên
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -142,6 +180,7 @@ import {
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import PlanningStepsComponent from '../../../components/planningStepsComponent/planningStepsComponent.vue';
 import createUserMixin from "../../../helpers/mixins/createUserMixin";
+import TeacherService from "../../../services/teacher/teacherServices";
 
 export default {
   name: 'AddStudentsFileByPlan',
@@ -189,6 +228,9 @@ export default {
       studentNoExistInDB: [],
       studentExistInDB: [],
       studentLengthCallApi: 0,
+      teachers: [],
+      teachersForCreate: [],
+      teachersCreate: [],
     }
   },
   props: {
@@ -202,6 +244,7 @@ export default {
     await this.getStudentsAsync();
     await this.getClassesFilterAsync();
     await this.getPlanByIdAsync(this.guid);
+    await this.getTeachersAsync();
     this.classes = this.classes.filter(
       classroom => classroom.internshipCourseId == this.guid);
   },
@@ -211,6 +254,88 @@ export default {
   },
 
   methods: {
+    async previewFilesTeachers(e) {
+      var files = e.target.files,f = files[0];
+      var reader = new FileReader();
+      var vm = this;
+      reader.onload = async function (e) {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, { type: "array" });
+        let sheetName = workbook.SheetNames[0];
+        /* DO SOMETHING WITH workbook HERE */
+        let worksheet = workbook.Sheets[sheetName];
+        vm.metadataFile = XLSX.utils.sheet_to_json(worksheet);
+        vm.metadataFile.forEach(function(element) { element.status = "active"; });
+        vm.metadataFile.forEach(function(element) { element.facultyId = 'facultyId'; });
+      };
+      reader.readAsArrayBuffer(f);
+    },
+
+    async createTeachersAsync() {     
+      this.showLoading();
+      let api = new TeacherService();
+      let response = await api.createTeachersAsync(this.teachersForCreate);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return false;
+      }
+      return true;
+    },
+
+    async saveCreateTeachers() {
+      this.teachersForCreate = [];
+      this.teachersCreate = this.metadataFile;
+      for (let i in this.teachersCreate) {
+        // duyệt danh sách teacher từ file
+        this.teachersCreate[i].facultyId = this.plan.facultyId;
+        this.teachersForCreate.push(this.teachersCreate[i])
+      }
+
+      let createUserResponse = await this.createTeachersAsync();
+      this.showLoading(false);
+      if (!createUserResponse) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Thêm mới giáo viên thất bại"
+        );
+      } else {
+        this.showNotifications(
+          "success",
+          `${AppConfig.notification.title_default}`,
+          `${AppConfig.notification.content_created_success_default} giáo viên`
+        );
+        await this.getTeachersAsync();
+      }
+    },
+
+    async getTeachersAsync() {
+      // Call Api
+      this.showLoading();
+      const api = new TeacherService();
+      const response = await api.getTeachersAsync({
+        lastName: "",
+        facultyId: this.plan.facultyId,
+        status: "active",
+      });
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.teachers = response.data;
+    },
+
     sumStuentInClass(classId) {
       if (!this.studentsCallApi) {
         return 0;

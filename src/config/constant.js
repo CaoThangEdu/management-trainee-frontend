@@ -90,7 +90,7 @@ export const PAGINATION = {
   NOTIFICATION: 10
 }
 
-export const GENDER_ENUMS ={
+export const GENDER_ENUMS = {
   MALE: 1,
   FEMALE: 2
 }
@@ -166,7 +166,7 @@ export const BOOKING_STATUS_ENUMS = {
   COMPLETED: 9, // Ticket completed (Confirmed)
   WILLFLY: 10, // Ticket will fly (Confirmed)
   CHANGED_INFO: 11,
-  
+
 }
 
 export const TICKET_PRICE_CODES = {
@@ -180,7 +180,7 @@ export const TICKET_PRICE_CODES = {
   TAX: "TAX",
   /**Tổng tiền = FEE + NET + ATH + TAX */
   TTL: "TTL",
-  
+
 }
 //~~~ [END] Constants OPTIONS BOOKING ~~~\\
 
@@ -251,3 +251,42 @@ export const INTERNSHIP_COURSE_STATUS = {
     name: "Kết thúc thực tập",
   },
 }
+
+export const TIME_LINE_ENUM = [
+  {
+    value: 'Plan',
+    timelineName: 'Lên kế hoạch',
+  },
+  {
+    value: 'AssignInstructors',
+    timelineName: 'Phân công giáo viên hướng dẫn',
+  },
+  {
+    value: 'SignUpForAnInternshipReferralForm',
+    timelineName: 'Đăng ký phiếu giới thiệu thực tập',
+  },
+  {
+    value: 'ConfirmInternshipInformationAtTheCompany',
+    timelineName: 'Xác nhận thông tin thực tập tại công ty',
+  },
+  {
+    value: 'UpdateInternshipContent',
+    timelineName: 'Cập nhật nội dung công việc thực tập, báo cáo hàng tuần',
+  },
+  {
+    value: 'SubmitReportsAndAttachedDocuments',
+    timelineName: 'Nộp báo cáo, giấy tờ đính kèm',
+  },
+  {
+    value: 'SurveyOfEnterprisesAboutTheInternshipProcess',
+    timelineName: 'Khảo sát doanh nghiệp về quá trình thực tập',
+  },
+  {
+    value: 'Grading_EnteringInternshipScores',
+    timelineName: 'Chấm điểm, nhập điểm thực tập',
+  },
+  {
+    value: 'End',
+    timelineName: 'Kết thúc đợt thực tập',
+  }
+]

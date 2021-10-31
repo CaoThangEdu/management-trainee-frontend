@@ -3,10 +3,11 @@ export default class TimeLineViewModel extends ViewModel {
   constructor() {
     super()
     this.fields = {
-      timeLineName: '',
+      timelineName: '',
       description: '',
       startDay: '',
       endDay: '',
+      value: '',
       internshipCourseId: '',
       status: 'active',
       isActive: true
@@ -14,8 +15,8 @@ export default class TimeLineViewModel extends ViewModel {
   }
 
   getValidations() {
-    let validations = {
-      timeLineName: {
+    return {
+      timelineName: {
         label: 'Tiêu đề',
         rules: {
           require: '',
@@ -45,8 +46,7 @@ export default class TimeLineViewModel extends ViewModel {
           require: '',
         }
       },
-    }
-    return validations
+    };
   }
   isValid() {
     return super.isValid(this.getValidations())

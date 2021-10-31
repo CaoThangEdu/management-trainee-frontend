@@ -67,6 +67,14 @@
             id="name"
             v-model="internshipDataInfo.link"
           />
+        <div>
+          <span class="text--italic text--red">
+            Vui lòng copy link google drive để vào đây!
+          </span>
+          <a href="https://drive.google.com/" target="_blank">
+            Đi đến google drive của bạn
+          </a>
+        </div>
         </div>
       </div>
     </div>

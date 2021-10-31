@@ -13,6 +13,7 @@ import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import "vue2-datepicker/locale/vi";
 import moment from "moment";
+import { TIME_LINE_ENUM } from "../../../config/constant";
 
 export default {
   name: 'TimeLineDetailComponent',
@@ -28,6 +29,7 @@ export default {
       timeline: {},
       plans: [],
       errorMessages: [],
+      timelineEnums: TIME_LINE_ENUM,
     }
   },
   props: {
@@ -39,6 +41,14 @@ export default {
       type: String,
       default: null,
     },
+    timeLines: {
+      type: Array,
+      default: [],
+    },
+    plan: {
+      type: Object,
+      default: {},
+    }
   },
 
   async mounted(){
@@ -69,7 +79,8 @@ export default {
 
     displayBetweenFromDateAndPastDates(date) {
       const day = new Date(this.timeline.startDay);
-      return date < day;
+      const planEndDay = new Date(this.plan.endDay);
+      return date < day || date > planEndDay;
     },
     async getPlansAsync(){
       let filterPlan = {
@@ -194,8 +205,10 @@ export default {
     data() {
       this.isShow = true;
       if (Object.keys(this.data).length == 0) {
+        let timelineEnumCreate = this.timelineEnums[this.timeLines.length];
         this.timeline = {
-          timeLineName: "",
+          timelineName: timelineEnumCreate.timelineName,
+          value: timelineEnumCreate.value,
           description: "",
           startDay: new Date(),
           endDay: moment()
