@@ -4,7 +4,8 @@
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <TimeLineComponent :plans="plans"
-            :planGuid="guid" />
+            :planGuid="guid"
+            :plan="plan" />
         </div>
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <div class="card">

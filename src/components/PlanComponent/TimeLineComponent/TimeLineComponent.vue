@@ -8,6 +8,7 @@ import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TimlineService from '../../../services/timeline/timelineServices'
 import AppConfig from '../../../../src/app.config.json'
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import { TIME_LINE_ENUM } from "../../../config/constant";
 
 export default {
   name: "TimeLineComponent",
@@ -20,12 +21,16 @@ export default {
   props: {
     plans: {
       type: Array,
-      default: null,
+      default: [],
     },
     planGuid: {
       type: String,
       default: null,
     },
+    plan: {
+      type: Object,
+      default: {},
+    }
   },
   data() {
     return {
@@ -35,6 +40,7 @@ export default {
       filterTimeLine: {
         planId: '',
       },
+      timelineEnums: TIME_LINE_ENUM,
     };
   },
 
@@ -44,7 +50,7 @@ export default {
 
   methods:{
     checkTimeLineExpired(time) {
-      return new Date(time) > new Date();
+      return new Date(time) <= new Date();
     },
 
     createTimeLine() {
@@ -111,14 +117,6 @@ export default {
     
     async changeData() {
       await this.getTimeLinesAsync();
-    },
-
-    showNotification() {
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
     },
   }
 }
