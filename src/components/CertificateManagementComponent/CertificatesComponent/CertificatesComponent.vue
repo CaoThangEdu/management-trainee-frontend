@@ -15,10 +15,10 @@
               class="ci-primary"
             ></path>
           </svg>
-          <span v-if="isAdmin === false">Đăng ký giấy giới thiệu thực tập</span>
-          <span v-if="isAdmin === true">Duyệt giấy giới thiệu thực tập</span>
+          <span v-if="!isAdmin">Đăng ký giấy giới thiệu thực tập</span>
+          <span v-if="isAdmin">Duyệt giấy giới thiệu thực tập</span>
           <button
-            v-if="isAdmin === false"
+            v-if="!isAdmin"
             class="btn btn-primary float-right"
             @click="createCertificates"
           >
@@ -103,12 +103,12 @@
               </div>
             </div>
           </div>
-          <div class="table-responsive">
+          <div id="table" class="table-responsive">
             <table class="table table-hover">
               <caption></caption>
               <thead class="">
                 <tr>
-                  <th v-if="isAdmin === true" scope="col" class="align-middle">
+                  <th v-if="isAdmin" scope="col" class="align-middle">
                     <div class="form-check form-check-inline">
                       <input
                         class="form-check-input"
@@ -120,11 +120,11 @@
                       <label class="form-check-label" for="all">STT</label>
                     </div>
                   </th>
-                  <th v-if="isAdmin === false" scope="col">STT</th>
+                  <th v-if="!isAdmin" scope="col">STT</th>
                   <th scope="col" class="align-middle">Thông tin sinh viên</th>
                   <th scope="col" class="align-middle">Thông tin công ty</th>
                   <th scope="col" class="align-middle">Trạng thái</th>
-                  <th v-if="!isAdmin" scope="col" class="align-middle">
+                  <th scope="col" class="align-middle">
                     Thao tác
                   </th>
                 </tr>
@@ -144,7 +144,7 @@
                         {{ index + 1 }}</label
                       >
                     </div>
-                    <div v-if="isAdmin === false">{{ index + 1 }}</div>
+                    <div v-if="!isAdmin">{{ index + 1 }}</div>
                   </th>
                   <td>
                     <div><strong>MSSV:</strong> {{ item.mssv }}</div>
@@ -176,7 +176,7 @@
                       {{ confirmationCompany(item.taxCode) }}.
                     </div>
                   </td>
-                  <td v-if="isAdmin === false">
+                  <td v-if="!isAdmin">
                     <button
                       v-if="item.status === 'unconfirmed'"
                       class="btn btn-warning not-active"
@@ -196,7 +196,7 @@
                       Hoàn thành
                     </button>
                   </td>
-                  <td v-if="isAdmin === true">
+                  <td v-if="isAdmin">
                     <select
                       :disabled="item.status === ''"
                       name="status"
@@ -221,9 +221,9 @@
                       >
                     </select>
                   </td>
-                  <td :class="{ 'text-center': isAdmin === true }">
+                  <td :class="{ 'text-center': isAdmin }">
                     <button
-                      v-if="isAdmin === false"
+                      v-if="!isAdmin"
                       :disabled="item.status !== 'unconfirmed'"
                       class="btn btn-primary mr-1"
                       @click="updateCertificate(index)"
@@ -231,7 +231,7 @@
                       <em class="fa fa-edit"></em>
                     </button>
                     <button
-                      v-if="isAdmin === false"
+                      v-if="!isAdmin"
                       :disabled="item.status !== 'unconfirmed'"
                       class="btn btn-danger"
                       @click="deleteCertificate(item.id, index)"
@@ -239,7 +239,7 @@
                       <em class="fa fa-trash"></em>
                     </button>
                     <button
-                      v-if="isAdmin = true"
+                      v-if="isAdmin"
                       class="btn btn-primary"
                       @click="exportPdfFile(item)"
                     >
@@ -255,7 +255,10 @@
               </tbody>
             </table>
             <hr />
-            <div class="form-group text-center d-flex justify-content-center">
+            <div
+              v-if="isAdmin"
+              class="form-group text-center d-flex justify-content-center"
+            >
               <select
                 class="form-control w-25"
                 id="exampleFormControlSelect1"
@@ -272,7 +275,102 @@
               >
                 Cập nhật trạng thái
               </button>
+              <button
+                @click="exportPdfFiles()"
+                type="button"
+                class="btn btn-success ml-2 w-25"
+              >
+                Xuất file PDF
+              </button>
             </div>
+          </div>
+        </div>
+        <div id="certificate-pdf" class="d-none">
+          <div>
+            <span style="opacity: 0;">---------</span> BỘ CÔNG THƯƠNG
+            <span style="opacity: 0;">-----------------------------</span>
+            <strong>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
+          </div>
+          <div>
+            <strong>TRƯỜNG CĐ KỸ THUẬT CAO THẮNG</strong>
+            <span style="opacity: 0;">--------------------------</span>
+            Độc lập – Tự do – Hạnh phúc
+          </div>
+          <hr />
+          <div>
+            <span style="opacity: 0;">------</span>
+            <strong
+              >Số:<span style="opacity: 0;">---</span>/CĐKTCT-CTCT HSSV</strong
+            >
+            <span style="opacity: 0;">---------------------------</span>
+            TP.Hồ Chí Minh, ngày 18 tháng 01 năm 2021
+          </div>
+          <div>
+            <span style="opacity: 0;">------</span> V/v:Liên hệ thực tập tốt
+            nghiệp
+          </div><br>
+          <div style="text-align: center;"><span></span> Kính gửi:</div>
+          <div style="padding: 0px 55px;text-align: center;">
+            <strong
+              ><h2>{{keyCertificate.companyName}}</h2>
+            </strong>
+          </div>
+          <div style="padding: 0px 65px">
+            <span
+              >Để thực hiện tốt nhiệm vụ đào tạo của trường, giúp cho sinh viên
+              học tập trong nhà trường phối hợp thực hành, sản xuất nâng cao tay
+              nghề từ thực tiễn tại nhà máy, công ty, cơ sở sản xuất.
+            </span>
+          </div>
+          <div style="padding: 0px 80px;">
+            <span>Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn vị:</span><br>
+            <span>* Tạo điều kiện cho: 2 sinh viên (danh sách đính kèm).</span><br>
+            <span>* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào tạo:Công nghệ thông
+tin</span><br>
+            <span>* Với giảng viên hướng dẫn là Thầy/Cô: Nguyễn Võ Công Khanh</span><br>
+            <span>* Thời gian thực tập từ ngày: 18/01/2020 đến ngày: 22/05/2021</span><br>
+            <span>* Nội dung thực tập: theo đề cương thực tập (gửi kèm)</span><br>
+            <span>Nhà trường cùng với giảng viên hướng dẫn có trách nhiệm giáo dục, nhắc
+              nhở sinh viên thuộc trường chấp hành nghiêm nội quy, quy định thực tập, sản xuất
+              tại Quý đơn vị.
+            </span><br>
+            <span>Rất mong được xem xét giải quyết.</span><br>
+            <span>Trân trọng kính chào./.</span>
+          </div>
+          <br>
+          <div style="padding-left: 50%;text-align: center;">
+              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br>
+              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
+          </div>
+          <br>
+          <div style="padding: 0px 80px;text-align: center;">
+            <strong style="font-size: 20px;">DANH SÁCH SINH VIÊN THỰC TẬP TỐT NGHIỆP</strong><br>
+            <span>Kèm theo CV số: . . . . . . ngày . . . . . . . . . . . .</span>
+          </div>
+         <br>
+          <div style="padding: 0px 60px;">
+            <table style="width: 100%;">
+              <caption></caption>
+              <tr style="text-align: center;">
+              <th style="border: 1px solid;" scope=""><strong>STT</strong></th>
+              <th style="border: 1px solid;" scope=""><strong>MSSV</strong></th>
+              <th style="border: 1px solid;" scope=""><strong>HỌ VÀ TÊN</strong></th>
+              <th style="border: 1px solid;" scope=""><strong>EMAIL</strong></th>
+            </tr>
+            <tr>
+              <td style="border: 1px solid;text-align: center;" >1</td>
+              <td style="border: 1px solid;" >{{keyCertificate.mssv}}</td>
+              <td style="border: 1px solid;" >
+                {{keyStudent.firstName + keyStudent.lastName}}
+              </td>
+              <td style="border: 1px solid;" >{{keyStudent.email}}</td>
+            </tr>
+            </table>
+          </div>
+          <br>
+          <div style="padding-left: 50%;text-align: center;">
+              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br>
+              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
           </div>
         </div>
         <CertificateDetailComponent
@@ -374,7 +472,7 @@ dataModule(Highcharts);
 let drilldownChart,
   drilldownEvent,
   drilldownLevel = 0;
-
+import jsPDF from "jspdf";
 export default {
   name: "CertificatesComponent",
   extends: ComponentBase,
@@ -390,6 +488,8 @@ export default {
   mixins: [CrudMixin],
   data() {
     return {
+      keyCertificate:{},
+      keyStudent:{},
       certificates: [],
       defaultCertificates: [],
       editCertificate: {},
@@ -964,6 +1064,26 @@ export default {
 
     async changeStatusFilterCerticate() {
       await this.getCertificatesAsync(this.filterCerticate);
+    },
+
+    async exportPdfFile(item) {
+      this.keyStudent =  await this.studentsByMssv[item.mssv];
+      this.keyCertificate = await item;
+      // const doc = new jsPDF();
+
+      let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
+
+      mywindow.document.write(
+        document.getElementById("certificate-pdf").innerHTML
+      );
+
+      mywindow.document.close();
+      mywindow.focus(); 
+
+      mywindow.print();
+      mywindow.close();
+
+      return true;
     },
   },
   watch: {

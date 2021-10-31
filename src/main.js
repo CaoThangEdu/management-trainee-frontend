@@ -11,6 +11,7 @@ import Notifications from 'vue-notification';
 import Vuelidate from 'vuelidate';
 import 'regenerator-runtime/runtime';
 import HighchartsVue from 'highcharts-vue';
+import jsPDF from 'jspdf'
 
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true });
 Vue.config.productionTip = false;
@@ -20,6 +21,7 @@ Vue.use(Notifications);
 Vue.use(Vuelidate);
 Vue.prototype.$log = console.log.bind(console);
 Vue.use(HighchartsVue);
+Vue.use(jsPDF)
 import '@fortawesome/fontawesome-free/js/all.js';
 
 new Vue({

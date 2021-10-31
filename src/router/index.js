@@ -241,6 +241,7 @@ const routes = [
   {
     path: "/confirm-referra-file",
     name: "duyet-phieu-gioi-thieu",
+    props: true,
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
@@ -400,6 +401,7 @@ const routes = [
   {
     path: '/certificate-management',
     name: 'dang-ky-giay-gioi-thi-thuc-tap',
+    props: true,
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
