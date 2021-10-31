@@ -49,6 +49,7 @@
 
     &-item {
         list-style: none;
+        border: 1px solid rgb(247, 246, 246);
 
         &:hover {
             background-color: #f1f1f1;
@@ -66,18 +67,18 @@
 
     &-link {
         display: flex;
-        padding: 12px 12px 0px 12px;
+        padding: 12px;
         text-decoration: none;
         width: 100%;
     }
 
     &-info {
-        margin-left: 12px;
+        width: 100%;
     }
 
     &-name {
         display: block;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: #333;
         font-weight: 400;
         line-height: 1rem;
@@ -124,4 +125,27 @@
 
 .navbar__item--has-notify .nav__notify--display {
     display: block;
+}
+
+.navbar__item--has-notify {
+    .header-icon-notification {
+        position: relative;
+    }
+
+    .header__notice-count {
+        position: absolute;
+        top: -4px;
+        right: -2px;
+        color: white;
+        background-color: red;
+        border-radius: 10px;
+        border: 2px solid #ee4d2d;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.8rem;
+        font-weight: 650;
+    }
 }

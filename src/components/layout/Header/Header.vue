@@ -17,9 +17,12 @@
     <ul class="c-header-nav mr-4">
       <li class="c-header-nav-item d-md-down-none mx-2 navbar__item--has-notify"
         @click="showNotify()">
-        <a href="#" class="c-header-nav-link">
+        <span href="#" class="c-header-nav-link header-icon-notification">
           <CIcon name="cil-bell" />
-        </a>
+          <span
+            v-if="sumNotifyUnWatch"
+            class="header__notice-count">{{sumNotifyUnWatch}}</span>
+        </span>
         <div class="nav__notify"
           :class="{'nav__notify--display': isShowNotify}"
           id="notifications-box">
@@ -29,30 +32,27 @@
           <ul class="nav__notify-list">
             <li class="nav__notify-item"
               v-for="(notify, index) in notificationsOfUser"
-              :class="{'nav__notify-item--viewed': notify.watched}"
+              :class="{'nav__notify-item--viewed': !notify.watched}"
               :key="index + 'notify'">
               <router-link
                 class="nav__notify-link"
                 :to="{name:'thong-bao-cua-tai-khoan', params: { guid: notify.id } }">
                 <div class="nav__notify-info">
                   <span class="nav__notify-name">{{ notify.title }}</span>
-                  <span class="nav__notify-description">
-                    {{ notify.content }}
+                  <span class="nav__notify-description text-right">
+                    Trạng thái: {{ notify.watched?'Đã xem':'Chưa xem' }}
                   </span>
                 </div>
               </router-link>
-              <div class="nav__notify-watched w-100 text-right">
-                Trạng thái: {{ notify.watched?'Đã xem':'Chưa xem' }}
-              </div>
             </li>
             <li class="nav__notify-item--no-notidy font-weight-bold"
               v-if="notificationsOfUser && notificationsOfUser.length==0">
               Bạn chưa có thông báo nào
             </li>
-            <div class="nav__notify-footer">
-              <a href="" class="nav__notify-footer-btn"> Xem tất cả </a>
-            </div>
           </ul>
+          <div class="nav__notify-footer">
+            <a href="" class="nav__notify-footer-btn"> Xem tất cả </a>
+          </div>
         </div>
       </li>
       <li class="c-header-nav-item d-md-down-none mx-2">
@@ -96,6 +96,7 @@ export default {
       breadCrumbList: [],
       notificationsOfUser: [],
       isShowNotify: false,
+      sumNotifyUnWatch: 0,
     }
   },
   created() {
@@ -110,6 +111,7 @@ export default {
   async mounted() {
     if (this.userProfile.user) return;
     await this.updateUserInfoDataAsync();
+    await this.getNotifyByEmail();
   },
 
   methods: {
@@ -151,6 +153,7 @@ export default {
         return;
       }
       this.notificationsOfUser = res.result;
+      this.sumNotifyUnWatch = this.notificationsOfUser.filter(noti => !noti.watched).length;
     },
     async showNotify() {
       this.isShowNotify = !this.isShowNotify;
