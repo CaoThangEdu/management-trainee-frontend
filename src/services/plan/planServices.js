@@ -29,7 +29,7 @@ export default class PlanService extends ServicesBaseAPI {
 
   async createPlanAsync(object) {
     try {
-      const response = await this.http.post(`${this.url}/Create`, object);
+      const response = await this.http.post(`${this.url}/CreateInternshipCourses`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -39,7 +39,7 @@ export default class PlanService extends ServicesBaseAPI {
 
   async updatePlanAsync(object) {
     try {
-      const response = await this.http.put(`${this.url}/Update`, object);
+      const response = await this.http.put(`${this.url}/UpdateInternshipCourses`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

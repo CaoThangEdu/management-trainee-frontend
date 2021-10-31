@@ -7,8 +7,10 @@
             d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
             class="ci-primary"></path>
         </svg> Time line
-        <button class="btn btn-primary float-right" @click="createTimeLine" title="Thêm mới">
-          <em class="fa fa-plus-square"></em></button>
+        <button class="btn btn-primary float-right" @click="createTimeLine" title="Thêm mới"
+          v-if="timeLines.length<=timelineEnums.length">
+          <em class="fa fa-plus-square"></em>
+        </button>
       </header>
       <div class="card-body">
         <div class='wrapper'>
@@ -26,7 +28,7 @@
               </div>
               <div class='number' v-else>{{index + 1}}</div>
               <div class='info'>
-                <p class='title'>{{ timeLine.timeLineName }}</p>
+                <p class='title'>{{ timeLine.timelineName }}</p>
                 <div class="info-timeline"
                   @click="updateTimeLine(index)"
                   :title="'Nhấn để thay đổi time line'">
@@ -49,7 +51,9 @@
       <TimeLineDetailComponent
         :planGuid="planGuid"
         :data="editTimeLine"
-        @change-data="changeData" />
+        :timeLines="timeLines"
+        @change-data="changeData"
+        :plan="plan" />
       <ConfirmDialog
         :data="confirmTimeline"
         @agree="deleteTimelineConfirm" />

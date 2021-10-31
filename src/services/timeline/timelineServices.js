@@ -29,7 +29,7 @@ export default class TimeLineService extends ServicesBaseAPI {
 
   async createTimeLineAsync(object) {
     try {
-      const response = await this.http.post(`${this.url}/Create`, object);
+      const response = await this.http.post(`${this.url}/CreateTimeline`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -39,7 +39,7 @@ export default class TimeLineService extends ServicesBaseAPI {
 
   async updateTimeLineAsync(object) {
     try {
-      const response = await this.http.put(`${this.url}/Update`, object);
+      const response = await this.http.put(`${this.url}/UpdateTimeline`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
