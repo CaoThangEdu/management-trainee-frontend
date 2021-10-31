@@ -119,7 +119,7 @@ export default [{
     },
     {
       _name: "CSidebarNavItem",
-      name: "Đăng ký giấy giới thiệu thực tập",
+      name: "Giấy giới thiệu thực tập",
       to: "/certificate-management",
       icon: "cil-note-add",
       role: "STUDENT",

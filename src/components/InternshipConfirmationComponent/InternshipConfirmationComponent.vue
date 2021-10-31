@@ -17,7 +17,10 @@
           </svg>
           Xác nhận thực tập
         </header>
-        <div class="card-body">
+        <div
+          v-if="keyInternshipConfirmation !== undefined"
+          class="card-body py-0"
+        >
           <div class="row mb-3"></div>
           <form @submit.prevent>
             <div class="form-row p-3">
@@ -122,7 +125,12 @@ export default {
   components: { AlertMessages },
   data() {
     return {
-      keyInternshipConfirmation: {
+      keyInternshipConfirmation:{},
+      errorMessages: [],
+    };
+  },
+  mounted() {
+    this.keyInternshipConfirmation =  {
         studentId: "",
         taxCode: "",
         title: "",
@@ -134,12 +142,7 @@ export default {
         status: "practiced",
         phoneNumber: "",
         internshipCourseId: "",
-      },
-      errorMessages: [],
-    };
-  },
-  async mounted() {
-    this.keyInternshipConfirmation = await this.getInternshipConfirmationAsync();
+      };
   },
   computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
@@ -216,7 +219,7 @@ export default {
     async getInternshipConfirmationAsync() {
       let filter = {
         studentId: this.userProfile.mssv,
-        status: "",
+        status: "practiced",
       };
       this.showLoading();
       let api = new InternshipConfirmationServices();
@@ -233,6 +236,14 @@ export default {
       return response.data[0];
     },
   },
+  watch:{
+    async userProfile(){
+      var internshipConfirmation = await this.getInternshipConfirmationAsync();
+      if(internshipConfirmation !== undefined){
+      this.keyInternshipConfirmation = internshipConfirmation;
+      }
+    }
+  }
 };
 </script>
 

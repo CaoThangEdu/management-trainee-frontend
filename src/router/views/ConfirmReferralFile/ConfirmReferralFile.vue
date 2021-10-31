@@ -7,6 +7,7 @@
 <script>
 import CertificatesComponent from "../../../components/CertificateManagementComponent/CertificatesComponent/CertificatesComponent.vue";
 export default {
+  name:"ConfirmReferralFile",
   components: { CertificatesComponent },
   data() {
     return {

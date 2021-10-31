@@ -49,7 +49,7 @@
               <thead>
                 <tr>
                   <th scope="col">STT</th>
-                  <th scope="col">MSST</th>
+                  <th scope="col">MST</th>
                   <th scope="col">Tên công ty</th>
                   <th scope="col">Địa chỉ</th>
                   <th scope="col">Lĩnh Vực</th>
@@ -66,8 +66,8 @@
                   <td>{{ company.companyAddress }}</td>
                   <td>{{ company.career }}</td>
                   <td>
-                    <button 
-                     @click="createCertificateAsync(index)"
+                    <button
+                      @click="showConfirmationCertificate(company)"
                       title="Đăng ký giấy giới thiệu thực tập"
                       type="button"
                       class="btn btn-success"
@@ -85,6 +85,11 @@
             </table>
           </div>
         </div>
+        <ConfirmationCertificate 
+        :isShow="isShow" 
+        :keyCompany="keyCompany" 
+        :userProfile="userProfile"
+        @closeModal="closeModal"/>
         <div class="card-footer d-flex justify-content-center text--blue">
           <!-- <JwPagination
             :items="companies"
@@ -104,12 +109,15 @@ import CompanyService from "../../services/company/companyServices";
 import JwPagination from "jw-vue-pagination";
 import ComponentBase from "../common/component-base/ComponentBase";
 import AppConfig from "../../../src/app.config.json";
-import CertificateService from "../../services/certificate/CertificateServices";
+import ConfirmationCertificate from "./ConfirmationCertificate.vue"
+import { mapGetters } from "vuex";
 export default {
   name: "SearchInternshipCompany",
   extends: ComponentBase,
   components: {
     JwPagination,
+    ComponentBase,
+    ConfirmationCertificate
   },
   data() {
     return {
@@ -134,10 +142,19 @@ export default {
         mssv: "",
         classId: "",
       },
+      isShow: false,
+      keyCompany: {},
     };
   },
   async mounted() {
     await this.getAllCompaniesAsync();
+  },
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
   },
   methods: {
     async getAllCompaniesAsync() {
@@ -174,33 +191,13 @@ export default {
       }
       this.companies = response.data.listCompany;
     },
-    async createCertificateAsync(index) {
-      this.certificate.mssv = this.userInfo.mssv;
-      this.certificate.classId = this.userInfo.classId;
-      this.certificate.taxCode = this.companies[index].taxCode;
-      this.certificate.title = this.companies[index].companyName;
-      this.certificate.companyAddress = this.companies[index].companyAddress;
-      this.certificate.owner = this.companies[index].owner;
-      this.certificate.phoneNumber = this.companies[index].phoneNumberOfCompany;
-      this.certificate.career = this.companies[index].career;
-      this.showLoading();
-      let api = new CertificateService();
-      let response = await api.createCertificateAsync(this.certificate);
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
+    showConfirmationCertificate(company) {
+      this.isShow = true;
+      this.keyCompany = company;
     },
+    closeModal(isShow){
+      this.isShow = isShow;
+    }
   },
 };
 </script>
