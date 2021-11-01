@@ -7,6 +7,18 @@ export default class NotificationService extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/Notify`
   }
 
+  async createNotifyForUserAsync(datasend) {
+    try {
+      const response = await this.http.post(
+        `${AppConfig.apiHost}/Instructor/CreateNotifyForUser?internshipCourseId=${datasend.internshipCourseId}`
+        , datasend);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
   async getNotificationsReportAsync(datasend) {
     try {
       const response = await this.http.post(

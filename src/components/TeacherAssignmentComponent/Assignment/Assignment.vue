@@ -7,6 +7,7 @@
       :studentInInternshipCourse="studentInInternshipCourse"
       :classes="classes"
       :teachers="teachers"
+      :students="students"
       :statisticalPlan="statisticalPlan"
       :statistiesStudentInClass="statistiesStudentInClass"
      />
@@ -114,6 +115,7 @@ export default {
       teacherId: "",
       statisticalPlan: null,
       statistiesStudentInClass: [],
+      facultyName: '',
     };
   },
   async mounted() {
@@ -150,6 +152,7 @@ export default {
         await this.getStudentsUnassigned();
         await this.getStudentsInInternshipCourseAsync();
         await this.getStatisticsStudentInClass();
+        await this.getTeachersAsync();
         this.reloadAutomaticAssignment = false;
         this.$nextTick(() => {
           this.reloadAutomaticAssignment = true;
@@ -209,14 +212,14 @@ export default {
         );
         return;
       }
-
+      this.facultyName = response.data.facultyName;
       this.statisticalPlan = {
-        courseName: response.data.courseName,
-        internshipCourseName: response.data.internshipCourseName,
-        description: response.data.description,
-        startDay: response.data.startDay,
-        endDay: response.data.endDay,
-        status: response.data.status,
+        courseName: response.data.internshipCourseDto.courseName,
+        internshipCourseName: response.data.internshipCourseDto.internshipCourseName,
+        description: response.data.internshipCourseDto.description,
+        startDay: response.data.internshipCourseDto.startDay,
+        endDay: response.data.internshipCourseDto.endDay,
+        status: response.data.internshipCourseDto.status,
         numberStudentsUnassigned:
         this.studentInInternshipCourse.length - this.instructors.length,
         numberStudentsInInternshipCourse: this.studentInInternshipCourse.length,
@@ -278,6 +281,7 @@ export default {
           student => student.teacherId == teacher.id
         ).length;
       }
+      this.teachers = this.teachers.sort((a, b) => b.sumStudents - a.sumStudents)
     },
 
     async getStudentsInInternshipCourseAsync() {

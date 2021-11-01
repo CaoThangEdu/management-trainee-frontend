@@ -14,12 +14,11 @@
                 class="ci-primary"></path>
             </svg> Danh sách lớp của đợt
             <strong>"{{ plan.internshipCourseName }}"</strong>
-            <router-link
-              v-show="teachers.length != 0"
+            <button
               class="btn btn-info float-right"
-              :to="{name:'phan-cong-dot', params: { internshipCourseId: guid } }">
+              @click="goToAssignment()">
               Đi đến phân công
-            </router-link>
+            </button>
           </header>
           <div class="card-body">
             <div class="table-responsive">
@@ -48,13 +47,12 @@
 
       </div>
     </div>
-    <div class="row"
-      v-show="teachers.length == 0">
+    <div class="row">
       <div class="col-12">
         <div class="card">
           <header class="card-header h5">
-            <span class="text--red">Bạn vui lòng thêm giáo viên cho đợt thực tập </span>
-            <strong>"{{ plan.internshipCourseName }}"</strong>
+            <span class="text--red">Bạn vui lòng thêm giáo viên cho khoa </span>
+            <strong>"{{ facultyName }}"</strong>
           </header>
           <div class="card-body">
             <div class="form-group row">
@@ -231,6 +229,7 @@ export default {
       teachers: [],
       teachersForCreate: [],
       teachersCreate: [],
+      facultyName: '',
     }
   },
   props: {
@@ -254,6 +253,20 @@ export default {
   },
 
   methods: {
+    goToAssignment() {
+      if(this.teachers.length == 0) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          `Bạn vui lòng thêm giáo viên cho khoa ${this.facultyName}`
+        );
+        return;
+      }
+      this.$router.push({
+        name: "phan-cong-dot",
+        params: { internshipCourseId: this.guid },
+      });
+    },
     async previewFilesTeachers(e) {
       var files = e.target.files,f = files[0];
       var reader = new FileReader();
@@ -360,7 +373,8 @@ export default {
         );
         return;
       }
-      this.plan = response.data;
+      this.plan = response.data.internshipCourseDto;
+      this.facultyName = response.data.facultyName;
     },
 
     getInfoByCourseId(courseId, list) {
