@@ -88,7 +88,7 @@
         <ConfirmationCertificate 
         :isShow="isShow" 
         :keyCompany="keyCompany" 
-        :userProfile="user"
+        :student="student"
         @closeModal="closeModal"/>
         <div class="card-footer d-flex justify-content-center text--blue">
           <!-- <JwPagination
@@ -144,7 +144,7 @@ export default {
       },
       isShow: false,
       keyCompany: {},
-      user:{}
+      student:{}
     };
   },
   async mounted() {
@@ -202,7 +202,7 @@ export default {
   },
   watch:{
     userProfile(){
-      this.user = this.userProfile;
+      this.student = this.userProfile;
     }
   }
 };

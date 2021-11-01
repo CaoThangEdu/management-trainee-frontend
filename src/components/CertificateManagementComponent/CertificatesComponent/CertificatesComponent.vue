@@ -120,11 +120,11 @@
                       <label class="form-check-label" for="all">STT</label>
                     </div>
                   </th>
-                  <th v-if="!isAdmin" scope="col">STT</th>
-                  <th scope="col" class="align-middle">Thông tin sinh viên</th>
+                  <th v-if="!isAdmin" scope="col" class="text-center">STT</th>
+                  <th scope="col" class="align-middle" style="width: 300px;">Thông tin sinh viên</th>
                   <th scope="col" class="align-middle">Thông tin công ty</th>
-                  <th scope="col" class="align-middle">Trạng thái</th>
-                  <th scope="col" class="align-middle">
+                  <th scope="col" class="align-middle" style="width: 200px;">Trạng thái</th>
+                  <th scope="col" class="align-middle" style="width: 110px;">
                     Thao tác
                   </th>
                 </tr>
@@ -144,7 +144,7 @@
                         {{ index + 1 }}</label
                       >
                     </div>
-                    <div v-if="!isAdmin">{{ index + 1 }}</div>
+                    <div v-if="!isAdmin " class="text-center">{{ index + 1 }}</div>
                   </th>
                   <td>
                     <div><strong>MSSV:</strong> {{ item.mssv }}</div>
@@ -204,6 +204,12 @@
                       class="form-control mb-2 select-type"
                       @change="changeStatus($event, index)"
                     >
+                      <option
+                        v-if="item.status === ''"
+                        :selected="item.status === ''"
+                        value=""
+                        >Đang chọn</option
+                      >
                       <option
                         :selected="item.status === 'unconfirmed'"
                         value="unconfirmed"
@@ -359,7 +365,7 @@ tin</span><br>
             </tr>
             <tr>
               <td style="border: 1px solid;text-align: center;" >1</td>
-              <td style="border: 1px solid;" >{{keyCertificate.mssv}}</td>
+              <td style="border: 1px solid;" >{{keyStudent.studentId}}</td>
               <td style="border: 1px solid;" >
                 {{keyStudent.firstName + keyStudent.lastName}}
               </td>
@@ -941,7 +947,7 @@ export default {
         return;
       }
       for (let i = 0; i <= this.certificates.length - 1; i++) {
-        if (document.getElementById(i).checked === true) {
+        if (document.getElementById(i)!= null && document.getElementById(i).checked === true) {
           this.certificates[i].status = this.selectUpdateCertificates.status;
           document.getElementById(i).checked = false;
         }
@@ -1029,11 +1035,10 @@ export default {
           return;
         }
         for (let i = 0; i <= this.certificates.length - 1; i++) {
+          if(document.getElementById(i) === null) return;
           document.getElementById(i).checked = true;
           this.certificates[i].status = "";
-          this.selectUpdateCertificates.certificationId.push(
-            this.certificates[i].id
-          );
+          this.selectUpdateCertificates.certificationId.push(this.certificates[i].id);
         }
         return;
       }
@@ -1041,11 +1046,7 @@ export default {
       let index = parseInt(event.target.id);
       if (event.target.checked === false) {
         document.getElementById("all").checked = false;
-        for (
-          let i = 0;
-          i <= this.selectUpdateCertificates.certificationId.length - 1;
-          i++
-        ) {
+        for (let i = 0;i <= this.selectUpdateCertificates.certificationId.length - 1;i++) {
           if (
             this.selectUpdateCertificates.certificationId[i] ===
             event.target.value
@@ -1066,9 +1067,13 @@ export default {
       await this.getCertificatesAsync(this.filterCerticate);
     },
 
-    async exportPdfFile(item) {
-      this.keyStudent =  await this.studentsByMssv[item.mssv];
-      this.keyCertificate = await item;
+    updateCertificatePdf(certificate){
+      this.keyStudent =this.studentsByMssv[certificate.mssv];
+      this.keyCertificate = certificate;
+    },
+
+    async exportPdfFile(certificate) {
+      await this.updateCertificatePdf(certificate)
       // const doc = new jsPDF();
 
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");

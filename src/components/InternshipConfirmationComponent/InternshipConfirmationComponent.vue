@@ -125,24 +125,28 @@ export default {
   components: { AlertMessages },
   data() {
     return {
-      keyInternshipConfirmation:{},
+      keyInternshipConfirmation: {},
       errorMessages: [],
     };
   },
-  mounted() {
-    this.keyInternshipConfirmation =  {
-        studentId: "",
-        taxCode: "",
-        title: "",
-        companyAddress: "",
-        website: "",
-        owner: "",
-        manager: "",
-        companiesInterviewed: "",
-        status: "practiced",
-        phoneNumber: "",
-        internshipCourseId: "",
-      };
+  async mounted() {
+    this.keyInternshipConfirmation = {
+      studentId: "",
+      taxCode: "",
+      title: "",
+      companyAddress: "",
+      website: "",
+      owner: "",
+      manager: "",
+      companiesInterviewed: "",
+      status: "practiced",
+      phoneNumber: "",
+      internshipCourseId: "",
+    };
+    var internshipConfirmation = await this.getInternshipConfirmationAsync();
+      if (internshipConfirmation !== undefined) {
+      this.keyInternshipConfirmation = internshipConfirmation;
+    }
   },
   computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
@@ -175,7 +179,9 @@ export default {
       this.keyInternshipConfirmation.internshipCourseId = this.userProfile.internshipCourseId;
       this.showLoading();
       let api = new InternshipConfirmationServices();
-      let response = await api.internshipConfirmationAsync(this.keyInternshipConfirmation);
+      let response = await api.internshipConfirmationAsync(
+        this.keyInternshipConfirmation
+      );
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -236,14 +242,14 @@ export default {
       return response.data[0];
     },
   },
-  watch:{
-    async userProfile(){
+  watch: {
+    async userProfile() {
       var internshipConfirmation = await this.getInternshipConfirmationAsync();
-      if(internshipConfirmation !== undefined){
-      this.keyInternshipConfirmation = internshipConfirmation;
+      if (internshipConfirmation !== undefined) {
+        this.keyInternshipConfirmation = internshipConfirmation;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
