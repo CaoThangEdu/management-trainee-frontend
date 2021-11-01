@@ -9,8 +9,10 @@
       <div class="form-group px-5">
         <h5>
           Bạn chắc chắn muốn đăng ký giấy giới thiệu thực tập công ty:
-          {{ keyCompany.title }} - Mã số thuế: {{ keyCompany.taxCode }} ?
+          {{ keyCompany.title }} - Mã số thuế: {{ keyCompany.taxCode }} ?<br />
         </h5>
+        Vui lòng nhập số điện thoại của bạn nếu đồng ý:
+        <input type="text" v-model="certificate.phoneNumberOfStudent" />
       </div>
     </div>
     <template #header>
@@ -21,10 +23,10 @@
     </template>
     <template #footer>
       <div class="form-inline form-group col-md-12 pr-0">
-        <div class="col-form-label col-md-4 col-sm-4"></div>
-        <div class="col-md-8 col-sm-8 pl-0 pr-0"></div>
+        <div class="col-md-12 col-sm-12 pl-0 pr-0">
+          <AlertMessages :messages="errorMessages" />
+        </div>
       </div>
-
       <div class="form-inline form-group col-md-12 pr-0">
         <div class="col-form-label col-md-4 col-sm-4"></div>
         <div class="col-md-8 col-sm-8 pl-0 pr-0">
@@ -48,21 +50,24 @@ import BaseModal from "../../components/common/base-modal/BaseModal.vue";
 import CertificateService from "../../services/certificate/CertificateServices";
 import AppConfig from "../../../src/app.config.json";
 import CompanyService from "../../services/company/companyServices";
-import CrudMixin from "../../helpers/mixins/crudMixin"
+import CrudMixin from "../../helpers/mixins/crudMixin";
+import AlertMessages from "../common/alert/alert-messages/AlertMessages";
 export default {
   name: "ConfirmationCertificate",
   extends: ComponentBase,
   components: {
     BaseModal,
+    AlertMessages,
   },
-  mixins:[CrudMixin],
+  mixins: [CrudMixin],
   props: {
     isShow: Boolean,
     keyCompany: Object,
-    userProfile: Object,
+    student: Object,
   },
   data() {
     return {
+      errorMessages: [],
       certificate: {
         taxCode: "",
         companyName: "",
@@ -75,10 +80,10 @@ export default {
         mssv: "",
         classId: "",
       },
-      companiesByTaxCode:{}
+      companiesByTaxCode: {},
     };
   },
-  async mounted(){
+  async mounted() {
     this.companiesByTaxCode = await this.getCompaniesAsync();
   },
 
@@ -87,14 +92,20 @@ export default {
       this.$emit("closeModal", false);
     },
     async createCertificateAsync() {
-      this.certificate.mssv = this.userProfile.mssv;
-      this.certificate.classId = this.userProfile.classId;
+      if (this.certificate.phoneNumberOfStudent === "") {
+        return this.errorMessages.push(
+          "Vui lòng nhập <span>Số điện thoại của bạn</span>."
+        );
+      }
+      this.certificate.mssv = this.student.mssv;
+      this.certificate.classId = this.student.classId;
       this.certificate.taxCode = this.keyCompany.taxCode;
       this.certificate.companyName = this.keyCompany.title;
       this.certificate.companyAddress = this.keyCompany.companyAddress;
       this.certificate.owner = this.keyCompany.owner;
-      this.certificate.phoneNumber = this.keyCompany.phoneNumberOfCompany;
+      this.certificate.phoneNumberOfCompany = this.keyCompany.phoneNumber;
       this.certificate.career = this.keyCompany.career;
+      console.log(this.certificate)
       this.showLoading();
       let api = new CertificateService();
       let response = await api.createCertificateAsync(this.certificate);
@@ -112,23 +123,24 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
+      this.errorMessages = []
       await this.createCompanyAsync();
       this.closeModal();
     },
 
-    async getCompaniesAsync(){
+    async getCompaniesAsync() {
       const filterCompany = {
-        keyword:"",
-        status:""
+        keyword: "",
+        status: "",
       };
       // Call Api
       this.showLoading();
-      const api = new CompanyService()
+      const api = new CompanyService();
 
-      const response = await api.getCompaniesAsync(filterCompany)
+      const response = await api.getCompaniesAsync(filterCompany);
       this.showLoading(false);
 
-      if(!response.isOK){
+      if (!response.isOK) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
@@ -159,7 +171,8 @@ export default {
 
     async createCompanyAsync() {
       let company = await this.getCompanieByTaxCodeAsync();
-      if(this.companiesByTaxCode[company.taxCode] !== undefined) return;
+      if (this.companiesByTaxCode[company.taxCode] !== undefined) return;
+      company.status = "active";
       this.showLoading();
       let api = new CompanyService();
       let response = await api.createCompanyAsync(company);

@@ -128,6 +128,7 @@ import ComponentBase from "../common/component-base/ComponentBase";
 import StudentService from "../../services/student/studentServices";
 import CrudMixin from "../../helpers/mixins/crudMixin";
 import { Chart } from "highcharts-vue";
+import AppConfig from "../../../src/app.config.json";
 import PlanService from "../../services/plan/planServices";
 import IntershipConfirmationDetailComponent from "./IntershipConfirmationDetailComponent/IntershipConfirmationDetailComponent.vue"
 export default {
