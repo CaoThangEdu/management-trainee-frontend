@@ -94,10 +94,6 @@ export default {
     };
   },
 
-  async mounted() {
-    await this.getTimeLinesByInternshipCourseIdAsync();
-  },
-
   methods: {
     checkTimeLineExpired(time) {
       return new Date(time) > new Date();
@@ -106,7 +102,7 @@ export default {
     async getTimeLinesByInternshipCourseIdAsync() {
       let filterTimeLine = {
         timeLineName: "",
-        internshipCourseId: "",
+        internshipCourseId: this.userInfoProp.internshipCourseId,
         status: "active",
       };
       // Call Api
@@ -133,8 +129,9 @@ export default {
   },
 
   watch: {
-    userInfo() {
+    async userInfo() {
       this.userInfoProp = this.userInfo;
+      await this.getTimeLinesByInternshipCourseIdAsync();
     },
   },
 };

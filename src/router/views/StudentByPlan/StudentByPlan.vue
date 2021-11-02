@@ -50,15 +50,23 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <header class="card-header h5">
-            <span class="text--red">Bạn vui lòng thêm giáo viên cho khoa </span>
+          <header class="card-header h5 mb-0">
+            <span class="text--red"
+              v-if="teachers.length==0">
+              Bạn vui lòng thêm giáo viên cho khoa
+            </span>
             <strong>"{{ facultyName }}"</strong>
           </header>
           <div class="card-body">
-            <div class="form-group row">
+            <div class="form-group row font-weight-bold mb-2">
+              <label class="col-12 col-form-label">
+                Tổng số giáo viên trong khoa là: {{ teachers.length }} giáo viên
+              </label>
+            </div>
+            <div class="form-group row mb-2">
               <label class="col-md-4 col-sm-4 col-form-label">Chọn file excel</label>
               <div class="col-md-8 col-sm-8">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input
                     type="file"
                     class="btn btn-secondary float-right btn-add-file"
@@ -68,10 +76,10 @@
                 </div>
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-0">
               <label class="col-md-4 col-sm-4 col-form-label"></label>
               <div class="col-md-8 col-sm-8">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <button @click="saveCreateTeachers"
                     class="btn btn-primary float-right">
                     Thêm mới giáo viên
@@ -243,7 +251,7 @@ export default {
     await this.getStudentsAsync();
     await this.getClassesFilterAsync();
     await this.getPlanByIdAsync(this.guid);
-    await this.getTeachersAsync();
+    await this.getTeachersInInternshipCourse();
     this.classes = this.classes.filter(
       classroom => classroom.internshipCourseId == this.guid);
   },
@@ -323,18 +331,16 @@ export default {
           `${AppConfig.notification.title_default}`,
           `${AppConfig.notification.content_created_success_default} giáo viên`
         );
-        await this.getTeachersAsync();
+        await this.getTeachersInInternshipCourse();
       }
     },
 
-    async getTeachersAsync() {
+    async getTeachersInInternshipCourse() {
       // Call Api
       this.showLoading();
       const api = new TeacherService();
-      const response = await api.getTeachersAsync({
-        lastName: "",
-        facultyId: this.plan.facultyId,
-        status: "active",
+      const response = await api.getTeachersInInternshipCourse({
+        internshipCourseId: this.guid,
       });
       this.showLoading(false);
 

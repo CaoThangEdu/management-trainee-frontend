@@ -592,6 +592,7 @@ export default {
         facultyName:""
       },
       trainingSystemsFilter: [],
+      facultyName: '',
     };
   },
 
@@ -699,7 +700,8 @@ export default {
         );
         return;
       }
-      this.plan = response.data;
+      this.plan = response.data.internshipCourseDto;
+      this.facultyName = response.data.facultyName;
       this.facultyId = this.plan.facultyId;
     },
 

@@ -52,10 +52,6 @@ export default {
       isShowContinueAssignment: false,
       showCreateAssignments: false,
       studentsRemain: 0,
-      instructorsProps: '',
-      studentsProps: '',
-      numberOfStudentInInternshipCourseProps: '',
-
     };
   },
   props: {
@@ -105,25 +101,35 @@ export default {
     },
 
     createAssignmentData() {
-       if(this.showCreateAssignments) {
+      if(this.showCreateAssignments) {
         this.showCreateAssignments = false;
+        return;
+      }
+      const reducer = (previousValue, currentValue) => previousValue + currentValue.numberOfStudentAssigned;
+      this.studentsRemain = this.statistiesStudentInClass.reduce(reducer, 0);
+      if(this.numberOfStudentInInternshipCourse == this.studentsRemain) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          'Bạn đã phân công hết sinh viên cho đợt này!'
+        );
         return;
       }
       this.showCreateAssignments = true;
       //Phân công từ đầu
       this.statistics = [];
-      this.studentTempDelete = JSON.parse(JSON.stringify(this.studentsProps));
+      this.studentTempDelete = JSON.parse(JSON.stringify(this.students));
       this.assignments = [];
 
       this.averageNumber = Math.round(
-        this.numberOfStudentInInternshipCourseProps / this.teachers.length
+        this.numberOfStudentInInternshipCourse / this.teachers.length
       );
 
       if(this.numberOfTeacher != 0 && this.numberOfTeacher != this.averageNumber ){
         this.averageNumber = this.numberOfTeacher
       }    
       
-      if (this.instructorsProps.length == 0) {
+      if (this.instructors.length == 0) {
         this.teachers.forEach((teacher) => {
           this.studentTemp = [];
 
@@ -131,7 +137,6 @@ export default {
             this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber);
             this.studentTempDelete.splice(0, this.averageNumber);
           }
-          
 
           var count = 0;
           this.studentTemp = this.studentTemp.forEach((student) => {
@@ -195,7 +200,7 @@ export default {
       this.teacherTemp = [];
       this.teachers.forEach((teacher) => {
         var count = 0;
-        this.instructorsProps.forEach((instructor) => {
+        this.instructors.forEach((instructor) => {
           if (teacher.id == instructor.teacherId)
           {
             count++;
@@ -310,20 +315,8 @@ export default {
 
   watch: {
     statistiesStudentInClass() {
-      const reducer = (previousValue, currentValue) => previousValue + currentValue.numberOfStudentUnAssign;
+      const reducer = (previousValue, currentValue) => previousValue + currentValue.numberOfStudentAssigned;
       this.studentsRemain = this.statistiesStudentInClass.reduce(reducer, 0);
-    },
-
-    instructors() {
-      this.instructorsProps = this.instructors;
-    },
-
-    students() {
-      this.studentsProps = this.students;
-    },
-
-    numberOfStudentInInternshipCourse() {
-      this.numberOfStudentInInternshipCourseProps = this.numberOfStudentInInternshipCourse;
     },
   },
 };
