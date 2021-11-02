@@ -127,8 +127,11 @@ export default {
         this.teachers.forEach((teacher) => {
           this.studentTemp = [];
 
-          this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber);
-          this.studentTempDelete.splice(0, this.averageNumber);
+          if(this.studentTempDelete) {
+            this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber);
+            this.studentTempDelete.splice(0, this.averageNumber);
+          }
+          
 
           var count = 0;
           this.studentTemp = this.studentTemp.forEach((student) => {

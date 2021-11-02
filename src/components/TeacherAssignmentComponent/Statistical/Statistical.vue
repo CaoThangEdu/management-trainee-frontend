@@ -1,34 +1,52 @@
 <template>
   <div class="information">
     <div class="card">
-      <header class="card-header">
-        <div class="float-left">
-          <div>
-            Đợt thực tập:
-            <strong>{{ statisticalPlan.internshipCourseName }}</strong>
-          </div>
-          <div>
-            Khóa: <strong>{{ statisticalPlan.courseName }}</strong>
-          </div>
-        </div>
-        <div class="float-right">
-          <div>
-            Ngày bắt đầu:
-            <strong>{{
-              convertTime(statisticalPlan.startDay, "DD/MM/YYYY")
-            }}</strong>
-          </div>
-          <div>
-            Ngày kết thúc:
-            <strong>{{
-              convertTime(statisticalPlan.endDay, "DD/MM/YYYY")
-            }}</strong>
-          </div>
-        </div>
-      </header>
       <div class="card-body">
         <div class="row col-12">
           <div class="col-lg-8 col-xl-8 col-md-8 col-sm-12">
+            <div class="text--font-size__m mb-3">
+              <div>
+                <div>
+                  Đợt thực tập:
+                  <strong>{{ statisticalPlan.internshipCourseName }}</strong>
+                </div>
+                <div>
+                  Khóa: <strong>{{ statisticalPlan.courseName }}</strong>
+                </div>
+              </div>
+              <div>
+                <div>
+                  Ngày bắt đầu:
+                  <strong>{{
+                    convertTime(statisticalPlan.startDay, "DD/MM/YYYY")
+                  }}</strong>
+                </div>
+                <div>
+                  Ngày kết thúc:
+                  <strong>{{
+                    convertTime(statisticalPlan.endDay, "DD/MM/YYYY")
+                  }}</strong>
+                </div>
+              </div>
+              <div :class="{
+                  'disable-wapper-content': (students.length!=0),
+                }">
+                <button class="btn btn-success"
+                  @click="createNotifyForUser(internshipCourseId)">
+                  Gửi thông báo cho tất cả những người trong đợt
+                </button>
+                <div class="text--red text--italic"
+                  v-if="students.length!=0">
+                  Sau khi phân công xong giáo viên, chức năng này mới hoạt động được
+                </div>
+              </div>
+              <ConfirmDialog
+                :data="confirmCreateNotify"
+                @agree="createNotifyForUserAsync"
+                :message="'Bạn có muốn gửi thông báo cho tất cả những người trong đợt thực tập ' 
+                + statisticalPlan.internshipCourseName">
+              </ConfirmDialog>
+            </div>
             <Highcharts
               v-if="
                 assignedStudents.length != 0 && unassignStudents.length != 0
@@ -90,6 +108,9 @@ import ComponentBase from "../../common/component-base/ComponentBase";
 import crudMixin from "../../../helpers/mixins/crudMixin";
 import Highcharts from "../../common/high-chart/HighChart.vue";
 import JwPagination from "jw-vue-pagination";
+import NotificationService from "../../../services/notification/notificationServices";
+import AppConfig from "../../../../src/app.config.json";
+import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog.vue";
 
 export default {
   name: "Statistical",
@@ -97,6 +118,7 @@ export default {
   components: {
     Highcharts,
     JwPagination,
+    ConfirmDialog,
   },
   mixins: [crudMixin],
   props: {
@@ -120,6 +142,10 @@ export default {
       type: Array,
       default: [],
     },
+    students: {
+      type: Array,
+      default: [],
+    }
   },
 
   data() {
@@ -153,6 +179,7 @@ export default {
         previous: "<",
         next: ">",
       },
+      confirmCreateNotify: null,
     };
   },
   async mounted() {
@@ -175,6 +202,12 @@ export default {
   },
 
   methods: {
+    createNotifyForUser(internshipCourseId) {
+      this.confirmCreateNotify = {
+        internshipCourseId: internshipCourseId
+      };
+    },
+
     onChangePage(pageOfItemsTeacher) {
       // update page of items
       this.pageOfItemsTeacher = pageOfItemsTeacher;
@@ -197,6 +230,28 @@ export default {
         );
         this.labelsDataStatisticsStudentInClass.push(student.className);
       }
+    },
+    
+    async createNotifyForUserAsync(internshipCourseId) {
+      this.showLoading();
+      const api = new NotificationService();
+      const response = await api.createNotifyForUserAsync(
+        {internshipCourseId: internshipCourseId.internshipCourseId}
+      );
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default} thông báo`
+      );
     },
   },
 

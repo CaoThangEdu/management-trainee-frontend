@@ -9,7 +9,7 @@ export default class PlanService extends ServicesBaseAPI {
 
   async getPlanByIdAsync(guid) {
     try {
-      const response = await this.http.get(`${this.url}/Get?id=${guid}`);
+      const response = await this.http.get(`${this.url}/GetInternshipCourseById?id=${guid}`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
