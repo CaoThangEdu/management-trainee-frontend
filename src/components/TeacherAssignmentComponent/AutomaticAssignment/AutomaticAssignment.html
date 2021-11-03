@@ -1,12 +1,9 @@
 <div class="auto_assignment tab-students-assign">
-  <div class="notification" v-if="studentsRemain==0">
-    <h5>Bạn đã phân công cho sinh viên trong đợt thực tập này</h5>
-  </div>
   <div class="restore_assign">
     <div class="restore_assign_notifi">
       <div class="pl-0 pr-0 row align-items-center">
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-          Trong đợt này hiện tại đã có {{instructorsProps.length}} sinh viên được phân công
+          Trong đợt này hiện tại đã có {{instructors.length}} sinh viên được phân công
         </div>
         <div class="col-md-4 col-lg-4 col-md-4 col-sm-12 text-right">
           <button class="btn btn-danger mr-2"
@@ -44,13 +41,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in instructorsProps" :key="index">
+          <tr v-for="(item, index) in instructors" :key="index">
             <th scope="row">{{index + 1 }}</th>
             <td>{{ item.teacherName }}</td>
             <td>{{ item.studentName }}</td>
             <td>{{ item.className}}</td>
           </tr>
-          <tr v-show="instructorsProps == null || instructorsProps.length === 0">
+          <tr v-show="instructors == null || instructors.length === 0">
             <th colspan="5" class="text-left">
               Không có dữ liệu nào được tìm thấy.
             </th>
@@ -61,7 +58,7 @@
   </div>
 
   <div class="continue-assignment">
-    <hr v-if="instructorsProps.length>0">    
+    <hr v-if="instructors.length>0">    
     <div class="col-sm-4 col-md-4 col-lg-4">
       <label>Số lượng sinh viên mà mỗi giáo viên sẽ quản lý {{averageNumber}}
         (<span class="text--red">*</span>)
@@ -110,10 +107,10 @@
                       getInfoObject(item.teacherId, teachers).lastName }}
                     </td>
                     <td
-                      v-if="studentsProps.length != 0 && getInfoObject(item.studentId, studentsProps)"
+                      v-if="students.length != 0 && getInfoObject(item.studentId, students)"
                     >
-                      {{ getInfoObject(item.studentId, studentsProps).firstName }} {{
-                      getInfoObject(item.studentId, studentsProps).lastName }}
+                      {{ getInfoObject(item.studentId, students).firstName }} {{
+                      getInfoObject(item.studentId, students).lastName }}
                     </td>
                   </tr>                 
                 </tbody>

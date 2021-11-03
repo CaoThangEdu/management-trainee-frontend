@@ -1,58 +1,87 @@
 <template @getPlan="course = $event">
 <div class="assignment">
-  <div class="statistics-students">
-    <Statistical
-      v-if="statisticalPlan && studentInInternshipCourse"
-      :internshipCourseId="internshipCourseId"
-      :studentInInternshipCourse="studentInInternshipCourse"
-      :classes="classes"
-      :teachers="teachers"
-      :students="students"
-      :statisticalPlan="statisticalPlan"
-      :statistiesStudentInClass="statistiesStudentInClass"
-     />
+  <div class="card" v-if="teachers.length == 0 || instructors.length == 0">
+    <div class="card-body text--font-size__m">
+      <div v-if="teachers.length == 0 && statisticalPlan">
+        <div>Hiện tại chưa có giáo viên. Vui lòng thêm giáo viên!</div>
+        Để thực hiện chức năng <span class="font-weight-bold">"Phân công"</span>
+        bạn vui lòng thêm giáo viên vào khoa 
+        <span class="font-weight-bold">{{facultyName}}</span>
+        <div>
+          <router-link
+            :to="{name:'quan-ly-giao-vien'}">
+            Đi đến trang Quản lý giáo viên
+          </router-link>
+        </div>
+      </div>
+      <div v-if="isInstructors && statisticalPlan">
+        <div>Hiện tại chưa có sinh viên. Vui lòng thêm sinh viên!</div>
+        Để thực hiện chức năng <span class="font-weight-bold">"Phân công"</span>
+        bạn vui lòng thêm sinh viên vào đợt thực tập 
+        <span class="font-weight-bold">{{statisticalPlan.internshipCourseName}}</span>
+        <div>
+          <router-link
+            :to="{name:'them-sv-cua-dot', params: { guid: internshipCourseId }}">
+            Đi đến trang Thêm sinh viên của đợt {{statisticalPlan.internshipCourseName}}
+          </router-link>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="student-assignment mb-4">
-    <Tabs>
-      <Tab name="Danh sách sinh viên đã được phân công" :selected="true">
-        <ListTeacherAssignmentComponent
-          class="tab-students-assign"
-          v-if="reloadAutomaticAssignment"
-          :studentInInternshipCourse="studentInInternshipCourse"
-          :internshipCourseId="internshipCourseId"
-          :classes="classes"
-          :teachers="teachers" 
-          @change-instructors="changeInstructors"         
-        />
-      </Tab>
-      <Tab name="Phân công">
-        <ManualAssignment 
-          class="tab-students-assign"
-          v-if="reloadAutomaticAssignment"
-          :internshipCourseId="internshipCourseId"
-          :classes="classes"
-          :teachers="teachers"
-          @change-instructors="changeInstructors"
-        />
-      </Tab>
-      <Tab name="Phân công tự động">
-        <AutomaticAssignment
-          class="tab-students-assign"
-          v-if="reloadAutomaticAssignment"
-          :internshipCourseId="internshipCourseId"
-          :classes="classes"
-          :teachers="teachers"
-          :instructors="instructors"
-          :students="students"
-          :numberOfStudentInInternshipCourse="studentInInternshipCourse.length"
-          @change-instructors="changeInstructors"
-          :statistiesStudentInClass="statistiesStudentInClass"
-        />
-      </Tab>
-    </Tabs>
+  <div v-else>
+    <div class="statistics-students">
+      <Statistical
+        v-if="statisticalPlan && studentInInternshipCourse"
+        :internshipCourseId="internshipCourseId"
+        :studentInInternshipCourse="studentInInternshipCourse"
+        :classes="classes"
+        :teachers="teachers"
+        :students="students"
+        :statisticalPlan="statisticalPlan"
+        :statistiesStudentInClass="statistiesStudentInClass"
+      />
+    </div>
+    <div class="student-assignment mb-4">
+      <Tabs>
+        <Tab name="Danh sách sinh viên đã được phân công" :selected="true">
+          <ListTeacherAssignmentComponent
+            class="tab-students-assign"
+            v-if="reloadAutomaticAssignment"
+            :studentInInternshipCourse="studentInInternshipCourse"
+            :internshipCourseId="internshipCourseId"
+            :classes="classes"
+            :teachers="teachers" 
+            @change-instructors="changeInstructors"         
+          />
+        </Tab>
+        <Tab name="Phân công">
+          <ManualAssignment 
+            class="tab-students-assign"
+            v-if="reloadAutomaticAssignment"
+            :internshipCourseId="internshipCourseId"
+            :classes="classes"
+            :teachers="teachers"
+            @change-instructors="changeInstructors"
+          />
+        </Tab>
+        <Tab name="Phân công tự động">
+          <AutomaticAssignment
+            class="tab-students-assign"
+            v-if="reloadAutomaticAssignment"
+            :internshipCourseId="internshipCourseId"
+            :classes="classes"
+            :teachers="teachers"
+            :instructors="instructors"
+            :students="students"
+            :numberOfStudentInInternshipCourse="studentInInternshipCourse.length"
+            @change-instructors="changeInstructors"
+            :statistiesStudentInClass="statistiesStudentInClass"
+          />
+        </Tab>
+      </Tabs>
+    </div>
   </div>
 </div>
-
 </template>
 
 <script>
@@ -91,6 +120,7 @@ export default {
   data() {
     return {
       instructors: [],
+      isInstructors: false,
       teachers: [],
       classes: [],
       students: [],
@@ -119,12 +149,16 @@ export default {
     };
   },
   async mounted() {
-    await this.getInstructorsAsync();
-    await this.getClassesAsync();
+    await this.getPlanService();
     await this.getTeachersAsync();
+    if(this.teachers.length == 0) return;
+
+    await this.getInstructorsAsync();
+    if(this.instructors.length == 0) return;
+
+    await this.getClassesAsync();
     await this.getStudentsUnassigned();
     await this.getStudentsInInternshipCourseAsync();
-    await this.getPlanService();
     await this.getStatisticsStudentInClass();
   },
 
@@ -153,11 +187,20 @@ export default {
         await this.getStudentsInInternshipCourseAsync();
         await this.getStatisticsStudentInClass();
         await this.getTeachersAsync();
-        this.reloadAutomaticAssignment = false;
-        this.$nextTick(() => {
-          this.reloadAutomaticAssignment = true;
-        });
+        this.statisticalPlan.numberStudentsUnassigned = 
+          this.studentInInternshipCourse.length - this.instructors.length;
+
+        this.statisticalPlan.numberStudentsInInternshipCourse = 
+          this.studentInInternshipCourse.length;
+          
+        this.statisticalPlan.numberTeachersInInternshipCourse = 
+          this.teachers.length;
       }
+      this.reloadAutomaticAssignment = false;
+      this.$nextTick(() => {
+        this.reloadAutomaticAssignment = true;
+      });
+      
     },
 
     async getStudentsUnassigned() {
@@ -181,12 +224,13 @@ export default {
     },
     
     async getInstructorsAsync() {
-      const api = new InstructorService();
       this.instructorRequest = {
         internshipCourseId: this.internshipCourseId,
         classId: "",
         teacherId: "",
       };
+      this.isInstructors = true;
+      const api = new InstructorService();
       const response = await api.getInstructors(this.instructorRequest);
       if (!response.isOK) {
         this.showNotifications(

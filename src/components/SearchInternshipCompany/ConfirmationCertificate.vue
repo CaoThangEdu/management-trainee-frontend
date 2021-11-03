@@ -105,7 +105,6 @@ export default {
       this.certificate.owner = this.keyCompany.owner;
       this.certificate.phoneNumberOfCompany = this.keyCompany.phoneNumber;
       this.certificate.career = this.keyCompany.career;
-      console.log(this.certificate)
       this.showLoading();
       let api = new CertificateService();
       let response = await api.createCertificateAsync(this.certificate);
