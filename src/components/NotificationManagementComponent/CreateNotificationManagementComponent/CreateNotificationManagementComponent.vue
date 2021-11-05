@@ -26,12 +26,10 @@
                 Nội dung (<span style="color: red">*</span>)
               </label>
               <div class="col-md-8 col-sm-8">
-                <textarea
-                  class="form-control"
-                  name="content-notify"
-                  id="content"
+                <ckeditor
                   v-model="notifyRequest.notificationDto.content"
-                ></textarea>
+                  style
+                ></ckeditor>
               </div>
             </div>
             <div class="form-group row">
@@ -176,6 +174,7 @@ import SelectClassesObject from "./SelectClassesObject.vue";
 import NotificationViewModel from "../../../view-model/notification/notificationViewModel";
 import NotificationService from "../../../services/notification/notificationServices";
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages.vue";
+import CKEditor from "ckeditor4-vue";
 
 export default {
   name: "CreateNotificationManagementComponent",
@@ -186,6 +185,7 @@ export default {
     SelectStudentsObject,
     SelectClassesObject,
     AlertMessages,
+    ckeditor: CKEditor.component,
   },
   data() {
     return {

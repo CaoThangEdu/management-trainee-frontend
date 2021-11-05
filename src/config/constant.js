@@ -290,3 +290,26 @@ export const TIME_LINE_ENUM = [
     timelineName: 'Kết thúc đợt thực tập',
   }
 ]
+
+export const NOTYFY_STATUS_ENUM = {
+  Handmade: {
+    value: "Handmade",
+    name: "Thông báo được tạo thủ công",
+  },
+  AutoInstructorStudent: {
+    value: "AutoInstructorStudent",
+    name: "Thông báo tự động cho học sinh khi phân công",
+  },
+  AutoInstructorTeacher: {
+    value: "AutoInstructorTeacher",
+    name: "Thông báo tự động cho giáo viên khi phân công",
+  },
+  AutoTimelineCreate: {
+    value: "AutoTimelineCreate",
+    name: "Thông báo tự động khi cập nhật timeline",
+  },
+  AutoTimelineUpdate: {
+    value: "AutoTimelineUpdate",
+    name: "Thông báo khi cập nhật timeline",
+  },
+}
