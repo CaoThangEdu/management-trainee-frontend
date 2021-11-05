@@ -33,6 +33,8 @@
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
+import AppConfig from "../../../app.config.json";
+import NotificationService from "../../../services/notification/notificationServices";
 
 export default {
   name: "NotifyComponent",
@@ -46,12 +48,35 @@ export default {
   data() {
     return {
       userInfoProp: {},
+      notificationsOfUser: [],
     };
   },
 
+  methods: {
+    async getNotifyByEmail() {
+      // Call Api
+      this.showLoading();
+      const api = new NotificationService();
+
+      const response = await api.getNotifyByEmail(this.userInfoProp?.user?.emailAddress);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.notificationsOfUser = response.data;
+    },
+  },
+
   watch: {
-    userInfo() {
+    async userInfo() {
       this.userInfoProp = this.userInfo;
+      await this.getNotifyByEmail();
     },
   },
 };
