@@ -55,6 +55,19 @@
                     </SelectPlan>
                   </div>
                 </div>
+                <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
+                  <div class="input-group">
+                    <select class="form-control form-select form-select-class"
+                      name="notifyStatusEnums" id="notifyStatusEnums"
+                      v-model="filterNotify.status">
+                      <option value="">Tất cả trạng thái</option>
+                      <option v-for="(item, index) in notifyStatusEnums"
+                        :key="index + 'notifyStatus'"
+                        :value="item.value">
+                        {{item.name}}</option>
+                    </select>
+                  </div>
+                </div>
                 <div class="col-xl-2 col-md-4 col-sm-12">
                   <button
                     type="submit"
@@ -140,6 +153,7 @@ import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import PlanService from "../../../services/plan/planServices";
 import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
+import { NOTYFY_STATUS_ENUM } from "../../../config/constant";
 
 export default {
   name: "ListNotificationManagementComponent",
@@ -158,6 +172,7 @@ export default {
         internshipCourseId: "",
         isActive: true,
         title: "",
+        status: "",
       },
       pageOfNotifications: [],
       customLabels: {
@@ -167,6 +182,7 @@ export default {
         next: ">",
       },
       plans: [],
+      notifyStatusEnums: NOTYFY_STATUS_ENUM,
     };
   },
   async mounted() {

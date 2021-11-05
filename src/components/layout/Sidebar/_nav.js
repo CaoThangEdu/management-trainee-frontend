@@ -56,13 +56,6 @@ export default [{
     },
     {
       _name: "CSidebarNavItem",
-      name: "Quản lý thực tập sinh viên",
-      to: "/student-management-internships",
-      icon: "cil-description",
-      role: "Admin",
-    },
-    {
-      _name: "CSidebarNavItem",
       name: "Quản lý công ty",
       to: "/company-management",
       icon: "cil-building",
@@ -150,7 +143,7 @@ export default [{
       name: "Báo cáo hàng tuần",
       to: "/weekly-report-of-student",
       icon: "cil-book",
-      role: ["Admin", "TEACHER"],
+      role: "STUDENT",
     },
   ],
 },];

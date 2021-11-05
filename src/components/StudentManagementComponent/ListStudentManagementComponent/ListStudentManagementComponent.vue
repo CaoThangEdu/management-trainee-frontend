@@ -120,7 +120,8 @@
 
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems.length !== 0">
-        <div class="form-group d-flex page-size-group mb-0 mr-2">
+        <div class="form-group d-flex page-size-group mb-0 mr-2"
+          v-if="getPageSize">
           <select class="form-control w-auto"
             @change="changePageSize()"
             v-model="pageSize">
@@ -350,6 +351,11 @@ export default {
         `${AppConfig.notification.content_deleted_success_default}`,
       );
     },
+  },
+  computed: {
+    getPageSize() {
+      return this.students.length!=0?true:false;
+    }
   }
 }
 </script>

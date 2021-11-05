@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-          <TimeLineComponent :plans="plans"
+          <TimeLineComponent
             :planGuid="guid"
             :plan="plan" />
         </div>
@@ -46,6 +46,11 @@
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
                     <label>Tên khóa: </label>
                     {{plan.courseName}}
+                  </div>
+
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                    <label>Ngành: </label>
+                    {{facultyName}}
                   </div>
 
                   <div class="form-group col-sm-12 col-md-6 col-lg-6">
@@ -169,7 +174,6 @@ export default {
       isActiveStep: "1",
       planId: null,
       planName: null,
-      plans: [],
       isNotification: null,
       faculties: [],
       statistiesStudentInClass: [],
@@ -177,18 +181,17 @@ export default {
       labelsDataStatisticsStudentInClass: [],
       assignedStudents: [],
       unassignStudents: [],
+      facultyName: '',
     };
   },
 
   async mounted() {
     await this.getTrainingSystemsFilterAsync();
     await this.getCareersFilterAsync();
-    await this.getPlansAsync();
     await this.getFacultiesFilterAsync();
     if (!this.guid) {
       return;
     }
-    this.plans = this.plans.filter((plan) => plan.id != this.guid);
     await this.getPlanByIdAsync(this.guid);
     this.planId = this.plan.id;
     this.trainingSystemId = this.getInfoObject(
@@ -262,28 +265,6 @@ export default {
       this.faculties = response.data;
     },
 
-    async getPlansAsync() {
-      let planFilter = {
-        status: "",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new PlanService();
-
-      const response = await api.getPlansAsync(planFilter);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.plans = response.data;
-    },
-
     hidePastDates(date) {
       return date > this.plan.endDay || date < new Date();
     },
@@ -308,7 +289,8 @@ export default {
         );
         return;
       }
-      this.plan = response.data;
+      this.plan = response.data.internshipCourseDto;
+      this.facultyName = response.data.facultyName;
     },
 
     async getTrainingSystemsFilterAsync() {
@@ -379,16 +361,6 @@ export default {
       this.careersFilter = this.careers.filter(
         (career) => career.trainingSystemId == this.trainingSystemId
       );
-    },
-
-    checkExistencePlan(planName) {
-      const result = this.plans.find(
-        ({ internshipCourseName }) => internshipCourseName === planName
-      );
-      if (result) {
-        return true;
-      }
-      return false;
     },
 
     async createTrainingSystemAsync() {
