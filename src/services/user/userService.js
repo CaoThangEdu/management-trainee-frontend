@@ -95,6 +95,16 @@ export default class UserService extends ServicesBaseAPI {
       return this.http.loadError(e);
     }
     return this.result;
+  }
+
+  async getUsersAsync(object) {
+    try {
+      const response = await this.http.post(`${this.url}/FilterUser`, object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
   } 
   
 }

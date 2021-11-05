@@ -10,7 +10,7 @@
       </svg> Danh sách khoa
       <button class="btn btn-primary float-right" title="Thêm mới"
         @click="createFaculty">
-        <i class="fa fa-plus-square"></i>
+        <em class="fa fa-plus-square"></em>
       </button>
     </header>
     <div class="card-body">
@@ -25,7 +25,7 @@
               <button type="submit" id="btn-search" class="btn btn-stack-overflow"
                 @click="getFacultiesFilterAsync"
                 title="Tìm kiếm">
-                <i class="fas fa-search"></i>
+                <em class="fas fa-search"></em>
               </button>
             </div>
 
@@ -34,6 +34,7 @@
       </div>
       <div class="table-responsive">
         <table class="table">
+          <caption></caption>
           <thead class="">
             <tr>
               <th scope="col">STT</th>
@@ -50,11 +51,11 @@
                 title="Xem">{{ item.facultyName }}</td>
               <td>
                 <button class="btn btn-danger" title="Xóa"
-                  @click="deleteFaculty(item)"><i class="fa fa-trash"></i></button>
+                  @click="deleteFaculty(item, index)"><em class="fa fa-trash"></em></button>
               </td>
             </tr>
             <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-              <th colspan="5" class="text-left">
+              <th colspan="5" scope="" class="text-left">
                 Không có dữ liệu nào được tìm thấy.
               </th>
             </tr>
@@ -100,6 +101,7 @@ export default {
     return {
       faculties: [],
       editFaculty: {},
+      selectFaculty:-1,
       confirmFaculty: null,
       metaDataFile: [],
       pageOfItems: [],
@@ -150,6 +152,7 @@ export default {
         return;
       }
       this.faculties = response.data;
+      this.$emit("change-faculty", this.faculties);
     },
 
     async changePage(currentPage) {
@@ -157,11 +160,12 @@ export default {
     },
 
     updateFaculty(index) {
+      this.selectFaculty = index;
       this.editFaculty = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteFaculty(item) {
-      this.confirmFaculty = { item: item };
+    deleteFaculty(item, index) {
+      this.confirmFaculty = { item: item , index: index};
     },
 
     // Call api delete Faculty
@@ -178,7 +182,8 @@ export default {
         );
         return;
       }
-      this.faculties.splice(facultyComfirm.item.id, 1);
+      this.faculties.splice(facultyComfirm.index, 1);
+      this.$emit("change-faculty", this.faculties);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -186,9 +191,14 @@ export default {
       );
     },
     
-    async changeData() {
-      this.$emit("change-faculty");
-      await this.getFacultiesFilterAsync();
+    async changeData(faculty, type) {
+      if(type === "create"){
+        this.faculties.unshift(faculty);
+        return this.$emit("change-faculty", this.faculties);
+      }
+      this.faculties.splice(this.selectFaculty, 1 ,faculty)
+      this.selectFaculty = -1;
+      this.$emit("change-faculty", this.faculties);
     },
   }
 }

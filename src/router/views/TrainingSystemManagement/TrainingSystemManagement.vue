@@ -15,13 +15,16 @@
               v-if="faq.text == 'ListFacultyManagementComponent'"
             >
               <ListFacultyManagementComponent 
-              @change-training-system="changeTrainingSystem" />
+              @change-training-system="changeTrainingSystem" 
+              @change-faculty="changeFaculty"/>
             </div>
             <div
               class="col-xl-12 col-md-12 col-sm-12 col-12"
               v-if="faq.text == 'ListTrainingSystemManagementComponent'"
             >
               <ListTrainingSystemManagementComponent 
+                :faculties="faculties"
+                @change-training-system="changeTrainingSystems"
                 v-if="renderCareerComponent" />
             </div>
             <div
@@ -29,6 +32,8 @@
               v-if="faq.text == 'ListCareerManagementComponent'"
             >
               <ListCareerManagementComponent 
+                :faculties="faculties"
+                :trainingSystems="trainingSystems"
                 v-if="renderCareerComponent" />
             </div>
           </dd>
@@ -66,6 +71,9 @@ export default {
       ],
       currentFaq: 0,
       renderCareerComponent: true,
+      faculties:[],
+      trainingSystems:[]
+
     };
   },
 
@@ -79,6 +87,12 @@ export default {
         this.renderCareerComponent = true;
       });
     },
+    changeFaculty(faculties){
+      this.faculties = faculties;
+    },
+    changeTrainingSystems(trainingSystems){
+      this.trainingSystems = trainingSystems
+    }
   },
 };
 </script>

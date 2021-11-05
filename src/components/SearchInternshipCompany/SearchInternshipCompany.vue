@@ -195,6 +195,7 @@ export default {
     showConfirmationCertificate(company) {
       this.isShow = true;
       this.keyCompany = company;
+       this.student = this.userProfile;
     },
     closeModal(isShow){
       this.isShow = isShow;

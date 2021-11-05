@@ -40,8 +40,9 @@
                       v-for="(item, index) in classById"
                       :key="index"
                       :value="item.id"
-                      >{{ item.className }}</option
                     >
+                      {{ item.className }}
+                    </option>
                   </select>
                 </div>
                 <div v-if="isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
@@ -86,7 +87,7 @@
                   />
                 </div>
                 <div
-                  class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 "
+                  class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12"
                   v-if="isAdmin"
                 >
                   <label for="">&ensp;</label>
@@ -121,10 +122,14 @@
                     </div>
                   </th>
                   <th v-if="!isAdmin" scope="col" class="text-center">STT</th>
-                  <th scope="col" class="align-middle" style="width: 300px;">Thông tin sinh viên</th>
+                  <th scope="col" class="align-middle" style="width: 300px">
+                    Thông tin sinh viên
+                  </th>
                   <th scope="col" class="align-middle">Thông tin công ty</th>
-                  <th scope="col" class="align-middle" style="width: 200px;">Trạng thái</th>
-                  <th scope="col" class="align-middle" style="width: 110px;">
+                  <th scope="col" class="align-middle" style="width: 200px">
+                    Trạng thái
+                  </th>
+                  <th scope="col" class="align-middle" style="width: 110px">
                     Thao tác
                   </th>
                 </tr>
@@ -144,7 +149,9 @@
                         {{ index + 1 }}</label
                       >
                     </div>
-                    <div v-if="!isAdmin " class="text-center">{{ index + 1 }}</div>
+                    <div v-if="!isAdmin" class="text-center">
+                      {{ index + 1 }}
+                    </div>
                   </th>
                   <td>
                     <div><strong>MSSV:</strong> {{ item.mssv }}</div>
@@ -208,23 +215,27 @@
                         v-if="item.status === ''"
                         :selected="item.status === ''"
                         value=""
-                        >Đang chọn</option
                       >
+                        Đang chọn
+                      </option>
                       <option
                         :selected="item.status === 'unconfirmed'"
                         value="unconfirmed"
-                        >Đang chờ duyệt</option
                       >
+                        Đang chờ duyệt
+                      </option>
                       <option
                         :selected="item.status === 'confirmed'"
                         value="confirmed"
-                        >Đã duyệt</option
                       >
+                        Đã duyệt
+                      </option>
                       <option
                         :selected="item.status === 'complete'"
                         value="complete"
-                        >Hoàn thành</option
                       >
+                        Hoàn thành
+                      </option>
                     </select>
                   </td>
                   <td :class="{ 'text-center': isAdmin }">
@@ -291,34 +302,41 @@
             </div>
           </div>
         </div>
-        <div id="certificate-pdf" class="d-none">
-          <div>
-            <span style="opacity: 0;">---------</span> BỘ CÔNG THƯƠNG
-            <span style="opacity: 0;">-----------------------------</span>
-            <strong>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
+        <div id="certificate-pdf" class="">
+          <div
+            style="
+              display: -webkit-box;
+              display: -ms-flexbox;
+              display: flex;
+              -ms-flex-wrap: wrap;
+              flex-wrap: wrap;
+              margin-right: -15px;
+              margin-left: -15px;
+              justify-content: space-around;
+            "
+          >
+            <div style="text-align: center">
+              BỘ CÔNG THƯƠNG <br />
+              <strong>TRƯỜNG CĐ KỸ THUẬT CAO THẮNG</strong>
+              <hr />
+              <strong>Số:<span style="opacity: 0">---</span>/CĐKTCT-CTCT HSSV</strong><br />
+               V/v:Liên hệ thực tập tốtnghiệp
+            </div>
+            <div style="text-align: center">
+              <strong>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong><br />
+              Độc lập – Tự do – Hạnh phúc
+              <hr />
+              TP.Hồ Chí Minh, 
+              ngày {{today.day > 10 ?today.day:"0"+today.day}} 
+              tháng {{today.month > 10 ?today.month:"0"+today.month}} 
+              năm {{today.year}}
+            </div>
           </div>
-          <div>
-            <strong>TRƯỜNG CĐ KỸ THUẬT CAO THẮNG</strong>
-            <span style="opacity: 0;">--------------------------</span>
-            Độc lập – Tự do – Hạnh phúc
-          </div>
-          <hr />
-          <div>
-            <span style="opacity: 0;">------</span>
+          <br />
+          <div style="text-align: center"><span></span> Kính gửi:</div>
+          <div style="padding: 0px 55px; text-align: center">
             <strong
-              >Số:<span style="opacity: 0;">---</span>/CĐKTCT-CTCT HSSV</strong
-            >
-            <span style="opacity: 0;">---------------------------</span>
-            TP.Hồ Chí Minh, ngày 18 tháng 01 năm 2021
-          </div>
-          <div>
-            <span style="opacity: 0;">------</span> V/v:Liên hệ thực tập tốt
-            nghiệp
-          </div><br>
-          <div style="text-align: center;"><span></span> Kính gửi:</div>
-          <div style="padding: 0px 55px;text-align: center;">
-            <strong
-              ><h2>{{keyCertificate.companyName}}</h2>
+              ><h2>{{ keyCertificate.companyName }}</h2>
             </strong>
           </div>
           <div style="padding: 0px 65px">
@@ -328,55 +346,77 @@
               nghề từ thực tiễn tại nhà máy, công ty, cơ sở sản xuất.
             </span>
           </div>
-          <div style="padding: 0px 80px;">
-            <span>Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn vị:</span><br>
-            <span>* Tạo điều kiện cho: 2 sinh viên (danh sách đính kèm).</span><br>
-            <span>* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào tạo:Công nghệ thông
-tin</span><br>
-            <span>* Với giảng viên hướng dẫn là Thầy/Cô: Nguyễn Võ Công Khanh</span><br>
-            <span>* Thời gian thực tập từ ngày: 18/01/2020 đến ngày: 22/05/2021</span><br>
-            <span>* Nội dung thực tập: theo đề cương thực tập (gửi kèm)</span><br>
-            <span>Nhà trường cùng với giảng viên hướng dẫn có trách nhiệm giáo dục, nhắc
-              nhở sinh viên thuộc trường chấp hành nghiêm nội quy, quy định thực tập, sản xuất
-              tại Quý đơn vị.
-            </span><br>
-            <span>Rất mong được xem xét giải quyết.</span><br>
+          <div style="padding: 0px 80px">
+            <span
+              >Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn vị:</span
+            ><br />
+            <span>* Tạo điều kiện cho: 1 sinh viên (danh sách đính kèm).</span
+            ><br />
+            <span
+              >* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào tạo:Công
+              nghệ thông tin</span
+            ><br />
+            <span
+              >* Với giảng viên hướng dẫn là Thầy/Cô: Nguyễn Võ Công Khanh</span
+            ><br />
+            <span
+              >* Thời gian thực tập từ ngày: 18/01/2020 đến ngày:
+              22/05/2021</span
+            ><br />
+            <span>* Nội dung thực tập: theo đề cương thực tập (gửi kèm)</span
+            ><br />
+            <span
+              >Nhà trường cùng với giảng viên hướng dẫn có trách nhiệm giáo dục,
+              nhắc nhở sinh viên thuộc trường chấp hành nghiêm nội quy, quy định
+              thực tập, sản xuất tại Quý đơn vị. </span
+            ><br />
+            <span>Rất mong được xem xét giải quyết.</span><br />
             <span>Trân trọng kính chào./.</span>
           </div>
-          <br>
-          <div style="padding-left: 50%;text-align: center;">
-              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br>
-              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
+          <br />
+          <div style="padding-left: 50%; text-align: center">
+            <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
+            <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
           </div>
-          <br>
-          <div style="padding: 0px 80px;text-align: center;">
-            <strong style="font-size: 20px;">DANH SÁCH SINH VIÊN THỰC TẬP TỐT NGHIỆP</strong><br>
-            <span>Kèm theo CV số: . . . . . . ngày . . . . . . . . . . . .</span>
+          <br />
+          <div style="padding: 0px 80px; text-align: center">
+            <strong style="font-size: 20px"
+              >DANH SÁCH SINH VIÊN THỰC TẬP TỐT NGHIỆP</strong
+            ><br />
+            <span
+              >Kèm theo CV số: . . . . . . ngày . . . . . . . . . . . .</span
+            >
           </div>
-         <br>
-          <div style="padding: 0px 60px;">
-            <table style="width: 100%;">
+          <br />
+          <div style="padding: 0px 60px">
+            <table style="width: 100%">
               <caption></caption>
-              <tr style="text-align: center;">
-              <th style="border: 1px solid;" scope=""><strong>STT</strong></th>
-              <th style="border: 1px solid;" scope=""><strong>MSSV</strong></th>
-              <th style="border: 1px solid;" scope=""><strong>HỌ VÀ TÊN</strong></th>
-              <th style="border: 1px solid;" scope=""><strong>EMAIL</strong></th>
-            </tr>
-            <tr>
-              <td style="border: 1px solid;text-align: center;" >1</td>
-              <td style="border: 1px solid;" >{{keyStudent.studentId}}</td>
-              <td style="border: 1px solid;" >
-                {{keyStudent.firstName + keyStudent.lastName}}
-              </td>
-              <td style="border: 1px solid;" >{{keyStudent.email}}</td>
-            </tr>
+              <tr style="text-align: center">
+                <th style="border: 1px solid" scope=""><strong>STT</strong></th>
+                <th style="border: 1px solid" scope="">
+                  <strong>MSSV</strong>
+                </th>
+                <th style="border: 1px solid" scope="">
+                  <strong>HỌ VÀ TÊN</strong>
+                </th>
+                <th style="border: 1px solid" scope="">
+                  <strong>EMAIL</strong>
+                </th>
+              </tr>
+              <tr>
+                <td style="border: 1px solid; text-align: center">1</td>
+                <td style="border: 1px solid">{{ keyStudent.studentId }}</td>
+                <td style="border: 1px solid">
+                  {{ keyStudent.firstName + keyStudent.lastName }}
+                </td>
+                <td style="border: 1px solid">{{ keyStudent.email }}</td>
+              </tr>
             </table>
           </div>
-          <br>
-          <div style="padding-left: 50%;text-align: center;">
-              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br>
-              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
+          <br />
+          <div style="padding-left: 50%; text-align: center">
+            <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
+            <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
           </div>
         </div>
         <CertificateDetailComponent
@@ -426,7 +466,7 @@ tin</span><br>
               </SelectPlan>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-3">
-              <label class="d-sm-block d-none" style="height: 21px;"
+              <label class="d-sm-block d-none" style="height: 21px"
                 >&nbsp;</label
               >
               <button
@@ -478,7 +518,7 @@ dataModule(Highcharts);
 let drilldownChart,
   drilldownEvent,
   drilldownLevel = 0;
-import jsPDF from "jspdf";
+// import jsPDF from "jspdf";
 export default {
   name: "CertificatesComponent",
   extends: ComponentBase,
@@ -494,8 +534,8 @@ export default {
   mixins: [CrudMixin],
   data() {
     return {
-      keyCertificate:{},
-      keyStudent:{},
+      keyCertificate: {},
+      keyStudent: {},
       certificates: [],
       defaultCertificates: [],
       editCertificate: {},
@@ -539,6 +579,11 @@ export default {
       confirmedData: [],
       completeData: [],
       notRegisteredData: [],
+      today:{
+        day:(new Date()).getDate(),
+        month:(new Date()).getMonth() + 1,
+        year: (new Date()).getFullYear()
+      }
     };
   },
 
@@ -633,12 +678,12 @@ export default {
         chart: {
           type: "column",
           events: {
-            drilldown: function(e) {
+            drilldown: function (e) {
               if (!e.seriesOptions) {
                 this.vueRef.updateGraph(true, this, e);
               }
             },
-            drillup: function(e) {
+            drillup: function (e) {
               if (!e.seriesOptions.flag) {
                 this.vueRef.drilldownLevel = e.seriesOptions._levelNumber;
                 this.vueRef.updateGraph(false);
@@ -653,7 +698,7 @@ export default {
           column: {
             stacking: "normal",
             events: {
-              click: function(event) {
+              click: function (event) {
                 return false;
               },
             },
@@ -947,7 +992,10 @@ export default {
         return;
       }
       for (let i = 0; i <= this.certificates.length - 1; i++) {
-        if (document.getElementById(i)!= null && document.getElementById(i).checked === true) {
+        if (
+          document.getElementById(i) != null &&
+          document.getElementById(i).checked === true
+        ) {
           this.certificates[i].status = this.selectUpdateCertificates.status;
           document.getElementById(i).checked = false;
         }
@@ -1035,10 +1083,12 @@ export default {
           return;
         }
         for (let i = 0; i <= this.certificates.length - 1; i++) {
-          if(document.getElementById(i) === null) return;
+          if (document.getElementById(i) === null) return;
           document.getElementById(i).checked = true;
           this.certificates[i].status = "";
-          this.selectUpdateCertificates.certificationId.push(this.certificates[i].id);
+          this.selectUpdateCertificates.certificationId.push(
+            this.certificates[i].id
+          );
         }
         return;
       }
@@ -1046,7 +1096,11 @@ export default {
       let index = parseInt(event.target.id);
       if (event.target.checked === false) {
         document.getElementById("all").checked = false;
-        for (let i = 0;i <= this.selectUpdateCertificates.certificationId.length - 1;i++) {
+        for (
+          let i = 0;
+          i <= this.selectUpdateCertificates.certificationId.length - 1;
+          i++
+        ) {
           if (
             this.selectUpdateCertificates.certificationId[i] ===
             event.target.value
@@ -1054,9 +1108,8 @@ export default {
             this.selectUpdateCertificates.certificationId.splice(i, 1);
           }
         }
-        this.certificates[index].status = this.defaultCertificates[
-          index
-        ].status;
+        this.certificates[index].status =
+          this.defaultCertificates[index].status;
       } else {
         this.selectUpdateCertificates.certificationId.push(event.target.value);
         this.certificates[index].status = "";
@@ -1067,13 +1120,13 @@ export default {
       await this.getCertificatesAsync(this.filterCerticate);
     },
 
-    updateCertificatePdf(certificate){
-      this.keyStudent =this.studentsByMssv[certificate.mssv];
+    updateCertificatePdf(certificate) {
+      this.keyStudent = this.studentsByMssv[certificate.mssv];
       this.keyCertificate = certificate;
     },
 
     async exportPdfFile(certificate) {
-      await this.updateCertificatePdf(certificate)
+      await this.updateCertificatePdf(certificate);
       // const doc = new jsPDF();
 
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
@@ -1083,7 +1136,7 @@ export default {
       );
 
       mywindow.document.close();
-      mywindow.focus(); 
+      mywindow.focus();
 
       mywindow.print();
       mywindow.close();

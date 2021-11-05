@@ -38,37 +38,12 @@ export default {
       await this.save();
     },
 
-    closeModal(changeData) {
+    closeModal(changeData, trainingsystem, type) {
+      if (changeData) {
+        this.$emit("change-data", trainingsystem, type);
+      }
       this.isShow = false;
       this.trainingsystem = {};
-
-      if (changeData) {
-        this.$emit("change-data");
-      }
-    },
-
-    async deleteTrainingSystemConfirm(){
-      this.showLoading();
-      let api = new TrainingSystemService();
-      let response = await api.deleteTrainingSystemAsync(this.trainingsystem.id);
-      this.showLoading(false);
-
-      if(!response.isOK){   
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_updated_success_default}`
-      );
-
-      this.closeModal(true);
     },
 
     async createTrainingSystemAsync() {
@@ -91,7 +66,7 @@ export default {
         `${AppConfig.notification.content_created_success_default}`
       );
 
-      this.closeModal(true);
+      this.closeModal(true, response.data, "create");
     },
 
     async updateTrainingSystemAsync() {
@@ -115,7 +90,7 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-      this.closeModal(true);
+     this.closeModal(true, response.data, "update");
     },
 
     async save() {

@@ -146,6 +146,7 @@ export default {
     var internshipConfirmation = await this.getInternshipConfirmationAsync();
       if (internshipConfirmation !== undefined) {
       this.keyInternshipConfirmation = internshipConfirmation;
+      this.confirmed = true;
     }
   },
   computed: {
@@ -191,11 +192,10 @@ export default {
         );
         return;
       }
-      this.confirmed = true;
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
+        `Xác nhận thực tập thành công`
       );
     },
 
@@ -218,11 +218,12 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_updated_success_default}`
+        `Cập nhật thông tin thành công`
       );
     },
 
     async getInternshipConfirmationAsync() {
+      
       let filter = {
         studentId: this.userProfile.mssv,
         status: "practiced",
@@ -247,6 +248,7 @@ export default {
       var internshipConfirmation = await this.getInternshipConfirmationAsync();
       if (internshipConfirmation !== undefined) {
         this.keyInternshipConfirmation = internshipConfirmation;
+        this.confirmed = true;
       }
     },
   },

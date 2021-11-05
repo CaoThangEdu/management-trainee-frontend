@@ -112,11 +112,9 @@ import TrainingSystemManagementDetailComponent from '../TrainingSystemManagement
 import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
-import FacultyServices from '../../../services/faculty/facultyServices'
 import AppConfig from '../../../../src/app.config.json'
 import JwPagination from 'jw-vue-pagination';
-import CrudMixin from "../../../helpers/mixins/crudMixin";
-import crudMixin from '../../../helpers/mixins/crudMixin'
+import crudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ListTrainingSystemManagementComponent",
@@ -126,11 +124,15 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
-  mixins: [ CrudMixin ],
+  props:{
+    faculties:Array
+  },
+  mixins: [ crudMixin ],
   data() {
     return {
       trainingSystems: [],
       editTrainingSystem: {},
+      selectTrainingSystem:-1,
       confirmTrainingSystem: null,
       pageOfItems: [],
       customLabels: {
@@ -143,13 +145,11 @@ export default {
         trainingSystemName: "",
         status: "active",
       },
-      faculties: [],
     };
   },
 
   async mounted() {
     await this.getTrainingSystemsFilterAsync();
-    await this.getFacultiesFilterAsync();
   },
 
   methods: {
@@ -179,27 +179,7 @@ export default {
         return;
       }
       this.trainingSystems = response.data;
-    },
-
-    async getFacultiesFilterAsync() {
-      let facultyFilter = {
-      };
-      // Call Api
-      this.showLoading();
-      const api = new FacultyServices()
-
-      const response = await api.getFacultiesFilterAsync(facultyFilter);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.faculties = response.data;
+      this.$emit("change-training-system",this.trainingSystems);
     },
 
     async changePage(currentPage) {
@@ -207,6 +187,7 @@ export default {
     },
 
     updateTrainingSystem(index) {
+      this.selectTrainingSystem = index;
       this.editTrainingSystem = Object.assign({}, this.pageOfItems[index]);
     },
 
@@ -234,6 +215,7 @@ export default {
         return;
       }
       this.trainingSystems.splice(trainingSystem.index, 1);
+      this.$emit("change-training-system", this.trainingSystems);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -271,12 +253,17 @@ export default {
     },
 
     getStatusIcon(status) {
-      return CrudMixin.methods.getStatusIcon(status);
+      return crudMixin.methods.getStatusIcon(status);
     },
 
-    async changeData() {
-      this.$emit("change-training-system");
-      await this.getTrainingSystemsFilterAsync();
+    async changeData(trainingsystem, type) {
+      if(type === "create"){
+        this.trainingSystems.unshift(trainingsystem);
+        return this.$emit("change-training-system",this.trainingSystems);
+      }
+      this.trainingSystems.splice(this.selectTrainingSystem, 1 ,trainingsystem)
+      this.selectTrainingSystem = -1;
+      this.$emit("change-training-system",this.trainingSystems);
     },
 
     getFaculty(facultyId){
