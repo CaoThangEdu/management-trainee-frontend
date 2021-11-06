@@ -111,7 +111,8 @@
           class="card-footer d-flex justify-content-center text--blue"
           v-show="pageOfItems.length !== 0"
         >
-          <div class="form-group d-flex page-size-group mb-0 mr-2">
+          <div class="form-group d-flex page-size-group mb-0 mr-2"
+            v-if="isPageSize">
             <select class="form-control w-auto"
               @change="changePageSize()"
               v-model="pageSize">
@@ -173,6 +174,7 @@ export default {
       },
       plans: [],
       pageSize: 10,
+      isPageSize: false,
     };
   },
 
@@ -242,6 +244,7 @@ export default {
         return;
       }
       this.internshipData = response.data;
+      this.isPageSize = this.internshipData.length!=0;
     },
 
     async changePage(currentPage) {

@@ -4,7 +4,7 @@ import AppConfig from '../../app.config.json'
 export default class WeeklyReportService extends ServicesBaseAPI {
   constructor() {
     super();
-    this.url = `${AppConfig.apiHost}/WeeklyReportAppServices`
+    this.url = `${AppConfig.apiHost}/WeeklyReport`
   }
 
   async getWeeklyReportByIdAsync(guid) {
@@ -20,6 +20,16 @@ export default class WeeklyReportService extends ServicesBaseAPI {
   async getWeeklyReportsAsync(dataSend) {
     try {
       const response = await this.http.post(`${this.url}/Filter`, dataSend);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
+
+  async getWeeklyReportByTeacherIdAsync(id) {
+    try {
+      const response = await this.http.get(`${this.url}/GetWeeklyReportByTeacherId?teacherId=${id}`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

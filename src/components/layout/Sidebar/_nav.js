@@ -98,6 +98,13 @@ export default [{
     },
     {
       _name: "CSidebarNavItem",
+      name: "Danh sách báo cáo hàng tuần",
+      to: "/weekly-report-management-by-teacher",
+      icon: "cil-book",
+      role: "TEACHER",
+    },
+    {
+      _name: "CSidebarNavItem",
       name: "Quản lý lớp",
       to: "/class-management",
       icon: "cil-layers",

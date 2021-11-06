@@ -252,6 +252,18 @@ const routes = [
     },
   },
   {
+    path: "/student-management-internships",
+    name: "quan-ly-thuc-tap-sinh-vien",
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        "../router/views/StudentManagementInternships/StudentManagementInternships.vue"
+      ),
+    meta: {
+      breadcrumbName: "Quản lý thực tập sinh viên",
+    },
+  },
+  {
     path: "/company-management",
     name: "quan-ly-cong-ty",
     component: () =>
@@ -307,6 +319,17 @@ const routes = [
       ),
     meta: {
       breadcrumbName: "Quản lý báo cáo hàng tuần",
+    },
+  },
+  {
+    path: "/weekly-report-management-by-teacher",
+    name: "bao-cao-hang-tuan-giao-vien-quan-ly",
+    component: () =>
+      import(
+        "../router/views/WeeklyReportManagementByTeacher/WeeklyReportManagementByTeacher.vue"
+      ),
+    meta: {
+      breadcrumbName: "Báo cáo hàng tuần của các sinh viên",
     },
   },
   {
