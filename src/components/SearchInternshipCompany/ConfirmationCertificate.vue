@@ -120,7 +120,7 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
+        `Đăng ký thành công`
       );
       this.errorMessages = []
       await this.createCompanyAsync();
@@ -170,7 +170,8 @@ export default {
 
     async createCompanyAsync() {
       let company = await this.getCompanieByTaxCodeAsync();
-      if (this.companiesByTaxCode[company.taxCode] !== undefined) return;
+      console.log(company)
+      if (company == null || this.companiesByTaxCode[company.taxCode] !== undefined ) return;
       company.status = "active";
       this.showLoading();
       let api = new CompanyService();

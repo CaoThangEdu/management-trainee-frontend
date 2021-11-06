@@ -1,5 +1,52 @@
 <template>
   <div class="row">
+    <div v-if="isAdmin" class="col-12">
+      <div class="card">
+        <header class="card-header">
+          <h4>Thống kê phiếu giới thiệu</h4>
+        </header>
+        <div class="card-body">
+          <div class="form-row mb-2 filter-wrapper">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+              <label for="">Đợt thực tập:</label>
+              <SelectPlan
+                :isRequired="false"
+                v-model="filterChart.internshipCourseId"
+                :plans="plans"
+                :defaultText="'Tất cả'"
+                @change="
+                  (event) => {
+                    filterChart.internshipCourseId = event.id;
+                  }
+                "
+              >
+              </SelectPlan>
+            </div>
+            <div v-if="isAdmin" class="col-sm-12 col-md-6 col-lg-6">
+              <label for="">Lớp:</label>
+              <select
+                class="
+                  form-control
+                  form-select
+                  form-select-class
+                  form-select-class-size
+                "
+                v-model="filterCerticate.classId"
+              >
+                <option value="">Tất cả</option>
+                <option
+                  v-for="(item, index) in classById"
+                  :key="index"
+                  :value="item.id"
+                >
+                  {{ item.className }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="col-12">
       <div class="card">
         <header class="card-header">
@@ -29,22 +76,6 @@
           <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
-                <div v-if="isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                  <label for="">Lớp:</label>
-                  <select
-                    class="form-control form-select form-select-class"
-                    v-model="filterCerticate.classId"
-                  >
-                    <option value="">Tất cả</option>
-                    <option
-                      v-for="(item, index) in classById"
-                      :key="index"
-                      :value="item.id"
-                    >
-                      {{ item.className }}
-                    </option>
-                  </select>
-                </div>
                 <div v-if="isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
                   <label for="">Trạng thái:</label>
                   <select
@@ -256,9 +287,10 @@
                       <em class="fa fa-trash"></em>
                     </button>
                     <button
+                      :disabled="item.status === 'unconfirmed'"
                       v-if="isAdmin"
                       class="btn btn-primary"
-                      @click="exportPdfFile(item)"
+                      @click="exportPdfFile(item, index)"
                     >
                       <em class="fas fa-file-export"></em>
                     </button>
@@ -302,122 +334,257 @@
             </div>
           </div>
         </div>
-        <div id="certificate-pdf" class="">
-          <div
-            style="
-              display: -webkit-box;
-              display: -ms-flexbox;
-              display: flex;
-              -ms-flex-wrap: wrap;
-              flex-wrap: wrap;
-              margin-right: -15px;
-              margin-left: -15px;
-              justify-content: space-around;
-            "
-          >
-            <div style="text-align: center">
-              BỘ CÔNG THƯƠNG <br />
-              <strong>TRƯỜNG CĐ KỸ THUẬT CAO THẮNG</strong>
-              <hr />
-              <strong>Số:<span style="opacity: 0">---</span>/CĐKTCT-CTCT HSSV</strong><br />
-               V/v:Liên hệ thực tập tốtnghiệp
-            </div>
-            <div style="text-align: center">
-              <strong>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong><br />
-              Độc lập – Tự do – Hạnh phúc
-              <hr />
-              TP.Hồ Chí Minh, 
-              ngày {{today.day > 10 ?today.day:"0"+today.day}} 
-              tháng {{today.month > 10 ?today.month:"0"+today.month}} 
-              năm {{today.year}}
-            </div>
-          </div>
-          <br />
-          <div style="text-align: center"><span></span> Kính gửi:</div>
-          <div style="padding: 0px 55px; text-align: center">
-            <strong
-              ><h2>{{ keyCertificate.companyName }}</h2>
-            </strong>
-          </div>
-          <div style="padding: 0px 65px">
-            <span
-              >Để thực hiện tốt nhiệm vụ đào tạo của trường, giúp cho sinh viên
-              học tập trong nhà trường phối hợp thực hành, sản xuất nâng cao tay
-              nghề từ thực tiễn tại nhà máy, công ty, cơ sở sản xuất.
-            </span>
-          </div>
-          <div style="padding: 0px 80px">
-            <span
-              >Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn vị:</span
-            ><br />
-            <span>* Tạo điều kiện cho: 1 sinh viên (danh sách đính kèm).</span
-            ><br />
-            <span
-              >* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào tạo:Công
-              nghệ thông tin</span
-            ><br />
-            <span
-              >* Với giảng viên hướng dẫn là Thầy/Cô: Nguyễn Võ Công Khanh</span
-            ><br />
-            <span
-              >* Thời gian thực tập từ ngày: 18/01/2020 đến ngày:
-              22/05/2021</span
-            ><br />
-            <span>* Nội dung thực tập: theo đề cương thực tập (gửi kèm)</span
-            ><br />
-            <span
-              >Nhà trường cùng với giảng viên hướng dẫn có trách nhiệm giáo dục,
-              nhắc nhở sinh viên thuộc trường chấp hành nghiêm nội quy, quy định
-              thực tập, sản xuất tại Quý đơn vị. </span
-            ><br />
-            <span>Rất mong được xem xét giải quyết.</span><br />
-            <span>Trân trọng kính chào./.</span>
-          </div>
-          <br />
-          <div style="padding-left: 50%; text-align: center">
-            <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
-            <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
-          </div>
-          <br />
-          <div style="padding: 0px 80px; text-align: center">
-            <strong style="font-size: 20px"
-              >DANH SÁCH SINH VIÊN THỰC TẬP TỐT NGHIỆP</strong
-            ><br />
-            <span
-              >Kèm theo CV số: . . . . . . ngày . . . . . . . . . . . .</span
+        <div id="certificate-pdf" class="d-none">
+          <div>
+            <div
+              style="
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+                margin-right: -15px;
+                margin-left: -15px;
+                justify-content: space-around;
+              "
             >
+              <div style="text-align: center">
+                BỘ CÔNG THƯƠNG <br />
+                <strong>TRƯỜNG CĐ KỸ THUẬT CAO THẮNG</strong>
+                <hr />
+                <strong
+                  >Số:<span style="opacity: 0">---</span>/CĐKTCT-CTCT
+                  HSSV</strong
+                ><br />
+                V/v:Liên hệ thực tập tốt nghiệp
+              </div>
+              <div style="text-align: center">
+                <strong>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong><br />
+                Độc lập – Tự do – Hạnh phúc
+                <hr />
+                TP.Hồ Chí Minh, ngày
+                {{ today.day > 10 ? today.day : "0" + today.day }} tháng
+                {{ today.month > 10 ? today.month : "0" + today.month }} năm
+                {{ today.year }}
+              </div>
+            </div>
+            <br />
+            <div style="text-align: center"><span></span> Kính gửi:</div>
+            <div style="padding: 0px 55px; text-align: center">
+              <strong
+                ><h2>{{ keyCertificate.companyName }}</h2>
+              </strong>
+            </div>
+            <div style="padding: 0px 65px">
+              <span
+                >Để thực hiện tốt nhiệm vụ đào tạo của trường, giúp cho sinh
+                viên học tập trong nhà trường phối hợp thực hành, sản xuất nâng
+                cao tay nghề từ thực tiễn tại nhà máy, công ty, cơ sở sản xuất.
+              </span>
+            </div>
+            <div style="padding: 0px 80px">
+              <span
+                >Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn
+                vị:</span
+              ><br />
+              <span>* Tạo điều kiện cho: 1 sinh viên (danh sách đính kèm).</span
+              ><br />
+              <span
+                >* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào
+                tạo:Công nghệ thông tin</span
+              ><br />
+              <span
+                >* Với giảng viên hướng dẫn là Thầy/Cô: Nguyễn Võ Công
+                Khanh</span
+              ><br />
+              <span
+                >* Thời gian thực tập từ ngày: 18/01/2020 đến ngày:
+                22/05/2021</span
+              ><br />
+              <span>* Nội dung thực tập: theo đề cương thực tập (gửi kèm)</span
+              ><br />
+              <span
+                >Nhà trường cùng với giảng viên hướng dẫn có trách nhiệm giáo
+                dục, nhắc nhở sinh viên thuộc trường chấp hành nghiêm nội quy,
+                quy định thực tập, sản xuất tại Quý đơn vị. </span
+              ><br />
+              <span>Rất mong được xem xét giải quyết.</span><br />
+              <span>Trân trọng kính chào./.</span>
+            </div>
+            <br />
+            <div style="padding-left: 50%; text-align: center">
+              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
+              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
+            </div>
+            <br />
+            <div style="padding: 0px 80px; text-align: center">
+              <strong style="font-size: 20px"
+                >DANH SÁCH SINH VIÊN THỰC TẬP TỐT NGHIỆP</strong
+              ><br />
+              <span
+                >Kèm theo CV số: . . . . . . ngày . . . . . . . . . . . .</span
+              >
+            </div>
+            <br />
+            <div style="padding: 0px 60px">
+              <table style="width: 100%">
+                <caption></caption>
+                <tr style="text-align: center">
+                  <th style="border: 1px solid" scope="">
+                    <strong>STT</strong>
+                  </th>
+                  <th style="border: 1px solid" scope="">
+                    <strong>MSSV</strong>
+                  </th>
+                  <th style="border: 1px solid" scope="">
+                    <strong>HỌ VÀ TÊN</strong>
+                  </th>
+                  <th style="border: 1px solid" scope="">
+                    <strong>EMAIL</strong>
+                  </th>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid; text-align: center">1</td>
+                  <td style="border: 1px solid">{{ keyStudent.studentId }}</td>
+                  <td style="border: 1px solid">
+                    {{ keyStudent.firstName + keyStudent.lastName }}
+                  </td>
+                  <td style="border: 1px solid">{{ keyStudent.email }}</td>
+                </tr>
+              </table>
+            </div>
+            <br />
+            <div style="padding-left: 50%; text-align: center">
+              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
+              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
+            </div>
           </div>
-          <br />
-          <div style="padding: 0px 60px">
-            <table style="width: 100%">
-              <caption></caption>
-              <tr style="text-align: center">
-                <th style="border: 1px solid" scope=""><strong>STT</strong></th>
-                <th style="border: 1px solid" scope="">
-                  <strong>MSSV</strong>
-                </th>
-                <th style="border: 1px solid" scope="">
-                  <strong>HỌ VÀ TÊN</strong>
-                </th>
-                <th style="border: 1px solid" scope="">
-                  <strong>EMAIL</strong>
-                </th>
-              </tr>
-              <tr>
-                <td style="border: 1px solid; text-align: center">1</td>
-                <td style="border: 1px solid">{{ keyStudent.studentId }}</td>
-                <td style="border: 1px solid">
-                  {{ keyStudent.firstName + keyStudent.lastName }}
-                </td>
-                <td style="border: 1px solid">{{ keyStudent.email }}</td>
-              </tr>
-            </table>
-          </div>
-          <br />
-          <div style="padding-left: 50%; text-align: center">
-            <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
-            <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
-          </div>
+        </div>
+        <div id="certificates-pdf" class="">
+          <!-- <div v-for="internshipCompany in internshipCompanies" :key="internshipCompany" class="mb-4">
+            <div
+              style="
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+                margin-right: -15px;
+                margin-left: -15px;
+                justify-content: space-around;
+              "
+            >
+              <div style="text-align: center">
+                BỘ CÔNG THƯƠNG <br />
+                <strong>TRƯỜNG CĐ KỸ THUẬT CAO THẮNG</strong>
+                <hr />
+                <strong
+                  >Số:<span style="opacity: 0">---</span>/CĐKTCT-CTCT
+                  HSSV</strong
+                ><br />
+                V/v:Liên hệ thực tập tốt nghiệp
+              </div>
+              <div style="text-align: center">
+                <strong>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong><br />
+                Độc lập – Tự do – Hạnh phúc
+                <hr />
+                TP.Hồ Chí Minh, ngày
+                {{ today.day > 10 ? today.day : "0" + today.day }} tháng
+                {{ today.month > 10 ? today.month : "0" + today.month }} năm
+                {{ today.year }}
+              </div>
+            </div>
+            <br />
+            <div style="text-align: center"><span></span> Kính gửi:</div>
+            <div style="padding: 0px 55px; text-align: center">
+              <strong
+                ><h2>{{ internshipCompanies === {}?"":internshipCompanies[internshipCompany].companyName }}</h2>
+              </strong>
+            </div>
+            <div style="padding: 0px 65px">
+              <span
+                >Để thực hiện tốt nhiệm vụ đào tạo của trường, giúp cho sinh
+                viên học tập trong nhà trường phối hợp thực hành, sản xuất nâng
+                cao tay nghề từ thực tiễn tại nhà máy, công ty, cơ sở sản xuất.
+              </span>
+            </div>
+            <div style="padding: 0px 80px">
+              <span
+                >Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn
+                vị:</span
+              ><br />
+              <span>* Tạo điều kiện cho: {{internshipCompanies === {}?"":internshipCompanies[internshipCompany].student.lenght}} sinh viên (danh sách đính kèm).</span
+              ><br />
+              <span
+                >* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào
+                tạo:Công nghệ thông tin</span
+              ><br />
+              <span
+                >* Với giảng viên hướng dẫn là Thầy/Cô: Nguyễn Võ Công
+                Khanh</span
+              ><br />
+              <span
+                >* Thời gian thực tập từ ngày: 18/01/2020 đến ngày:
+                22/05/2021</span
+              ><br />
+              <span>* Nội dung thực tập: theo đề cương thực tập (gửi kèm)</span
+              ><br />
+              <span
+                >Nhà trường cùng với giảng viên hướng dẫn có trách nhiệm giáo
+                dục, nhắc nhở sinh viên thuộc trường chấp hành nghiêm nội quy,
+                quy định thực tập, sản xuất tại Quý đơn vị. </span
+              ><br />
+              <span>Rất mong được xem xét giải quyết.</span><br />
+              <span>Trân trọng kính chào./.</span>
+            </div>
+            <br />
+            <div style="padding-left: 50%; text-align: center">
+              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
+              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
+            </div>
+            <br />
+            <div style="padding: 0px 80px; text-align: center">
+              <strong style="font-size: 20px"
+                >DANH SÁCH SINH VIÊN THỰC TẬP TỐT NGHIỆP</strong
+              ><br />
+              <span
+                >Kèm theo CV số: . . . . . . ngày . . . . . . . . . . . .</span
+              >
+            </div>
+            <br />
+            <div style="padding: 0px 60px">
+              <table style="width: 100%">
+                <caption></caption>
+                <tr style="text-align: center">
+                  <th style="border: 1px solid" scope="">
+                    <strong>STT</strong>
+                  </th>
+                  <th style="border: 1px solid" scope="">
+                    <strong>MSSV</strong>
+                  </th>
+                  <th style="border: 1px solid" scope="">
+                    <strong>HỌ VÀ TÊN</strong>
+                  </th>
+                  <th style="border: 1px solid" scope="">
+                    <strong>EMAIL</strong>
+                  </th>
+                </tr>
+                <tr v-for="(index,student) in internshipCompanies[internshipCompany].students" :key="index">
+                  <td style="border: 1px solid; text-align: center">{{index + 1}}</td>
+                  <td style="border: 1px solid">{{ student }}</td>
+                  <td style="border: 1px solid">
+                    {{ getStudent(student).firstName + getStudent(student).lastName }}
+                  </td>
+                  <td style="border: 1px solid">{{ getStudent(student).email }}</td>
+                </tr>
+              </table>
+            </div>
+            <br />
+            <div style="padding-left: 50%; text-align: center">
+              <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
+              <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
+            </div>
+          </div> -->
         </div>
         <CertificateDetailComponent
           :data="editCertificate"
@@ -440,54 +607,6 @@
             :data="confirmedCertificate"
             @agree="agreeConfirm"
           ></ConfirmDialog>
-        </div>
-      </div>
-    </div>
-    <div class="col-12">
-      <div class="card">
-        <header class="card-header">
-          <h4>Thống kê phiếu giới thiệu</h4>
-        </header>
-        <div class="card-body">
-          <div class="form-row mb-2 filter-wrapper">
-            <div class="col-sm-12 col-md-6 col-lg-3">
-              <label for="">Đợt thực tập:</label>
-              <SelectPlan
-                :isRequired="false"
-                v-model="filterChart.internshipCourseId"
-                :plans="plans"
-                :defaultText="'Tất cả'"
-                @change="
-                  (event) => {
-                    filterChart.internshipCourseId = event.id;
-                  }
-                "
-              >
-              </SelectPlan>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-3">
-              <label class="d-sm-block d-none" style="height: 21px"
-                >&nbsp;</label
-              >
-              <button
-                type="submit"
-                id="btn-search"
-                class="btn btn-stack-overflow"
-                title="Tìm kiếm"
-                @click="showchartAsnyc()"
-              >
-                <em class="fas fa-search"></em>
-              </button>
-            </div>
-          </div>
-          <div v-if="statisticalCertificate.length > 0">
-            <highcharts
-              class="chart"
-              :constructor-type="'chart'"
-              :options="chartOptions"
-            >
-            </highcharts>
-          </div>
         </div>
       </div>
     </div>
@@ -534,6 +653,7 @@ export default {
   mixins: [CrudMixin],
   data() {
     return {
+      internshipCompanies: {},
       keyCertificate: {},
       keyStudent: {},
       certificates: [],
@@ -579,11 +699,11 @@ export default {
       confirmedData: [],
       completeData: [],
       notRegisteredData: [],
-      today:{
-        day:(new Date()).getDate(),
-        month:(new Date()).getMonth() + 1,
-        year: (new Date()).getFullYear()
-      }
+      today: {
+        day: new Date().getDate(),
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+      },
     };
   },
 
@@ -907,6 +1027,7 @@ export default {
     },
 
     getStudent(mssv) {
+      console.log(mssv)
       if (this.studentsByMssv[mssv] === undefined) {
         return "";
       }
@@ -1125,14 +1246,53 @@ export default {
       this.keyCertificate = certificate;
     },
 
-    async exportPdfFile(certificate) {
+    async exportPdfFile(certificate, index) {
       await this.updateCertificatePdf(certificate);
-      // const doc = new jsPDF();
+      console.log(index);
 
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
 
       mywindow.document.write(
         document.getElementById("certificate-pdf").innerHTML
+      );
+
+      mywindow.document.close(console.log("mywindow.document.close"));
+      mywindow.focus(console.log("mywindow.focus"));
+
+      mywindow.print(console.log("mywindow.print"));
+      mywindow.close(
+        console.log("mywindow.close")
+      );
+
+      return true;
+    },
+
+    setInternshipCompany() {
+      for (let i = 0; i <= this.certificates.length - 1; i++) {
+        if (
+          !(this.certificates[i].taxCode in this.internshipCompanies) &&
+          this.certificates[i].status === "confirmed"
+        ) {
+          this.internshipCompanies[this.certificates[i].taxCode] = {
+            taxCode: this.certificates[i].taxCode,
+            nameCompany: this.certificates[i].companyName,
+            students: [],
+          };
+        }
+        if (this.certificates[i].status === "confirmed") {
+          this.internshipCompanies[this.certificates[i].taxCode].students.push(
+            this.certificates[i].mssv
+          );
+        }
+      }
+    },
+
+    async exportPdfFiles() {
+      await this.setInternshipCompany();
+      let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
+
+      mywindow.document.write(
+        document.getElementById("certificates-pdf").innerHTML
       );
 
       mywindow.document.close();
@@ -1157,5 +1317,10 @@ export default {
   pointer-events: none;
   cursor: default;
   text-decoration: none;
+}
+.form-select-class-size {
+  width: 100%;
+  height: 28px;
+  padding: 0px 5px;
 }
 </style>

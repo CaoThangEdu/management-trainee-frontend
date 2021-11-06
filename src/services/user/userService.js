@@ -106,5 +106,5 @@ export default class UserService extends ServicesBaseAPI {
     }
     return this.result;
   } 
-  
+
 }
