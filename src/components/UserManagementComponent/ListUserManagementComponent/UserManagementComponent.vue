@@ -26,35 +26,58 @@
         </header>
 
         <div class="card-body">
+            <div class="row mb-3">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-row filter-wrapper ml-0 mr-0">
+              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
+                <select
+                  class="form-control form-select form-select-class" v-model="filterUser.role">
+                  <option value="">Tất cả</option>
+                  <option value="ADMIN">Quản trị viên</option>
+                  <option value="TEACHER">Giáo viên</option>
+                   <option value="STUDENT">Sinh viên</option>
+                </select>
+              </div>
+              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
+                <input v-model="filterUser.userName" type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
+                <button @click="getUsersAsync()" type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
+              </div>
+            </div>
+          </div>
+        </div>
           <div class="table-responsive">
             <table class="table">
               <thead class="">
                 <tr>
-                  <th scope="col">STT</th>
-                  <th scope="col">Tên đăng nhập</th>
-                  <th scope="col" class="text-center">Tên và tên đệm</th>
-                  <th scope="col" class="text-center">Họ</th>
-                  <th scope="col">Email</th>
-                  <th scope="col" class="text-center">Họ và tên</th>
-                  <th scope="col">Đăng nhập lần cuối</th>
-                  <th scope="col" class="text-center">Quyền hạn</th>
+                  <th scope="col" class="text-center align-middle">STT</th>
+                  <th scope="col" class="align-middle">Tên đăng nhập</th>
+                  <th scope="col" class="align-middle">Họ và tên</th>
+                  <th scope="col" class="align-middle">Email</th>
+                  <th scope="col" class="align-middle">Đăng nhập lần cuối</th>
+                  <th scope="col" class="align-middle">Quyền hạn</th>
+                  <th scope="col" class="text-center align-middle" style="width: 122px;">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(user, index) in pageOfItems" :key="index">
-                  <th scope="row">{{ index + 1 }}</th>
+                  <th scope="row" class="text-center">{{ index + 1 }}</th>
                   <td>{{ user.userName }}</td>
-                  <td class="text-center">{{ user.name }}</td>
-                  <td class="text-center">{{ user.surname }}</td>
+                  <td >{{ user.fullName }}</td>
                   <td>{{ user.emailAddress }}</td>
-                  <td class="text-center">{{ user.fullName }}</td>
                   <td>{{ user.lastLoginTime }}</td>
+                  <td v-if="user.roleNames[0] === 'STUDENT'" >Sinh viên</td>
+                  <td v-if="user.roleNames[0] === 'TEACHER'" >Giáo viên</td>
+                  <td v-if="user.roleNames[0] === 'ADMIN'" >Admin</td>
                   <td class="text-center">
-                    {{ getRoleName(user.roleNames[0]) }}
+                    <button @click="resetPasswordUser(user, index)" type="button" class="btn btn-success p-0 py-2">
+                      Reset password
+                    </button>
                   </td>
                 </tr>
                 <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-                  <th colspan="8" class="text-left">
+                  <th scope="" colspan="8" class="text-left">
                     Không có dữ liệu nào được tìm thấy.
                   </th>
                 </tr>
@@ -66,12 +89,25 @@
           :dataUser="editUser"
           @change-data-user="changeDataUser"
         />
+        <ConfirmDialog 
+        :data="user" 
+        @agree="resetPassword"
+        :message="message"></ConfirmDialog>
         <div class="card-footer d-flex justify-content-center text--blue">
+            <select class="form-control w-auto mr-2"
+            @change="changePageSize()"
+            v-model="pageSize">
+            <option value="10">10/ trang</option>
+            <option value="20">20/ trang</option>
+            <option value="30">30/ trang</option>
+            <option value="40">40/ trang</option>
+            <option value="50">50/ trang</option>
+          </select>
           <JwPagination
             :items="users"
             @changePage="onChangePage"
             :labels="customLabels"
-            :pageSize="10"
+            :pageSize="Number(pageSize)"
           >
           </JwPagination>
         </div>
@@ -90,6 +126,7 @@ import AppConfig from "../../../app.config.json";
 import { ROLE_ENUM } from "../../../config/constant";
 import UserManagementDetailComponent from "../UserManagementDetailComponent/UserManagementDetailComponent.vue";
 import crudMixin from "../../../helpers/mixins/crudMixin";
+import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 
 export default {
   name: "UserManagementComponent",
@@ -99,11 +136,15 @@ export default {
     BaseModal,
     AlertMessages,
     UserManagementDetailComponent,
+    ConfirmDialog
   },
   mixins: [crudMixin],
   data() {
     return {
+      user: null,
+      message:"",
       users: [],
+      pageSize: 10,
       pageOfItems: [],
       customLabels: {
         first: "<<",
@@ -113,10 +154,15 @@ export default {
       },
       roleEnums: ROLE_ENUM,
       editUser: {},
+      filterUser:{
+        role:"",
+        userName:"",
+        isActive:true
+      }
     };
   },
   async mounted() {
-    await this.getUserAsync();
+    await this.getUsersAsync();
   },
   methods: {
     createUser() {
@@ -124,7 +170,7 @@ export default {
     },
 
     async changeDataUser() {
-      await this.getUserAsync();
+      await this.getUsersAsync();
     },
 
     async createUserAsync(user) {
@@ -142,11 +188,11 @@ export default {
       }
     },
 
-    async getUserAsync() {
+    async getUsersAsync() {
       // Call Api
       this.showLoading();
       const api = new UserService();
-      const response = await api.getAllUserAsync(null);
+      const response = await api.getUsersAsync(this.filterUser);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -156,7 +202,7 @@ export default {
         );
         return;
       }
-      this.users = response.data.items;
+      this.users = response.data;
     },
 
     onChangePage(pageOfItems) {
@@ -164,9 +210,47 @@ export default {
       this.pageOfItems = pageOfItems;
     },
 
+    async changePageSize() {
+      await this.getUsersAsync();
+    },
+
     changePage(currentPage) {
       this.$emit("change-page", currentPage);
     },
+
+    resetPasswordUser(item, index) {
+      this.user = {item: item, index: index};
+      this.message = `Bạn có muốn reset password tài khoản: <b>${this.user.item.userName} <b/> ?`
+    },
+
+    async resetPassword(user){
+      let keyResetPassword= {
+        adminPassword: "123qwe",
+        userId: user.id,
+        newPassword: user.roleNames[0] === "TEACHER"?'teacherCaoThang@@':'studentCaoThang@@'
+      }
+      this.showLoading();
+      const api = new UserService();
+      const response = await api.resetPasswordAsync(keyResetPassword);
+      this.showLoading(false);
+      if (!response.isOK) {
+        return this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+      }
+      return this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `Resset password thành công`)
+    }
   },
+
+  watch:{
+    "filterUser.role":async function() {
+        await this.getUsersAsync();
+    }
+  }
 };
 </script>

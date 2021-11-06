@@ -6,20 +6,7 @@
     size="lg"
   >
     <div class="">
-      <div class="form-group row">
-        <label class="col-md-4 col-sm-4 col-form-label">
-          Tên ngành (<span class="text--red">*</span>)
-        </label>
-        <div class="col-md-8 col-sm-8">
-          <input
-            type="text"
-            class="form-control"
-            id="name"
-            v-model="career.careersName"
-          />
-        </div>
-      </div>
-      <div class="form-group row">
+           <div class="form-group row">
         <label class="col-md-4 col-sm-4 col-form-label">
           Hệ đào tạo (<span class="text--red">*</span>)
         </label>
@@ -32,9 +19,22 @@
               v-for="(item, index) in trainingSystems"
               :key="index"
               :value="item.id"
-              >{{ item.trainingSystemName }}
+              >{{ getFaculty(item.facultyId).facultyName }}-{{ item.trainingSystemName }}
             </option>
           </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-4 col-sm-4 col-form-label">
+          Tên ngành (<span class="text--red">*</span>)
+        </label>
+        <div class="col-md-8 col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            v-model="career.careersName"
+          />
         </div>
       </div>
     </div>
@@ -76,6 +76,7 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import CareerService from "../../../services/career/careerServices";
 import CareerViewModel from "../../../view-model/career/careerViewModel";
 import AppConfig from "../../../../src/app.config.json";
+import crudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "CareerManagementDetailComponent",
@@ -84,6 +85,7 @@ export default {
     BaseModal,
     AlertMessages,
   },
+  mixins:[crudMixin],
   data() {
     return {
       isShow: false,
@@ -100,6 +102,10 @@ export default {
       type: Array,
       default: null,
     },
+    faculties: {
+      type: Array,
+      default: null,
+    },
   },
 
   methods: {
@@ -107,13 +113,12 @@ export default {
       await this.save();
     },
 
-    closeModal(changeData) {
+    closeModal(changeData, career, type) {
+      if (changeData) {
+        this.$emit("change-data",career, type);
+      }
       this.isShow = false;
       this.career = {};
-
-      if (changeData) {
-        this.$emit("change-data");
-      }
     },
 
     async createCareerAsync() {
@@ -136,7 +141,7 @@ export default {
         `${AppConfig.notification.content_created_success_default}`
       );
 
-      this.closeModal(true);
+      this.closeModal(true, response.data, "create");
     },
 
     async updateCareerAsync() {
@@ -160,7 +165,7 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-      this.closeModal(true);
+     this.closeModal(true, response.data, "update");
     },
 
     async save() {
@@ -179,6 +184,14 @@ export default {
         await this.updateCareerAsync();
       }
     },
+
+    getFaculty(facultyId){
+      let facultyById = crudMixin.methods.convertArrayToObject(this.faculties, "id");
+      if(facultyById[facultyId] === undefined){
+        return {facultyName: ""}
+      }
+      return facultyById[facultyId];
+    }
   },
 
   watch: {

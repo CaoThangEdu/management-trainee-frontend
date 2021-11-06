@@ -85,13 +85,12 @@ export default {
       await this.save();
     },
 
-    closeModal(changeData) {
+    closeModal(changeData, faculty, type) {
+      if (changeData) {
+        this.$emit("change-data", faculty, type);
+      }
       this.isShow = false;
       this.faculty = {};
-
-      if (changeData) {
-        this.$emit("change-data");
-      }
     },
 
     async createFacultyAsync() {
@@ -113,7 +112,7 @@ export default {
         `${AppConfig.notification.content_created_success_default}`
       );
 
-      this.closeModal(true);
+      this.closeModal(true, response.data, "create");
     },
 
     async updateFacultyAsync() {
@@ -137,7 +136,7 @@ export default {
         `${AppConfig.notification.content_updated_success_default}`
       );
 
-      this.closeModal(true);
+      this.closeModal(true, response.data, "update");
     },
 
     async save() {

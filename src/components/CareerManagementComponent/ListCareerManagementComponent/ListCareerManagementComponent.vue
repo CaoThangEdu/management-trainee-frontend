@@ -78,12 +78,12 @@
                 <button class="btn btn-warning mr-2"
                   @click="updateStatus(index)" 
                   v-if="item.status == 'active'">
-                  <i :class="getStatusIcon(item.status)"></i>
+                  <em :class="getStatusIcon(item.status)"></em>
                 </button>
               </td>
               <td>
                 <button class="btn btn-danger" title="Xóa"
-                  @click="deleteCareer(item)"><i class="fa fa-trash"></i></button>
+                  @click="deleteCareer(item, index)"><em class="fa fa-trash"></em></button>
               </td>
             </tr>
             <tr v-show="pageOfItems == null || pageOfItems.length === 0">
@@ -97,7 +97,8 @@
     </div>
       <CareerManagementDetailComponent 
         :data="editCareer" @change-data="changeData"
-        :trainingSystems="trainingSystems" />
+        :trainingSystems="trainingSystems"
+        :faculties="faculties" />
 
       <ConfirmDialog :data="confirmCareer" @agree="deleteCareerConfirm"></ConfirmDialog>
 
@@ -118,7 +119,6 @@ import ComponentBase from "../../common/component-base/ComponentBase"
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 import CareerService from '../../../services/career/careerServices'
 import AppConfig from '../../../../src/app.config.json'
-import TrainingSystemService from '../../../services/trainingsystem/trainingsystemServices'
 import JwPagination from 'jw-vue-pagination';
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 
@@ -130,12 +130,17 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
+  props:{
+    trainingSystems:Array,
+    faculties: Array
+  },
   mixins: [ CrudMixin ],
   data() {
     return {
       careers: [],
       editCareer: {},
       confirmCareer: null,
+      selectCareer: -1,
       metaDataFile: [],
       pageOfItems: [],
       customLabels: {
@@ -144,7 +149,6 @@ export default {
         previous: '<',
         next: '>'
       },
-      trainingSystems: [],
       filter: {
         trainingSystemId: "",
         careersName: "",
@@ -155,7 +159,6 @@ export default {
 
   async mounted(){
     await this.getCareersFilterAsync();
-    await this.getTrainingSystemsFilterAsync();
   },
   
   methods:{
@@ -195,39 +198,17 @@ export default {
       this.careers = response.data;
     },
 
-    async getTrainingSystemsFilterAsync() {
-      let filterTrainingSystem = {
-        trainingSystemName: "",
-        status: "active",
-      }
-      // Call Api
-      this.showLoading();
-      const api = new TrainingSystemService()
-
-      const response = await api.getTrainingSystemsFilterAsync(filterTrainingSystem);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.trainingSystems = response.data;
-    },
-
     async changePage(currentPage) {
       await this.getCareersFilterAsync(currentPage);
     },
 
     updateCareer(index) {
+      this.selectCareer = index;
       this.editCareer = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteCareer(item) {
-      this.confirmCareer = { item: item };
+    deleteCareer(item, index) {
+      this.confirmCareer = { item: item, index : index };
     },
 
     // Call api delete Career
@@ -244,8 +225,7 @@ export default {
         );
         return;
       }
-      this.careers = this.careers.filter(
-      career => career.id != response.data.id);
+      this.careers.splice(careerComfirm.index, 1);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -253,9 +233,12 @@ export default {
       );
     },
     
-    async changeData() {
-      this.$emit("change-career");
-      await this.getCareersFilterAsync();
+    changeData(career, type) {
+      if(type === "create"){
+        return this.careers.unshift(career);
+      }
+      this.careers.splice(this.selectCareer, 1 ,career)
+      this.selectCareer = -1;
     },
 
     // Call api delete TrainingSystem
