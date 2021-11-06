@@ -447,7 +447,7 @@
                   <td style="border: 1px solid; text-align: center">1</td>
                   <td style="border: 1px solid">{{ keyStudent.studentId }}</td>
                   <td style="border: 1px solid">
-                    {{ keyStudent.firstName + keyStudent.lastName }}
+                    {{ keyStudent.firstName }} {{ keyStudent.lastName }}
                   </td>
                   <td style="border: 1px solid">{{ keyStudent.email }}</td>
                 </tr>
@@ -461,7 +461,8 @@
           </div>
         </div>
         <div id="certificates-pdf" class="">
-          <!-- <div v-for="internshipCompany in internshipCompanies" :key="internshipCompany" class="mb-4">
+          <div v-for="(index,internshipCompany) in internshipCompanies" 
+          :key="internshipCompany" style="margin:100px 0px">
             <div
               style="
                 display: -webkit-box;
@@ -498,7 +499,7 @@
             <div style="text-align: center"><span></span> Kính gửi:</div>
             <div style="padding: 0px 55px; text-align: center">
               <strong
-                ><h2>{{ internshipCompanies === {}?"":internshipCompanies[internshipCompany].companyName }}</h2>
+                ><h2>{{ internshipCompanies[internshipCompany] === undefined?"": internshipCompanies[internshipCompany].nameCompany}}</h2>
               </strong>
             </div>
             <div style="padding: 0px 65px">
@@ -513,7 +514,7 @@
                 >Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn
                 vị:</span
               ><br />
-              <span>* Tạo điều kiện cho: {{internshipCompanies === {}?"":internshipCompanies[internshipCompany].student.lenght}} sinh viên (danh sách đính kèm).</span
+              <span>* Tạo điều kiện cho: {{internshipCompanies[internshipCompany] === undefined?0: internshipCompanies[internshipCompany].students.length}} sinh viên (danh sách đính kèm).</span
               ><br />
               <span
                 >* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào
@@ -569,13 +570,15 @@
                     <strong>EMAIL</strong>
                   </th>
                 </tr>
-                <tr v-for="(index,student) in internshipCompanies[internshipCompany].students" :key="index">
-                  <td style="border: 1px solid; text-align: center">{{index + 1}}</td>
-                  <td style="border: 1px solid">{{ student }}</td>
+                <tr v-for="(student,index) in internshipCompanies[internshipCompany].students" :key="student">
+                  
+                  <td style="border: 1px solid; text-align: center">{{internshipCompanies[internshipCompany] === undefined? "":index+1 }}</td>
+                  <td style="border: 1px solid; ">{{student}}</td>
                   <td style="border: 1px solid">
-                    {{ getStudent(student).firstName + getStudent(student).lastName }}
+                    {{internshipCompanies[internshipCompany] === undefined? 
+                    "": getStudent(student).firstName + " " + getStudent(student).lastName }}
                   </td>
-                  <td style="border: 1px solid">{{ getStudent(student).email }}</td>
+                  <td style="border: 1px solid">{{internshipCompanies[internshipCompany] === undefined? "": getStudent(student).email }}</td>
                 </tr>
               </table>
             </div>
@@ -584,7 +587,7 @@
               <span>TL. <strong>HIỆU TRƯỞNG</strong></span> <br />
               <span><strong>TRƯỞNG PHÒNG CTCT HSSV</strong></span>
             </div>
-          </div> -->
+          </div>
         </div>
         <CertificateDetailComponent
           :data="editCertificate"
@@ -653,7 +656,9 @@ export default {
   mixins: [CrudMixin],
   data() {
     return {
-      internshipCompanies: {},
+      internshipCompanies: {
+
+      },
       keyCertificate: {},
       keyStudent: {},
       certificates: [],
@@ -1027,7 +1032,6 @@ export default {
     },
 
     getStudent(mssv) {
-      console.log(mssv)
       if (this.studentsByMssv[mssv] === undefined) {
         return "";
       }
@@ -1248,7 +1252,6 @@ export default {
 
     async exportPdfFile(certificate, index) {
       await this.updateCertificatePdf(certificate);
-      console.log(index);
 
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
 
@@ -1256,13 +1259,11 @@ export default {
         document.getElementById("certificate-pdf").innerHTML
       );
 
-      mywindow.document.close(console.log("mywindow.document.close"));
-      mywindow.focus(console.log("mywindow.focus"));
+      mywindow.document.close();
+      mywindow.focus();
 
-      mywindow.print(console.log("mywindow.print"));
-      mywindow.close(
-        console.log("mywindow.close")
-      );
+      mywindow.print();
+      mywindow.close();
 
       return true;
     },
@@ -1288,6 +1289,7 @@ export default {
     },
 
     async exportPdfFiles() {
+      this.internshipCompanies = {}
       await this.setInternshipCompany();
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
 
@@ -1303,6 +1305,7 @@ export default {
 
       return true;
     },
+
   },
   watch: {
     async userProfile() {
