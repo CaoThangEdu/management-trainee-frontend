@@ -28,7 +28,14 @@
               </div>
               <div class='number' v-else>{{index + 1}}</div>
               <div class='info'>
-                <p class='title'>{{ timeLine.timelineName }}</p>
+                <p class='title'
+                  :class="{'text-primary mb-0':timeLine.isActive}">
+                  {{ timeLine.timelineName }}
+                </p>
+                <span class="text--italic"
+                  v-if="timeLine.isActive">
+                  Đợt thực tập đang đến giai đoạn này
+                </span>
                 <div class="info-timeline"
                   @click="updateTimeLine(index)"
                   :title="'Nhấn để thay đổi time line'">

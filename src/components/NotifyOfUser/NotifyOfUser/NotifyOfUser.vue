@@ -12,7 +12,7 @@
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12">
               <label>Nội dung thông báo: </label>
-              {{notify.content}}                
+              <div v-html="notify.content"></div>             
             </div>
           </div>
         </div>

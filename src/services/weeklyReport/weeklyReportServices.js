@@ -17,9 +17,9 @@ export default class WeeklyReportService extends ServicesBaseAPI {
     return this.result;
   }
 
-  async getWeeklyReportsAsync() {
+  async getWeeklyReportsAsync(dataSend) {
     try {
-      const response = await this.http.post(`${this.url}/FilterAll`);
+      const response = await this.http.post(`${this.url}/Filter`, dataSend);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

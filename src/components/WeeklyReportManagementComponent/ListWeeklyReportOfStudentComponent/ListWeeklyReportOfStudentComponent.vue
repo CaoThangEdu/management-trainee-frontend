@@ -28,7 +28,6 @@
                 <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
                   <select
                     class="form-control form-select form-select-class"
-                    v-model="filter.status"
                   >
                     <option value="">Tất cả</option>
                     <option value="active">Đang hoạt động</option>
@@ -41,7 +40,6 @@
                     class="form-control"
                     id="keywords"
                     placeholder="Nhập từ khóa"
-                    v-model="filter.className"
                   />
                 </div>
                 <div class="col-xl-2 col-md-4 col-sm-12">
@@ -123,6 +121,7 @@ import WeeklyReportService from "../../../services/weeklyReport/weeklyReportServ
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "ListWeeklyReportOfStudentComponent",
@@ -147,17 +146,42 @@ export default {
       },
       filter: {
         internshipCourseId: "",
-        className: "",
-        status: "active",
+        studentId: "",
+        teacherId: "",
       },
     };
   },
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
+  },
 
   async mounted() {
+    if (!this.userProfile.user) {
+      await this.getUserProfile();
+    }
     await this.getWeeklyReportFilterAsync();
   },
 
   methods: {
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
+    async getUserProfile() {
+      // Check: if has token => get profile else push to LoginPage
+      if (this.tokenKey) {
+        if (!this.userProfile || !this.userProfile.user) {
+          await this.updateUserInfoDataAsync();
+        }
+      } else {
+        if (this.$route.name !== "login") {
+          this.$router.push({ name: "login" });
+        }
+      }
+    },
+    
     getStatusIcon(status) {
       return CrudMixin.methods.getStatusIcon(status);
     },
@@ -176,10 +200,12 @@ export default {
     },
 
     async getWeeklyReportFilterAsync() {
+      this.filter.studentId = this.userProfile.studentId;
+      this.filter.internshipCourseId = this.userProfile.internshipCourseId;
       // Call Api
       this.showLoading();
       const api = new WeeklyReportService();
-      const response = await api.getWeeklyReportsAsync();
+      const response = await api.getWeeklyReportsAsync(this.filter);
       this.showLoading(false);
 
       if (!response.isOK) {

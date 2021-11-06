@@ -25,7 +25,19 @@ export default class TeacherService extends ServicesBaseAPI {
       return this.http.loadError(e);
     }
     return this.result;
-  }    
+  }
+
+  async getStudentsManagedByTeacherById(id) {
+    try {
+      const response = await this.http.get(
+        `${this.url}/GetStudentsManagedByTeacher?teacherId=${id}`
+      );
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
 
   async getFilterByCareersId(careersId) {
     try {
