@@ -29,16 +29,21 @@
           <header class="nav__notify-header">
             <h3>Thông báo</h3>
           </header>
-          <ul class="nav__notify-list">
-            <li class="nav__notify-item"
+          <ul class="nav__notify-list notify-component">
+            <li class="nav__notify-item notice"
               v-for="(notify, index) in notificationsOfUser"
-              :class="{'nav__notify-item--viewed': !notify.watched}"
+              :class="{'nav__notify-item--viewed': !notify.watched, 'info': notify.watched,
+                'warning': !notify.watched}"
               :key="index + 'notify'">
               <router-link
                 class="nav__notify-link"
                 :to="{name:'thong-bao-cua-tai-khoan', params: { guid: notify.id } }">
                 <div class="nav__notify-info">
                   <span class="nav__notify-name">{{ notify.title }}</span>
+                  <span class="nav__notify-description">Được gửi từ {{ notify.userCreate }}</span>
+                  <span class="nav__notify-description text-right">
+                    <em class="far fa-clock"></em> {{ convertTime(notify.creationTime, "HH:mm DD/MM/YYYY") }}
+                  </span>
                   <span class="nav__notify-description text-right">
                     Trạng thái: {{ notify.watched?'Đã xem':'Chưa xem' }}
                   </span>
@@ -79,6 +84,7 @@ import { mapGetters, mapActions } from "vuex";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import { STORAGE_KEY } from "../../../config/constant";
 import localStorageMixin from "../../../helpers/mixins/localStorageMixin";
+import crudMixin from "../../../helpers/mixins/crudMixin";
 import axios from "axios";
 import Http from "../../../helpers/http";
 import AppConfig from "../../../app.config.json";
@@ -89,8 +95,7 @@ export default {
   components: {
     HeaderDropdownAccount,
   },
-  mixins: [localStorageMixin],
-
+  mixins: [localStorageMixin, crudMixin],
   data() {
     return {
       breadCrumbList: [],
@@ -207,4 +212,5 @@ export default {
 </script>
 <style lang="scss">
 @import './NotificationsHeader.scss';
+@import '../../../assets/scss/style.scss';
 </style>

@@ -18,12 +18,26 @@
           Thông báo
         </header>
         <div class="card-body">
-          <div class="wrapper">
-            <div class="steps" id="steps">
-              <div class="font-weight-bolder">
-                Không có dữ liệu được tìm thấy
-              </div>
-            </div>
+          <div class="notice"
+            v-for="(notify, index) in notificationsOfUser"
+            :key="index + 'noti'"
+            :class="{'info': notify.watched, 'warning': !notify.watched}">
+            <p>
+              {{ notify.title }}
+            </p>
+            <p>
+              Được gửi từ {{ notify.userCreate }}
+            </p>
+            <p>
+              <em class="far fa-clock"></em> {{ convertTime(notify.creationTime, "HH:mm DD/MM/YYYY") }}
+            </p>
+            <p>
+              Trạng thái: {{ notify.watched?'Đã xem':'Chưa xem' }}
+            </p>
+          </div>
+          <div class="font-weight-bolder"
+            v-if="notificationsOfUser.length == 0">
+            Không có dữ liệu được tìm thấy
           </div>
         </div>
       </div>
@@ -35,6 +49,7 @@
 import ComponentBase from "../../common/component-base/ComponentBase";
 import AppConfig from "../../../app.config.json";
 import NotificationService from "../../../services/notification/notificationServices";
+import crudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "NotifyComponent",
@@ -45,6 +60,7 @@ export default {
       default: {},
     },
   },
+  mixins: [crudMixin],
   data() {
     return {
       userInfoProp: {},
@@ -58,7 +74,9 @@ export default {
       this.showLoading();
       const api = new NotificationService();
 
-      const response = await api.getNotifyByEmail(this.userInfoProp?.user?.emailAddress);
+      const response = await api.getNotifyByEmail(
+        this.userInfoProp?.user?.emailAddress
+      );
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -82,5 +100,6 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import '../../../assets/scss/style.scss';
 </style>

@@ -98,18 +98,18 @@
                   :key="index + 'notification'"
                 >
                   <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ notify.title }}</td>
-                  <td>{{ notify.content }}</td>
+                  <td>{{ notify.notify.title }}</td>
+                  <td>{{ notify.notify.content }}</td>
                   <td class="text-center" v-if="plans.length != 0">
                     {{
-                      notify.internshipCourseId
-                        ? getPlanName(notify.internshipCourseId)
+                      notify.notify.internshipCourseId
+                        ? getPlanName(notify.notify.internshipCourseId)
                         : ""
                     }}
                   </td>
                   <td>
                     <router-link
-                      :to="{ name: 'thong-ke-thong-bao', params: { guid: notify.id } }"
+                      :to="{ name: 'thong-ke-thong-bao', params: { guid: notify.notify.id } }"
                       class="btn btn-success mr-2"
                       title="Thống kê báo cáo">
                       <em class="fas fa-file-contract"></em>
