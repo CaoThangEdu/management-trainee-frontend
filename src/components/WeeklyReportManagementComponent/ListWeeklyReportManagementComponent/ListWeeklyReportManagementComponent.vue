@@ -21,26 +21,28 @@
           <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
-                <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                  <select
-                    class="form-control form-select form-select-class"
-                    v-model="filter.status"
-                  >
-                    <option value="">Tất cả</option>
-                    <option value="active">Đang hoạt động</option>
-                    <option value="unactive">Không hoạt động</option>
-                  </select>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label>Chọn đợt thực tập</label>
+                    <SelectPlan
+                      :isRequired="false"
+                      v-model="filter.internshipCourseId"
+                      :plans="plans" :defaultText="'Tất cả'"
+                      @change="(event) => {filter.internshipCourseId = event.id}">
+                    </SelectPlan>
                 </div>
-                <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="keywords"
-                    placeholder="Nhập từ khóa"
-                    v-model="filter.className"
-                  />
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                  <label>Chọn giáo viên</label>
+                  <SelectTeacher
+                    v-model="filter.teacherId"
+                    :teachers="teachers"            
+                    @changeTeacher="(event) => {filter.teacherId = event.id}"
+                    :isRequired="false"
+                    :defaultText="'Tất cả'"       
+                    >
+                  </SelectTeacher>
                 </div>
-                <div class="col-xl-2 col-md-4 col-sm-12">
+                <div class="col-auto">
+                  <label class="d-sm-block d-none" style="height: 21px;">&nbsp;</label>
                   <button type="submit" id="btn-search" 
                     class="btn btn-stack-overflow"
                     title="Tìm kiếm"
@@ -130,6 +132,9 @@ import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import PlanService from "../../../services/plan/planServices";
+import TeacherService from "../../../services/teacher/teacherServices";
+import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
+import SelectTeacher from "../../common/form/select-teacher/SelectTeacher.vue";
 
 export default {
   name: "ListWeeklyReportManagementComponent",
@@ -138,6 +143,8 @@ export default {
     WeeklyReportDetailComponent,
     ConfirmDialog,
     JwPagination,
+    SelectPlan,
+    SelectTeacher,
   },
   mixins: [CrudMixin],
   data() {
@@ -154,19 +161,45 @@ export default {
       },
       filter: {
         internshipCourseId: "",
-        className: "",
-        status: "active",
+        studentId: "",
+        teacherId: "",
       },
       plans: [],
+      teachers: [],
     };
   },
 
   async mounted() {
     await this.getWeeklyReportFilterAsync();
     await this.getPlansAsync();
+    await this.getTeachersAsync();
   },
 
   methods: {
+    async getTeachersAsync() {
+      let teacherFilter = {
+        status: "",
+        facultyId: "",
+        lastName: "",
+      };
+      // Call Api
+      this.showLoading();
+      const api = new TeacherService();
+
+      const response = await api.getTeachersAsync(teacherFilter);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.teachers = response.data;
+    },
+
     async getPlansAsync() {
       let planFilter = {
         status: "",
@@ -206,7 +239,7 @@ export default {
       // Call Api
       this.showLoading();
       const api = new WeeklyReportService();
-      const response = await api.getWeeklyReportsAsync();
+      const response = await api.getWeeklyReportsAsync(this.filter);
       this.showLoading(false);
 
       if (!response.isOK) {

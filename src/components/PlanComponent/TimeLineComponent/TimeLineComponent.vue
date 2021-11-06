@@ -19,10 +19,6 @@ export default {
   },
   mixins: [CrudMixin],
   props: {
-    plans: {
-      type: Array,
-      default: [],
-    },
     planGuid: {
       type: String,
       default: null,

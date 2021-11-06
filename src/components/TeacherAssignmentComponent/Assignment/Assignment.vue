@@ -1,6 +1,6 @@
 <template @getPlan="course = $event">
 <div class="assignment">
-  <div class="card" v-if="teachers.length == 0 || instructors.length == 0">
+  <div class="card" v-if="teachers.length == 0 || studentInInternshipCourse.length == 0">
     <div class="card-body text--font-size__m">
       <div v-if="teachers.length == 0 && statisticalPlan">
         <div>Hiện tại chưa có giáo viên. Vui lòng thêm giáo viên!</div>
@@ -14,7 +14,8 @@
           </router-link>
         </div>
       </div>
-      <div v-if="isInstructors && statisticalPlan">
+      <div v-if="studentInInternshipCourse.length == 0 &&
+        isStudentInInternshipCourse && statisticalPlan">
         <div>Hiện tại chưa có sinh viên. Vui lòng thêm sinh viên!</div>
         Để thực hiện chức năng <span class="font-weight-bold">"Phân công"</span>
         bạn vui lòng thêm sinh viên vào đợt thực tập 
@@ -120,7 +121,7 @@ export default {
   data() {
     return {
       instructors: [],
-      isInstructors: false,
+      isStudentInInternshipCourse: false,
       teachers: [],
       classes: [],
       students: [],
@@ -153,12 +154,12 @@ export default {
     await this.getTeachersAsync();
     if(this.teachers.length == 0) return;
 
-    await this.getInstructorsAsync();
-    if(this.instructors.length == 0) return;
+    await this.getStudentsInInternshipCourseAsync();
+    if(this.studentInInternshipCourse.length == 0) return;
 
+    await this.getInstructorsAsync();
     await this.getClassesAsync();
     await this.getStudentsUnassigned();
-    await this.getStudentsInInternshipCourseAsync();
     await this.getStatisticsStudentInClass();
   },
 
@@ -229,7 +230,6 @@ export default {
         classId: "",
         teacherId: "",
       };
-      this.isInstructors = true;
       const api = new InstructorService();
       const response = await api.getInstructors(this.instructorRequest);
       if (!response.isOK) {
@@ -331,13 +331,13 @@ export default {
     async getStudentsInInternshipCourseAsync() {
       // Call Api
       this.showLoading();
+      this.isStudentInInternshipCourse = true;
       const api = new StudentService();
       this.filterTeacher.internshipCourseId = this.internshipCourseId;
       const response = await api.getStudentsInInternshipCourse(
         this.filterTeacher
       );
       this.showLoading(false);
-      this.studentLengthBanDau = response.data.length;
 
       if (!response.isOK) {
         this.showNotifications(
