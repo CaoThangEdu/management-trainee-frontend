@@ -121,11 +121,17 @@ export default {
       this.studentTempDelete = JSON.parse(JSON.stringify(this.students));
       this.assignments = [];
 
-      this.averageNumber = Math.round(
-        this.numberOfStudentInInternshipCourse / this.teachers.length
-      );
+      if (this.instructors.length == 0) {
+        this.averageNumber = Math.round(
+          this.numberOfStudentInInternshipCourse / this.teachers.length
+        );
+      } else {
+        this.averageNumber = Math.ceil(
+          (this.numberOfStudentInInternshipCourse - this.instructors.length) / this.teachers.length
+        );
+      }
 
-      if(this.numberOfTeacher != 0 && this.numberOfTeacher != this.averageNumber ){
+      if (this.numberOfTeacher != 0 && this.numberOfTeacher != this.averageNumber ){
         this.averageNumber = this.numberOfTeacher
       }    
       
