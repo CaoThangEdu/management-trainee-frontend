@@ -170,7 +170,6 @@ export default {
 
     async createCompanyAsync() {
       let company = await this.getCompanieByTaxCodeAsync();
-      console.log(company)
       if (company == null || this.companiesByTaxCode[company.taxCode] !== undefined ) return;
       company.status = "active";
       this.showLoading();
