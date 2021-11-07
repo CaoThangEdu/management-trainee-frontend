@@ -226,6 +226,9 @@ export default {
     },
     // Get all notify
     async getNotificationsAsync() {
+      if (this.filterNotify.internshipCourseId == -1) {
+        this.filterNotify.internshipCourseId = '';
+      }
       // Call Api
       this.showLoading();
       const api = new NotificationService();

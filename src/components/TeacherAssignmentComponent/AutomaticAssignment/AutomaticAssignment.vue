@@ -1,4 +1,182 @@
-<template src='./AutomaticAssignment.html'></template>
+<template>
+  <div class="auto_assignment tab-students-assign">
+    <div class="restore_assign">
+      <div class="restore_assign_notifi">
+        <div class="pl-0 pr-0 row align-items-center">
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+            Trong đợt này hiện tại đã có {{ instructors.length }} sinh viên được
+            phân công
+          </div>
+          <div class="col-md-4 col-lg-4 col-md-4 col-sm-12 text-right">
+            <button
+              class="btn btn-danger mr-2"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Phân công lại từ đầu"
+              @click="deleteStudent(internshipCourseId)"
+            >
+              <i class="fa fa-retweet"></i>
+            </button>
+            <!-- <button
+              class="btn btn-info"
+              title="Xem chi tiết"
+              @click="showAssignments"
+            >
+              <i class="fa fa-window-restore"></i>
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive" v-if="isShowAssignment">
+      <hr />
+      <figure>
+        <figcaption class="mb-3 font-weight-bold text-center">
+          Danh sách giáo viên và sinh viên đã thêm vào phân công
+        </figcaption>
+        <table class="table">
+          <thead class="">
+            <tr>
+              <th scope="col">STT</th>
+              <th scope="col">Họ tên giáo viên</th>
+              <th scope="col">Họ tên sinh viên</th>
+              <th scope="col">Lớp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in instructors" :key="index">
+              <th scope="row">{{ index + 1 }}</th>
+              <td>{{ item.teacherName }}</td>
+              <td>{{ item.studentName }}</td>
+              <td>{{ item.className }}</td>
+            </tr>
+            <tr v-show="instructors == null || instructors.length === 0">
+              <th colspan="5" class="text-left">
+                Không có dữ liệu nào được tìm thấy.
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    </div>
+
+    <div class="continue-assignment">
+      <hr v-if="instructors.length > 0" />
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <!-- <label>Số lượng sinh viên mà mỗi giáo viên sẽ quản lý {{averageNumber}}
+        (<span class="text--red">*</span>)
+      </label> -->
+        <label
+          >Nên để số lượng được gợi ý để đảm bảo các sinh viên đều được phân
+          công (<span class="text--red">*</span>)
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          v-model="numberOfTeacher"
+          @keypress="isNumber"
+          min="0"
+        />
+      </div>
+
+      <div
+        class="btn btn-success btn-create-assignment-data mb-2"
+        @click="createAssignmentData"
+      >
+        Tạo danh sách công
+      </div>
+      <hr />
+      <div class="info_instructor form-row mb-3" v-if="showCreateAssignments">
+        <div class="col-sm-4 col-md-4 col-lg-4">
+          <label class="d-sm-block d-none">&nbsp;</label>
+          <button
+            class="btn btn-primary btn-create-assignment"
+            @click="teacherAssignment"
+            v-if="showCreateAssignments"
+          >
+            Phân công
+          </button>
+        </div>
+      </div>
+
+      <div class="list_assignment" v-if="showCreateAssignments">
+        <div class="row">
+          <div class="col-xl-8">
+            <div class="table-responsive">
+              <figure>
+                <figcaption class="mb-3 font-weight-bold text-center">
+                  Danh sách phân công giáo viên
+                </figcaption>
+                <table class="table">
+                  <thead class="">
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">Họ tên giáo viên</th>
+                      <th scope="col">Họ tên sinh viên</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in pageOfItems" :key="index">
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td
+                        v-if="
+                          teachers.length != 0 &&
+                          getInfoObject(item.teacherId, teachers)
+                        "
+                      >
+                        {{ getInfoObject(item.teacherId, teachers).firstName }}
+                        {{ getInfoObject(item.teacherId, teachers).lastName }}
+                      </td>
+                      <td
+                        v-if="
+                          students.length != 0 &&
+                          getInfoObject(item.studentId, students)
+                        "
+                      >
+                        {{ getInfoObject(item.studentId, students).firstName }}
+                        {{ getInfoObject(item.studentId, students).lastName }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div
+                  class="card-footer d-flex justify-content-center text--blue"
+                >
+                  <JwPagination
+                    :items="assignments"
+                    @changePage="onChangePage"
+                    :labels="customLabels"
+                    :pageSize="20"
+                  >
+                  </JwPagination>
+                </div>
+              </figure>
+            </div>
+          </div>
+          <div class="col-xl-4">
+            <label for="" class="font-weight-bold">Thống kê</label>
+            <ul>
+              <li v-for="(item, index) in statistics"
+                :key="index + 'statistic'">
+                {{ getInfoObject(item.teacherId, teachers).firstName }}
+                {{ getInfoObject(item.teacherId, teachers).lastName }}:
+                {{ item.number }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ConfirmDialog
+      :data="confirmInternshipCourseId"
+      @agree="restoreAssignment()"
+      :message="'Bạn có muốn phân công lại từ đầu'"
+    >
+    </ConfirmDialog>
+  </div>
+</template>
 
 <script>
 import ComponentBase from "../../common/component-base/ComponentBase";
@@ -82,10 +260,15 @@ export default {
     statistiesStudentInClass: {
       type: Array,
       default: [],
-    }
+    },
   },
 
   methods: {
+    isNumber(val) {
+      if (isNaN(Number(val.key))) {
+        return val.preventDefault();
+      }
+    },
     showAssignments() {
       this.isShowAssignment = !this.isShowAssignment;
       if (this.isShowContinueAssignment) {
@@ -101,17 +284,18 @@ export default {
     },
 
     createAssignmentData() {
-      if(this.showCreateAssignments) {
+      if (this.showCreateAssignments) {
         this.showCreateAssignments = false;
         return;
       }
-      const reducer = (previousValue, currentValue) => previousValue + currentValue.numberOfStudentAssigned;
+      const reducer = (previousValue, currentValue) =>
+        previousValue + currentValue.numberOfStudentAssigned;
       this.studentsRemain = this.statistiesStudentInClass.reduce(reducer, 0);
-      if(this.numberOfStudentInInternshipCourse == this.studentsRemain) {
+      if (this.numberOfStudentInInternshipCourse == this.studentsRemain) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          'Bạn đã phân công hết sinh viên cho đợt này!'
+          "Bạn đã phân công hết sinh viên cho đợt này!"
         );
         return;
       }
@@ -127,20 +311,27 @@ export default {
         );
       } else {
         this.averageNumber = Math.ceil(
-          (this.numberOfStudentInInternshipCourse - this.instructors.length) / this.teachers.length
+          (this.numberOfStudentInInternshipCourse - this.instructors.length) /
+            this.teachers.length
         );
       }
 
-      if (this.numberOfTeacher != 0 && this.numberOfTeacher != this.averageNumber ){
-        this.averageNumber = this.numberOfTeacher
-      }    
-      
+      if (
+        this.numberOfTeacher != 0 &&
+        this.numberOfTeacher != this.averageNumber
+      ) {
+        this.averageNumber = this.numberOfTeacher;
+      }
+
       if (this.instructors.length == 0) {
         this.teachers.forEach((teacher) => {
           this.studentTemp = [];
 
-          if(this.studentTempDelete) {
-            this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber);
+          if (this.studentTempDelete) {
+            this.studentTemp = this.studentTempDelete.slice(
+              0,
+              this.averageNumber
+            );
             this.studentTempDelete.splice(0, this.averageNumber);
           }
 
@@ -157,22 +348,31 @@ export default {
             this.assignments.push(this.assignmentRequest);
           });
 
-          this.addStatistics(teacher.id, count)       
+          this.addStatistics(teacher.id, count);
         });
-      } 
-      // Phân công tiếp tục 
+        this.numberOfTeacher = this.averageNumber;
+      }
+      // Phân công tiếp tục
       else {
         // Láy danh sách giáo viên tạm bao gồm số lượng sinh viên đã phân công cho giáo viên đó.
         this.addAssignmentStudentNumber();
 
-        this.teacherTemp.forEach((teacher) => {         
+        this.teacherTemp.forEach((teacher) => {
           this.studentTemp = [];
-          if(teacher.number > 0 && teacher.number <= this.averageNumber) {
-            this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber - teacher.number);
-            this.studentTempDelete.splice(0, this.averageNumber - teacher.number);
-          } 
-          else {
-            this.studentTemp = this.studentTempDelete.slice(0, this.averageNumber );
+          if (teacher.number > 0 && teacher.number <= this.averageNumber) {
+            this.studentTemp = this.studentTempDelete.slice(
+              0,
+              this.averageNumber - teacher.number
+            );
+            this.studentTempDelete.splice(
+              0,
+              this.averageNumber - teacher.number
+            );
+          } else {
+            this.studentTemp = this.studentTempDelete.slice(
+              0,
+              this.averageNumber
+            );
             this.studentTempDelete.splice(0, this.averageNumber);
           }
           var count = 0;
@@ -188,18 +388,18 @@ export default {
             this.assignments.push(this.assignmentRequest);
           });
 
-          this.addStatistics(teacher.teacherId, count)         
+          this.addStatistics(teacher.teacherId, count);
         });
+        this.numberOfTeacher = this.averageNumber;
       }
     },
 
-    addStatistics(teacherId, count)
-    {
+    addStatistics(teacherId, count) {
       this.statistic = {
         teacherId: teacherId,
         number: count,
-        };
-        this.statistics.push(this.statistic);
+      };
+      this.statistics.push(this.statistic);
     },
 
     addAssignmentStudentNumber() {
@@ -207,8 +407,7 @@ export default {
       this.teachers.forEach((teacher) => {
         var count = 0;
         this.instructors.forEach((instructor) => {
-          if (teacher.id == instructor.teacherId)
-          {
+          if (teacher.id == instructor.teacherId) {
             count++;
           }
         });
@@ -225,8 +424,9 @@ export default {
       await this.createInstructorsAsync();
       this.showLoading(false);
       this.$emit("change-instructors", true);
-      this.assignments = [];  
-      this.statistics = []     
+      this.assignments = [];
+      this.statistics = [];
+      this.numberOfTeacher = 0;
     },
 
     // Phân công cho 1 danh sách
@@ -321,7 +521,8 @@ export default {
 
   watch: {
     statistiesStudentInClass() {
-      const reducer = (previousValue, currentValue) => previousValue + currentValue.numberOfStudentAssigned;
+      const reducer = (previousValue, currentValue) =>
+        previousValue + currentValue.numberOfStudentAssigned;
       this.studentsRemain = this.statistiesStudentInClass.reduce(reducer, 0);
     },
   },

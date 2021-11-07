@@ -3,12 +3,35 @@
     <div class="row">
       <div class="col-12">
         <div class="card-group">
+          <div color="primary" text-color="white" class="card text-left p-4 d-sm-down-none bg-primary text-white" body-wrapper >
+            <div class="card-body">
+              <h2 class="text-center">
+                Đăng ký ngay
+              </h2>
+              <p>
+                Đây là trang web để quản lý việc thực tập và tốt nghiệp của sinh viên trường cao đẳng kỹ thuật Cao Thắng
+              </p>
+              <p>
+                <span class="font-weight-bold">
+                  Liên hệ với chúng tôi qua:
+                </span>
+                <br />
+                website chính thức:
+                <a class="text-white" href="caothang.edu.vn"
+                  >caothang.edu.vn</a
+                >
+                <br />
+                Điện thoại:
+                <a class="text-white" href="tel:+84949170012">0123456789</a>
+              </p>
+            </div>
+          </div>
           <div class="card p-4">
             <div class="card-body">
               <form>
                 <h1>Đăng nhập</h1>
                 <p>
-                  Đăng nhập tài khoản CaoThang.edu.vn của bạn
+                  Đăng nhập tài khoản caothang.edu.vn của bạn
                 </p>
                 <div role="group" class="form-group">
                   <div class="input-group">
@@ -59,29 +82,6 @@
                   <AlertMessages :messages="errorMessages" />
                 </div>
               </form>
-            </div>
-          </div>
-          <div color="primary" text-color="white" class="card text-left p-4 d-sm-down-none bg-primary text-white" body-wrapper >
-            <div class="card-body">
-              <h2 class="text-center">
-                Đăng ký ngay
-              </h2>
-              <p>
-                Đây là trang web để quản lý việc thực tập và tốt nghiệp của sinh viên trường cao đẳng kỹ thuật Cao Thắng
-              </p>
-              <p>
-                <span class="font-weight-bold">
-                  Liên hệ với chúng tôi qua:
-                </span>
-                <br />
-                website chính thức:
-                <a class="text-white" href="caothang.edu.vn"
-                  >caothang.edu.vn</a
-                >
-                <br />
-                Điện thoại:
-                <a class="text-white" href="tel:+84949170012">0123456789</a>
-              </p>
             </div>
           </div>
         </div>
@@ -147,6 +147,11 @@ export default {
         return;
       }
 
+      if (this.requestInfo.username !='admin'
+        && !this.requestInfo.username.includes("@caothang.edu.vn")) {
+        this.requestInfo.username = this.requestInfo.username + "@caothang.edu.vn";
+      }
+
       this.showLoading();
       let _loginApi = new AuthenticateService();
       let response = await _loginApi.loginAsync(this.requestInfo);
@@ -168,14 +173,17 @@ export default {
       let roles =
         localStorageMixin.methods.parseJwt(response.data.accessToken)['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
       // goto the next page
-      if (roles.toUpperCase() == 'ADMIN') {
-        this.$router.push({ name: 'them-ke-hoach'});
-        return;
+      if (roles) {
+        if (roles.toUpperCase() == 'ADMIN') {
+          this.$router.push({ name: 'them-ke-hoach'});
+          return;
+        }
+        if (roles.toUpperCase() == 'STUDENT') {
+          this.$router.push({ name: 'trang-chu-sinh-vien'});
+          return;
+        }
       }
-      if (roles.toUpperCase() == 'STUDENT') {
-        this.$router.push({ name: 'trang-chu-sinh-vien'});
-        return;
-      }
+      
       this.$router.push({ name: 'trang-chu'});
     },
   },

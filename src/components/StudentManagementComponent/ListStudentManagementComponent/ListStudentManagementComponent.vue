@@ -68,9 +68,10 @@
             <tbody>
               <tr v-for="(item, index) in pageOfItems" :key="index">
                 <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.studentId }}</td>
-                <td @click="updateStudent(index)" class="link-detail"
-                  title="Xem">{{ item.firstName + ' ' + item.lastName }}</td>
+                <td
+                  @click="updateStudent(index)" class="link-detail"
+                  title="Xem">{{ item.studentId }}</td>
+                <td>{{ item.firstName + ' ' + item.lastName }}</td>
                 <td v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.classId, classes)">
                   {{ getInfoObject(item.classId, classes).className }}
                 </td>
@@ -257,7 +258,7 @@ export default {
     },
 
     async changeData() {
-      this.$emit("change-data-student-component");
+      this.searchStudent();
     },
 
     changeDataClass() {

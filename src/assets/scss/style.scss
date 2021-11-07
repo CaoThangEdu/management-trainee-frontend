@@ -15,6 +15,9 @@
   .cursor-pointer {
     cursor: pointer;
   }
+  .cursor-default {
+    cursor: default;
+  }
 
   .text {
     &--red {
@@ -36,6 +39,9 @@
     &--font-size__m {
       font-size: 16px;
     }
+  }
+  .mx-datepicker .mx-input-wrapper:hover .mx-icon-calendar {
+    display: none;
   }
 }
 
