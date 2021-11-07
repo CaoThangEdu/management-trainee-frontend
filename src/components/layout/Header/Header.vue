@@ -56,7 +56,9 @@
             </li>
           </ul>
           <div class="nav__notify-footer">
-            <a href="" class="nav__notify-footer-btn"> Xem tất cả </a>
+            <router-link
+              :to="{name:'danh-sach-thong-bao-cua-tai-khoan'}"
+              class="nav__notify-footer-btn">Xem tất cả</router-link>
           </div>
         </div>
       </li>

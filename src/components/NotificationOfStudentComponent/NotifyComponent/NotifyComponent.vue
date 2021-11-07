@@ -1,5 +1,5 @@
 <template>
-  <div class="row notify-component">
+  <div class="row notify-component list-notifications">
     <div class="col-12">
       <div class="card">
         <header class="card-header">
@@ -102,4 +102,10 @@ export default {
 
 <style lang="scss">
 @import '../../../assets/scss/style.scss';
+.list-notifications {
+  .card-body {
+    max-height: 272px;
+    overflow-y: auto;
+  }
+}
 </style>

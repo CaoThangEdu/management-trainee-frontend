@@ -652,10 +652,6 @@ export default {
       this.classes = response.data;
     },
 
-    async pressKeyEnter() {
-      await this.save();
-    },
-
     showConfirmCreateStudentExist(item) {
       this.confirmCreateStudentExist = { item: item };
     },
@@ -692,28 +688,35 @@ export default {
         );
         return;
       }
-
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default}` +
+          " sinh viên"
+      );
+      this.metaDataFile = [];
       await this.getStudentsAsync();
-      if (this.studentLengthCallApi == this.studentLengthBanDau) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          "Thêm mới sinh viên thất bại"
-        );
-      } else {
-        this.showNotifications(
-          "success",
-          `${AppConfig.notification.title_default}`,
-          `${AppConfig.notification.content_created_success_default}` +
-            " sinh viên"
-        );
-      }
+      let listClassId = [];
       this.classes = this.classes.filter(
-        (classroom) => classroom.internshipCourseId == this.guid
+        (classroom) => {
+          listClassId.push(classroom.id);
+          return classroom.internshipCourseId == this.guid;
+        }
+      );
+      this.studentOfInInternshipCourse = this.studentsCallApi.filter(
+        (student) =>  listClassId.includes(student.classId)
       );
     },
 
     async save() {
+      if (this.metaDataFile.length==0) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          'Vui lòng chọn file sinh viên'
+        );
+        return;
+      }
       this.students = this.metaDataFile;
       this.studentLengthCallApi = this.studentLengthBanDau;
       this.studentsForCreate = [];
@@ -899,23 +902,14 @@ export default {
         );
         return;
       }
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_created_success_default}` +
+          " sinh viên"
+      );
 
       await this.getStudentsAsync();
-      if (studentLengthCallApi == this.studentLengthBanDau) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          "Thêm mới sinh viên thất bại"
-        );
-      } else {
-        this.showNotifications(
-          "success",
-          `${AppConfig.notification.title_default}`,
-          `${AppConfig.notification.content_created_success_default}` +
-            " sinh viên"
-        );
-      }
-      await this.getPlanByIdAsync(this.guid);
       let listClassId = [];
       this.classes = this.classes.filter(
         (classroom) => {

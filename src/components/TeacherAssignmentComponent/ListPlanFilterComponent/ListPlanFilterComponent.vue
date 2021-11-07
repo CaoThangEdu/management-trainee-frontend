@@ -21,18 +21,14 @@
           <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
-                <div class="col-xl-2 col-md-4 col-sm-12 mb-sm-2">
+                <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
                   <select
-                    class="form-control"
-                    @change="getInternshipCourseAsync"
-                    v-model="internshipCourseFilter.status"
-                  >
-                    <option value="">Tất cả</option>
-                    <option value="Đang chuẩn bị">Đang chuẩn bị</option>
-                    <option value="Đã phân công">Đã phân công</option>
-
-                    <option value="Chưa phân công">Chưa phân công</option>
-                    <option value="Hoàn tất">Hoàn tất</option>
+                    class="form-control form-select form-select-class"
+                    name="status" id="status" v-model="internshipCourseFilter.status">
+                    <option value="">Tất cả trạng thái</option>
+                    <option v-for="(timeline, index) in timelineEnum"
+                      :key="index + 'timeline'" :value="timeline.timelineName">
+                      {{timeline.timelineName}}</option>
                   </select>
                 </div>
                 <div class="col-xl-2 col-md-4 col-sm-12">
@@ -106,6 +102,7 @@ import ComponentBase from "../../common/component-base/ComponentBase";
 import BaseModal from "../../common/base-modal/BaseModal";
 import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import { TIME_LINE_ENUM } from "../../../config/constant";
 
 export default {
   name: "ListPlanFilterComponent",
@@ -123,6 +120,7 @@ export default {
       internshipCourseFilter: {
         status: "",
       },
+      timelineEnum: TIME_LINE_ENUM,
     };
   },
   async mounted() {

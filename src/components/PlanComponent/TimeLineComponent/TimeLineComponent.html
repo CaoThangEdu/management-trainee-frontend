@@ -18,7 +18,7 @@
             <div class='step'
               v-for="(timeLine, index) in timeLines"
               :key="index + 'time-line'"
-              :class="{ 'step-unactive': !checkTimeLineExpired(timeLine.endDay) }">
+              :class="{ 'step-unactive': checkTimeLineExpired(timeLine.endDay) }">
               <div class='number completed'
                 v-if="checkTimeLineExpired(timeLine.endDay)">
                 <svg viewBox="0 0 512 512" width="100" title="check">
@@ -28,17 +28,18 @@
               </div>
               <div class='number' v-else>{{index + 1}}</div>
               <div class='info'>
-                <p class='title'
-                  :class="{'text-primary mb-0':timeLine.isActive}">
+                <p class='title mb-1 cursor-pointer'
+                  :class="{'text-primary mb-0':timeLine.isActive}"
+                  @click="updateTimeLine(index)"
+                  :title="'Nhấn để thay đổi time line'">
                   {{ timeLine.timelineName }}
+                  <em class="fas fa-external-link-alt"></em>
                 </p>
                 <span class="text--italic"
                   v-if="timeLine.isActive">
                   Đợt thực tập đang đến giai đoạn này
                 </span>
-                <div class="info-timeline"
-                  @click="updateTimeLine(index)"
-                  :title="'Nhấn để thay đổi time line'">
+                <div>
                   <span>
                     {{ convertTime(timeLine.startDay, 'DD/MM/YYYY') }} - {{ convertTime(timeLine.endDay, 'DD/MM/YYYY') }}
                   </span>

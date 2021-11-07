@@ -26,7 +26,7 @@
                 v-for="(timeLine, index) in timeLines"
                 :key="index + 'time-line'"
                 :class="{
-                  'step-unactive': !checkTimeLineExpired(timeLine.endDay),
+                  'step-unactive': checkTimeLineExpired(timeLine.endDay),
                 }"
               >
                 <div
@@ -41,10 +41,14 @@
                 </div>
                 <div class="number" v-else>{{ index + 1 }}</div>
                 <div class="info">
-                  <p class="title">{{ timeLine.timeLineName }}</p>
-                  <div
-                    class="info-timeline cursor-default"
-                  >
+                  <p class="title"
+                    :class="{'text-primary mb-0':timeLine.isActive}"
+                  >{{ timeLine.timelineName }}</p>
+                  <span class="text--italic"
+                    v-if="timeLine.isActive">
+                    Đợt thực tập đang đến giai đoạn này
+                  </span>
+                  <div>
                     <span>
                       {{ convertTime(timeLine.startDay, "DD/MM/YYYY") }} -
                       {{ convertTime(timeLine.endDay, "DD/MM/YYYY") }}
@@ -96,7 +100,7 @@ export default {
 
   methods: {
     checkTimeLineExpired(time) {
-      return new Date(time) > new Date();
+      return new Date(time) <= new Date();
     },
 
     async getTimeLinesByInternshipCourseIdAsync() {

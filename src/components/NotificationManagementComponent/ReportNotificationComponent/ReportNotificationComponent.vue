@@ -2,9 +2,10 @@
   <div>
     <div class="col-12">
       <div class="card">
-        <header class="card-header">
-          <h5>Thống kê thông báo của tiêu đề: {{notify.title}}</h5>
-          <h5>Đợt thực tập: {{notify.internshipCourseId}}</h5>
+        <header class="card-header"
+          v-if="notify.notification">
+          <h5>Thống kê thông báo của tiêu đề: {{notify.notification.title}}</h5>
+          <h5>Đợt thực tập: {{notify.notification.internshipCourse.internshipCourseName}}</h5>
         </header>
         <div class="card-body">
           <div class="row mb-2" v-if="Object.keys(notifyReport).length !== 0">
