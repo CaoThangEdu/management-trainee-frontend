@@ -10,13 +10,13 @@
           <div class="row mb-2" v-if="Object.keys(notifyReport).length !== 0">
             <div class="col-12">
               <div>
-                Tổng số người đã gửi là:
+                Số người chưa xem là:
                 <span class="font-weight-bold">{{
                   notifyReport.numberPeopleOfSend
                 }}</span> người
               </div>
               <div>
-                Tổng số người đã xem là:
+                Số người đã xem là:
                 <span class="font-weight-bold">{{
                   notifyReport.numberPeopleWatched
                 }}</span> người
@@ -47,6 +47,8 @@
                         <td>{{ emailsPeopleSend }}</td>
                         <td>
                           <button class="btn btn-success"
+                            :disabled="currentSendMail[index]"
+                            :class="{'cursor-default':currentSendMail[index]}"
                             @click="showSendAnEmailUrgingYouToSeeTheAnnouncement(emailsPeopleSend)">Gửi lại mail
                           </button>
                         </td>
@@ -170,6 +172,7 @@ export default {
         previous: '<',
         next: '>'
       },
+      currentSendMail: {},
     }
   },
 
@@ -219,6 +222,11 @@ export default {
         `${AppConfig.notification.title_default}`,
         `Gửi mail nhắc nhở thành công cho mail ${this.sendAnEmailUrgingYouToSeeTheAnnouncementModel.email}`
       );
+      for(let i in this.notifyReport.emailsPeopleSend) {
+        if (this.notifyReport.emailsPeopleSend[i] == this.sendAnEmailUrgingYouToSeeTheAnnouncementModel.email) {
+          this.$set(this.currentSendMail, i, true);
+        }
+      }
     },
 
     async setNotifyReportAsync() {

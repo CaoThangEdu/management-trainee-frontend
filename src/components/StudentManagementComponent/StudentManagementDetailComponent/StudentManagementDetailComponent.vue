@@ -114,8 +114,15 @@
     <div class="form-group row" v-if="!student.id">
       <label class="col-md-4 col-sm-4 col-form-label">Ngày sinh</label>
       <div class="col-md-8 col-sm-8">
-        <input class="form-control brith-day" type="date"
-          v-model="student.dayOfBirth">
+        <DatePicker
+          v-model="student.dayOfBirth"
+          input-class="form-control brithday"
+          :format="'DD/MM/YYYY'"
+          type="date"
+          :disabled-date="contrainInputDay"
+          @focus="displayDateCloseConstraintDate()"
+          class="w-100"
+        ></DatePicker>
       </div>
     </div>
 
@@ -181,6 +188,10 @@ import CrudMixin from "../../../helpers/mixins/crudMixin";
 import ClassService from '../../../services/class/classServices'
 import ClassViewModel from "../../../view-model/class/classViewModel"
 import createUserMixin from "../../../helpers/mixins/createUserMixin";
+import DatePicker from "vue2-datepicker";
+import "vue2-datepicker/index.css";
+import "vue2-datepicker/locale/vi";
+import moment from "moment";
 
 export default {
   name: 'StudentManagementDetailComponent',
@@ -188,13 +199,23 @@ export default {
   components: {
     BaseModal,
     AlertMessages,
+    DatePicker,
   },
   mixins: [ CrudMixin, createUserMixin ],
 
   data() {
     return {
       isShow: false,
-      student: {},
+      student: {
+        firstName: '',
+        lastName: '',
+        studentId: '',
+        status: '',
+        email: '',
+        dayOfBirth: null,
+        classId: '',
+        internshipStatus: '',
+      },
       errorMessages: [],
       classroom: {},
       faqs: [
@@ -238,6 +259,25 @@ export default {
   },
 
   methods: {
+    displayDateCloseConstraintDate() {
+      let dob = moment().add(-18, "Y").toDate();
+      dob.setDate((new Date().getDate()));
+      dob.setMonth((new Date().getMonth()));
+      dob.setHours(0, 0, 0, 0);
+      this.$set(this.student, 'dayOfBirth', new Date(dob));
+    },
+
+    contrainInputDay(date) {
+      const today = new Date();
+      today.setFullYear(
+        today.getFullYear() - 18,
+        today.getMonth(),
+        today.getDate(),
+        0
+      );
+      return date > today;
+    },
+
     getInfoObject(trainingSystemId, list) {
       return CrudMixin.methods.getInfo(trainingSystemId, list);
     },
@@ -333,7 +373,8 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
+        `${AppConfig.notification.content_created_success_default} ` + 
+        `sinh viên ${this.student.firstName} ${this.student.lastName}`
       );
       this.closeModal(true);
     },  
@@ -357,7 +398,8 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_updated_success_default}`
+        `${AppConfig.notification.content_updated_success_default} ` + 
+        `sinh viên ${this.student.firstName} ${this.student.lastName}`
       );
 
         this.closeModal(true);

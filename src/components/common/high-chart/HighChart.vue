@@ -93,9 +93,6 @@ export default {
             },
           },
         },
-        legend: {
-          enabled: false,
-        },
         yAxis: {
           stackLabels: {
             enabled: false,
