@@ -6,7 +6,8 @@
   <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-4">
     <ListPlanComponent :plans="plans"
       @change-data-plan-component="updateDataPlan"
-      @change-page="changePage" />
+      @change-page="changePage"
+      @search-plan="searchPlan" />
   </div>
 </div>
 </template>
@@ -59,6 +60,11 @@ export default {
         return;
       }
       this.plans = response.data
+    },
+
+    async searchPlan(filter) {
+      this.filter = filter;
+      await this.getPlansAsync();
     },
 
     async updateDataPlan(id) {

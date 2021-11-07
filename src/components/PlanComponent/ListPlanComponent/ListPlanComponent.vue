@@ -29,12 +29,14 @@
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
                 <div class="col-xl-5 col-lg-5 col-md-4 col-sm-12 col-12">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="keywords"
-                    placeholder="Nhập từ khóa"
-                  />
+                  <select
+                    class="form-control form-select form-select-class"
+                    name="status" id="status" v-model="filter.status">
+                    <option value="">Tất cả trạng thái</option>
+                    <option v-for="(timeline, index) in timelineEnum"
+                      :key="index + 'timeline'" :value="timeline.timelineName">
+                      {{timeline.timelineName}}</option>
+                  </select>
                 </div>
                 <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12">
                   <button
@@ -42,6 +44,7 @@
                     id="btn-search"
                     class="btn btn-stack-overflow"
                     title="Tìm kiếm"
+                    @click="searchPlan()"
                   >
                     <i class="fas fa-search"></i>
                   </button>
@@ -115,7 +118,8 @@
         </ConfirmDialog>
         <div class="card-footer d-flex justify-content-center text--blue"
           v-show="pageOfItems.length !== 0">
-          <div class="form-group d-flex page-size-group mb-0 mr-2">
+          <div class="form-group d-flex page-size-group mb-0 mr-2"
+            v-if="getPlan.length!=0">
             <select class="form-control w-auto"
               @change="changePageSize()"
               v-model="pageSize">
@@ -146,6 +150,7 @@ import PlanService from "../../../services/plan/planServices";
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
+import { TIME_LINE_ENUM } from "../../../config/constant";
 
 export default {
   name: "ListPlan",
@@ -181,12 +186,22 @@ export default {
         next: ">",
       },
       pageSize: 10,
+      timelineEnum: TIME_LINE_ENUM,
     };
+  },
+  computed: {
+    getPlan() {
+      return this.plans;
+    }
   },
 
   methods: {
     async changePageSize() {
       await this.$emit("change-page", 1);
+    },
+
+    async searchPlan() {
+      await this.$emit("search-plan", this.filter);
     },
 
     onChangePage(pageOfItems) {

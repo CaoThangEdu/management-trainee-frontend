@@ -41,6 +41,18 @@ const routes = [
       breadcrumbName: 'Chi tiết thông báo của bạn'
     },
   },
+  {
+    path: "/notifications",
+    name: "danh-sach-thong-bao-cua-tai-khoan",
+    props: true,
+    component: () =>
+      import(
+        "../components/NotifyOfUser/ListNotifyOfUserComponent/ListNotifyOfUserComponent.vue"
+      ),
+    meta: {
+      breadcrumbName: 'Tất cả thông báo'
+    },
+  },
   // template mail
   {
     path: "/template-mail",
