@@ -24,17 +24,6 @@
           <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
-                <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                  <select
-                    @change="getClassesFilterAsync"
-                    class="form-control form-select form-select-class"
-                    v-model="filter.status"
-                  >
-                    <option value="">Tất cả</option>
-                    <option value="active">Đang hoạt động</option>
-                    <option value="unactive">Không hoạt động</option>
-                  </select>
-                </div>
                 <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
                   <input
                     type="text"
@@ -64,7 +53,6 @@
                   <th scope="col">STT</th>
                   <th scope="col">Tên lớp</th>
                   <th scope="col">Đợt thực tập</th>
-                  <th scope="col">Trạng thái</th>
                   <th scope="col">Thao tác</th>
                 </tr>
               </thead>
@@ -77,22 +65,6 @@
                       getInfoObject(item.internshipCourseId, plans)
                         .internshipCourseName
                     }}
-                  </td>
-                  <td>
-                    <button
-                      class="btn btn-danger mr-2"
-                      @click="updateStatus(index)"
-                      v-if="item.status == 'unactive'"
-                    >
-                      <i :class="getStatusIcon(item.status)"></i>
-                    </button>
-                    <button
-                      class="btn btn-warning mr-2"
-                      @click="updateStatus(index)"
-                      v-if="item.status == 'active'"
-                    >
-                      <i :class="getStatusIcon(item.status)"></i>
-                    </button>
                   </td>
                   <td>
                     <button

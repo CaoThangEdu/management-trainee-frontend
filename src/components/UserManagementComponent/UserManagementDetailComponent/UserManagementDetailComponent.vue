@@ -15,7 +15,7 @@
         <input
           type="text"
           class="form-control"
-          id="name"
+          id="sur-name"
           v-model="user.surname"
         />
       </div>

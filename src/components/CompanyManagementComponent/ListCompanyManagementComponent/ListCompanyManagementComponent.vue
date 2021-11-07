@@ -16,14 +16,6 @@
         <div class="row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
-              <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                <select
-                  class="form-control form-select form-select-class" v-model="filterCompany.status">
-                  <option value="">Tất cả</option>
-                  <option value="active">Đang hoạt động</option>
-                  <option value="unactive">Không hoạt động</option>
-                </select>
-              </div>
               <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
                 <input v-model="filterCompany.keyword" type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
               </div>
@@ -41,7 +33,6 @@
                 <th scope="col" class="align-middle">Mã số thuế</th>
                 <th scope="col" class="align-middle">Tên công ty</th>
                 <th scope="col" class="align-middle">thông tin</th>
-                <th scope="col" class="align-middle">Trạng thái</th>
                 <th scope="col" class="align-middle">Thao tác</th>
               </tr>
             </thead>
@@ -57,14 +48,6 @@
                   <div><strong>Chủ sở hữu: </strong> {{ company.owner }}</div>
                   <div><strong>Số điện thoại: </strong>{{ company.phoneNumber }}</div>
                   <div><strong>Ngành nghề: </strong>{{ company.career }}</div>
-                </td>
-                <td>
-                  <button title="Không hoạt động" class="btn btn-danger mr-2" @click="updateStatus(index)" v-if="company.status == 'unactive'">
-                    <i :class="getStatusIcon(company.status)"></i>
-                  </button>
-                  <button title="Hoạt động" class="btn btn-warning mr-2" @click="updateStatus(index)" v-if="company.status == 'active'">
-                    <i :class="getStatusIcon(company.status)"></i>
-                  </button>
                 </td>
                 <td>
                   <button title="Xóa công ty" class="btn btn-danger" @click="deleteCompany(company.id, index)"> <em

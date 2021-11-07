@@ -460,7 +460,7 @@
             </div>
           </div>
         </div>
-        <div id="certificates-pdf" class="">
+        <div id="certificates-pdf" class="d-none">
           <div v-for="(index,internshipCompany) in internshipCompanies" 
           :key="internshipCompany" style="margin:100px 0px">
             <div
@@ -603,7 +603,7 @@
             :items="certificates"
             @changePage="onChangePage"
             :labels="customLabels"
-            :pageSize="5"
+            :pageSize="20"
           >
           </JwPagination>
           <ConfirmDialog

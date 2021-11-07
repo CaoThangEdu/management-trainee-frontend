@@ -24,15 +24,6 @@
                   {{item.trainingSystemName}}</option>
               </select>
             </div>
-            <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-              <select @change="getCareersFilterAsync" 
-                class="form-control form-select form-select-class"
-                v-model="filter.status">
-                <option value="">Tất cả</option>
-                <option value="active">Đang hoạt động</option>
-                <option value="unactive">Không hoạt động</option>
-              </select>
-            </div>
             <div class="col-xl-3 col-md-3 col-sm-12 mb-sm-2">
               <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa"
                 v-model="filter.careersName" />
@@ -41,7 +32,7 @@
               <button type="submit" id="btn-search" class="btn btn-stack-overflow"
                 @click="getCareersFilterAsync"
                 title="Tìm kiếm">
-                <i class="fas fa-search"></i>
+                <em class="fas fa-search"></em>
               </button>
             </div>
 
@@ -50,12 +41,12 @@
       </div>
       <div class="table-responsive">
         <table class="table">
+          <caption></caption>
           <thead class="">
             <tr>
               <th scope="col">STT</th>
               <th scope="col">Ngành</th>
               <th scope="col">Hệ</th>
-              <th scope="col">Trạng thái</th>
               <th scope="col">Thao tác</th>
             </tr>
           </thead>
@@ -70,24 +61,12 @@
                 {{ getTrainingSystemName(item.trainingSystemId, trainingSystems).trainingSystemName }}
               </td>
               <td>
-                <button class="btn btn-danger mr-2"   
-                  @click="updateStatus(index)" 
-                  v-if="item.status == 'unactive'">
-                  <i :class="getStatusIcon(item.status)"></i>
-                </button>
-                <button class="btn btn-warning mr-2"
-                  @click="updateStatus(index)" 
-                  v-if="item.status == 'active'">
-                  <em :class="getStatusIcon(item.status)"></em>
-                </button>
-              </td>
-              <td>
                 <button class="btn btn-danger" title="Xóa"
                   @click="deleteCareer(item, index)"><em class="fa fa-trash"></em></button>
               </td>
             </tr>
             <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-              <th colspan="5" class="text-left">
+              <th colspan="5" scope="" class="text-left">
                 Không có dữ liệu nào được tìm thấy.
               </th>
             </tr>
