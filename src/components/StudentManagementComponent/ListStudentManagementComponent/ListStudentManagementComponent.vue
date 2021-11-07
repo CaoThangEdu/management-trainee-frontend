@@ -61,7 +61,6 @@
                 <th scope="col">Lớp</th>
                 <th scope="col">Email</th>
                 <th scope="col">Đợt thực tập</th>
-                <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>
               </tr>
             </thead>
@@ -81,22 +80,14 @@
                   {{ getInfoByCourseId(getInfoObject(item.classId, classes).courseId, plans) ? getInfoByCourseId(getInfoObject(item.classId, classes).courseId, plans).internshipCourseName : 'Chưa có đợt' }}
                 </td>
                 <td>
-                  <button class="btn btn-danger mr-2" @click="updateStatus(index)" v-if="item.status == 'unactive'">
-                    <i :class="getStatusIcon(item.status)"></i>
-                  </button>
-                  <button class="btn btn-warning mr-2" @click="updateStatus(index)" v-if="item.status == 'active'">
-                    <i :class="getStatusIcon(item.status)"></i>
-                  </button>
-                </td>
-                <td>
                   <button class="btn btn-danger" title="Xóa"
                     @click="deleteStudent(item)">
-                    <i class="fa fa-trash"></i>
+                    <em class="fa fa-trash"></em>
                   </button>
                 </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-                <th colspan="5" class="text-left">
+                <th scope="" colspan="5" class="text-left">
                   Không có dữ liệu nào được tìm thấy.
                 </th>
               </tr>

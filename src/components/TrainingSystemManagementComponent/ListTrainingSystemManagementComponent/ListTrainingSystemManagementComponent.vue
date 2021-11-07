@@ -18,14 +18,6 @@
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-row filter-wrapper ml-0 mr-0">
               <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                <select @change="getTrainingSystemsFilterAsync" 
-                  class="form-control form-select form-select-class" v-model="filter.status">
-                  <option value="">Tất cả</option>
-                  <option value="active">Đang hoạt động</option>
-                  <option value="unactive">Không hoạt động</option>
-                </select>
-              </div>
-              <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
                 <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa"
                   v-model="filter.trainingSystemName" />
               </div>
@@ -33,7 +25,7 @@
                 <button type="submit" id="btn-search" class="btn btn-stack-overflow" 
                   @click="getTrainingSystemsFilterAsync"
                   title="Tìm kiếm">
-                  <i class="fas fa-search"></i>
+                  <em class="fas fa-search"></em>
                 </button>
               </div>
             </div>
@@ -41,12 +33,12 @@
         </div>
         <div class="table-responsive">
           <table class="table">
+            <caption></caption>
             <thead class="">
               <tr>
                 <th scope="col">STT</th>
                 <th scope="col">Tên hệ đào tạo</th>
                 <th scope="col">Khoa</th>
-                <th scope="col">Trạng thái</th>
                 <th scope="col">Thao tác</th>                
               </tr>
             </thead>
@@ -57,20 +49,6 @@
                   class="link-detail"
                   title="Xem">{{ item.trainingSystemName }}</td>
                   <td>{{ getFaculty(item.facultyId).facultyName }}</td>
-                <td>
-                  <button class="btn btn-danger mr-2"
-                    @click="updateStatus(index)"
-                    v-if="item.status == 'unactive'"
-                    title="Không hoạt động">
-                    <i :class="getStatusIcon(item.status)"></i>
-                  </button>
-                  <button class="btn btn-warning mr-2"
-                    @click="updateStatus(index)"
-                    v-if="item.status == 'active'"
-                    title="Hoạt động">
-                    <em :class="getStatusIcon(item.status)"></em>
-                  </button>
-                </td>
                 <td>
                   <button class="btn btn-danger" title="Xóa"
                     @click="deleteTrainingSystem(item, index)">

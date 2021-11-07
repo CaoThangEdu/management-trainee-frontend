@@ -127,6 +127,7 @@ export default {
     return {
       keyInternshipConfirmation: {},
       errorMessages: [],
+      confirmed:false
     };
   },
   async mounted() {

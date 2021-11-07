@@ -39,7 +39,8 @@
                 </select>
               </div>
               <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12">
-                <input v-model="filterUser.userName" type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
+              <input type="text" class="form-control" id="user-name" placeholder="Nhập từ khóa"
+              v-model="filterUser.userName"/>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
                 <button @click="getUsersAsync()" type="submit" id="btn-search" class="btn btn-primary">Tìm kiếm</button>
@@ -55,9 +56,8 @@
                   <th scope="col" class="align-middle">Tên đăng nhập</th>
                   <th scope="col" class="align-middle">Họ và tên</th>
                   <th scope="col" class="align-middle">Email</th>
-                  <th scope="col" class="align-middle">Đăng nhập lần cuối</th>
                   <th scope="col" class="align-middle">Quyền hạn</th>
-                  <th scope="col" class="text-center align-middle" style="width: 122px;">Thao tác</th>
+                  <th scope="col" class="text-center align-middle" style="width: 125px;">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -66,12 +66,11 @@
                   <td>{{ user.userName }}</td>
                   <td >{{ user.fullName }}</td>
                   <td>{{ user.emailAddress }}</td>
-                  <td>{{ user.lastLoginTime }}</td>
                   <td v-if="user.roleNames[0] === 'STUDENT'" >Sinh viên</td>
                   <td v-if="user.roleNames[0] === 'TEACHER'" >Giáo viên</td>
                   <td v-if="user.roleNames[0] === 'ADMIN'" >Admin</td>
                   <td class="text-center">
-                    <button @click="resetPasswordUser(user, index)" type="button" class="btn btn-success p-0 py-2">
+                    <button @click="resetPassword(user)" type="button" class="btn btn-success p-0 py-2">
                       Reset password
                     </button>
                   </td>
@@ -88,6 +87,11 @@
         <UserManagementDetailComponent
           :dataUser="editUser"
           @change-data-user="changeDataUser"
+        />
+          <ResetPasswordComponent
+          :dataUser="userResetPassword"
+          :isShowResetPassword="isShowResetPassword"
+          @close-reset-password="closeResetpassword"
         />
         <ConfirmDialog 
         :data="user" 
@@ -123,8 +127,8 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import JwPagination from "jw-vue-pagination";
 import UserService from "../../../services/user/userService";
 import AppConfig from "../../../app.config.json";
-import { ROLE_ENUM } from "../../../config/constant";
 import UserManagementDetailComponent from "../UserManagementDetailComponent/UserManagementDetailComponent.vue";
+import ResetPasswordComponent from "../ResetPasswordComponent/ResetPasswordComponent.vue";
 import crudMixin from "../../../helpers/mixins/crudMixin";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog"
 
@@ -136,11 +140,14 @@ export default {
     BaseModal,
     AlertMessages,
     UserManagementDetailComponent,
-    ConfirmDialog
+    ConfirmDialog,
+    ResetPasswordComponent
   },
   mixins: [crudMixin],
   data() {
     return {
+      userResetPassword:null,
+      isShowResetPassword:false,
       user: null,
       message:"",
       users: [],
@@ -152,7 +159,6 @@ export default {
         previous: "<",
         next: ">",
       },
-      roleEnums: ROLE_ENUM,
       editUser: {},
       filterUser:{
         role:"",
@@ -218,33 +224,15 @@ export default {
       this.$emit("change-page", currentPage);
     },
 
-    resetPasswordUser(item, index) {
-      this.user = {item: item, index: index};
-      this.message = `Bạn có muốn reset password tài khoản: <b>${this.user.item.userName} <b/> ?`
-    },
+   closeResetpassword(changeData){
+     this.isShowResetPassword = changeData
+   },
 
-    async resetPassword(user){
-      let keyResetPassword= {
-        adminPassword: "123qwe",
-        userId: user.id,
-        newPassword: user.roleNames[0] === "TEACHER"?'teacherCaoThang@@':'studentCaoThang@@'
-      }
-      this.showLoading();
-      const api = new UserService();
-      const response = await api.resetPasswordAsync(keyResetPassword);
-      this.showLoading(false);
-      if (!response.isOK) {
-        return this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-      }
-      return this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `Resset password thành công`)
-    }
+   resetPassword(user){
+     this.userResetPassword = user;
+     this.isShowResetPassword = true;
+   }
+
   },
 
   watch:{

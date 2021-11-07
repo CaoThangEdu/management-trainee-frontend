@@ -99,7 +99,7 @@
                           <strong>Họ tên sinh viên:</strong>
                           {{ student.firstName }} {{ student.lastName }}
                         </div>
-                        <div><strong>lớp:</strong> {{ student.className }}</div>
+                        <div><strong>lớp:</strong> {{ getNameClass(student.classId) }}</div>
                       </td>
                       <td>
                         <button
@@ -143,8 +143,8 @@
                 </table>
               </div>
                  <div class="card-footer d-flex justify-content-center text--blue"
-                  v-show="pageOfItems == null || pageOfItems.length === 0">
-                  <select class="form-control w-auto mr-2"
+                  v-show="students == null || students.length === 0">
+                  <select :class="{'d-none':students == null || students.length === 0}"  class="form-control w-auto mr-2"
                   @change="changePageSize()"
                   v-model="pageSize">
                   <option value="10">10/ trang</option>
@@ -182,6 +182,7 @@ import { Chart } from "highcharts-vue";
 import AppConfig from "../../../src/app.config.json";
 import PlanService from "../../services/plan/planServices";
 import IntershipConfirmationDetailComponent from "./IntershipConfirmationDetailComponent/IntershipConfirmationDetailComponent.vue";
+import crudMixin from '../../helpers/mixins/crudMixin';
 export default {
   name: "InternshipConfirmationStatisticsComponent",
   extends: ComponentBase,
@@ -357,9 +358,7 @@ export default {
       this.showLoading();
       const api = new StudentService();
 
-      const response = await api.getStudentsInInternshipCourse(
-        this.filterStudent
-      );
+      const response = await api.getStudentsAsync(this.filterStudent);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -399,6 +398,11 @@ export default {
     async changePageSize() {
       await this.getStudentsByInternshipCourseAsync();
     },
+    getNameClass(classId){
+      let classesById = CrudMixin.methods.convertArrayToObject(this.statistics, "classId");
+      if(classId in classesById) return classesById[classId].className;
+      return "";
+    }
   },
 
   watch: {

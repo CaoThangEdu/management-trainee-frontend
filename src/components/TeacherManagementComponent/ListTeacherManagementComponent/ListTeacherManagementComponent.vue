@@ -30,13 +30,6 @@
             <div class="row mb-3">
               <div class="col-sm-12 col-md-12 col-lg-12">
                 <div class="form-row filter-wrapper ml-0 mr-0">
-                  <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                    <select class="form-control form-select form-select-class">
-                      <option value="">Tất cả</option>
-                      <option value="active">Đang hoạt động</option>
-                      <option value="unactive">Không hoạt động</option>
-                    </select>
-                  </div>
                   <div class="col-xl-3 col-md-3 col-sm-12 mb-sm-2">
                     <input type="text" class="form-control" id="keywords" placeholder="Nhập từ khóa" />
                   </div>
@@ -56,7 +49,6 @@
                     <th scope="col">Họ và tên</th>
                     <th scope="col">Email</th>
                     <th scope="col">Số điện thoại</th>
-                    <th scope="col">Trạng thái</th>
                     <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
@@ -67,16 +59,6 @@
                       {{ item.firstName + ' ' + item.lastName }}</td>
                     <td>{{ item.email }}</td>
                     <td>{{ item.phoneNumber }}</td>
-                    <td>
-                      <button class="btn btn-danger mr-2" @click="updateStatus(index)" title="Chưa hoạt động"
-                        v-if="item.status == 'unactive'">
-                        <em :class="getStatusIcon(item.status)"></em>
-                      </button>
-                      <button class="btn btn-warning mr-2" @click="updateStatus(index)" title="Hoạt động"
-                        v-if="item.status == 'active'">
-                        <em :class="getStatusIcon(item.status)"></em>
-                      </button>
-                    </td>
                     <td>
                       <button class="btn btn-danger" title="Xóa" @click="deleteTeacher(item)">
                         <em class="fa fa-trash"></em>
