@@ -127,7 +127,7 @@ export default {
     return {
       keyInternshipConfirmation: {},
       errorMessages: [],
-      confirmed:false
+      confirmed:false,
     };
   },
   async mounted() {
@@ -179,6 +179,7 @@ export default {
       }
       this.keyInternshipConfirmation.studentId = this.userProfile.mssv;
       this.keyInternshipConfirmation.internshipCourseId = this.userProfile.internshipCourseId;
+      this.keyInternshipConfirmation.classId = this.userProfile.classId;
       this.showLoading();
       let api = new InternshipConfirmationServices();
       let response = await api.internshipConfirmationAsync(
@@ -198,6 +199,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `Xác nhận thực tập thành công`
       );
+      this.confirmed = true;
     },
 
     async updateInternshipConfirmationAsync() {
@@ -228,6 +230,8 @@ export default {
       let filter = {
         studentId: this.userProfile.mssv,
         status: "practiced",
+        internsipCourseId: this.userProfile.internshipCourseId,
+        classId: this.userProfile.classId,
       };
       this.showLoading();
       let api = new InternshipConfirmationServices();

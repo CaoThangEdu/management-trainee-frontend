@@ -310,6 +310,7 @@ export default {
       studentsCallApi: [],
       studentLengthBanDau: 0,
       metaDataFile: [],
+      metaDataFileTeacher: [],
       classIdSelected: null,
       errorMessages: [],
       classroom: {},
@@ -418,11 +419,9 @@ export default {
         let sheetName = workbook.SheetNames[0];
         /* DO SOMETHING WITH workbook HERE */
         let worksheet = workbook.Sheets[sheetName];
-        vm.metadataFile = XLSX.utils.sheet_to_json(worksheet);
-        vm.metadataFile.forEach(function (element) {
+        vm.metaDataFileTeacher = XLSX.utils.sheet_to_json(worksheet);
+        vm.metaDataFileTeacher.forEach(function (element) {
           element.status = "active";
-        });
-        vm.metadataFile.forEach(function (element) {
           element.facultyId = "facultyId";
         });
       };
@@ -447,8 +446,16 @@ export default {
 
     async saveCreateTeachers() {
       this.teachersForCreate = [];
-      this.teachersCreate = this.metadataFile;
+      this.teachersCreate = this.metaDataFileTeacher;
       for (let i in this.teachersCreate) {
+        if(!this.teachersCreate[i].email || !this.teachersCreate[i].lastName
+        || !this.teachersCreate[i].firstName || !this.teachersCreate[i].phoneNumber ){
+          return this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          "Thêm mới giáo viên thất bại<br/ >File thêm không đúng định dạng!"
+        );
+        }
         // duyệt danh sách teacher từ file
         this.teachersCreate[i].facultyId = this.plan.facultyId;
         this.teachersForCreate.push(this.teachersCreate[i]);

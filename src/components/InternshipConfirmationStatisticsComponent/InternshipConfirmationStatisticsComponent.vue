@@ -263,8 +263,7 @@ export default {
     };
   },
   async mounted() {
-    this.internshipConfirmations =
-      await this.fliterInternshipConfirmationAsync();
+    this.internshipConfirmations =await this.fliterInternshipConfirmationAsync();
     await this.getPlansAsync();
   },
   methods: {
