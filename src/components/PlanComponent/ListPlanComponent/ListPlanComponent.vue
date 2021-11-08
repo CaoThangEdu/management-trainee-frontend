@@ -21,7 +21,7 @@
             class="btn btn-primary float-right"
             title="Thêm mới"
           >
-            <i class="fa fa-plus-square"></i>
+            <em class="fa fa-plus-square"></em>
           </router-link>
         </header>
         <div class="card-body">
@@ -38,22 +38,12 @@
                       {{timeline.timelineName}}</option>
                   </select>
                 </div>
-                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12">
-                  <button
-                    type="submit"
-                    id="btn-search"
-                    class="btn btn-stack-overflow"
-                    title="Tìm kiếm"
-                    @click="searchPlan()"
-                  >
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
               </div>
             </div>
           </div>
           <div class="table-responsive">
             <table class="table">
+              <caption></caption>
               <thead class="">
                 <tr>
                   <th scope="col">STT</th>
@@ -84,7 +74,7 @@
                         params: { guid: plan.id },
                       }"
                     >
-                      <i class="fas fa-info-circle"></i>
+                      <em class="fas fa-info-circle"></em>
                     </router-link>
                     <router-link
                       class="btn btn-info mr-2"
@@ -94,19 +84,19 @@
                         params: { guid: plan.id },
                       }"
                     >
-                      <i class="fa fa-arrow-alt-circle-right"></i>
+                      <em class="fa fa-arrow-alt-circle-right"></em>
                     </router-link>
                     <button
                       class="btn btn-danger"
                       @click="deletePlan(plan)"
                       title="Xóa"
                     >
-                      <i class="fa fa-trash"></i>
+                      <em class="fa fa-trash"></em>
                     </button>
                   </td>
                 </tr>
                 <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-                  <th colspan="5" class="text-left">
+                  <th scope="" colspan="5" class="text-left">
                     Không có dữ liệu nào được tìm thấy.
                   </th>
                 </tr>
@@ -240,5 +230,10 @@ export default {
       );
     },
   },
+  watch:{
+    "filter.status":async function() {
+      await this.searchPlan()
+    }
+  }
 };
 </script>

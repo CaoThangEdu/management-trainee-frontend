@@ -67,7 +67,7 @@ export default class StudentService extends ServicesBaseAPI {
 
   async deleteStudentAsync(id) {
     try {
-      const response = await this.http.delete(`${this.url}/Delete?id=${id}`);
+      const response = await this.http.delete(`${this.url}/DeleteStudent?id=${id}`);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

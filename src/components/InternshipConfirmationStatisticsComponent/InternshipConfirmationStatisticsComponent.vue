@@ -60,7 +60,7 @@
                   <input
                     type="text"
                     class="form-control"
-                    id="filterStudent.keywords"
+                    v-model="filterStudent.keyword"
                     placeholder="Nhập từ khóa"
                   />
                 </div>
@@ -182,7 +182,7 @@ import { Chart } from "highcharts-vue";
 import AppConfig from "../../../src/app.config.json";
 import PlanService from "../../services/plan/planServices";
 import IntershipConfirmationDetailComponent from "./IntershipConfirmationDetailComponent/IntershipConfirmationDetailComponent.vue";
-import crudMixin from '../../helpers/mixins/crudMixin';
+// import crudMixin from '../../helpers/mixins/crudMixin';
 export default {
   name: "InternshipConfirmationStatisticsComponent",
   extends: ComponentBase,
@@ -263,7 +263,7 @@ export default {
     };
   },
   async mounted() {
-    this.internshipConfirmations =await this.fliterInternshipConfirmationAsync();
+    // this.internshipConfirmations = await this.fliterInternshipConfirmationAsync();
     await this.getPlansAsync();
   },
   methods: {
@@ -309,8 +309,11 @@ export default {
       return response.data;
     },
 
-    async fliterInternshipConfirmationAsync() {
-      let filter = { studentId: "", status: "" };
+    async fliterInternshipConfirmationAsync(internsipCourseId, classId) {
+      let filter = {   internsipCourseId: internsipCourseId,
+          classId: "",
+          studentId: "",
+          status: "" };
       this.showLoading();
       let api = new InternshipConfirmationServices();
       let response = await api.fliterInternshipConfirmationAsync(filter);
@@ -412,11 +415,15 @@ export default {
         this.students = [];
         return;
       }
+      this.filterStudent.keyword ="";
+      this.internshipConfirmations = await this.fliterInternshipConfirmationAsync(this.filterStudent.internshipCourseId, "");
       this.setPieChart(this.filterStudent.internshipCourseId);
       await this.getStudentsByInternshipCourseAsync();
     },
 
     "filterStudent.classId": async function () {
+      this.filterStudent.keyword ="";
+      this.internshipConfirmations = await this.fliterInternshipConfirmationAsync(this.filterStudent.internshipCourseId, this.filterStudent.classId);
       if (this.filterStudent.classId === "") {
         this.pieChart.series[0].data[0].y =
           (this.numberOfStudentACompany /
