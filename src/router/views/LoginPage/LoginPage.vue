@@ -147,10 +147,10 @@ export default {
         return;
       }
 
-      if (this.requestInfo.username !='admin'
-        && !this.requestInfo.username.includes("@caothang.edu.vn")) {
-        this.requestInfo.username = this.requestInfo.username + "@caothang.edu.vn";
-      }
+      // if (this.requestInfo.username !='admin'
+      //   && !this.requestInfo.username.includes("@caothang.edu.vn")) {
+      //   this.requestInfo.username = this.requestInfo.username + "@caothang.edu.vn";
+      // }
 
       this.showLoading();
       let _loginApi = new AuthenticateService();

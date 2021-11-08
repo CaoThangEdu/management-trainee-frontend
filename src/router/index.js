@@ -160,6 +160,15 @@ const routes = [
       },
     },
     {
+      path: 'create-by-teacher',
+      name: 'them-thong-bao-cua-giao-vien',
+      component: () =>
+        import("../components/NotificationManagementComponent/CreateNotificationOfTeacherComponent/CreateNotificationOfTeacherComponent"),
+      meta: {
+        breadcrumbName: 'Thêm mới thông báo',
+      },
+    },
+    {
       path: 'report/:guid',
       name: 'thong-ke-thong-bao',
       props: true,
