@@ -115,7 +115,14 @@ export default [{
       name: "Quản lý thông báo",
       to: "/notification-management",
       icon: "cil-bell",
-      role: "Admin",
+      role: ["Admin", "TEACHER"],
+    },
+    {
+      _name: "CSidebarNavItem",
+      name: "Thông báo đến sinh viên",
+      to: "/notification-management/create-by-teacher",
+      icon: "cil-send",
+      role: 'TEACHER',
     },
     {
       _name: "CSidebarNavItem",

@@ -20,6 +20,7 @@
             :to="{ name: 'them-thong-bao' }"
             class="btn btn-primary float-right"
             title="Thêm mới"
+            v-if="userProfile && userProfile.role == 'Admin'"
           >
             <i class="fa fa-plus-square"></i>
           </router-link>
@@ -154,6 +155,7 @@ import JwPagination from "jw-vue-pagination";
 import PlanService from "../../../services/plan/planServices";
 import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
 import { NOTYFY_STATUS_ENUM } from "../../../config/constant";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "ListNotificationManagementComponent",
@@ -186,10 +188,37 @@ export default {
     };
   },
   async mounted() {
+    if (!this.userProfile.user) {
+      await this.getUserProfile();
+    }
     await this.getNotificationsAsync();
     await this.getPlansAsync();
   },
+
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
+  },
+
   methods: {
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
+    async getUserProfile() {
+      // Check: if has token => get profile else push to LoginPage
+      if (this.tokenKey) {
+        if (!this.userProfile || !this.userProfile.user) {
+          await this.updateUserInfoDataAsync();
+        }
+      } else {
+        if (this.$route.name !== "login") {
+          this.$router.push({ name: "login" });
+        }
+      }
+    },
+
     getPlanName(id) {
       return this.plans.find((plan) => plan.id == id).internshipCourseName;
     },

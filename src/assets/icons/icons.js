@@ -85,6 +85,7 @@ import {
   cilPaperclip,
   cilBook,
   cilChartLine,
+  cilSend,
 } from '@coreui/icons';
 import { logo } from './logo'
 
@@ -177,5 +178,6 @@ export const iconsSet = Object.assign(
     cilPaperclip,
     cilBook,
     cilChartLine,
+    cilSend,
   },
 )
