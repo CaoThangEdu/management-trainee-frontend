@@ -11,12 +11,12 @@
               <label for="">Đợt thực tập:</label>
               <SelectPlan
                 :isRequired="false"
-                v-model="filterChart.internshipCourseId"
+                v-model="filterCerticate.internshipCourseId"
                 :plans="plans"
                 :defaultText="'Tất cả'"
                 @change="
                   (event) => {
-                    filterChart.internshipCourseId = event.id;
+                    filterCerticate.internshipCourseId = event.id;
                   }
                 "
               >
@@ -42,6 +42,9 @@
                   {{ item.className }}
                 </option>
               </select>
+            </div>
+            <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mt-5">
+              <Highcharts :options="pieChart" ref="pieCharts" />
             </div>
           </div>
         </div>
@@ -76,32 +79,17 @@
           <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
-                <div v-if="isAdmin" class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                  <label for="">Trạng thái:</label>
-                  <select
-                    class="form-control form-select form-select-class"
-                    v-model="filterCerticate.status"
-                  >
-                    <option value="">Tất cả</option>
-                    <option value="unconfirmed">Đang duyệt</option>
-                    <option value="confirmed">Đã duyệt</option>
-                    <option value="complete">Đã in</option>
-                  </select>
-                </div>
-                <div
-                  v-if="!isAdmin"
+                <div v-if="isAdmin"
                   class="col-xl-2 col-md-2 col-sm-12 mb-sm-2"
                   @change="changeStatusFilterCerticate()"
                 >
                   <label for="">Trạng thái:</label>
                   <select
                     class="form-control form-select form-select-class"
-                    v-model="filterCerticate.status"
+                    @change="filterStatusCerticate($event)"
                   >
-                    <option value="">Tất cả</option>
-                    <option value="unconfirmed">Đang duyệt</option>
-                    <option value="confirmed">Đã duyệt</option>
-                    <option value="complete">Đã in</option>
+                    <option value="registered">Đã đăng ký</option>
+                    <option value="unregistered">Chưa đăng ký</option>
                   </select>
                 </div>
                 <div
@@ -121,8 +109,7 @@
                   class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12"
                   v-if="isAdmin"
                 >
-                  <label for="">&ensp;</label>
-                  <div class="mb-2">&ensp;</div>
+                  <label class="invisible" for="">Thao tác</label><br />
                   <button
                     @click="getCertificatesAsync(filterCerticate)"
                     type="submit"
@@ -168,7 +155,7 @@
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">
-                    <div v-if="isAdmin" class="form-check form-check-inline">
+                    <div v-if="isAdmin && Object.keys(getCertificate(item.studentId)).length !== 0" class="form-check form-check-inline">
                       <input
                         class="form-check-input"
                         @change="selectUpdateCertificate"
@@ -180,16 +167,16 @@
                         {{ index + 1 }}</label
                       >
                     </div>
-                    <div v-if="!isAdmin" class="text-center">
+                    <div v-if="!isAdmin && Object.keys(getCertificate(item.studentId)).length === 0" class="text-center">
                       {{ index + 1 }}
                     </div>
                   </th>
                   <td>
-                    <div><strong>MSSV:</strong> {{ item.mssv }}</div>
+                    <div><strong>MSSV:</strong> {{ item.studentId }}</div>
                     <div>
                       <strong>Họ tên sinh viên:</strong>
-                      {{ getStudent(item.mssv).firstName }}
-                      {{ getStudent(item.mssv).lastName }}
+                      {{item.firstName }}
+                      {{item.lastName }}
                     </div>
                     <div>
                       <strong>lớp:</strong>
@@ -197,72 +184,72 @@
                     </div>
                     <div>
                       <strong>Số điện thoại:</strong>
-                      {{ item.phoneNumberOfStudent }}
+                      {{ getCertificate(item.studentId).phoneNumberOfStudent }}
                     </div>
                     <div>
                       <strong>Ngày đăng ký giấy: </strong>
-                      {{ convertTime(item.creationTime) }}
+                      {{ convertTime(getCertificate(item.studentId).creationTime) }}
                     </div>
                   </td>
                   <td>
-                    <div><strong>Mã số thuế:</strong> {{ item.taxCode }}.</div>
+                    <div><strong>Mã số thuế:</strong> {{ getCertificate(item.studentId).taxCode }}.</div>
                     <div>
-                      <strong>Tên công ty:</strong> {{ item.companyName }}.
+                      <strong>Tên công ty:</strong> {{ getCertificate(item.studentId).companyName }}.
                     </div>
                     <div>
                       <strong>Xác nhận công ty:</strong>
-                      {{ confirmationCompany(item.taxCode) }}.
+                      {{ confirmationCompany(getCertificate(item.studentId).taxCode) }}.
                     </div>
                   </td>
                   <td v-if="!isAdmin">
                     <button
-                      v-if="item.status === 'unconfirmed'"
+                      v-if="getCertificate(item.studentId).status === 'unconfirmed'"
                       class="btn btn-warning not-active"
                     >
                       Đang chờ duyệt
                     </button>
                     <button
-                      v-if="item.status === 'confirmed'"
+                      v-if="getCertificate(item.studentId).status === 'confirmed'"
                       class="btn btn-primary not-active"
                     >
                       Đã duyệt
                     </button>
                     <button
-                      v-if="item.status === 'complete'"
+                      v-if="getCertificate(item.studentId).status === 'complete'"
                       class="btn btn-success not-active"
                     >
                       Hoàn thành
                     </button>
                   </td>
                   <td v-if="isAdmin">
-                    <select
-                      :disabled="item.status === ''"
+                    <select v-if="Object.keys(getCertificate(item.studentId)).length !== 0"
+                      :disabled="getCertificate(item.studentId).status === ''"
                       name="status"
                       id="group"
                       class="form-control mb-2 select-type"
                       @change="changeStatus($event, index)"
                     >
                       <option
-                        v-if="item.status === ''"
-                        :selected="item.status === ''"
+                        v-if="getCertificate(item.studentId).status === ''"
+                        :selected="getCertificate(item.studentId).status === ''"
                         value=""
                       >
                         Đang chọn
                       </option>
                       <option
-                        :selected="item.status === 'unconfirmed'"
+                        :selected="getCertificate(item.studentId).status === 'unconfirmed'"
                         value="unconfirmed"
                       >
                         Đang chờ duyệt
                       </option>
                       <option
-                        :selected="item.status === 'confirmed'"
+                        :selected="getCertificate(item.studentId).status === 'confirmed'"
                         value="confirmed"
                       >
                         Đã duyệt
                       </option>
                       <option
-                        :selected="item.status === 'complete'"
+                        :selected="getCertificate(item.studentId).status === 'complete'"
                         value="complete"
                       >
                         Hoàn thành
@@ -272,7 +259,7 @@
                   <td :class="{ 'text-center': isAdmin }">
                     <button
                       v-if="!isAdmin"
-                      :disabled="item.status !== 'unconfirmed'"
+                      :disabled="getCertificate(item.studentId).status !== 'unconfirmed'"
                       class="btn btn-primary mr-1"
                       @click="updateCertificate(index)"
                     >
@@ -280,17 +267,17 @@
                     </button>
                     <button
                       v-if="!isAdmin"
-                      :disabled="item.status !== 'unconfirmed'"
+                      :disabled="getCertificate(item.studentId).status !== 'unconfirmed'"
                       class="btn btn-danger"
-                      @click="deleteCertificate(item.id, index)"
+                      @click="deleteCertificate(getCertificate(item.studentId).id, index)"
                     >
                       <em class="fa fa-trash"></em>
                     </button>
                     <button
-                      :disabled="item.status === 'unconfirmed'"
-                      v-if="isAdmin"
+                      :disabled="getCertificate(item.studentId).status === 'unconfirmed'"
+                      v-if="isAdmin && Object.keys(getCertificate(item.studentId)).length !== 0"
                       class="btn btn-primary"
-                      @click="exportPdfFile(item, index)"
+                      @click="exportPdfFile(getCertificate(item.studentId), index)"
                     >
                       <em class="fas fa-file-export"></em>
                     </button>
@@ -305,7 +292,7 @@
             </table>
             <hr />
             <div
-              v-if="isAdmin"
+              v-if="isAdmin && !isHidenFunction" 
               class="form-group text-center d-flex justify-content-center"
             >
               <select
@@ -461,8 +448,11 @@
           </div>
         </div>
         <div id="certificates-pdf" class="d-none">
-          <div v-for="(index,internshipCompany) in internshipCompanies" 
-          :key="internshipCompany" style="margin:100px 0px">
+          <div
+            v-for="(index, internshipCompany) in internshipCompanies"
+            :key="internshipCompany"
+            style="margin: 100px 0px"
+          >
             <div
               style="
                 display: -webkit-box;
@@ -499,7 +489,13 @@
             <div style="text-align: center"><span></span> Kính gửi:</div>
             <div style="padding: 0px 55px; text-align: center">
               <strong
-                ><h2>{{ internshipCompanies[internshipCompany] === undefined?"": internshipCompanies[internshipCompany].nameCompany}}</h2>
+                ><h2>
+                  {{
+                    internshipCompanies[internshipCompany] === undefined
+                      ? ""
+                      : internshipCompanies[internshipCompany].nameCompany
+                  }}
+                </h2>
               </strong>
             </div>
             <div style="padding: 0px 65px">
@@ -514,7 +510,14 @@
                 >Trường Cao đẳng Kỹ thuật Cao Thắng kính đề nghị Quý đơn
                 vị:</span
               ><br />
-              <span>* Tạo điều kiện cho: {{internshipCompanies[internshipCompany] === undefined?0: internshipCompanies[internshipCompany].students.length}} sinh viên (danh sách đính kèm).</span
+              <span
+                >* Tạo điều kiện cho:
+                {{
+                  internshipCompanies[internshipCompany] === undefined
+                    ? 0
+                    : internshipCompanies[internshipCompany].students.length
+                }}
+                sinh viên (danh sách đính kèm).</span
               ><br />
               <span
                 >* Đến thực tập sản xuất tại đơn vị theo ngành, nghề đào
@@ -570,15 +573,34 @@
                     <strong>EMAIL</strong>
                   </th>
                 </tr>
-                <tr v-for="(student,index) in internshipCompanies[internshipCompany].students" :key="student">
-                  
-                  <td style="border: 1px solid; text-align: center">{{internshipCompanies[internshipCompany] === undefined? "":index+1 }}</td>
-                  <td style="border: 1px solid; ">{{student}}</td>
-                  <td style="border: 1px solid">
-                    {{internshipCompanies[internshipCompany] === undefined? 
-                    "": getStudent(student).firstName + " " + getStudent(student).lastName }}
+                <tr
+                  v-for="(student, index) in internshipCompanies[internshipCompany].students"
+                  :key="student"
+                >
+                  <td style="border: 1px solid; text-align: center">
+                    {{
+                      internshipCompanies[internshipCompany] === undefined
+                        ? ""
+                        : index + 1
+                    }}
                   </td>
-                  <td style="border: 1px solid">{{internshipCompanies[internshipCompany] === undefined? "": getStudent(student).email }}</td>
+                  <td style="border: 1px solid">{{ student }}</td>
+                  <td style="border: 1px solid">
+                    {{
+                      internshipCompanies[internshipCompany] === undefined
+                        ? ""
+                        : getStudent(student).firstName +
+                          " " +
+                          getStudent(student).lastName
+                    }}
+                  </td>
+                  <td style="border: 1px solid">
+                    {{
+                      internshipCompanies[internshipCompany] === undefined
+                        ? ""
+                        : getStudent(student).email
+                    }}
+                  </td>
                 </tr>
               </table>
             </div>
@@ -599,8 +621,15 @@
           class="card-footer d-flex justify-content-center text--blue"
           v-show="pageOfItems == null || pageOfItems.length === 0"
         >
+        <select :class="{'d-none':students == null || students.length === 0}"  class="form-control w-auto mr-2" @change="changePageSize()" v-model="pageSize">
+          <option value="10">10/ trang</option>
+          <option value="20">20/ trang</option>
+          <option value="30">30/ trang</option>
+          <option value="40">40/ trang</option>
+          <option value="50">50/ trang</option>
+        </select>
           <JwPagination
-            :items="certificates"
+            :items="students"
             @changePage="onChangePage"
             :labels="customLabels"
             :pageSize="20"
@@ -628,19 +657,11 @@ import StudentService from "../../../services/student/studentServices";
 import ClassService from "../../../services/class/classServices";
 import CompanyService from "../../../services/company/companyServices";
 import moment from "moment";
-import Highcharts from "highcharts";
-import dataModule from "highcharts/modules/data";
-import drilldown from "highcharts/modules/drilldown";
 import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
 import PlanService from "../../../services/plan/planServices";
 import { mapGetters } from "vuex";
 import lodash from "lodash";
-drilldown(Highcharts);
-dataModule(Highcharts);
-let drilldownChart,
-  drilldownEvent,
-  drilldownLevel = 0;
-// import jsPDF from "jspdf";
+import { Chart } from "highcharts-vue";
 export default {
   name: "CertificatesComponent",
   extends: ComponentBase,
@@ -649,6 +670,7 @@ export default {
     ConfirmDialog,
     JwPagination,
     SelectPlan,
+    Highcharts: Chart,
   },
   props: {
     isAdmin: Boolean,
@@ -656,9 +678,54 @@ export default {
   mixins: [CrudMixin],
   data() {
     return {
-      internshipCompanies: {
-
+      pageSize:10,
+      pieChart: {
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: "pie",
+        },
+        title: {
+          text: "Thống kê đăng ký giấy giới thiệu",
+        },
+        tooltip: {
+          pointFormat:
+            "<b>{point.x} Sinh viên</b><br><b>{point.percentage:.1f} %</b> ",
+        },
+        accessibility: {
+          point: {
+            valueSuffix: "%",
+          },
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: "pointer",
+            dataLabels: {
+              enabled: true,
+              format: "<b>{point.name}</b><br>{point.percentage:.1f} %",
+              distance: -50,
+              filter: {
+                property: "percentage",
+                operator: ">",
+                value: 4,
+              },
+            },
+          },
+        },
+        colors: ["#2eb85c", "#e55353"],
+        series: [
+          {
+            // name: "Share",
+            data: [
+              { name: "Đã đăng ký", y: 0, x: 0 },
+              { name: "Chưa đăng ký", y: 0, x: 0 },
+            ],
+          },
+        ],
       },
+      internshipCompanies: {},
       keyCertificate: {},
       keyStudent: {},
       certificates: [],
@@ -677,24 +744,22 @@ export default {
         studentId: "",
         isDelete: false,
       },
-      studentsByMssv: [],
+      students: [],
+      studentsDefault:[],
       classById: [],
       companiesByTaxCode: {},
       company: {},
       selectCertificate: -1,
       filterCerticate: {
-        mssv: "",
+        studentCode: "",
         status: "",
         classId: "",
+        internshipCourseId:""
       },
       selectUpdateCertificates: {
         certificationId: [],
         status: "unconfirmed",
       },
-      chartOptions: {},
-      drilldownChart,
-      drilldownEvent,
-      drilldownLevel,
       filterChart: {
         internshipCourseId: "",
       },
@@ -709,14 +774,17 @@ export default {
         month: new Date().getMonth() + 1,
         year: new Date().getFullYear(),
       },
+      isHidenFunction:false
     };
   },
 
   async mounted() {
     if (this.userProfile !== "") {
+      this.filterCerticate.classId = this.userProfile.classId;
+      this.filterCerticate.internshipCourseId = this.userProfile.internshipCourseId;
+      await this.getStudentsAsync();
       await this.getCertificatesAsync(this.filterCerticate);
     }
-    await this.getStudentsAsync();
     await this.getClassesAsync();
     await this.getCompaniesAsync();
     await this.getPlansFilterAsync();
@@ -728,19 +796,7 @@ export default {
     }),
   },
   methods: {
-    async showchartAsnyc() {
-      if (!this.filterChart.internshipCourseId) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          "Vui lòng chọn đợt để xem thống kê"
-        );
-        return;
-      }
-      await this.getStatisticalCertificateAsync();
-      this.renderHighChart();
-    },
-
+ 
     async getPlansFilterAsync() {
       let filterPlan = {
         status: "",
@@ -764,13 +820,15 @@ export default {
     },
 
     async getStatisticalCertificateAsync() {
+      let filter = {
+        internshipCourseId : this.filterCerticate.internshipCourseId,
+        classId: this.filterCerticate.classId
+      }
       // Call Api
       this.showLoading();
       const api = new CertificateSevice();
 
-      const response = await api.getStatisticalCertificateAsync(
-        this.filterChart
-      );
+      const response = await api.getStatisticalCertificateAsync(filter);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -784,128 +842,6 @@ export default {
       this.statisticalCertificate = response.data;
     },
 
-    getChart() {
-      this.unconfirmedData = [];
-      this.confirmedData = [];
-      this.completeData = [];
-      this.notRegisteredData = [];
-      for (let res of this.statisticalCertificate) {
-        this.unconfirmedData.push(res.unconfirmed);
-        this.confirmedData.push(res.confirmed);
-        this.completeData.push(res.complete);
-        this.notRegisteredData.push(res.notRegistered);
-      }
-    },
-
-    renderHighChart() {
-      this.getChart();
-      this.chartOptions = {
-        chart: {
-          type: "column",
-          events: {
-            drilldown: function (e) {
-              if (!e.seriesOptions) {
-                this.vueRef.updateGraph(true, this, e);
-              }
-            },
-            drillup: function (e) {
-              if (!e.seriesOptions.flag) {
-                this.vueRef.drilldownLevel = e.seriesOptions._levelNumber;
-                this.vueRef.updateGraph(false);
-              }
-            },
-          },
-        },
-        credits: {
-          enabled: false,
-        },
-        plotOptions: {
-          column: {
-            stacking: "normal",
-            events: {
-              click: function (event) {
-                return false;
-              },
-            },
-          },
-          series: {
-            borderWidth: 0,
-            dataLabels: {
-              enabled: true,
-              style: {
-                textShadow: false,
-                fontSize: "10px",
-              },
-            },
-          },
-        },
-        legend: {
-          enabled: false,
-        },
-        yAxis: {
-          stackLabels: {
-            enabled: false,
-            style: {
-              fontWeight: "bold",
-              color: "gray",
-            },
-          },
-        },
-        title: {
-          text: "Thống kê giấy giới thiệu của sinh viên",
-          fontWeight: "bold",
-        },
-        xAxis: {
-          title: {},
-          type: "category",
-        },
-        yAxis: [
-          {
-            title: {
-              text: "Số lượng giấy",
-            },
-            min: 0,
-            allowDecimals: false,
-          },
-        ],
-        tooltip: {
-          headerFormat:
-            '<span style="font-size:10px">{point.key}</span><table>',
-          pointFormat:
-            '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y}</b></td></tr>',
-          footerFormat: "</table>",
-          shared: true,
-          useHTML: true,
-        },
-        series: [
-          {
-            type: "column",
-            name: "Số phiếu giới thiệu đang duyệt",
-            color: "#EF5350",
-            data: this.unconfirmedData,
-          },
-          {
-            type: "column",
-            name: "Số phiếu giới thiệu đã duyệt",
-            color: "rgb(128, 183, 255)",
-            data: this.confirmedData,
-          },
-          {
-            type: "column",
-            name: "Số phiếu giới thiệu đã in",
-            color: "#33691E",
-            data: this.completeData,
-          },
-          {
-            type: "column",
-            name: "Số sinh viên không đăng ký",
-            color: "#FF6F00",
-            data: this.notRegisteredData,
-          },
-        ],
-      };
-    },
     convertTime(time) {
       return moment(time).format("DD/MM/YYYY");
     },
@@ -916,9 +852,9 @@ export default {
 
     async getStudentsAsync() {
       let filterStudent = {
-        keyword: "",
-        classId: "",
-        internshipCourseId: "",
+        keyword: this.userProfile.mssv,
+        classId: this.filterCerticate.classId,
+        internshipCourseId: this.filterCerticate.internshipCourseId,
         status: "active",
       };
       // Call Api
@@ -936,10 +872,11 @@ export default {
         );
         return;
       }
-      this.studentsByMssv = CrudMixin.methods.convertArrayToObject(
-        response.data,
-        "studentId"
-      );
+      this.studentsDefault = response.data;
+      this.students = response.data.filter((student)=>{
+        return Object.keys(this.getCertificate(student.studentId)).length !== 0;
+      });
+  
     },
 
     onChangePage(pageOfItems) {
@@ -952,9 +889,6 @@ export default {
     },
 
     async getCertificatesAsync(filterCerticate) {
-      if (this.userProfile !== undefined && this.isAdmin === false) {
-        filterCerticate.mssv = this.userProfile.mssv;
-      }
       // Call Api
       this.showLoading();
       const api = new CertificateSevice();
@@ -992,10 +926,7 @@ export default {
     },
 
     deleteCertificate(id, index) {
-      this.confirmedCertificate = {
-        id: id,
-        index: index,
-      };
+      this.confirmedCertificate = {id: id,index: index};
     },
     // Call api delete Certificate
     async agreeConfirm(confirmedCertificate) {
@@ -1032,18 +963,24 @@ export default {
     },
 
     getStudent(mssv) {
-      if (this.studentsByMssv[mssv] === undefined) {
+      let studentsByMssv = CrudMixin.methods.convertArrayToObject(this.students, "mssv");
+      if (studentsByMssv[mssv] === undefined) {
         return "";
       }
-      return this.studentsByMssv[mssv];
+      return studentsByMssv[mssv];
     },
 
     async getClassesAsync() {
+      let filterClass = {
+        className: "",
+        status: "",
+        internshipCourseId: this.filterCerticate.internshipCourseId
+      }
       // Call Api
       this.showLoading();
       const api = new ClassService();
 
-      const response = await api.getClassesAsync();
+      const response = await api.getClassesFilterAsync(filterClass);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -1055,7 +992,7 @@ export default {
         return;
       }
       this.classById = CrudMixin.methods.convertArrayToObject(
-        response.data.items,
+        response.data,
         "id"
       );
     },
@@ -1246,11 +1183,12 @@ export default {
     },
 
     updateCertificatePdf(certificate) {
-      this.keyStudent = this.studentsByMssv[certificate.mssv];
+      let studentsByMssv = CrudMixin.methods.convertArrayToObject(this.students, "mssv");
+      this.keyStudent = studentsByMssv[certificate.mssv];
       this.keyCertificate = certificate;
     },
 
-    async exportPdfFile(certificate, index) {
+    async exportPdfFile(certificate) {
       await this.updateCertificatePdf(certificate);
 
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
@@ -1289,7 +1227,7 @@ export default {
     },
 
     async exportPdfFiles() {
-      this.internshipCompanies = {}
+      this.internshipCompanies = {};
       await this.setInternshipCompany();
       let mywindow = window.open("", "PRINT", "width=803,top=100,left=150");
 
@@ -1306,11 +1244,52 @@ export default {
       return true;
     },
 
+    async statisticsCerticate(){
+      await this.getStatisticalCertificateAsync();
+      var unregistered = 0;
+      var  registered = 0;
+      for(let i = 0; i<=this.statisticalCertificate.length -1 ; i++){
+        registered += this.statisticalCertificate[i].unconfirmed +  
+        this.statisticalCertificate[i].confirmed + this.statisticalCertificate[i].complete;
+        unregistered += this.statisticalCertificate[i].notRegistered;
+      }
+      this.pieChart.series[0].data[0].x = registered;
+      this.pieChart.series[0].data[1].x = unregistered;
+      this.pieChart.series[0].data[0].y = (registered/(unregistered + registered))*100;
+      this.pieChart.series[0].data[1].y = (unregistered/(unregistered + registered))*100;
+      await this.getStudentsAsync();
+    },
+
+    getCertificate(mssv){
+      let certificatesByMssv = CrudMixin.methods.convertArrayToObject(this.certificates, "mssv");
+      if(mssv in certificatesByMssv) return certificatesByMssv[mssv];
+      return {}
+    },
+
+    filterStatusCerticate($event){
+      if($event.target.value === "registered"){ 
+        this.isHidenFunction = false;
+        this.students = this.studentsDefault.filter((student)=>{
+          return Object.keys(this.getCertificate(student.studentId)).length !== 0;
+        })
+        return;
+      }
+      this.isHidenFunction = true;
+       this.students = this.studentsDefault.filter((student)=>{
+          return Object.keys(this.getCertificate(student.studentId)).length === 0;
+      })
+    }
   },
   watch: {
     async userProfile() {
+      this.filterCerticate.classId = this.userProfile.classId;
+      this.filterCerticate.internshipCourseId = this.userProfile.internshipCourseId;
+      await this.getStudentsAsync();
       await this.getCertificatesAsync(this.filterCerticate);
     },
+    "filterCerticate.internshipCourseId":async function() {
+      this.statisticsCerticate();
+    }
   },
 };
 </script>
