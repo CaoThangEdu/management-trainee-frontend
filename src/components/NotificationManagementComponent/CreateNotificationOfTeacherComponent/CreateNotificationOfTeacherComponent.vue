@@ -74,7 +74,7 @@
                         :value="notifyObject.value"
                         :id="notifyObject.value"
                         v-model="selectObject"
-                        @change="changeRadioObject(notifyObject.value)"
+                        @change="changeRadioObject()"
                       />
                       <label
                         class="custom-control-label"
@@ -225,10 +225,11 @@ export default {
       }
     },
 
-    changeInternshipCourse($event) {
+    async changeInternshipCourse($event) {
       this.notifyRequest.notificationDto.internshipCourseId = $event.id;
       this.notifyRequest.emails = [];
       this.selectObject = this.notifyObjectEnum.STUDENTS.value;
+      await this.getStudentsAsync();
     },
 
     sendClassId(classesId) {
@@ -264,10 +265,11 @@ export default {
       if (this.selectObject == this.notifyObjectEnum.STUDENTS.value) {
         this.notifyRequest.emails = [];
         for (let element of this.students) {
-          console.log(element.student.email);
           this.notifyRequest.emails.push(element.student.email);
         }
       }
+      let notifyRequestTemp = JSON.parse(JSON.stringify(this.notifyRequest));
+      notifyRequestTemp.groupOfPeople = "EMAILSTUDENTS";
       let viewModel = new NotificationViewModel();
       viewModel.setFields(this.notifyRequest.notificationDto);
       // validation model
@@ -278,7 +280,7 @@ export default {
       }
       this.showLoading();
       let api = new NotificationService();
-      let response = await api.createNotificationAsync(this.notifyRequest);
+      let response = await api.createNotificationAsync(notifyRequestTemp);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -296,11 +298,8 @@ export default {
       );
     },
 
-    async changeRadioObject(notifyObject) {
+    async changeRadioObject() {
       this.notifyRequest.emails = [];
-      if (notifyObject == this.notifyObjectEnum.EMAILSTUDENTS.value) {
-        await this.getStudentsAsync();
-      }
     },
 
     async getStudentsAsync() {
