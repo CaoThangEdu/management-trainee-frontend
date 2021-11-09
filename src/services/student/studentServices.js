@@ -6,6 +6,16 @@ export default class StudentService extends ServicesBaseAPI {
     super();
     this.url = `${AppConfig.apiHost}/Student`
   }
+  
+  async scoreStudentAsync(object) {
+    try {
+      const response = await this.http.post('http://localhost:21021/api/services/app/Score/ToMark', object);
+      this.setResult(response);
+    } catch (e) {
+      return this.http.loadError(e);
+    }
+    return this.result;
+  }
 
   async getStudentsAsync(object) {
     try {
