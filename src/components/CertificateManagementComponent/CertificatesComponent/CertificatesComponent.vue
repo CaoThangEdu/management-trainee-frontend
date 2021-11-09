@@ -79,7 +79,8 @@
           <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12">
               <div class="form-row filter-wrapper ml-0 mr-0">
-                <div v-if="isAdmin"
+                <div
+                  v-if="isAdmin"
                   class="col-xl-2 col-md-2 col-sm-12 mb-sm-2"
                   @change="changeStatusFilterCerticate()"
                 >
@@ -155,7 +156,13 @@
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">
-                    <div v-if="isAdmin && Object.keys(getCertificate(item.studentId)).length !== 0" class="form-check form-check-inline">
+                    <div
+                      v-if="
+                        isAdmin &&
+                        Object.keys(getCertificate(item.studentId)).length !== 0
+                      "
+                      class="form-check form-check-inline"
+                    >
                       <input
                         class="form-check-input"
                         @change="selectUpdateCertificate"
@@ -167,7 +174,13 @@
                         {{ index + 1 }}</label
                       >
                     </div>
-                    <div v-if="!isAdmin && Object.keys(getCertificate(item.studentId)).length === 0" class="text-center">
+                    <div
+                      v-if="
+                        !isAdmin &&
+                        Object.keys(getCertificate(item.studentId)).length === 0
+                      "
+                      class="text-center"
+                    >
                       {{ index + 1 }}
                     </div>
                   </th>
@@ -175,8 +188,8 @@
                     <div><strong>MSSV:</strong> {{ item.studentId }}</div>
                     <div>
                       <strong>Họ tên sinh viên:</strong>
-                      {{item.firstName }}
-                      {{item.lastName }}
+                      {{ item.firstName }}
+                      {{ item.lastName }}
                     </div>
                     <div>
                       <strong>lớp:</strong>
@@ -188,41 +201,60 @@
                     </div>
                     <div>
                       <strong>Ngày đăng ký giấy: </strong>
-                      {{ convertTime(getCertificate(item.studentId).creationTime) }}
+                      {{
+                        convertTime(getCertificate(item.studentId).creationTime)
+                      }}
                     </div>
                   </td>
                   <td>
-                    <div><strong>Mã số thuế:</strong> {{ getCertificate(item.studentId).taxCode }}.</div>
                     <div>
-                      <strong>Tên công ty:</strong> {{ getCertificate(item.studentId).companyName }}.
+                      <strong>Mã số thuế:</strong>
+                      {{ getCertificate(item.studentId).taxCode }}.
+                    </div>
+                    <div>
+                      <strong>Tên công ty:</strong>
+                      {{ getCertificate(item.studentId).companyName }}.
                     </div>
                     <div>
                       <strong>Xác nhận công ty:</strong>
-                      {{ confirmationCompany(getCertificate(item.studentId).taxCode) }}.
+                      {{
+                        confirmationCompany(
+                          getCertificate(item.studentId).taxCode
+                        )
+                      }}.
                     </div>
                   </td>
                   <td v-if="!isAdmin">
                     <button
-                      v-if="getCertificate(item.studentId).status === 'unconfirmed'"
+                      v-if="
+                        getCertificate(item.studentId).status === 'unconfirmed'
+                      "
                       class="btn btn-warning not-active"
                     >
                       Đang chờ duyệt
                     </button>
                     <button
-                      v-if="getCertificate(item.studentId).status === 'confirmed'"
+                      v-if="
+                        getCertificate(item.studentId).status === 'confirmed'
+                      "
                       class="btn btn-primary not-active"
                     >
                       Đã duyệt
                     </button>
                     <button
-                      v-if="getCertificate(item.studentId).status === 'complete'"
+                      v-if="
+                        getCertificate(item.studentId).status === 'complete'
+                      "
                       class="btn btn-success not-active"
                     >
                       Hoàn thành
                     </button>
                   </td>
                   <td v-if="isAdmin">
-                    <select v-if="Object.keys(getCertificate(item.studentId)).length !== 0"
+                    <select
+                      v-if="
+                        Object.keys(getCertificate(item.studentId)).length !== 0
+                      "
                       :disabled="getCertificate(item.studentId).status === ''"
                       name="status"
                       id="group"
@@ -237,19 +269,26 @@
                         Đang chọn
                       </option>
                       <option
-                        :selected="getCertificate(item.studentId).status === 'unconfirmed'"
+                        :selected="
+                          getCertificate(item.studentId).status ===
+                          'unconfirmed'
+                        "
                         value="unconfirmed"
                       >
                         Đang chờ duyệt
                       </option>
                       <option
-                        :selected="getCertificate(item.studentId).status === 'confirmed'"
+                        :selected="
+                          getCertificate(item.studentId).status === 'confirmed'
+                        "
                         value="confirmed"
                       >
                         Đã duyệt
                       </option>
                       <option
-                        :selected="getCertificate(item.studentId).status === 'complete'"
+                        :selected="
+                          getCertificate(item.studentId).status === 'complete'
+                        "
                         value="complete"
                       >
                         Hoàn thành
@@ -259,7 +298,9 @@
                   <td :class="{ 'text-center': isAdmin }">
                     <button
                       v-if="!isAdmin"
-                      :disabled="getCertificate(item.studentId).status !== 'unconfirmed'"
+                      :disabled="
+                        getCertificate(item.studentId).status !== 'unconfirmed'
+                      "
                       class="btn btn-primary mr-1"
                       @click="updateCertificate(index)"
                     >
@@ -267,17 +308,31 @@
                     </button>
                     <button
                       v-if="!isAdmin"
-                      :disabled="getCertificate(item.studentId).status !== 'unconfirmed'"
+                      :disabled="
+                        getCertificate(item.studentId).status !== 'unconfirmed'
+                      "
                       class="btn btn-danger"
-                      @click="deleteCertificate(getCertificate(item.studentId).id, index)"
+                      @click="
+                        deleteCertificate(
+                          getCertificate(item.studentId).id,
+                          index
+                        )
+                      "
                     >
                       <em class="fa fa-trash"></em>
                     </button>
                     <button
-                      :disabled="getCertificate(item.studentId).status === 'unconfirmed'"
-                      v-if="isAdmin && Object.keys(getCertificate(item.studentId)).length !== 0"
+                      :disabled="
+                        getCertificate(item.studentId).status === 'unconfirmed'
+                      "
+                      v-if="
+                        isAdmin &&
+                        Object.keys(getCertificate(item.studentId)).length !== 0
+                      "
                       class="btn btn-primary"
-                      @click="exportPdfFile(getCertificate(item.studentId), index)"
+                      @click="
+                        exportPdfFile(getCertificate(item.studentId))
+                      "
                     >
                       <em class="fas fa-file-export"></em>
                     </button>
@@ -292,7 +347,7 @@
             </table>
             <hr />
             <div
-              v-if="isAdmin && !isHidenFunction" 
+              v-if="isAdmin && !isHidenFunction"
               class="form-group text-center d-flex justify-content-center"
             >
               <select
@@ -574,7 +629,9 @@
                   </th>
                 </tr>
                 <tr
-                  v-for="(student, index) in internshipCompanies[internshipCompany].students"
+                  v-for="(student, index) in internshipCompanies[
+                    internshipCompany
+                  ].students"
                   :key="student"
                 >
                   <td style="border: 1px solid; text-align: center">
@@ -621,13 +678,18 @@
           class="card-footer d-flex justify-content-center text--blue"
           v-show="pageOfItems == null || pageOfItems.length === 0"
         >
-        <select :class="{'d-none':students == null || students.length === 0}"  class="form-control w-auto mr-2" @change="changePageSize()" v-model="pageSize">
-          <option value="10">10/ trang</option>
-          <option value="20">20/ trang</option>
-          <option value="30">30/ trang</option>
-          <option value="40">40/ trang</option>
-          <option value="50">50/ trang</option>
-        </select>
+          <select
+            :class="{ 'd-none': students == null || students.length === 0 }"
+            class="form-control w-auto mr-2"
+            @change="changePageSize()"
+            v-model="pageSize"
+          >
+            <option value="10">10/ trang</option>
+            <option value="20">20/ trang</option>
+            <option value="30">30/ trang</option>
+            <option value="40">40/ trang</option>
+            <option value="50">50/ trang</option>
+          </select>
           <JwPagination
             :items="students"
             @changePage="onChangePage"
@@ -678,7 +740,7 @@ export default {
   mixins: [CrudMixin],
   data() {
     return {
-      pageSize:10,
+      pageSize: 10,
       pieChart: {
         chart: {
           plotBackgroundColor: null,
@@ -745,7 +807,7 @@ export default {
         isDelete: false,
       },
       students: [],
-      studentsDefault:[],
+      studentsDefault: [],
       classById: [],
       companiesByTaxCode: {},
       company: {},
@@ -754,7 +816,7 @@ export default {
         studentCode: "",
         status: "",
         classId: "",
-        internshipCourseId:""
+        internshipCourseId: "",
       },
       selectUpdateCertificates: {
         certificationId: [],
@@ -774,14 +836,17 @@ export default {
         month: new Date().getMonth() + 1,
         year: new Date().getFullYear(),
       },
-      isHidenFunction:false
+      isHidenFunction: false,
     };
   },
 
   async mounted() {
     if (this.userProfile !== "") {
-      this.filterCerticate.classId = this.userProfile.classId;
-      this.filterCerticate.internshipCourseId = this.userProfile.internshipCourseId;
+      if (!this.isAdmin) {
+        this.filterCerticate.classId = this.userProfile.classId;
+        this.filterCerticate.internshipCourseId =
+          this.userProfile.internshipCourseId;
+      }
       await this.getStudentsAsync();
       await this.getCertificatesAsync(this.filterCerticate);
     }
@@ -796,7 +861,6 @@ export default {
     }),
   },
   methods: {
- 
     async getPlansFilterAsync() {
       let filterPlan = {
         status: "",
@@ -821,9 +885,9 @@ export default {
 
     async getStatisticalCertificateAsync() {
       let filter = {
-        internshipCourseId : this.filterCerticate.internshipCourseId,
-        classId: this.filterCerticate.classId
-      }
+        internshipCourseId: this.filterCerticate.internshipCourseId,
+        classId: this.filterCerticate.classId,
+      };
       // Call Api
       this.showLoading();
       const api = new CertificateSevice();
@@ -857,6 +921,10 @@ export default {
         internshipCourseId: this.filterCerticate.internshipCourseId,
         status: "active",
       };
+      if (this.isAdmin) {
+        filterStudent.keyword = "";
+        filterStudent.classId = "";
+      }
       // Call Api
       this.showLoading();
       const api = new StudentService();
@@ -872,11 +940,14 @@ export default {
         );
         return;
       }
-      this.studentsDefault = response.data;
-      this.students = response.data.filter((student)=>{
-        return Object.keys(this.getCertificate(student.studentId)).length !== 0;
-      });
-  
+      if (response.data !== null) {
+        this.studentsDefault = response.data;
+        this.students = response.data.filter((student) => {
+          return (
+            Object.keys(this.getCertificate(student.studentId)).length !== 0
+          );
+        });
+      }
     },
 
     onChangePage(pageOfItems) {
@@ -926,7 +997,7 @@ export default {
     },
 
     deleteCertificate(id, index) {
-      this.confirmedCertificate = {id: id,index: index};
+      this.confirmedCertificate = { id: id, index: index };
     },
     // Call api delete Certificate
     async agreeConfirm(confirmedCertificate) {
@@ -963,7 +1034,10 @@ export default {
     },
 
     getStudent(mssv) {
-      let studentsByMssv = CrudMixin.methods.convertArrayToObject(this.students, "mssv");
+      let studentsByMssv = CrudMixin.methods.convertArrayToObject(
+        this.students,
+        "studentId"
+      );
       if (studentsByMssv[mssv] === undefined) {
         return "";
       }
@@ -974,8 +1048,8 @@ export default {
       let filterClass = {
         className: "",
         status: "",
-        internshipCourseId: this.filterCerticate.internshipCourseId
-      }
+        internshipCourseId: this.filterCerticate.internshipCourseId,
+      };
       // Call Api
       this.showLoading();
       const api = new ClassService();
@@ -1183,7 +1257,10 @@ export default {
     },
 
     updateCertificatePdf(certificate) {
-      let studentsByMssv = CrudMixin.methods.convertArrayToObject(this.students, "mssv");
+      let studentsByMssv = CrudMixin.methods.convertArrayToObject(
+        this.students,
+        "studentId"
+      );
       this.keyStudent = studentsByMssv[certificate.mssv];
       this.keyCertificate = certificate;
     },
@@ -1207,20 +1284,20 @@ export default {
     },
 
     setInternshipCompany() {
-      for (let i = 0; i <= this.certificates.length - 1; i++) {
+      for (let i = 0; i <= this.students.length - 1; i++) {
         if (
-          !(this.certificates[i].taxCode in this.internshipCompanies) &&
-          this.certificates[i].status === "confirmed"
+          !(this.getCertificate(this.students[i].studentId).taxCode in this.internshipCompanies) &&
+          this.getCertificate(this.students[i].studentId).status === "confirmed"
         ) {
-          this.internshipCompanies[this.certificates[i].taxCode] = {
-            taxCode: this.certificates[i].taxCode,
-            nameCompany: this.certificates[i].companyName,
+          this.internshipCompanies[this.getCertificate(this.students[i].studentId).taxCode] = {
+            taxCode: this.getCertificate(this.students[i].studentId).taxCode,
+            nameCompany: this.getCertificate(this.students[i].studentId).companyName,
             students: [],
           };
         }
         if (this.certificates[i].status === "confirmed") {
-          this.internshipCompanies[this.certificates[i].taxCode].students.push(
-            this.certificates[i].mssv
+          this.internshipCompanies[this.getCertificate(this.students[i].studentId).taxCode].students.push(
+            this.getCertificate(this.students[i].studentId).mssv
           );
         }
       }
@@ -1244,52 +1321,64 @@ export default {
       return true;
     },
 
-    async statisticsCerticate(){
+    async statisticsCerticate() {
       await this.getStatisticalCertificateAsync();
       var unregistered = 0;
-      var  registered = 0;
-      for(let i = 0; i<=this.statisticalCertificate.length -1 ; i++){
-        registered += this.statisticalCertificate[i].unconfirmed +  
-        this.statisticalCertificate[i].confirmed + this.statisticalCertificate[i].complete;
+      var registered = 0;
+      for (let i = 0; i <= this.statisticalCertificate.length - 1; i++) {
+        registered +=
+          this.statisticalCertificate[i].unconfirmed +
+          this.statisticalCertificate[i].confirmed +
+          this.statisticalCertificate[i].complete;
         unregistered += this.statisticalCertificate[i].notRegistered;
       }
       this.pieChart.series[0].data[0].x = registered;
       this.pieChart.series[0].data[1].x = unregistered;
-      this.pieChart.series[0].data[0].y = (registered/(unregistered + registered))*100;
-      this.pieChart.series[0].data[1].y = (unregistered/(unregistered + registered))*100;
+      this.pieChart.series[0].data[0].y =
+        (registered / (unregistered + registered)) * 100;
+      this.pieChart.series[0].data[1].y =
+        (unregistered / (unregistered + registered)) * 100;
       await this.getStudentsAsync();
     },
 
-    getCertificate(mssv){
-      let certificatesByMssv = CrudMixin.methods.convertArrayToObject(this.certificates, "mssv");
-      if(mssv in certificatesByMssv) return certificatesByMssv[mssv];
-      return {}
+    getCertificate(mssv) {
+      let certificatesByMssv = CrudMixin.methods.convertArrayToObject(
+        this.certificates,
+        "mssv"
+      );
+      if (mssv in certificatesByMssv) return certificatesByMssv[mssv];
+      return {};
     },
 
-    filterStatusCerticate($event){
-      if($event.target.value === "registered"){ 
+    filterStatusCerticate($event) {
+      if ($event.target.value === "registered") {
         this.isHidenFunction = false;
-        this.students = this.studentsDefault.filter((student)=>{
-          return Object.keys(this.getCertificate(student.studentId)).length !== 0;
-        })
+        this.students = this.studentsDefault.filter((student) => {
+          return (
+            Object.keys(this.getCertificate(student.studentId)).length !== 0
+          );
+        });
         return;
       }
       this.isHidenFunction = true;
-       this.students = this.studentsDefault.filter((student)=>{
-          return Object.keys(this.getCertificate(student.studentId)).length === 0;
-      })
-    }
+      this.students = this.studentsDefault.filter((student) => {
+        return Object.keys(this.getCertificate(student.studentId)).length === 0;
+      });
+    },
   },
   watch: {
     async userProfile() {
-      this.filterCerticate.classId = this.userProfile.classId;
-      this.filterCerticate.internshipCourseId = this.userProfile.internshipCourseId;
+      if (!this.isAdmin) {
+        this.filterCerticate.classId = this.userProfile.classId;
+        this.filterCerticate.internshipCourseId =
+          this.userProfile.internshipCourseId;
+      }
       await this.getStudentsAsync();
       await this.getCertificatesAsync(this.filterCerticate);
     },
-    "filterCerticate.internshipCourseId":async function() {
+    "filterCerticate.internshipCourseId": async function () {
       this.statisticsCerticate();
-    }
+    },
   },
 };
 </script>
