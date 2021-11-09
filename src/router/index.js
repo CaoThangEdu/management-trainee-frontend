@@ -479,6 +479,31 @@ const routes = [
       breadcrumbName: 'Upload file',
     },
   },
+  {
+    path: '/questionnaire',
+    name: 'questionnaire',
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../components/QuestionnaireComponent/QuestionnaireComponent.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Phiếu khảo sát',
+    },
+  },
+  {
+    path: '/content-questionnaire/:surveyFormId',
+    name: 'contentQuestionnaire',
+    props:true,
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../components/QuestionnaireComponent/ContentQuestionnaireComponent.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Nội dung khảo sát',
+    },
+  },
 ];
 
 const router = new VueRouter({

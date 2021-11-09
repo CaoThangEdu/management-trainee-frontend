@@ -159,5 +159,12 @@ export default [{
       icon: "cil-book",
       role: "STUDENT",
     },
+    {
+      _name: "CSidebarNavItem",
+      name: "Phiếu khảo sát",
+      to: "/questionnaire",
+      icon: "cil-book",
+      role: "Admin",
+    },
   ],
 },];
