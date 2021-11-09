@@ -264,7 +264,6 @@ export default {
       if (this.selectObject == this.notifyObjectEnum.STUDENTS.value) {
         this.notifyRequest.emails = [];
         for (let element of this.students) {
-          console.log(element.student.email);
           this.notifyRequest.emails.push(element.student.email);
         }
       }

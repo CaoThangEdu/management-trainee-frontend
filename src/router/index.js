@@ -437,7 +437,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "ControlExample" */
-        '../router/views/Certificate/Certificate.vue'
+        '../components/CertificateManagementComponent/CertificatesStudentComponent/CertificatesStudentComponent.vue'
       ),
     meta: {
       breadcrumbName: 'Đăng ký giấy giới thiệu thực tập',
