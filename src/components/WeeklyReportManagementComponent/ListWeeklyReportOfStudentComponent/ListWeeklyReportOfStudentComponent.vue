@@ -205,8 +205,8 @@ export default {
       this.editWeeklyReport = Object.assign({}, this.pageOfItems[index]);
     },
 
-    deleteWeeklyReport(classroom) {
-      this.confirmWeeklyReport = classroom;
+    deleteWeeklyReport(confirmWeeklyReport) {
+      this.confirmWeeklyReport = confirmWeeklyReport;
     },
 
     // Call api delete Class
@@ -229,7 +229,7 @@ export default {
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default} ${weeklyReportsComfirm.title}`
+        `${AppConfig.notification.content_deleted_success_default}`
       );
     },
 
