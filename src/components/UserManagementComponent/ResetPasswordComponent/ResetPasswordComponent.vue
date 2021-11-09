@@ -86,7 +86,7 @@ import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import UserService from "../../../services/user/userService";
 import crudMixin from "../../../helpers/mixins/crudMixin";
 import createUserMixin from "../../../helpers/mixins/createUserMixin";
-import ChangePasswordViewModel from "../../../view-model/user/changePasswordViewModel";
+import ResetPasswordViewModel from "../../../view-model/user/resetPasswordViewModel";
 import AppConfig from "../../../app.config.json";
 
 export default {
@@ -158,7 +158,7 @@ export default {
         adminPassword: this.passwordAdmin,
         newPassword: this.newPassword,
       };
-      let viewModel = new ChangePasswordViewModel();
+      let viewModel = new ResetPasswordViewModel();
       viewModel.setFields(checkPassword);
       this.errorMessages = viewModel.isValid();
       if (this.errorMessages.length > 0) {
