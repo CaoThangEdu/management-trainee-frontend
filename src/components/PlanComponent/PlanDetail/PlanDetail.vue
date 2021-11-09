@@ -64,6 +64,7 @@
                       min="2018"
                       max=""
                       v-model="plan.courseName"
+                      @keypress="isNumber"
                     />
                   </div>
 

@@ -56,7 +56,9 @@
               <td
                 @click="updateCareer(index)"
                 class="link-detail"
-                title="Xem">{{ item.careersName }}</td>
+                title="Xem">{{ item.careersName }}
+                <em class="fas fa-external-link-alt"></em>
+              </td>
               <td v-if="trainingSystems.length != 0">
                 {{ getTrainingSystemName(item.trainingSystemId, trainingSystems).trainingSystemName }}
               </td>

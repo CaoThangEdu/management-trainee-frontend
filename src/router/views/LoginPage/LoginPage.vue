@@ -147,10 +147,10 @@ export default {
         return;
       }
 
-      // if (this.requestInfo.username !='admin'
-      //   && !this.requestInfo.username.includes("@caothang.edu.vn")) {
-      //   this.requestInfo.username = this.requestInfo.username + "@caothang.edu.vn";
-      // }
+      if (this.requestInfo.username !='admin'
+        && !this.requestInfo.username.includes("@caothang.edu.vn")) {
+        this.requestInfo.username = this.requestInfo.username + "@caothang.edu.vn";
+      }
 
       this.showLoading();
       let _loginApi = new AuthenticateService();
@@ -178,13 +178,17 @@ export default {
           this.$router.push({ name: 'them-ke-hoach'});
           return;
         }
+
         if (roles.toUpperCase() == 'STUDENT') {
           this.$router.push({ name: 'trang-chu-sinh-vien'});
           return;
         }
+
+        if (roles.toUpperCase() == 'TEACHER') {
+          this.$router.push({ name: 'ds-sinh-vien-cua-gv'});
+          return;
+        }
       }
-      
-      this.$router.push({ name: 'trang-chu'});
     },
   },
   computed: {

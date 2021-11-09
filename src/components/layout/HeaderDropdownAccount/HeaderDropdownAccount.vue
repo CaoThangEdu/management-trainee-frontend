@@ -21,7 +21,7 @@
       class="text-center"
       color="light"
     >
-      <strong>Settings</strong>
+      <strong>Cài đặt</strong>
     </CDropdownHeader>
     <CDropdownItem
       @click="$router.push({ name: 'ProfileUserLogged' })">
@@ -32,7 +32,7 @@
       <CIcon name="cil-lock-locked" />
         Đổi mật khẩu
     </CDropdownItem>
-    <CDropdownItem>
+    <!-- <CDropdownItem>
       <CIcon name="cil-settings" /> Settings
     </CDropdownItem>
     <CDropdownItem>
@@ -42,7 +42,7 @@
     <CDropdownItem>
       <CIcon name="cil-file" /> Projects
       <CBadge color="primary" class="mfs-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
+    </CDropdownItem> -->
     <CDropdownDivider/>
     <CDropdownItem @click="logoutAccount">
       <CIcon name="cil-account-logout" /> Đăng xuất

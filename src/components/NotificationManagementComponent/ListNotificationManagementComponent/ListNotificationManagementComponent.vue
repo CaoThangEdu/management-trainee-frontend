@@ -89,7 +89,9 @@
                   <th scope="col">STT</th>
                   <th scope="col">Tiêu đề</th>
                   <th scope="col">Nội dung</th>
+                  <th scope="col">Người gửi</th>
                   <th scope="col" class="text-center">Đợt thực tập</th>
+                  <th scope="col">Ngày gửi</th>
                   <th scope="col">Thao tác</th>
                 </tr>
               </thead>
@@ -101,6 +103,7 @@
                   <th scope="row">{{ index + 1 }}</th>
                   <td>{{ notify.notify.title }}</td>
                   <td>{{ notify.notify.content }}</td>
+                  <td>{{ notify.userCreate }}</td>
                   <td class="text-center" v-if="plans.length != 0">
                     {{
                       notify.notify.internshipCourseId
@@ -108,6 +111,7 @@
                         : ""
                     }}
                   </td>
+                  <td>{{ convertTime(notify.notify.creationTime, 'HH:mm DD/MM/YYYY') }}</td>
                   <td>
                     <router-link
                       :to="{ name: 'thong-ke-thong-bao', params: { guid: notify.notify.id } }"
@@ -156,6 +160,7 @@ import PlanService from "../../../services/plan/planServices";
 import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
 import { NOTYFY_STATUS_ENUM } from "../../../config/constant";
 import { mapGetters, mapActions } from "vuex";
+import crudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ListNotificationManagementComponent",
@@ -165,6 +170,7 @@ export default {
     JwPagination,
     SelectPlan,
   },
+  mixins:[crudMixin],
   data() {
     return {
       notifications: [],
