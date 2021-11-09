@@ -37,6 +37,7 @@
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">{{ index + 1 }}</th>
+                  <td>{{item.title}}</td>
                   <td>{{item.description}}</td>
                   <td>
                     <a :href="item.link" target="_blank">

@@ -22,37 +22,6 @@
           </button>
         </header>
         <div class="card-body">
-          <div class="row mb-3">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-              <div class="form-row filter-wrapper ml-0 mr-0">
-                <div class="col-xl-2 col-md-2 col-sm-12 mb-sm-2">
-                  <select
-                    class="form-control form-select form-select-class"
-                  >
-                    <option value="">Tất cả</option>
-                    <option value="active">Đang hoạt động</option>
-                    <option value="unactive">Không hoạt động</option>
-                  </select>
-                </div>
-                <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="keywords"
-                    placeholder="Nhập từ khóa"
-                  />
-                </div>
-                <div class="col-xl-2 col-md-4 col-sm-12">
-                  <button type="submit" id="btn-search" 
-                    class="btn btn-stack-overflow"
-                    title="Tìm kiếm"
-                    @click="getWeeklyReportFilterAsync()">
-                    <em class="fas fa-search"></em>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="table-responsive">
             <table class="table">
               <thead class="">
@@ -67,9 +36,18 @@
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">{{ index + 1 }}</th>
-                  <td>{{item.title}}</td>
+                  <td class="link-detail"
+                    @click="updateWeeklyReport(index)"
+                    title="Xem">
+                    {{ item.title }}
+                    <em class="fas fa-external-link-alt"></em>
+                  </td>
                   <td>{{item.description}}</td>
-                  <td>{{item.link}}</td>
+                  <td>
+                    <a :href="item.link" target="_blank">
+                      Xem chi tiết
+                    </a>
+                  </td>
                   <td>
                     <button class="btn btn-danger" title="Xóa"
                       @click="deleteWeeklyReport(item)">

@@ -85,13 +85,13 @@
                 <textarea
                   name="name-companies"
                   cols="30"
-                  class="w-100"
+                  class="w-100 form-control"
                   v-model="keyInternshipConfirmation.companiesInterviewed"
                 ></textarea>
               </div>
             </div>
           </form>
-          <div class="text-center ">
+          <div class="text-center">
             <button
               type="button"
               @click="internshipConfirmation()"

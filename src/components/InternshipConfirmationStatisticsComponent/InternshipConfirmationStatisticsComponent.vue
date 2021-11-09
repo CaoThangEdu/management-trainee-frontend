@@ -339,7 +339,7 @@ export default {
         !this.internshipConfirmations ||
         this.internshipConfirmations.length === 0
       )
-        return;
+        return 0;
       let internshipConfirmationsByStudentId =
         CrudMixin.methods.convertArrayToObject(
           this.internshipConfirmations,
