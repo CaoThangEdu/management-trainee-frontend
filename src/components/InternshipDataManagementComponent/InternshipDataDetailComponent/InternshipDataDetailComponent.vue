@@ -67,14 +67,14 @@
             id="name"
             v-model="internshipDataInfo.link"
           />
-        <div>
-          <span class="text--italic text--red">
-            Vui lòng copy link google drive để vào đây!
-          </span>
-          <a href="https://drive.google.com/" target="_blank">
-            Đi đến google drive của bạn
-          </a>
-        </div>
+          <div>
+            <span class="text--italic text--red">
+              Vui lòng copy link google drive để vào đây!
+            </span>
+            <a href="https://drive.google.com/" target="_blank">
+              Đi đến google drive của bạn
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -221,6 +221,10 @@ export default {
       let viewModel = new InternshipDataViewModel();
       viewModel.setFields(this.internshipDataInfo);
       this.errorMessages = viewModel.isValid();
+      if(this.internshipDataInfo.link && 
+        !(this.internshipDataInfo.link.includes('https://drive.google.com'))) {
+        this.errorMessages.push('Vui lòng copy link google drive để <strong>Link đường dẫn</strong> ')
+      }
       if (this.errorMessages.length > 0) {
         return;
       }

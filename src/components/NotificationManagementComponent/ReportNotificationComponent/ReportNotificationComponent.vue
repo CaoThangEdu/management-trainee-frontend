@@ -2,12 +2,45 @@
   <div>
     <div class="col-12">
       <div class="card">
-        <header class="card-header"
-          v-if="notify.notification">
-          <h5>Thống kê thông báo của tiêu đề: {{notify.notification.title}}</h5>
-          <h5>Đợt thực tập: {{notify.notification.internshipCourse.internshipCourseName}}</h5>
+        <header class="card-header">
+          <h5 class="float-left"
+            v-if="notify.notification">
+            Tiêu đề thông báo: {{notify.notification.title}}
+          </h5>
+          <div class="float-right">
+            <button
+              @click="$router.go(-1)"
+              id="cancel"
+              class="btn btn-dark mr-2"
+            >
+              Trở về
+            </button>
+          </div>          
         </header>
         <div class="card-body">
+          <div class="row mb-2"
+            v-if="notify.notification">
+            <div class="col-12">
+              <div>
+                <span class="font-weight-bold">
+                  Đợt thực tập:
+                </span>
+                {{notify.notification.internshipCourse.internshipCourseName}}
+              </div>
+              <div>
+                <span class="font-weight-bold">
+                  Người gửi:
+                </span>
+                  {{notify.userCreate}}
+              </div>
+              <div>
+                <span class="font-weight-bold">
+                  Ngày gửi:
+                </span>
+                {{convertTime(notify.notification.creationTime, 'HH:mm DD/MM/YYYY')}}
+              </div>
+            </div>
+          </div>
           <div class="row mb-2" v-if="Object.keys(notifyReport).length !== 0">
             <div class="col-12">
               <div>
@@ -142,6 +175,7 @@ import AppConfig from "../../../../src/app.config.json";
 import ComponentBase from "../../common/component-base/ComponentBase";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog" ;
 import JwPagination from 'jw-vue-pagination';
+import crudMixin from "../../../helpers/mixins/crudMixin";
 
 export default {
   name: "ReportNotificationComponent",
@@ -150,6 +184,7 @@ export default {
     ConfirmDialog,
     JwPagination,
   },
+  mixins:[crudMixin],
   props: {
     guid: {
       type: String,
