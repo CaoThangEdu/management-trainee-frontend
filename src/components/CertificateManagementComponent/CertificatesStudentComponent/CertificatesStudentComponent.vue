@@ -192,11 +192,9 @@ import JwPagination from "jw-vue-pagination";
 import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import CertificateSevice from "../../../services/certificate/CertificateServices";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
-import ClassService from "../../../services/class/classServices";
 import CompanyService from "../../../services/company/companyServices";
 import moment from "moment";
 import { mapGetters } from "vuex";
-import lodash from "lodash";
 export default {
   name: "CertificatesStudentComponent",
   extends: ComponentBase,
@@ -333,38 +331,6 @@ export default {
       );
     },
 
-    async changeStatus(event, index) {
-      this.certificates[index].status = event.target.value;
-      await this.updateCertificateAsync(index);
-    },
-
-    async getClassesAsync() {
-      let filterClass = {
-        className: "",
-        status: "",
-        internshipCourseId: this.filterCerticate.internshipCourseId,
-      };
-      // Call Api
-      this.showLoading();
-      const api = new ClassService();
-
-      const response = await api.getClassesFilterAsync(filterClass);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.classById = CrudMixin.methods.convertArrayToObject(
-        response.data,
-        "id"
-      );
-    },
-
     async updateCertificateAsync(index) {
       this.showLoading();
       let api = new CertificateSevice();
@@ -459,9 +425,6 @@ export default {
       this.companiesByTaxCode[company.taxCode] = company;
     },
 
-    async changeStatusFilterCerticate() {
-      await this.getCertificatesAsync();
-    },
   },
   watch: {
     async userProfile() {
