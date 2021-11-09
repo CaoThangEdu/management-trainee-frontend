@@ -69,7 +69,9 @@
                 <th scope="row">{{ index + 1 }}</th>
                 <td
                   @click="updateStudent(index)" class="link-detail"
-                  title="Xem">{{ item.studentId }}</td>
+                  title="Xem">{{ item.studentId }}
+                  <em class="fas fa-external-link-alt"></em>
+                </td>
                 <td>{{ item.firstName + ' ' + item.lastName }}</td>
                 <td v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.classId, classes)">
                   {{ getInfoObject(item.classId, classes).className }}

@@ -24,73 +24,24 @@
           </button>
         </header>
         <div class="card-body">
-          <div class="row mb-3">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-              <div class="form-row filter-wrapper ml-0 mr-0">
-                <div class="col-xl-4 col-md-4 col-sm-12 mb-sm-2">
-                  <SelectPlan
-                    :isRequired="false"
-                    v-model="filter.internshipCourseId"
-                    :plans="plans"
-                    :defaultText="'Tất cả đợt thực tập'"
-                    @change="
-                      (event) => {
-                        filter.internshipCourseId = event.id;
-                      }
-                    "
-                  >
-                  </SelectPlan>
-                </div>
-                <div class="col-xl-2 col-md-4 col-sm-12">
-                  <button type="submit" id="btn-search" 
-                    class="btn btn-stack-overflow"
-                    title="Tìm kiếm"
-                    @click="getInternshipDataFilterAsync()">
-                    <em class="fas fa-search"></em>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="table-responsive">
             <table class="table">
               <thead class="">
                 <tr>
                   <th scope="col">STT</th>
                   <th scope="col">Tiêu đề</th>
-                  <th scope="col">Đợt thực tập</th>
                   <th scope="col">Mô tả</th>
                   <th scope="col">Đường dẫn</th>
-                  <th scope="col">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">{{ index + 1 }}</th>
-                  <td :class="{'link-detail':(userProfile&&userProfile.role=='Admin')}"
-                    title="Xem"
-                    @click="updateInternshipData(index)">
-                    {{ item.title }}
-                    <em class="fas fa-external-link-alt"
-                      v-if="userProfile&&userProfile.role=='Admin'"></em>
-                  </td>
-                  <td v-if="plans.length > 0">
-                    {{
-                      getInfoObject(item.internshipCourseId, plans)
-                        .internshipCourseName
-                    }}
-                  </td>
                   <td>{{item.description}}</td>
                   <td>
                     <a :href="item.link" target="_blank">
                       Xem chi tiết
                     </a>
-                  </td>
-                  <td>
-                    <button class="btn btn-danger" title="Xóa"
-                      @click="deleteInternshipData(item)">
-                      <i class="fa fa-trash"></i>
-                    </button>
                   </td>
                 </tr>
                 <tr v-show="pageOfItems == null || pageOfItems.length === 0">
@@ -102,17 +53,6 @@
             </table>
           </div>
         </div>
-        <InternshipDataDetailComponent
-          :data="editInternshipData"
-          @change-data="changeData"
-          :plans="plans"
-        />
-
-        <ConfirmDialog
-          :data="confirmInternshipData"
-          @agree="deleteInternshipDataConfirm"
-        ></ConfirmDialog>
-
         <div
           class="card-footer d-flex justify-content-center text--blue"
           v-show="pageOfItems.length !== 0"
@@ -143,25 +83,18 @@
 </template>
 
 <script>
-import InternshipDataDetailComponent from "../InternshipDataDetailComponent/InternshipDataDetailComponent.vue";
 import ComponentBase from "../../common/component-base/ComponentBase";
-import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import InternshipDataService from "../../../services/internshipData/internshipDataServices";
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
-import PlanService from "../../../services/plan/planServices";
-import SelectPlan from "../../common/form/select-plan/SelectPlan.vue";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "ListInternshipDataManagementComponent",
+  name: "InternshipDataOfStudentComponent",
   extends: ComponentBase,
   components: {
-    InternshipDataDetailComponent,
-    ConfirmDialog,
-    JwPagination,
-    SelectPlan,
+    JwPagination
   },
   mixins: [CrudMixin],
   data() {
@@ -176,10 +109,6 @@ export default {
         previous: "<",
         next: ">",
       },
-      filter: {
-        internshipCourseId: "",
-      },
-      plans: [],
       pageSize: 10,
       isPageSize: false,
     };
@@ -198,7 +127,6 @@ export default {
       await this.getUserProfile();
     }
     await this.getInternshipDataFilterAsync();
-    await this.getPlansAsync();
   },
 
   methods: {
@@ -221,28 +149,6 @@ export default {
       await this.getInternshipDataFilterAsync();
     },
 
-    async getPlansAsync() {
-      let planFilter = {
-        status: "",
-      };
-      // Call Api
-      this.showLoading();
-      const api = new PlanService();
-
-      const response = await api.getPlansAsync(planFilter);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.plans = response.data;
-    },
-
     getStatusIcon(status) {
       return CrudMixin.methods.getStatusIcon(status);
     },
@@ -261,11 +167,15 @@ export default {
     },
 
     async getInternshipDataFilterAsync() {
+      if (!this.userProfile) return;
+      if (!this.userProfile.internshipCourseId) return;
       // Call Api
       this.showLoading();
       const api = new InternshipDataService();
 
-      const response = await api.getInternshipDatasAsync(this.filter);
+      const response = await api.getInternshipDatasAsync({
+        internshipCourseId:  this.userProfile.internshipCourseId,
+      });
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -285,7 +195,6 @@ export default {
     },
 
     updateInternshipData(index) {
-      if (this.userProfile && this.userProfile.role != 'Admin') return;
       this.editInternshipData = Object.assign({}, this.pageOfItems[index]);
     },
 

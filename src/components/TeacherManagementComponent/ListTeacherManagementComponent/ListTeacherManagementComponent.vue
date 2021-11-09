@@ -114,6 +114,7 @@
                         title="Xem"
                       >
                         {{ item.firstName + " " + item.lastName }}
+                        <em class="fas fa-external-link-alt"></em>
                       </td>
                       <td>{{ item.email }}</td>
                       <td>{{ item.phoneNumber }}</td>

@@ -376,6 +376,17 @@ const routes = [
     },
   },
   {
+    path: "/internship-data-list",
+    name: "danh-sach-bieu-mau",
+    component: () =>
+      import(
+        "../components/InternshipDataManagementComponent/InternshipDataOfStudentComponent/InternshipDataOfStudentComponent.vue"
+      ),
+    meta: {
+      breadcrumbName: "Danh sách biểu mẫu",
+    },
+  },
+  {
     path: "/student-management",
     name: "quan-ly-sinh-vien",
     redirect: '/student-management/list',
@@ -398,7 +409,7 @@ const routes = [
       },
       {
         path: 'students-managed-by-the-teacher',
-        name: 'ds-sinh-vien',
+        name: 'ds-sinh-vien-cua-gv',
         component: () =>
           import("../router/views/StudentsManagedByTheTeacher/StudentsManagedByTheTeacher.vue"),
         meta: {

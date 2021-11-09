@@ -48,7 +48,9 @@
               <td
                 @click="updateFaculty(index)"
                 class="link-detail"
-                title="Xem">{{ item.facultyName }}</td>
+                title="Xem">{{ item.facultyName }}
+                <em class="fas fa-external-link-alt"></em>
+              </td>
               <td>
                 <button class="btn btn-danger" title="Xóa"
                   @click="deleteFaculty(item, index)"><em class="fa fa-trash"></em></button>

@@ -61,6 +61,7 @@
                       :to="{ name: 'sua-ke-hoach', params: { guid: plan.id } }"
                     >
                       {{ plan.internshipCourseName }}
+                      <em class="fas fa-external-link-alt"></em>
                     </router-link>
                   </th>
                   <td>{{ convertTime(plan.startDay, "DD/MM/YYYY") }}</td>

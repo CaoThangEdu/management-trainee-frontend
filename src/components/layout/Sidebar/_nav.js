@@ -35,6 +35,13 @@ export default [{
     },
     {
       _name: 'CSidebarNavItem',
+      name: 'Danh sách biểu mẫu',
+      to: '/internship-data-list',
+      icon: 'cil-file',
+      role: "STUDENT",
+    },
+    {
+      _name: 'CSidebarNavItem',
       name: 'Quản lý tài khoản',
       to: '/user-management',
       icon: 'cil-user',

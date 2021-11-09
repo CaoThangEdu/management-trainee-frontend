@@ -41,6 +41,7 @@
                 <th scope="row">{{ index + 1 }}</th>
                 <td class="link-detail" title="Xem chi tiết" @click="updateCompany(index)">
                   {{ company.taxCode }}
+                  <em class="fas fa-external-link-alt"></em>
                 </td>
                 <td>{{ company.title }}</td>
                 <td>

@@ -9,6 +9,12 @@ export default {
     }
   },
   methods: {
+    isNumber(val) {
+      if (isNaN(Number(val.key))) {
+        return val.preventDefault();
+      }
+    },
+    
     getStatusIcon(status) {
       if (status == 'active') {
         return 'fa fa-unlock';

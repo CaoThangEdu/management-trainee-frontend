@@ -59,7 +59,11 @@
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ item.className }}</td>
+                  <td class="link-detail"
+                    @click="updateClass(index)"
+                    title="Xem">{{ item.className }}
+                    <em class="fas fa-external-link-alt"></em>  
+                  </td>
                   <td v-if="plans.length > 0">
                     {{
                       getInfoObject(item.internshipCourseId, plans)
@@ -67,14 +71,8 @@
                     }}
                   </td>
                   <td>
-                    <button
-                      class="btn btn-success mr-2"
-                      @click="updateClass(index)"
-                    >
-                      Sửa
-                    </button>
                     <button class="btn btn-danger" @click="deleteClass(item)">
-                      Xóa
+                      <em class="fa fa-trash"></em>
                     </button>
                   </td>
                 </tr>

@@ -47,7 +47,9 @@
                 <th scope="row">{{ index + 1 }}</th>
                 <td @click="updateTrainingSystem(index)"
                   class="link-detail"
-                  title="Xem">{{ item.trainingSystemName }}</td>
+                  title="Xem">{{ item.trainingSystemName }}
+                  <em class="fas fa-external-link-alt"></em>
+                </td>
                   <td>{{ getFaculty(item.facultyId).facultyName }}</td>
                 <td>
                   <button class="btn btn-danger" title="Xóa"
