@@ -592,7 +592,7 @@ export default {
       let studentFilter = {
         keyword: "",
         classId: "",
-        internshipCourseId: "",
+        internshipCourseId: this.guid,
         status: "active",
         isDelete: false,
       };
