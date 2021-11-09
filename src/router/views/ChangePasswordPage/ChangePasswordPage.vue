@@ -45,11 +45,12 @@
           <div class="form-group form-row">
             <label for="" class="col-form-label col-md-12 col-lg-3 col-xl-3">&nbsp;</label>
             <div class="col-md-12 col-lg-6 col-xl-6">
-              <button id="btn-cancel" class="btn btn-dark">Hủy</button>
+              <button id="btn-cancel" class="btn btn-dark"
+                @click="$router.go(-1)">Hủy</button>
               <button id="btn-reset" class="btn btn-primary ml-2 mr-2"
                 @click="resetForm()">Làm lại</button>
               <button btn="btn-edit" class="btn btn-success"
-                @click="changePassword()">Sửa</button>
+                @click="changePassword()">Đổi mật khẩu</button>
             </div>
           </div>
           <div class="form-group form-row">
