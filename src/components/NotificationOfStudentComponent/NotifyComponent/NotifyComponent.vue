@@ -22,9 +22,11 @@
             v-for="(notify, index) in notificationsOfUser"
             :key="index + 'noti'"
             :class="{'info': notify.watched, 'warning': !notify.watched}">
-            <p>
+            <router-link
+                class="nav__notify-link"
+                :to="{name:'thong-bao-cua-tai-khoan', params: { guid: notify.id } }">
               {{ notify.title }}
-            </p>
+            </router-link>
             <p>
               Được gửi từ {{ notify.userCreate }}
             </p>

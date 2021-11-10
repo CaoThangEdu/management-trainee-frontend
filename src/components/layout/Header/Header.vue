@@ -129,9 +129,7 @@ export default {
     //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
     ...mapActions("user", ["updateUserInfoDataAsync"]),
     async getNotifyByEmail(){
-      if(!this.userProfile.role ||
-        (this.userProfile.role && this.userProfile.role.toUpperCase() == 'ADMIN')
-        || !this.userProfile.user) return;
+      if(!this.userProfile.role || !this.userProfile.user) return;
       let res;
       let authToken = localStorageMixin.methods.getLocalStorage(STORAGE_KEY.AUTH_TOKEN);
       let accessToken = authToken?.accessToken;
