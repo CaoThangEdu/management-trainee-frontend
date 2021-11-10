@@ -21,6 +21,13 @@ export default [{
     },
     {
       _name: "CSidebarNavItem",
+      name: "Danh sách kế hoạch",
+      to: "/list-of-teacher",
+      icon: "cil-plant",
+      role: "TEACHER",
+    },
+    {
+      _name: "CSidebarNavItem",
       name: "Quản lý biểu mẫu",
       to: "/internship-data-management",
       icon: "cil-file",

@@ -99,7 +99,7 @@ export default {
       this.showLoading();
       const api = new StudentService()
 
-      const response = await api.getStudentsAsync(filter)
+      const response = await api.getFilterStudentAsync(filter)
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(
