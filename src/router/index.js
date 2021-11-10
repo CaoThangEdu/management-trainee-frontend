@@ -130,6 +130,15 @@ const routes = [
   ]
   },
   {
+    path: '/list-of-teacher',
+    name: 'ds-ke-hoach-cua-gv',
+    component: () =>
+      import("../router/views/Plan/Plan.vue"),
+    meta: {
+      breadcrumbName: 'Danh sách kế hoạch',
+    },
+  },
+  {
     path: "/notification-management",
     name: "quan-ly-thong-bao",
     redirect: '/notification-management/list',

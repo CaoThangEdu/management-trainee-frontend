@@ -8,7 +8,7 @@
             class="ci-primary"></path>
         </svg> Time line
         <button class="btn btn-primary float-right" @click="createTimeLine" title="Thêm mới"
-          v-if="timeLines.length<=timelineEnums.length">
+          v-if="(getUserProfile && getUserProfile.role == 'Admin') && (timeLines.length<=timelineEnums.length)">
           <em class="fa fa-plus-square"></em>
         </button>
       </header>

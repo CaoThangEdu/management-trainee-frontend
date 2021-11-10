@@ -339,7 +339,7 @@ export default {
 
     checkStudent(studentId){
       for(const index in this.students){
-        if(studentId == this.students[index].studentId){
+        if(studentId == this.students[index].student.studentId){
           this.showNotifications(
             "error",
             `${AppConfig.notification.title_default}`,

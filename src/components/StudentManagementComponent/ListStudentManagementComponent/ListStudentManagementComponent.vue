@@ -61,6 +61,7 @@
                 <th scope="col">Lớp</th>
                 <th scope="col">Email</th>
                 <th scope="col">Đợt thực tập</th>
+                <th scope="col">Điểm</th>
                 <th scope="col">Thao tác</th>
               </tr>
             </thead>
@@ -69,19 +70,21 @@
                 <th scope="row">{{ index + 1 }}</th>
                 <td
                   @click="updateStudent(index)" class="link-detail"
-                  title="Xem">{{ item.studentId }}
+                  title="Xem">{{ item.student.studentId }}
                   <em class="fas fa-external-link-alt"></em>
                 </td>
-                <td>{{ item.firstName + ' ' + item.lastName }}</td>
-                <td v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.classId, classes)">
-                  {{ getInfoObject(item.classId, classes).className }}
+                <td>{{ item.student.firstName + ' ' + item.student.lastName }}</td>
+                <td v-if="students.length != 0 && classes.length != 0 && getInfoObject(item.student.classId, classes)">
+                  {{ getInfoObject(item.student.classId, classes).className }}
                 </td>
-                <td>{{ item.email }}</td> 
+                <td>{{ item.student.email }}</td> 
                 <td
                   v-if="students.length != 0 && classes.length != 0 && plans.length != 0 
-                  && getInfoObject(item.classId, classes)">
-                  {{ getInfoByCourseId(getInfoObject(item.classId, classes).courseId, plans) ? getInfoByCourseId(getInfoObject(item.classId, classes).courseId, plans).internshipCourseName : 'Chưa có đợt' }}
+                  && getInfoObject(item.student.classId, classes)">
+                  {{ getInfoByCourseId(getInfoObject(item.student.classId, classes).courseId, plans)
+                    ? getInfoByCourseId(getInfoObject(item.student.classId, classes).courseId, plans).internshipCourseName : 'Chưa có đợt' }}
                 </td>
+                <td class="text-center">{{ item.scores.length!=0?item.scores[0].score:0 }}</td> 
                 <td>
                   <button class="btn btn-danger" title="Xóa"
                     @click="deleteStudent(item)">
@@ -259,7 +262,7 @@ export default {
     },
 
     updateStudent(index) {
-      this.editStudent = Object.assign({}, this.pageOfItems[index]);
+      this.editStudent = Object.assign({}, this.pageOfItems[index].student);
     },
 
     getStatusIcon(status) {
