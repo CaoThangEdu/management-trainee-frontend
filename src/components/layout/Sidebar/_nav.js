@@ -173,5 +173,19 @@ export default [{
       icon: "cil-book",
       role: "Admin",
     },
+    {
+      _name: "CSidebarNavItem",
+      name: "Câu hỏi khảo sát",
+      to: "/questions",
+      icon: "cil-book",
+      role: "Admin",
+    },
+    {
+      _name: "CSidebarNavItem",
+      name: "Khảo sát",
+      to: "/survey",
+      icon: "cil-book",
+      role: "STUDENT",
+    },
   ],
 },];

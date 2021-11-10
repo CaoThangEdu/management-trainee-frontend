@@ -58,25 +58,11 @@
                   </td>
                   <td class="text-center">
                     <button
-                      @click="contentSurveyForm(surveyForm)"
+                      @click="answerSurvey(surveyForm)"
                       type="button"
                       class="btn btn-success mr-1"
                     >
-                      <em class="fas fa-list"></em>
-                    </button>
-                    <button
-                      @click="updateSurveyFormsAsync(index)"
-                      type="button"
-                      class="btn btn-primary mr-1"
-                    >
-                      <em class="fas fa-edit"></em>
-                    </button>
-                    <button
-                      @click="deleteSurveyForm(surveyForm.id, index)"
-                      type="button"
-                      class="btn btn-danger ml-1"
-                    >
-                      <em class="fas fa-trash-alt"></em>
+                    <em class="fas fa-edit"></em>
                     </button>
                   </td>
                 </tr>
@@ -85,37 +71,10 @@
                     Không có dữ liệu nào được tìm thấy.
                   </th>
                 </tr>
-                <tr>
-                  <td class="align-middle"></td>
-                  <td class="align-middle">
-                    <div class="input-group">
-                      <input
-                        v-model="keySurveyForm.formName"
-                        type="text"
-                        class="form-control"
-                        aria-label="Amount (to the nearest dollar)"
-                      />
-                      <div class="input-group-append"></div>
-                    </div>
-                  </td>
-                  <td class="text-center">
-                    <button
-                      @click="createSurveyFormsAsync()"
-                      title="Thêm mới phiếu khảo sát"
-                      class="btn btn-primary"
-                    >
-                      <em class="fa fa-plus-square"></em>
-                    </button>
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <ConfirmDialog
-          :data="confirmedSurveyForm"
-          @agree="agreeConfirm"
-        ></ConfirmDialog>
         <div class="card-footer d-flex justify-content-center text--blue">
           <JwPagination
             :items="surveyForms"
@@ -132,23 +91,20 @@
 
 <script>
 import ComponentBase from "../common/component-base/ComponentBase";
-import ConfirmDialog from "../common/confirm-dialog/ConfirmDialog";
 import SurveyFormServices from "../../services/surveyForm/surveyFormServices";
 import AppConfig from "../../../src/app.config.json";
 import CrudMixin from "../../helpers/mixins/crudMixin";
 import JwPagination from "jw-vue-pagination";
 export default {
-  name: "QuestionnaireComponent",
+  name: "SurveyComponent",
   extends: ComponentBase,
   components: {
-    ConfirmDialog,
     JwPagination,
   },
   mixins: [CrudMixin],
   data() {
     return {
       pageSize: 10,
-      confirmedSurveyForm: null,
       surveyForms: [],
       customLabels: {
         first: "<<",
@@ -157,18 +113,12 @@ export default {
         next: ">",
       },
       pageOfItems: [],
-      keySurveyForm: {
-        formName: "",
-      },
     };
   },
   async mounted() {
     this.surveyForms = await this.getSurveyFormsAsync();
   },
   methods: {
-    deleteSurveyForm(id, index) {
-      this.confirmedSurveyForm = { id: id, index: index };
-    },
 
     // Call api delete SurveyForms
     async getSurveyFormsAsync() {
@@ -187,83 +137,13 @@ export default {
       return response.data;
     },
 
-    async createSurveyFormsAsync() {
-      if (this.keySurveyForm.formName === "") {
-        return this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          "Tên phiếu khảo sát"
-        );
-      }
-      this.showLoading();
-      let api = new SurveyFormServices();
-      let response = await api.createSurveyFormAsync(this.keySurveyForm); // Gọi Api
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}`
-      );
-      this.surveyForms.unshift(response.data);
-      this.keySurveyForm.formName = "";
-    },
-
-    async updateSurveyFormsAsync(index) {
-      this.showLoading();
-      let api = new SurveyFormServices();
-      let response = await api.updateSurveyFormAsync(this.surveyForms[index]); // Gọi Api
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_updated_success_default}`
-      );
-      this.$set(this.surveyForms, index, response.data);
-    },
-
-    async agreeConfirm(dataConfirm) {
-      this.showLoading();
-      let api = new SurveyFormServices();
-      let response = await api.deleteSurveyFormAsync(dataConfirm.id); // Gọi Api
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.surveyForms.splice(dataConfirm.index, 1);
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default}`
-      );
-    },
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
-    contentSurveyForm(surveyForm) {
+    answerSurvey(surveyForm) {
       this.$router.push({
-        name: "contentQuestionnaire",
+        name: "answerSurvey",
         params: { formName:surveyForm.formName,surveyFormId: surveyForm.id},
       });
     },

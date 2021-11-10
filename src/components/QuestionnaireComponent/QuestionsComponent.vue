@@ -14,7 +14,7 @@
               d="M47.547,63.547V448.453a16,16,0,0,0,16,16H448.453a16,16,0,0,0,16-16V63.547a16,16,0,0,0-16-16H63.547A16,16,0,0,0,47.547,63.547Zm288.6,16h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm-128.3-256.6h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Zm0,128.3h96.3v96.3h-96.3Z"
               class="ci-primary"
             ></path></svg
-          ><strong>Nội dung khảo sát: {{formName}}</strong> 
+          >Câu hỏi khảo xác
         </header>
         <div class="card-body">
           <div class="row mb-3">
@@ -41,22 +41,35 @@
               <thead class="">
                 <tr>
                   <th scope="col" class="align-middle">STT</th>
-                  <th scope="col" class="align-middle" style="width: 800px;">Câu hỏi</th>
-                  <th scope="col" class="align-middle" style="width: 150px;">Số thứ tự</th>
+                  <th scope="col" class="align-middle" 
+                  style="width: 550px;">
+                  Câu hỏi</th>
+                  <th scope="col" class="align-middle"  style="width: 250px;">Câu hỏi cha</th>
+                  <th scope="col" class="align-middle">Kiểu câu trả lời</th>
                   <th scope="col" class="align-middle text-center">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(formMcq, index) in formMcqs" :key="index">
+                <tr v-for="(question, index) in questions" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      aria-label="Amount (to the nearest dollar)"
+                      v-model="question.question"
+                    />
+                  </td>
+                  <td>
                     <select
-                      v-model="formMcq.mcqId"
+                      v-model="question.parrentMcqId"
                       class="form-control form-select form-select-class"
                     >
+                      <option :selected ="question.parrentMcqId == null" value="">Câu hỏi chính</option>
                       <option
+                        :selected ="question.parrentMcqId === question.id"
                         v-for="(question, index) in questions"
-                        :key="index"
+                        :key="`select-${index}`"
                         :value="question.id"
                       >
                         {{ question.question }}
@@ -64,23 +77,26 @@
                     </select>
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      class="form-control"
-                      aria-label="Amount (to the nearest dollar)"
-                      v-model="formMcq.order"
-                    />
+                    <select
+                      v-model="question.type"
+                      class="form-control form-select form-select-class"
+                    >
+                     <option value="0">Không chọn</option>
+                      <option value="1">Text</option>
+                      <option value="2">radio button</option>
+                      <option value="3">check box</option>
+                    </select>
                   </td>
                   <td class="text-center">
                     <button
-                      @click="updateFormMcqAsync(index)"
+                      @click="updateQuestionAsync(index)"
                       type="button"
                       class="btn btn-primary mr-1"
                     >
                       <em class="fas fa-edit"></em>
                     </button>
                     <button
-                      @click="deleteFormMcq(formMcq.id, index)"
+                      @click="deleteQuestion(question.id, index)"
                       type="button"
                       class="btn btn-danger ml-1"
                     >
@@ -88,21 +104,30 @@
                     </button>
                   </td>
                 </tr>
-                <tr v-show="formMcqs == null || formMcqs.length === 0">
+                <tr v-show="questions == null || questions.length === 0">
                   <th colspan="5" class="text-left">
                     Không có dữ liệu nào được tìm thấy.
                   </th>
                 </tr>
                 <tr>
-             <td></td>
+                  <td class="align-middle"></td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      aria-label="Amount (to the nearest dollar)"
+                      v-model="keyQuestion.question"
+                    />
+                  </td>
                   <td>
                     <select
-                      v-model="keyFormMcq.mcqId"
+                      v-model="keyQuestion.parrentMcqId"
                       class="form-control form-select form-select-class"
                     >
+                      <option value="null" >Câu hỏi chính</option>
                       <option
                         v-for="(question, index) in questions"
-                        :key="index"
+                        :key="`select-${index}`"
                         :value="question.id"
                       >
                         {{ question.question }}
@@ -110,16 +135,19 @@
                     </select>
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      class="form-control"
-                      aria-label="Amount (to the nearest dollar)"
-                      v-model="keyFormMcq.order"
-                    />
+                    <select
+                      v-model="keyQuestion.type"
+                      class="form-control form-select form-select-class"
+                    >
+                     <option value="0">Không chọn</option>
+                      <option value="1">Text</option>
+                      <option value="2">radio button</option>
+                      <option value="3">check box</option>
+                    </select>
                   </td>
                   <td class="text-center">
                     <button
-                      @click="createFormMcqAsync()"
+                      @click="createQuestionAsync()"
                       title="Thêm mới phiếu khảo sát"
                       class="btn btn-primary"
                     >
@@ -132,12 +160,12 @@
           </div>
         </div>
         <ConfirmDialog
-          :data="confirmedFormMcq"
+          :data="confirmedquestion"
           @agree="agreeConfirm"
         ></ConfirmDialog>
         <div class="card-footer d-flex justify-content-center text--blue">
           <JwPagination
-            :items="formMcqs"
+            :items="questions"
             @changePage="onChangePage"
             :labels="customLabels"
             :pageSize="pageSize"
@@ -152,24 +180,23 @@
 <script>
 import ComponentBase from "../common/component-base/ComponentBase";
 import ConfirmDialog from "../common/confirm-dialog/ConfirmDialog";
-import AppConfig from "../../../src/app.config.json";
-import JwPagination from "jw-vue-pagination";
-import FormMcqServices from "../../services/formMcq/formMcqServices";
 import QuestionServices from "../../services/question/questionServices";
+import AppConfig from "../../../src/app.config.json";
+import CrudMixin from "../../helpers/mixins/crudMixin";
+import JwPagination from "jw-vue-pagination";
 export default {
-  name: "ContentQuestionnaireComponent",
+  name: "QuestionsComponent",
   extends: ComponentBase,
   components: {
     ConfirmDialog,
     JwPagination,
   },
-  props: ["formName","surveyFormId"],
-
+  mixins: [CrudMixin],
   data() {
     return {
-      formMcqs: [],
       pageSize: 10,
-      confirmedFormMcq: null,
+      confirmedquestion: null,
+      questions: [],
       customLabels: {
         first: "<<",
         last: ">>",
@@ -177,23 +204,22 @@ export default {
         next: ">",
       },
       pageOfItems: [],
-      keyFormMcq: {
-        formId: "",
-        mcqId: "",
-        order: 0,
+      keyQuestion: {
+        question: "",
+        parrentMcqId: null,
+        type: 0,
       },
-      questions: [],
     };
   },
   async mounted() {
-    this.formMcqs = await this.getAllFormMcqByFormIdAsync();
     this.questions = await this.getQuestionsAsync();
   },
   methods: {
-    deleteFormMcq(id, index) {
-      this.confirmedFormMcq = { id: id, index: index };
+    deleteQuestion(id, index) {
+      this.confirmedquestion = { id: id, index: index };
     },
 
+    // Call api delete
     async getQuestionsAsync() {
       this.showLoading();
       let api = new QuestionServices();
@@ -209,35 +235,19 @@ export default {
       }
       return response.data;
     },
-    // Call api delete 
-    async getAllFormMcqByFormIdAsync() {
-      this.showLoading();
-      let api = new FormMcqServices();
-      let response = await api.getAllFormMcqByFormIdAsync(this.surveyFormId); // Gọi Api
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      return response.data;
-    },
 
-    async createFormMcqAsync() {
-      if (this.keyFormMcq.mcqId === "") {
+    async createQuestionAsync() {
+      if (this.keyQuestion.question === "") {
         return this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          "Vui lòng chọn câu hỏi"
+          "Vui lòng nhập câu hỏi"
         );
       }
-      this.keyFormMcq.formId = this.surveyFormId;
+      this.keyQuestion.parrentMcqId = this.keyQuestion.parrentMcqId === "null"? null : this.keyQuestion.parrentMcqId
       this.showLoading();
-      let api = new FormMcqServices();
-      let response = await api.createFormMcqAsync(this.keyFormMcq); // Gọi Api
+      let api = new QuestionServices();
+      let response = await api.createQuestionAsync(this.keyQuestion); // Gọi Api
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -252,15 +262,16 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
-      this.formMcqs.unshift(response.data);
-      this.keyFormMcq.mcqId = "";
-      this.keyFormMcq.order = 0;
+      this.questions.unshift(response.data);
+      this.keyQuestion.question = "";
+      this.keyQuestion.parrentMcqId = "";
+      this.keyQuestion.type = 1;
     },
 
-    async updateFormMcqAsync(index) {
+    async updateQuestionAsync(index) {
       this.showLoading();
-      let api = new FormMcqServices();
-      let response = await api.updateFormMcqAsync(this.formMcqs[index]); // Gọi Api
+      let api = new QuestionServices();
+      let response = await api.updateQuestionAsync(this.questions[index]); // Gọi Api
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -275,13 +286,13 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_success_default}`
       );
-      this.$set(this.formMcqs, index, response.data);
+      this.$set(this.questions, index, response.data);
     },
 
     async agreeConfirm(dataConfirm) {
       this.showLoading();
-      let api = new FormMcqServices();
-      let response = await api.deleteFormMcqAsync(dataConfirm.id); // Gọi Api
+      let api = new QuestionServices();
+      let response = await api.deleteQuestionAsync(dataConfirm.id); // Gọi Api
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -291,7 +302,7 @@ export default {
         );
         return;
       }
-      this.formMcqs.splice(dataConfirm.index, 1);
+      this.questions.splice(dataConfirm.index, 1);
       this.showNotifications(
         "success",
         `${AppConfig.notification.title_default}`,
@@ -305,3 +316,4 @@ export default {
   },
 };
 </script>
+

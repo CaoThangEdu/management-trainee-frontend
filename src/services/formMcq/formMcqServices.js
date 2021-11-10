@@ -1,15 +1,15 @@
 import ServicesBaseAPI from '../servicesBaseApi'
 import AppConfig from '../../app.config.json'
 
-export default class surveyFormServices extends ServicesBaseAPI {
+export default class FormMcqServices extends ServicesBaseAPI {
   constructor() {
     super();
-    this.url = `${AppConfig.apiHost}/SurveyForm`
+    this.url = `${AppConfig.apiHost}/FormMcq`
   }
 
-  async getSurveyFormsAsync() {
+  async getAllFormMcqByFormIdAsync(id) {
     try {
-      const response = await this.http.get(`${this.url}/GetAllSurveyForm`, );
+      const response = await this.http.get(`${this.url}/GetAllFormMcqByFormId?formId=${id}` );
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);
@@ -17,17 +17,8 @@ export default class surveyFormServices extends ServicesBaseAPI {
     return this.result;
   }
 
-  async getSurveyFormByIdAsync(id) {
-    try {
-      const response = await this.http.get(`${this.url}/GetQuestionInSurveyForm?surveyFormId=${id}`);
-      this.setResult(response);
-    } catch (e) {
-      return this.http.loadError(e);
-    }
-    return this.result;
-  }
 
-  async createSurveyFormAsync(object) {
+  async createFormMcqAsync(object) {
     try {
       const response = await this.http.post(`${this.url}/Create`, object);
       this.setResult(response);
@@ -37,7 +28,7 @@ export default class surveyFormServices extends ServicesBaseAPI {
     return this.result;
   }
 
-  async updateSurveyFormAsync(object) {
+  async updateFormMcqAsync(object) {
     try {
       const response = await this.http.put(`${this.url}/Update`, object);
       this.setResult(response);
@@ -47,7 +38,7 @@ export default class surveyFormServices extends ServicesBaseAPI {
     return this.result;
   }
 
-  async deleteSurveyFormAsync(id) {
+  async deleteFormMcqAsync(id) {
     try {
       const response = await this.http.delete(`${this.url}/delete?id=${id}`);
       this.setResult(response);

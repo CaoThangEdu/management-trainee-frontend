@@ -515,6 +515,45 @@ const routes = [
       breadcrumbName: 'Nội dung khảo sát',
     },
   },
+  {
+    path: '/questions',
+    name: 'questions',
+    props:true,
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../components/QuestionnaireComponent/QuestionsComponent.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Câu hỏi khảo sát',
+    },
+  },
+  {
+    path: '/survey',
+    name: 'survey',
+    props:true,
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../components/QuestionnaireComponent/SurveyComponent.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Khảo sát',
+    },
+  },
+  {
+    path: '/answer-survey/:surveyFormId',
+    name: 'answerSurvey',
+    props:true,
+    component: () =>
+      import(
+        /* webpackChunkName: "ControlExample" */
+        '../components/QuestionnaireComponent/AnswerSurveyComponent.vue'
+      ),
+    meta: {
+      breadcrumbName: 'Trả lời khảo sát',
+    },
+  },
 ];
 
 const router = new VueRouter({
