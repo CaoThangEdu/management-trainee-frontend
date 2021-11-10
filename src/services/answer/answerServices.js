@@ -7,9 +7,9 @@ export default class AnswerServices extends ServicesBaseAPI {
     this.url = `${AppConfig.apiHost}/Answer`
   }
 
-  async getAllAnswersAsync() {
+  async getAllAnswersAsync(object) {
     try {
-      const response = await this.http.get(`${this.url}/GetAnswers` );
+      const response = await this.http.get(`${this.url}/GetAnswers?FormId=${object.formId}&StudentId=${object.studentId}` );
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

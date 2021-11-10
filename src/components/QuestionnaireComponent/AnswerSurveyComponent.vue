@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div v-if="isShow" class="row">
     <div class="col-12">
       <div class="card">
         <header class="card-header">
@@ -20,20 +20,23 @@
         <div class="card-body">
           <strong>{{ surveyForms.surveyFormName }}</strong>
           <hr />
-          <div 
+          <div
             v-for="(formMqcQuestion, index) in surveyForms.formMqcQuestion"
             :key="index"
           >
-            <div >
-              
-              <strong >{{ index + 1 }}: {{ formMqcQuestion.mcq.question }}:</strong>
-              <div class="my-2"
+            <div>
+              <strong
+                >{{ index + 1 }}: {{ formMqcQuestion.mcq.question }}:</strong
+              >
+              <div
+                class="my-2"
                 v-if="
                   formMqcQuestion.mcq.type === '1' &&
                   formMqcQuestion.mcq.listChild.length === 0
                 "
               >
                 <textarea
+                  v-model="answers[formMqcQuestion.mcq.id].answers"
                   :name="formMqcQuestion.mcq.id"
                   id=""
                   cols="30"
@@ -56,7 +59,6 @@
                       aria-label="Checkbox for following text input"
                     />
                     <label class="form-check-label" for="yes">Có</label>
-                    
                   </div>
                 </div>
                 <div class="input-group-prepend">
@@ -67,7 +69,6 @@
                       aria-label="Checkbox for following text input"
                     />
                     <label class="form-check-label" for="yes">Không</label>
-                    
                   </div>
                 </div>
               </div>
@@ -87,52 +88,142 @@
                   v-if="listChild.type === '3'"
                   class="row justify-content-around my-3 form-check"
                 >
-                   <div class="form-check form-check-inline ">
-                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="checkbox1" value="rat yeu">
-                    <label class="form-check-label" for="checkbox1">Rất yếu</label>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="inlineRadioOptions"
+                      id="checkbox1"
+                      value="rat yeu"
+                    />
+                    <label class="form-check-label" for="checkbox1"
+                      >Rất yếu</label
+                    >
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="checkbox2" value="yeu">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="inlineRadioOptions"
+                      id="checkbox2"
+                      value="yeu"
+                    />
                     <label class="form-check-label" for="checkbox2">Yếu</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="checkbox3" value="trunh binh">
-                    <label class="form-check-label" for="checkbox3">Trung bình</label>
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="inlineRadioOptions"
+                      id="checkbox3"
+                      value="trunh binh"
+                    />
+                    <label class="form-check-label" for="checkbox3"
+                      >Trung bình</label
+                    >
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="checkbox4" value="tot">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="inlineRadioOptions"
+                      id="checkbox4"
+                      value="tot"
+                    />
                     <label class="form-check-label" for="checkbox4">Tốt</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="checkbox5" value="rat-tot">
-                    <label class="form-check-label" for="checkbox5">Rất tốt</label>
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="inlineRadioOptions"
+                      id="checkbox5"
+                      value="rat-tot"
+                    />
+                    <label class="form-check-label" for="checkbox5"
+                      >Rất tốt</label
+                    >
                   </div>
                 </div>
                 <div
                   v-if="listChild.type === '2'"
-                  class="row justify-content-around my-3 form-check "
+                  class="row justify-content-around my-3 form-check"
                 >
-                  <div class="form-check form-check-inline ">
-                    <input class="form-check-input" type="radio" :name="listChild.id" :id="listChild.id + formMqcQuestion.mcq.id + 1" value="rat yeu" @change="checked($event)">
-                    <label class="form-check-label" :for="listChild.id + formMqcQuestion.mcq.id + 1">Rất yếu</label>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :name="listChild.id"
+                      :id="listChild.id + formMqcQuestion.mcq.id + 1"
+                      value="rat yeu"
+                      v-model="answers[listChild.id].answers"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="listChild.id + formMqcQuestion.mcq.id + 1"
+                      >Rất yếu</label
+                    >
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" :name="listChild.id" :id="listChild.id + formMqcQuestion.mcq.id+ 2" value="yeu" @change="checked($event)">
-                    <label class="form-check-label" :for="listChild.id + formMqcQuestion.mcq.id+ 2">Yếu</label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :name="listChild.id"
+                      :id="listChild.id + formMqcQuestion.mcq.id + 2"
+                      value="yeu"
+                      v-model="answers[listChild.id].answers"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="listChild.id + formMqcQuestion.mcq.id + 2"
+                      >Yếu</label
+                    >
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" :name="listChild.id" :id="listChild.id + formMqcQuestion.mcq.id+ 3" value="trunh binh" @change="checked($event)">
-                    <label class="form-check-label" :for="listChild.id + formMqcQuestion.mcq.id+ 3  ">Trung bình</label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :name="listChild.id"
+                      :id="listChild.id + formMqcQuestion.mcq.id + 3"
+                      value="trunh binh"
+                      v-model="answers[listChild.id].answers"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="listChild.id + formMqcQuestion.mcq.id + 3"
+                      >Trung bình</label
+                    >
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" :name="listChild.id" :id="listChild.id + formMqcQuestion.mcq.id+ 4" value="tot" @change="checked($event)">
-                    <label class="form-check-label" :for="listChild.id + formMqcQuestion.mcq.id+ 4">Tốt</label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :name="listChild.id"
+                      :id="listChild.id + formMqcQuestion.mcq.id + 4"
+                      value="tot"
+                      v-model="answers[listChild.id].answers"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="listChild.id + formMqcQuestion.mcq.id + 4"
+                      >Tốt</label
+                    >
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" :name="listChild.id" :id="listChild.id + formMqcQuestion.mcq.id+ 5" value="rat-tot" @change="checked($event)">
-                    <label class="form-check-label" :for="listChild.id + formMqcQuestion.mcq.id+ 5">Rất tốt</label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :name="listChild.id"
+                      :id="listChild.id + formMqcQuestion.mcq.id + 5"
+                      value="rat-tot"
+                      v-model="answers[listChild.id].answers"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="listChild.id + formMqcQuestion.mcq.id + 5"
+                      >Rất tốt</label
+                    >
                   </div>
-
                 </div>
                 <div v-if="listChild.type.type === '1'">
                   <textarea
@@ -147,8 +238,20 @@
             </div>
           </div>
           <div class="text-center">
-            <button @click="$router.go(-1)" type="button" class="btn btn-secondary w-25 mr-2">Hủy</button>
-            <button @click="createAnswerAsync()" type="button" class="btn btn-success w-25 ml-2">Gửi</button>
+            <button
+              @click="$router.go(-1)"
+              type="button"
+              class="btn btn-secondary w-25 mr-2"
+            >
+              Hủy
+            </button>
+            <button
+              @click="createAnswerAsync()"
+              type="button"
+              class="btn btn-success w-25 ml-2"
+            >
+              Gửi
+            </button>
           </div>
         </div>
       </div>
@@ -172,33 +275,49 @@ export default {
   data() {
     return {
       surveyForms: [],
-      answers:{
-
-      }
+      answers: {},
+      isShow: false,
     };
   },
   computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
-    ...mapGetters("user", { userProfile: "getUserInfo", tokenKey: "getTokenKey" }),
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
   },
   async mounted() {
     this.surveyForms = await this.getSurveyFormByIdAsync();
 
-    this.answers.surveyFormId = this.surveyForms.surveyFormId;
-    for(let i =0; i <= this.surveyForms.formMqcQuestion.length-1; i++){
+    for (let i = 0; i <= this.surveyForms.formMqcQuestion.length - 1; i++) {
+      if (this.surveyForms.formMqcQuestion[i].mcq.type === 0 || this.surveyForms.formMqcQuestion[i].mcq.listChild.length === 0) {
         this.answers[this.surveyForms.formMqcQuestion[i].mcq.id] = {
-          id:this.surveyForms.formMqcQuestion[i].mcq.id,
-          answer:"",
-          listChild:{}
-        }
-      for(let j =0; j <= this.surveyForms.formMqcQuestion[i].mcq.listChild.length-1; j++){
-        this.answers[this.surveyForms.formMqcQuestion[i].mcq.id].listChild[this.surveyForms.formMqcQuestion[i].mcq.listChild[j].id] = {
-          id:this.surveyForms.formMqcQuestion[i].mcq.listChild[j].id,
-          answer:""
-        }
+          studentId: this.userProfile.studentId,
+          mcqId: this.surveyForms.formMqcQuestion[i].mcq.id,
+          formId: this.surveyForms.surveyFormId,
+          answers: "",
+        };
+      }
+
+      for (let j = 0;j <= this.surveyForms.formMqcQuestion[i].mcq.listChild.length - 1;j++) {
+        this.answers[this.surveyForms.formMqcQuestion[i].mcq.listChild[j].id] =
+          {
+            studentId: this.userProfile.studentId,
+            mcqId: this.surveyForms.formMqcQuestion[i].mcq.listChild[j].id,
+            formId: this.surveyForms.surveyFormId,
+            answers: "",
+          };
       }
     }
-    
+    let saveAnswer = await this.getAllAnswersAsync();
+    if(saveAnswer.length !== 0){
+      for(let i = 0; i <= saveAnswer.length -1 ; i++){
+        this.answers[saveAnswer[i].mcqId] = saveAnswer[i];
+      }
+    }
+    if (Object.values(this.answers).length !== 0) {
+      this.isShow = true;
+    }
   },
   methods: {
     async getSurveyFormByIdAsync() {
@@ -219,9 +338,13 @@ export default {
 
     // Call api delete SurveyForms
     async getAllAnswersAsync() {
+      let filter = {
+        formId: this.surveyFormId,
+        studentId: this.userProfile.studentId,
+      };
       this.showLoading();
       let api = new AnswerServices();
-      let response = await api.getAllAnswersAsync(); // Gọi Api
+      let response = await api.getAllAnswersAsync(filter); // Gọi Api
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -234,27 +357,8 @@ export default {
       return response.data;
     },
 
-    async createAnswerAsync() { 
-      var saveAnswer =[]
-      for(let answer in this.answers){
-        if(answer !== "surveyFormId" && Object.keys(this.answers[answer].listChild).length === 0){
-          this.answers[answer].answer = document.getElementsByName(answer)[0].value;
-          saveAnswer.push({
-            studentId:this.userProfile.studentId,
-            formId:this.answers.surveyFormId,
-            mcqId:this.answers[answer].id,
-            answers:this.answers[answer].answer
-          })
-        }
-        for(let child in this.answers[answer].listChild){
-          saveAnswer.push({
-            studentId:this.userProfile.studentId,
-            formId:this.answers.surveyFormId,
-            mcqId:this.answers[answer].listChild[child].id,
-            answers:this.answers[answer].listChild[child].answer
-          })
-        }
-      }
+    async createAnswerAsync() {
+      var saveAnswer = Object.values(this.answers);
       this.showLoading();
       let api = new AnswerServices();
       let response = await api.createAnswerAsync(saveAnswer); // Gọi Api
@@ -278,21 +382,6 @@ export default {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
-    answerSurvey(surveyForm) {
-      this.$router.push({
-        name: "answerSurvey",
-        params: { formName: surveyForm.formName, surveyFormId: surveyForm.id },
-      });
-    },
-    checked($event){
-       for(let answer in this.answers){
-         for(let child in this.answers[answer].listChild){
-           if(this.answers[answer].listChild[child].id === $event.target.name){
-             this.answers[answer].listChild[child].answer = $event.target.value;
-           }
-         }
-       }
-    }
   },
 };
 </script>

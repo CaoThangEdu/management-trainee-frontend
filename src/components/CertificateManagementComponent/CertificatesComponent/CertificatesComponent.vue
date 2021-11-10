@@ -65,15 +65,7 @@
               class="ci-primary"
             ></path>
           </svg>
-          <span v-if="!isAdmin">Đăng ký giấy giới thiệu thực tập</span>
           <span v-if="isAdmin">Duyệt giấy giới thiệu thực tập</span>
-          <button
-            v-if="!isAdmin"
-            class="btn btn-primary float-right"
-            @click="createCertificates"
-          >
-            + Đăng ký
-          </button>
         </header>
         <div class="card-body">
           <div class="row mb-3">
@@ -140,7 +132,6 @@
                       <label class="form-check-label" for="all">STT</label>
                     </div>
                   </th>
-                  <th v-if="!isAdmin" scope="col" class="text-center">STT</th>
                   <th scope="col" class="align-middle" style="width: 300px">
                     Thông tin sinh viên
                   </th>
@@ -157,13 +148,10 @@
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">
                     <div
-                      v-if="
-                        isAdmin &&
-                        Object.keys(getCertificate(item.studentId)).length !== 0
-                      "
+                      v-if="isAdmin"
                       class="form-check form-check-inline"
                     >
-                      <input
+                      <input v-if="Object.keys(getCertificate(item.studentId)).length !== 0"
                         class="form-check-input"
                         @change="selectUpdateCertificate"
                         :value="item.id"
@@ -173,15 +161,6 @@
                       <label class="form-check-label" :for="index">
                         {{ index + 1 }}</label
                       >
-                    </div>
-                    <div
-                      v-if="
-                        !isAdmin &&
-                        Object.keys(getCertificate(item.studentId)).length === 0
-                      "
-                      class="text-center"
-                    >
-                      {{ index + 1 }}
                     </div>
                   </th>
                   <td>
@@ -223,32 +202,6 @@
                         )
                       }}.
                     </div>
-                  </td>
-                  <td v-if="!isAdmin">
-                    <button
-                      v-if="
-                        getCertificate(item.studentId).status === 'unconfirmed'
-                      "
-                      class="btn btn-warning not-active"
-                    >
-                      Đang chờ duyệt
-                    </button>
-                    <button
-                      v-if="
-                        getCertificate(item.studentId).status === 'confirmed'
-                      "
-                      class="btn btn-primary not-active"
-                    >
-                      Đã duyệt
-                    </button>
-                    <button
-                      v-if="
-                        getCertificate(item.studentId).status === 'complete'
-                      "
-                      class="btn btn-success not-active"
-                    >
-                      Hoàn thành
-                    </button>
                   </td>
                   <td v-if="isAdmin">
                     <select
@@ -296,31 +249,6 @@
                     </select>
                   </td>
                   <td :class="{ 'text-center': isAdmin }">
-                    <button
-                      v-if="!isAdmin"
-                      :disabled="
-                        getCertificate(item.studentId).status !== 'unconfirmed'
-                      "
-                      class="btn btn-primary mr-1"
-                      @click="updateCertificate(index)"
-                    >
-                      <em class="fa fa-edit"></em>
-                    </button>
-                    <button
-                      v-if="!isAdmin"
-                      :disabled="
-                        getCertificate(item.studentId).status !== 'unconfirmed'
-                      "
-                      class="btn btn-danger"
-                      @click="
-                        deleteCertificate(
-                          getCertificate(item.studentId).id,
-                          index
-                        )
-                      "
-                    >
-                      <em class="fa fa-trash"></em>
-                    </button>
                     <button
                       :disabled="
                         getCertificate(item.studentId).status === 'unconfirmed'
@@ -668,12 +596,6 @@
             </div>
           </div>
         </div>
-        <CertificateDetailComponent
-          :data="editCertificate"
-          @change-data="changeData"
-          @changeCompanies="changeCompanies"
-        />
-
         <div
           class="card-footer d-flex justify-content-center text--blue"
           v-show="pageOfItems == null || pageOfItems.length === 0"
@@ -697,10 +619,6 @@
             :pageSize="20"
           >
           </JwPagination>
-          <ConfirmDialog
-            :data="confirmedCertificate"
-            @agree="agreeConfirm"
-          ></ConfirmDialog>
         </div>
       </div>
     </div>
@@ -712,7 +630,6 @@ import CertificateDetailComponent from "../CertificateDetailComponent/Certificat
 import ComponentBase from "../../common/component-base/ComponentBase";
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
-import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
 import CertificateSevice from "../../../services/certificate/CertificateServices";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import StudentService from "../../../services/student/studentServices";
@@ -729,7 +646,6 @@ export default {
   extends: ComponentBase,
   components: {
     CertificateDetailComponent,
-    ConfirmDialog,
     JwPagination,
     SelectPlan,
     Highcharts: Chart,
@@ -793,7 +709,6 @@ export default {
       certificates: [],
       defaultCertificates: [],
       editCertificate: {},
-      confirmedCertificate: null,
       pageOfItems: [],
       customLabels: {
         first: "<<",
@@ -967,10 +882,6 @@ export default {
       this.pageOfItems = pageOfItems;
     },
 
-    createCertificates() {
-      this.editCertificate = {};
-    },
-
     async getCertificatesAsync(filterCerticate) {
       if(Number(filterCerticate.internshipCourseId) == -1) {
         filterCerticate.internshipCourseId = '';
@@ -997,43 +908,6 @@ export default {
     updateCertificate(index) {
       this.selectCertificate = index;
       this.editCertificate = Object.assign({}, this.certificates[index]);
-    },
-
-    changeIsdelete(index) {
-      this.editCertificates = Object.assign({}, this.pageOfItems[index]);
-    },
-
-    async changeData(certificate, action) {
-      if (action === "create") {
-        return this.certificates.unshift(certificate);
-      }
-      this.$set(this.certificates, this.selectCertificate, certificate);
-      this.selectCertificate = -1;
-    },
-
-    deleteCertificate(id, index) {
-      this.confirmedCertificate = { id: id, index: index };
-    },
-    // Call api delete Certificate
-    async agreeConfirm(confirmedCertificate) {
-      this.showLoading();
-      let api = new CertificateSevice();
-      let response = await api.deleteCertificateAsync(confirmedCertificate.id); // Gọi Api
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.certificates.splice(confirmedCertificate.index, 1);
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default}`
-      );
     },
 
     async changeStatus(event, index) {
@@ -1356,7 +1230,11 @@ export default {
         (registered / (unregistered + registered)) * 100;
       this.pieChart.series[0].data[1].y =
         (unregistered / (unregistered + registered)) * 100;
-      await this.getStudentsAsync();
+        await this.getCertificatesAsync(this.filterCerticate);
+        await this.getStudentsAsync();
+      this.students = this.studentsDefault.filter((student) => {
+        return (Object.keys(this.getCertificate(student.studentId)).length !== 0);
+      });
     },
 
     getCertificate(mssv) {
@@ -1372,9 +1250,7 @@ export default {
       if ($event.target.value === "registered") {
         this.isHidenFunction = false;
         this.students = this.studentsDefault.filter((student) => {
-          return (
-            Object.keys(this.getCertificate(student.studentId)).length !== 0
-          );
+          return (Object.keys(this.getCertificate(student.studentId)).length !== 0);
         });
         return;
       }
@@ -1395,6 +1271,17 @@ export default {
       await this.getCertificatesAsync(this.filterCerticate);
     },
     "filterCerticate.internshipCourseId": async function () {
+      if(this.filterCerticate.internshipCourseId === ""){
+        this.pieChart.series[0].data[0].x = 0;
+        this.pieChart.series[0].data[1].x = 0;
+        this.pieChart.series[0].data[0].y =0;
+        this.pieChart.series[0].data[1].y =0;
+        return;
+      }
+      await this.statisticsCerticate();
+    },
+    "filterCerticate.classId": async function () {
+      await this.getStudentsAsync();
       this.statisticsCerticate();
     },
   },
