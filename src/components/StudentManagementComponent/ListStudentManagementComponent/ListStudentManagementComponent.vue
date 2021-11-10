@@ -331,7 +331,7 @@ export default {
     async deleteStudentConfirm(studentComfirm) {
       this.showLoading();
       let api = new StudentService();
-      let response = await api.deleteStudentAsync(studentComfirm.id); // Gọi Api
+      let response = await api.deleteStudentAsync(studentComfirm.student.id); // Gọi Api
       this.showLoading(false);
       if(!response.isOK){
         this.showNotifications(

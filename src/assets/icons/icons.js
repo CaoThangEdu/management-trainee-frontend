@@ -86,6 +86,7 @@ import {
   cilBook,
   cilChartLine,
   cilSend,
+  cibBuffer,
 } from '@coreui/icons';
 import { logo } from './logo'
 
@@ -179,5 +180,6 @@ export const iconsSet = Object.assign(
     cilBook,
     cilChartLine,
     cilSend,
+    cibBuffer,
   },
 )
