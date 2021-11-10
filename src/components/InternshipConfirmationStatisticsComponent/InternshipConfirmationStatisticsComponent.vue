@@ -310,10 +310,15 @@ export default {
     },
 
     async fliterInternshipConfirmationAsync(internsipCourseId, classId) {
-      let filter = {   internsipCourseId: internsipCourseId,
-          classId: "",
-          studentId: "",
-          status: "" };
+      if(internsipCourseId == -1) {
+        internsipCourseId = '';
+      }
+      let filter = {
+        internsipCourseId: internsipCourseId,
+        classId: "",
+        studentId: "",
+        status: ""
+      };
       this.showLoading();
       let api = new InternshipConfirmationServices();
       let response = await api.fliterInternshipConfirmationAsync(filter);
