@@ -3,17 +3,6 @@
     <div class="col-12">
       <div class="card">
         <header class="card-header">
-          <h4>Thống kê phiếu giới thiệu</h4>
-        </header>
-        <div class="card-body">
-          <div class="form-row mb-2 filter-wrapper">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12">
-      <div class="card">
-        <header class="card-header">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
