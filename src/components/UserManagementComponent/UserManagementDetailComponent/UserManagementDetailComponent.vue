@@ -46,7 +46,7 @@
         (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control"
+        <input type="password" class="form-control"
           id="password" v-model="user.password" />
       </div>
     </div>
@@ -56,7 +56,7 @@
         (<span class="text--red">*</span>)
       </label>
       <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control"
+        <input type="password" class="form-control"
           id="confirmPassword" v-model="user.confirmPassword" />
       </div>
     </div>
@@ -91,7 +91,7 @@
   </div>
 
   <template #header>
-    <h5>{{user.id ? "Cập nhật khóa" : "Thêm mới giáo viên"}}</h5>
+    <h5>{{user.id ? "Cập nhật tài khoản" : "Thêm mới tài khoản"}}</h5>
     <button class="close" style="color: red;" @click="closeModal(false)">
       &times;
     </button>

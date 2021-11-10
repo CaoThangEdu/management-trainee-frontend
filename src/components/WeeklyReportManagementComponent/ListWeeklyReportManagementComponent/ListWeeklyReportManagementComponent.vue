@@ -62,15 +62,14 @@
                   <th scope="col">Đợt thực tập</th>
                   <th scope="col">Mô tả</th>
                   <th scope="col">Đường dẫn</th>
-                  <th scope="col">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
                   <th scope="row">{{ index + 1 }}</th>
-                  <td class="link-detail"
-                    title="Xem"
-                    @click="updateWeeklyReport(index)">{{ item.title }}</td>
+                  <td>
+                    {{ item.title }}
+                  </td>
                   <td v-if="plans.length > 0">
                     {{
                       getInfoObject(item.internshipCourseId, plans)
@@ -78,12 +77,10 @@
                     }}
                   </td>
                   <td>{{item.description}}</td>
-                  <td>{{item.link}}</td>
                   <td>
-                    <button class="btn btn-danger" title="Xóa"
-                      @click="deleteWeeklyReport(item)">
-                      <i class="fa fa-trash"></i>
-                    </button>
+                    <a :href="item.link" target="_blank">
+                      Xem chi tiết
+                    </a>
                   </td>
                 </tr>
                 <tr v-show="pageOfItems == null || pageOfItems.length === 0">
@@ -236,6 +233,9 @@ export default {
     },
 
     async getWeeklyReportFilterAsync() {
+      if(this.filter.internshipCourseId == -1) {
+        this.filter.internshipCourseId = '';
+      }
       // Call Api
       this.showLoading();
       const api = new WeeklyReportService();

@@ -21,6 +21,7 @@
                 <th scope="col">Email</th>
                 <th scope="col">Đợt thực tập</th>
                 <th scope="col">Điểm</th>
+                <th scope="col">Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -31,10 +32,16 @@
                 <td>{{ studentItem.className }}</td>
                 <td>{{ studentItem.student.email }}</td>
                 <td>{{ studentItem.internshipCourseName }}</td>
-                <td>{{ studentItem.pointNumber?studentItem.pointNumber:0 }}</td>
+                <td>{{ studentItem.score?studentItem.score.score:0 }}</td>
+                <td>
+                  <button class="btn btn-success"
+                    @click="updateStudent(index)">
+                    Chấm điểm
+                  </button>
+                </td>
               </tr>
               <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-                <th colspan="5" class="text-left">
+                <th colspan="8" class="text-left">
                   Không có dữ liệu nào được tìm thấy.
                 </th>
               </tr>
@@ -42,6 +49,10 @@
           </table>
         </div>
       </div>
+
+      <StudentInfoScoreComponent
+        :data="editStudent"
+        @change-data="changeData"/>
 
       <div class="card-footer d-flex justify-content-center text--blue"
         v-show="pageOfItems.length !== 0">
@@ -79,6 +90,7 @@ import SelectClassroom from '../../../components/common/form/select-classroom/Se
 import teacherService from '../../../services/teacher/teacherServices';
 import { mapGetters, mapActions } from "vuex";
 import AppConfig from "../../../app.config.json";
+import StudentInfoScoreComponent from "../StudentInfoScoreComponent/StudentInfoScoreComponent.vue"
 
 export default {
   name: "ListOfStudentsManagedByTheTeacher",
@@ -87,6 +99,7 @@ export default {
     JwPagination,
     SelectPlan,
     SelectClassroom,
+    StudentInfoScoreComponent,
   },
   mixins: [ CrudMixin ],
   data() {
@@ -101,6 +114,7 @@ export default {
       students: [],
       pageSize: 10,
       isPageSize: false,
+      editStudent: {},
     };
   },
 
@@ -133,6 +147,10 @@ export default {
           this.$router.push({ name: "login" });
         }
       }
+    },
+
+    updateStudent(index) {
+      this.editStudent = Object.assign({}, this.pageOfItems[index]);
     },
 
     async changePageSize() {

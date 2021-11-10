@@ -7,7 +7,6 @@
           v-if="userProfile.user">
           <div class="form-row">
             <div class="col-sm-12 col-md-12 col-lg-12">
-              <label>Tiêu đề thông báo: </label>
               {{notify.title}}                
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12">

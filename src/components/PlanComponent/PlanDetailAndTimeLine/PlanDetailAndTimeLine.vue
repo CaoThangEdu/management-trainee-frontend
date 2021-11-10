@@ -5,7 +5,8 @@
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <TimeLineComponent
             :planGuid="guid"
-            :plan="plan" />
+            :plan="plan" 
+            :userProfile="userProfile"/>
         </div>
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <div class="card">
@@ -13,6 +14,7 @@
               <h4 class="float-left">Chi tiết kế hoạch</h4>
               <div class="float-right">
                 <router-link
+                  v-if="userProfile && userProfile.role == 'Admin'" 
                   class="btn btn-info"
                   :to="{ name: 'them-sv-cua-dot', params: { guid: planId } }"
                 >
@@ -83,7 +85,8 @@
         </div>
         <div class="col-12"
           v-if="assignedStudents.length!=0 && unassignStudents.length!=0">
-          <div class="card">
+          <div class="card"
+            v-if="userProfile && userProfile.role == 'Admin'" >
             <header class="card-header">
               <h4 class="float-left">Phân công</h4>
               <div class="float-right">
@@ -124,6 +127,7 @@ import TimeLineComponent from "../TimeLineComponent/TimeLineComponent.vue";
 import moment from "moment";
 import ClassServices from "../../../services/class/classServices";
 import Highcharts from "../../common/high-chart/HighChart.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "PlanDetail",
@@ -186,6 +190,10 @@ export default {
   },
 
   async mounted() {
+    if (!this.userProfile.user) {
+      await this.getUserProfile();
+    }
+
     await this.getTrainingSystemsFilterAsync();
     await this.getCareersFilterAsync();
     await this.getFacultiesFilterAsync();
@@ -204,7 +212,33 @@ export default {
     await this.getStatisticsStudentInClass();
   },
 
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
+    getPlan() {
+      return this.plans;
+    }
+  },
+
   methods: {
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
+    async getUserProfile() {
+      // Check: if has token => get profile else push to LoginPage
+      if (this.tokenKey) {
+        if (!this.userProfile || !this.userProfile.user) {
+          await this.updateUserInfoDataAsync();
+        }
+      } else {
+        if (this.$route.name !== "login") {
+          this.$router.push({ name: "login" });
+        }
+      }
+    },
+
     getChartStatisticsStudentInClass() {
       for (let student of this.statistiesStudentInClass) {
         let assignedStudent = {

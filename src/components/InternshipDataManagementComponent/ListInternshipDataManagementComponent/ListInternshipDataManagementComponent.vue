@@ -61,7 +61,7 @@
                   <th scope="col">Đợt thực tập</th>
                   <th scope="col">Mô tả</th>
                   <th scope="col">Đường dẫn</th>
-                  <th scope="col">Thao tác</th>
+                  <th scope="col" v-if="userProfile&&userProfile.role=='Admin'">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -86,7 +86,7 @@
                       Xem chi tiết
                     </a>
                   </td>
-                  <td>
+                  <td v-if="userProfile&&userProfile.role=='Admin'">
                     <button class="btn btn-danger" title="Xóa"
                       @click="deleteInternshipData(item)">
                       <i class="fa fa-trash"></i>

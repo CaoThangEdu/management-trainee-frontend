@@ -4,7 +4,7 @@
     <CToggler in-header class="ml-3 d-md-down-none" @click="setToggleSidebarDesktop()" />
     <a href class="c-header-brand d-lg-none mx-auto router-link-active">IT CAO THANG</a>
     <ul class="c-header-nav d-md-down-none mr-auto">
-      <li class="c-header-nav-item px-3">
+      <!-- <li class="c-header-nav-item px-3">
         <a href="#" class="c-header-nav-link">Dashboard</a>
       </li>
       <li class="c-header-nav-item px-3">
@@ -12,7 +12,7 @@
       </li>
       <li class="c-header-nav-item px-3">
         <a href="#" class="c-header-nav-link">Settings</a>
-      </li>
+      </li> -->
     </ul>
     <ul class="c-header-nav mr-4">
       <li class="c-header-nav-item d-md-down-none mx-2 navbar__item--has-notify"
@@ -62,14 +62,14 @@
           </div>
         </div>
       </li>
-      <li class="c-header-nav-item d-md-down-none mx-2">
+      <!-- <li class="c-header-nav-item d-md-down-none mx-2">
         <a href="#" class="c-header-nav-link">
           <CIcon name="cil-list" />
         </a>
-      </li>
+      </li> -->
       <li class="c-header-nav-item d-md-down-none mx-2">
         <a href="#" class="c-header-nav-link">
-          <CIcon name="cil-envelope-open" />
+          <!-- <CIcon name="cil-envelope-open" /> -->
           <HeaderDropdownAccount />
         </a>
       </li>
@@ -129,9 +129,7 @@ export default {
     //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
     ...mapActions("user", ["updateUserInfoDataAsync"]),
     async getNotifyByEmail(){
-      if(!this.userProfile.role ||
-        (this.userProfile.role && this.userProfile.role.toUpperCase() == 'ADMIN')
-        || !this.userProfile.user) return;
+      if(!this.userProfile.role || !this.userProfile.user) return;
       let res;
       let authToken = localStorageMixin.methods.getLocalStorage(STORAGE_KEY.AUTH_TOKEN);
       let accessToken = authToken?.accessToken;

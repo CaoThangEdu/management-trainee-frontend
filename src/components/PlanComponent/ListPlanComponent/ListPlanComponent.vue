@@ -20,6 +20,7 @@
             :to="{ name: 'them-ke-hoach' }"
             class="btn btn-primary float-right"
             title="Thêm mới"
+            v-if="userProfile && userProfile.role == 'Admin'"            
           >
             <em class="fa fa-plus-square"></em>
           </router-link>
@@ -57,12 +58,18 @@
                 <tr v-for="(plan, index) in pageOfItems" :key="index">
                   <th scope="row">{{ index + 1 }}</th>
                   <th scope="row" title="Xem">
-                    <router-link
-                      :to="{ name: 'sua-ke-hoach', params: { guid: plan.id } }"
-                    >
-                      {{ plan.internshipCourseName }}
-                      <em class="fas fa-external-link-alt"></em>
-                    </router-link>
+                    <div>
+                      <router-link
+                        v-if="userProfile && userProfile.role == 'Admin'"
+                        :to="{ name: 'sua-ke-hoach', params: { guid: plan.id } }"
+                      >
+                        {{ plan.internshipCourseName }}
+                        <em class="fas fa-external-link-alt"></em>
+                      </router-link>
+                      <div v-else>
+                        {{ plan.internshipCourseName }}
+                      </div>
+                    </div>
                   </th>
                   <td>{{ convertTime(plan.startDay, "DD/MM/YYYY") }}</td>
                   <td>{{ convertTime(plan.endDay, "DD/MM/YYYY") }}</td>
@@ -84,6 +91,7 @@
                         name: 'them-sv-cua-dot',
                         params: { guid: plan.id },
                       }"
+                      v-if="userProfile && userProfile.role == 'Admin'"
                     >
                       <em class="fa fa-arrow-alt-circle-right"></em>
                     </router-link>
@@ -91,6 +99,7 @@
                       class="btn btn-danger"
                       @click="deletePlan(plan)"
                       title="Xóa"
+                      v-if="userProfile && userProfile.role == 'Admin'"
                     >
                       <em class="fa fa-trash"></em>
                     </button>
@@ -142,6 +151,7 @@ import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
 import { TIME_LINE_ENUM } from "../../../config/constant";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "ListPlan",
@@ -180,13 +190,40 @@ export default {
       timelineEnum: TIME_LINE_ENUM,
     };
   },
+
+  async mounted() {
+    if (!this.userProfile.user) {
+      await this.getUserProfile();
+    }
+  },
+
   computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
     getPlan() {
       return this.plans;
     }
   },
 
   methods: {
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
+    async getUserProfile() {
+      // Check: if has token => get profile else push to LoginPage
+      if (this.tokenKey) {
+        if (!this.userProfile || !this.userProfile.user) {
+          await this.updateUserInfoDataAsync();
+        }
+      } else {
+        if (this.$route.name !== "login") {
+          this.$router.push({ name: "login" });
+        }
+      }
+    },
+
     async changePageSize() {
       await this.$emit("change-page", 1);
     },

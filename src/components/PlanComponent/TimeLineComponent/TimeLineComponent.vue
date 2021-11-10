@@ -26,6 +26,10 @@ export default {
     plan: {
       type: Object,
       default: {},
+    },
+    userProfile: {
+      type: Object,
+      default: {},
     }
   },
   data() {
@@ -42,6 +46,12 @@ export default {
 
   async mounted(){
     await this.getTimeLinesAsync();
+  },
+
+  computed: {
+    getUserProfile() {
+      return this.userProfile;
+    }
   },
 
   methods:{

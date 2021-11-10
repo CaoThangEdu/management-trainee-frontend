@@ -86,10 +86,10 @@
           </div>
         </div>
         <ConfirmationCertificate 
-        :isShow="isShow" 
-        :keyCompany="keyCompany" 
-        :student="student"
-        @closeModal="closeModal"/>
+          :isShow="isShow" 
+          :keyCompany="keyCompany" 
+          :student="student"
+          @closeModal="closeModal"/>
         <div class="card-footer d-flex justify-content-center text--blue">
           <!-- <JwPagination
             :items="companies"
@@ -195,7 +195,7 @@ export default {
     showConfirmationCertificate(company) {
       this.isShow = true;
       this.keyCompany = company;
-       this.student = this.userProfile;
+      this.student = this.userProfile ?? {};
     },
     closeModal(isShow){
       this.isShow = isShow;
@@ -203,7 +203,7 @@ export default {
   },
   watch:{
     userProfile(){
-      this.student = this.userProfile;
+      this.student = this.userProfile ?? {};
     }
   }
 };

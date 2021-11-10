@@ -45,6 +45,14 @@
             id="name"
             v-model="weeklyReportInfo.link"
           />
+          <div>
+            <span class="text--italic text--red">
+              Vui lòng copy link google drive để vào đây!
+            </span>
+            <a href="https://drive.google.com/" target="_blank">
+              Đi đến google drive của bạn
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -102,9 +110,10 @@ export default {
       isShow: false,
       weeklyReportInfo: {
         title: "",
-        studenId: "",
+        studentId: "",
         link: "",
         description: "",
+        internshipCourseId: ""
       },
       errorMessages: [],
     };
@@ -209,11 +218,16 @@ export default {
     },
 
     async save() {
-      this.weeklyReportInfo.studenId = this.userProfile.studentId;
+      this.weeklyReportInfo.studentId = this.userProfile.studentId;
+      this.weeklyReportInfo.internshipCourseId = this.userProfile.internshipCourseId;
       // validate
       let viewModel = new WeeklyReportViewModel();
       viewModel.setFields(this.weeklyReportInfo);
       this.errorMessages = viewModel.isValid();
+      if(this.weeklyReportInfo.link && 
+        !(this.weeklyReportInfo.link.includes('https://drive.google.com'))) {
+        this.errorMessages.push('Vui lòng copy link google drive để <strong>Link đường dẫn</strong> ')
+      }
       if (this.errorMessages.length > 0) {
         return;
       }
