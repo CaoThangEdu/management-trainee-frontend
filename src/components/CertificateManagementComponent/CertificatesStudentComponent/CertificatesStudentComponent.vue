@@ -50,7 +50,7 @@
               </thead>
               <tbody>
                 <tr v-for="(item, index) in pageOfItems" :key="index">
-                  <td>{{index + 1}}</td>
+                  <td class="text-center">{{index + 1}}</td>
                   <td>
                     <div><strong>MSSV:</strong> {{ student.mssv }}</div>
                     <div>

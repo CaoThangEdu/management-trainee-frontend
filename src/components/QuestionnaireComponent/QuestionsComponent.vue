@@ -65,14 +65,14 @@
                       v-model="question.parrentMcqId"
                       class="form-control form-select form-select-class"
                     >
-                      <option :selected ="question.parrentMcqId == null" value="">Câu hỏi chính</option>
+                      <option :selected ="question.parrentMcqId == '00000000-0000-0000-0000-000000000000'" value="00000000-0000-0000-0000-000000000000">Câu hỏi chính</option>
                       <option
-                        :selected ="question.parrentMcqId === question.id"
-                        v-for="(question, index) in questions"
+                        :selected ="question.parrentMcqId === selectQuestion.id"
+                        v-for="(selectQuestion, index) in questions"
                         :key="`select-${index}`"
-                        :value="question.id"
+                        :value="selectQuestion.id"
                       >
-                        {{ question.question }}
+                        {{ selectQuestion.question }}
                       </option>
                     </select>
                   </td>
@@ -265,7 +265,7 @@ export default {
       this.questions.unshift(response.data);
       this.keyQuestion.question = "";
       this.keyQuestion.parrentMcqId = "";
-      this.keyQuestion.type = 1;
+      this.keyQuestion.type = 0;
     },
 
     async updateQuestionAsync(index) {
