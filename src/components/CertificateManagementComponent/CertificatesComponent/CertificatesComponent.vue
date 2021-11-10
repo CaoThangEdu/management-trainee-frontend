@@ -848,7 +848,6 @@ export default {
           this.userProfile.internshipCourseId;
       }
       await this.getStudentsAsync();
-      await this.getCertificatesAsync(this.filterCerticate);
     }
     await this.getClassesAsync();
     await this.getCompaniesAsync();
@@ -884,6 +883,15 @@ export default {
     },
 
     async getStatisticalCertificateAsync() {
+      if(!this.filterCerticate.internshipCourseId || Number(this.filterCerticate.internshipCourseId) == -1) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          'Vui lòng chọn đợt thực tập'
+        );
+        return;
+      }
+      
       let filter = {
         internshipCourseId: this.filterCerticate.internshipCourseId,
         classId: this.filterCerticate.classId,
@@ -915,6 +923,10 @@ export default {
     },
 
     async getStudentsAsync() {
+      if(Number(this.filterCerticate.internshipCourseId) == -1) {
+        this.filterCerticate.internshipCourseId = '';
+      }
+
       let filterStudent = {
         keyword: this.userProfile.mssv,
         classId: this.filterCerticate.classId,
@@ -960,6 +972,9 @@ export default {
     },
 
     async getCertificatesAsync(filterCerticate) {
+      if(Number(filterCerticate.internshipCourseId) == -1) {
+        filterCerticate.internshipCourseId = '';
+      }
       // Call Api
       this.showLoading();
       const api = new CertificateSevice();
@@ -1045,6 +1060,9 @@ export default {
     },
 
     async getClassesAsync() {
+      if(Number(this.filterCerticate.internshipCourseId) == -1) {
+        this.filterCerticate.internshipCourseId = '';
+      }
       let filterClass = {
         className: "",
         status: "",

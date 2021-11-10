@@ -6,9 +6,7 @@ export default class InternshipConfirmationServices extends ServicesBaseAPI {
     super();
     this.url = `${AppConfig.apiHost}/InternshipConfirmation`
   }
-
-
-
+  
   async internshipConfirmationAsync(query) {
 
     try {

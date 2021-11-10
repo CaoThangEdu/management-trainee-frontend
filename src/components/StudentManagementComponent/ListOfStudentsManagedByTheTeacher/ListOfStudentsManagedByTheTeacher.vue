@@ -32,7 +32,7 @@
                 <td>{{ studentItem.className }}</td>
                 <td>{{ studentItem.student.email }}</td>
                 <td>{{ studentItem.internshipCourseName }}</td>
-                <td>{{ studentItem.pointNumber?studentItem.pointNumber:0 }}</td>
+                <td>{{ studentItem.score?studentItem.score.score:0 }}</td>
                 <td>
                   <button class="btn btn-success"
                     @click="updateStudent(index)">

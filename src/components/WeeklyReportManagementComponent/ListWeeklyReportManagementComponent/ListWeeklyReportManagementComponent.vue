@@ -233,6 +233,9 @@ export default {
     },
 
     async getWeeklyReportFilterAsync() {
+      if(this.filter.internshipCourseId == -1) {
+        this.filter.internshipCourseId = '';
+      }
       // Call Api
       this.showLoading();
       const api = new WeeklyReportService();
