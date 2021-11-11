@@ -83,8 +83,9 @@
                     >
                      <option value="0">Không chọn</option>
                       <option value="1">Text</option>
-                      <option value="2">radio button</option>
-                      <option value="3">check box</option>
+                      <option value="2">Radio button</option>
+                      <option value="3">Check box</option>
+                      <option value="4">String</option>
                     </select>
                   </td>
                   <td class="text-center">
@@ -139,10 +140,11 @@
                       v-model="keyQuestion.type"
                       class="form-control form-select form-select-class"
                     >
-                     <option value="0">Không chọn</option>
+                      <option value="0">Không chọn</option>
                       <option value="1">Text</option>
-                      <option value="2">radio button</option>
-                      <option value="3">check box</option>
+                      <option value="2">Radio button</option>
+                      <option value="3">Check box</option>
+                      <option value="4">String</option>
                     </select>
                   </td>
                   <td class="text-center">
