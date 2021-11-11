@@ -15,7 +15,7 @@
               class="ci-primary"
             ></path>
           </svg>
-          Danh sách link biểu mẫu
+          Danh sách biểu mẫu
           <button class="btn btn-primary float-right btn-search"          
             @click="createInternshipData" title="Thêm mới"
             v-if="userProfile && userProfile.role == 'Admin'"

@@ -510,6 +510,7 @@ import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import "vue2-datepicker/locale/vi";
 import moment from "moment";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "PlanDetail",
@@ -598,6 +599,18 @@ export default {
   },
 
   async mounted() {
+    if (!this.userProfile.user) {
+      await this.getUserProfile();
+    }
+    if (this.userProfile && this.userProfile.role == 'STUDENT') {
+      this.$router.push({ name: 'trang-chu-sinh-vien'});
+      return;
+    }
+    if (this.userProfile && this.userProfile.role == 'TEACHER') {
+      this.$router.push({ name: 'ds-sinh-vien-cua-gv'});
+      return;
+    }
+
     await this.getTrainingSystemsFilterAsync();
     await this.getCareersFilterAsync();
     await this.getPlansAsync();
@@ -632,7 +645,29 @@ export default {
     }
   },
 
+  computed: {
+    //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapGetters("user", {
+      userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
+    }),
+  },
+
   methods: {
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
+    async getUserProfile() {
+      // Check: if has token => get profile else push to LoginPage
+      if (this.tokenKey) {
+        if (!this.userProfile || !this.userProfile.user) {
+          await this.updateUserInfoDataAsync();
+        }
+      } else {
+        if (this.$route.name !== "login") {
+          this.$router.push({ name: "login" });
+        }
+      }
+    },
     async getFacultiesFilterAsync() {
       let facultyFilter = {
         facultyName:"",

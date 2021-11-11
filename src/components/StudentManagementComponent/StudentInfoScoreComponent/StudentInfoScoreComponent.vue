@@ -185,6 +185,7 @@ export default {
     async data() {
       this.isShow = true;
       this.student = this.data;
+      this.scoreStudentRequest.score = this.data.score.score;
       await this.getTimeLinesByInternshipCourseIdAsync();
     }
   }
@@ -192,6 +193,5 @@ export default {
 </script>
 
 <style lang='scss'>
-@import '../../../assets/scss/style.scss'
-
+@import '../../../assets/scss/style.scss';
 </style>
