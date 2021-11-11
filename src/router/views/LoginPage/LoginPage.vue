@@ -148,7 +148,7 @@ export default {
       }
 
       if (this.requestInfo.username !='admin'
-        && !this.requestInfo.username.includes("@caothang.edu.vn")) {
+        && !this.requestInfo.username.includes("@")) {
         this.requestInfo.username = this.requestInfo.username + "@caothang.edu.vn";
       }
 
@@ -174,11 +174,6 @@ export default {
         localStorageMixin.methods.parseJwt(response.data.accessToken)['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
       // goto the next page
       if (roles) {
-        if (roles.toUpperCase() == 'ADMIN') {
-          this.$router.push({ name: 'them-ke-hoach'});
-          return;
-        }
-
         if (roles.toUpperCase() == 'STUDENT') {
           this.$router.push({ name: 'trang-chu-sinh-vien'});
           return;
@@ -186,6 +181,11 @@ export default {
 
         if (roles.toUpperCase() == 'TEACHER') {
           this.$router.push({ name: 'ds-sinh-vien-cua-gv'});
+          return;
+        }
+
+        if (roles.toUpperCase() == 'ADMIN') {
+          this.$router.push({ name: 'them-ke-hoach'});
           return;
         }
       }
