@@ -18,16 +18,26 @@
           <strong>Trả lời khảo sát</strong>
         </header>
         <div class="card-body">
-          <strong>{{ surveyForms.surveyFormName }}</strong>
-          <hr />
+          <div class="row">
+            <div class="col-3 col-lg-3 col-ml-3">
+              <img class="w-75" src="../../assets/img/Cao-Thang-logo-01.jpg" alt="logo-cao-thang">
+            </div>
+            <div class="col-6 col-lg-6 col-ml-6 text-center">
+              <h3>TRƯỜNG CAO ĐẲNG KỸ THUẬT CAO THẮNG</h3>
+              <h3>KHOA ĐIỆN TỬ - TIN HỌC</h3>
+              <h3>BỘ MÔN TIN HỌC</h3>
+              <em class="fas fa-book-open" style="font-size: 30px;"></em>
+            </div>
+            <div class="col-12 col-lg-12 col-ml-12 px-5 text-center">
+               <h1>{{ surveyForms.surveyFormName }}</h1>
+            </div>
+          </div>
           <div
             v-for="(formMqcQuestion, index) in surveyForms.formMqcQuestion"
             :key="index"
           >
             <div>
-              <strong
-                >{{ index + 1 }}: {{ formMqcQuestion.mcq.question }}:</strong
-              >
+              <h4>{{ index + 1 }}: {{ formMqcQuestion.mcq.question }}:</h4>
               <div
                 class="my-2"
                 v-if="
@@ -43,6 +53,15 @@
                   rows="10"
                   class="w-100 my-3"
                 ></textarea>
+              </div>
+               <div
+                class="my-2"
+                v-if="
+                  formMqcQuestion.mcq.type === '4' &&
+                  formMqcQuestion.mcq.listChild.length === 0
+                "
+              >
+                <input type="text" class="form-control" v-model="answers[formMqcQuestion.mcq.id].answers">
               </div>
               <div
                 v-if="
@@ -79,14 +98,14 @@
                 "
                 class="row justify-content-around my-3"
               ></div>
-              <div
+              <div class="px-4"
                 v-for="(listChild, index) in formMqcQuestion.mcq.listChild"
                 :key="listChild + index"
               >
-                {{ listChild.question }}
+                - {{ listChild.question }}
                 <div
                   v-if="listChild.type === '3'"
-                  class="row justify-content-around my-3 form-check"
+                  class="row justify-content-around my-3 form-check py-2"
                 >
                   <div class="form-check form-check-inline">
                     <input

@@ -994,7 +994,7 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_updated_success_default}`
       );
-      await this.showchartAsnyc();
+      await this.statisticsCerticate();
     },
     async updateStatusCertificatesAsync() {
       if (this.selectUpdateCertificates.certificationId.length === 0) {
