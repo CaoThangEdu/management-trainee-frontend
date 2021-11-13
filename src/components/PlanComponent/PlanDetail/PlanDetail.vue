@@ -599,8 +599,8 @@ export default {
   },
 
   async mounted() {
-    if (!this.userProfile.user) {
-      await this.getUserProfile();
+    if (!this.userProfile || !this.userProfile.user) {
+      await this.updateUserInfoDataAsync();
     }
     if (this.userProfile && this.userProfile.role == 'STUDENT') {
       this.$router.push({ name: 'trang-chu-sinh-vien'});
@@ -651,23 +651,19 @@ export default {
       userProfile: "getUserInfo",
       tokenKey: "getTokenKey",
     }),
+    
+    checkFacultyIdExist() {
+      return !this.facultyId;
+    },
+
+    checkTrainingSystemIdExist() {
+      return !this.trainingSystemId;
+    },
   },
 
   methods: {
     //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
     ...mapActions("user", ["updateUserInfoDataAsync"]),
-    async getUserProfile() {
-      // Check: if has token => get profile else push to LoginPage
-      if (this.tokenKey) {
-        if (!this.userProfile || !this.userProfile.user) {
-          await this.updateUserInfoDataAsync();
-        }
-      } else {
-        if (this.$route.name !== "login") {
-          this.$router.push({ name: "login" });
-        }
-      }
-    },
     async getFacultiesFilterAsync() {
       let facultyFilter = {
         facultyName:"",
@@ -1180,16 +1176,6 @@ export default {
       } else {
         await this.updatePlanAsync();
       }
-    },
-  },
-  
-  computed: {
-    checkFacultyIdExist() {
-      return !this.facultyId;
-    },
-
-    checkTrainingSystemIdExist() {
-      return !this.trainingSystemId;
     },
   },
 };

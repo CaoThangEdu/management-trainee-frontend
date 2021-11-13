@@ -449,12 +449,12 @@ export default {
       this.teachersCreate = this.metaDataFileTeacher;
       for (let i in this.teachersCreate) {
         if(!this.teachersCreate[i].email || !this.teachersCreate[i].lastName
-        || !this.teachersCreate[i].firstName || !this.teachersCreate[i].phoneNumber ){
+          || !this.teachersCreate[i].firstName || !this.teachersCreate[i].phoneNumber ){
           return this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          "Thêm mới giáo viên thất bại<br/ >File thêm không đúng định dạng!"
-        );
+            "error",
+            `${AppConfig.notification.title_default}`,
+            "Thêm mới giáo viên thất bại<br/ >File thêm không đúng định dạng!"
+          );
         }
         // duyệt danh sách teacher từ file
         this.teachersCreate[i].facultyId = this.plan.facultyId;
@@ -804,11 +804,7 @@ export default {
         this.studentsForCreate.length == 0 &&
         this.studentNoExistInDB.length == 0
       ) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          "Thêm mới sinh viên thất bại<br/ >File thêm không đúng định dạng!"
-        );
+        await this.saveStudentBefore();
         return;
       }
 
@@ -820,41 +816,32 @@ export default {
     },
 
     async saveStudentBefore() {
-      if (this.classCreated) {
-        await this.getClassesFilterAsync();
-        this.classes = this.classes.filter(
-          (classroom) => classroom.internshipCourseId == this.guid
+      if (this.metaDataFile.length==0) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          'Vui lòng chọn file sinh viên'
         );
-        this.classIdSelected = this.classCreated;
+        return;
       }
       this.students = this.metaDataFile;
-      let studentLengthCallApi = this.studentLengthBanDau;
-      var idClass = this.classIdSelected;
       this.studentsForCreate = [];
+      this.studentNoExistInDB = [];
+      this.studentExistInDB = [];
       for (let i in this.students) {
-        let isStudentExist = this.studentsCallApi.find(
-          ({ studentId }) => studentId == this.students[i].studentId
-        );
-        if (isStudentExist) continue;
+        if (!this.students[i].classId) {
+          this.showNotifications(
+            "error",
+            `${AppConfig.notification.title_default}`,
+            "Thêm mới sinh viên thất bại<br/ >File thêm không đúng định dạng!"
+          );
+          return;
+        }
 
-        // Kiểm tra lớp đã trùng với lớp đã chọn hay chưa
-        let classOfStudent = this.getInfoObjectByName(
-          this.students[i].classId,
-          this.classes
-        );
         let classIdExist = this.classes.find(
           ({ className }) => className == this.students[i].classId
         );
-        if (classOfStudent) {
-          // nếu tồn tại lớp
-          this.students[i].classId = classOfStudent.classId;
-          // nếu lớp bằng lớp đã chọn
-          if (classOfStudent.id == idClass) {
-            this.students[i].classId = idClass;
-          } else {
-            this.students[i].classId = classOfStudent.id;
-          }
-        } else if (classIdExist) {
+        if (classIdExist) {
           this.students[i].classId = classIdExist.id;
         } else {
           this.classroom.internshipCourseId = this.guid;
@@ -887,46 +874,41 @@ export default {
         let viewModel = new StudentViewModel();
         viewModel.setFields(this.students[i]);
         this.errorMessages = viewModel.isValid();
-
         if (this.errorMessages.length > 0) {
           return;
         }
+
+        let isStudentExist = this.studentsCallApi.find(
+          ({ studentId }) => studentId == this.students[i].studentId
+        );
+        
+        if (isStudentExist) {
+          viewModel.fields.studentId =
+            viewModel.fields.studentId + "-duplicate";
+          this.studentExistInDB.push(this.students[i]);
+        } else {
+          this.studentNoExistInDB.push(this.students[i]);
+        }
         this.studentsForCreate.push(this.students[i]);
       }
-      let response = false;
-      if (this.studentsForCreate.length != 0) {
-        this.showLoading();
-        let api = new StudentService();
-        response = await api.createStudentsAsync(this.studentsForCreate);
-        this.showLoading(false);
-      }
 
-      if (!response || !response.isOK) {
+      if (
+        this.studentsForCreate.length == 0 &&
+        this.studentNoExistInDB.length == 0
+      ) {
         this.showNotifications(
           "error",
           `${AppConfig.notification.title_default}`,
-          response.errorMessages ?? "Thêm mới sinh viên thất bại"
+          "Thêm mới sinh viên thất bại<br/ >File thêm không đúng định dạng!"
         );
         return;
       }
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_created_success_default}` +
-          " sinh viên"
-      );
 
-      await this.getStudentsAsync();
-      let listClassId = [];
-      this.classes = this.classes.filter(
-        (classroom) => {
-          listClassId.push(classroom.id);
-          return classroom.internshipCourseId == this.guid;
-        }
-      );
-      this.studentOfInInternshipCourse = this.studentsCallApi.filter(
-        (student) =>  listClassId.includes(student.classId)
-      );
+      if (this.studentNoExistInDB.length < this.studentsForCreate.length) {
+        this.showConfirmCreateStudentExist(this.studentsForCreate);
+        return;
+      }
+      await this.createStudentAfterWhileReadAsync(this.studentsForCreate);
     },
   },
 
