@@ -626,7 +626,7 @@
 </template>
 
 <script>
-import CertificateDetailComponent from "../CertificateDetailComponent/CertificateDetailComponent.vue";
+
 import ComponentBase from "../../common/component-base/ComponentBase";
 import AppConfig from "../../../../src/app.config.json";
 import JwPagination from "jw-vue-pagination";
@@ -645,7 +645,6 @@ export default {
   name: "CertificatesComponent",
   extends: ComponentBase,
   components: {
-    CertificateDetailComponent,
     JwPagination,
     SelectPlan,
     Highcharts: Chart,
@@ -690,7 +689,9 @@ export default {
                 value: 4,
               },
             },
+            showInLegend: true
           },
+         
         },
         colors: ["#2eb85c", "#e55353"],
         series: [

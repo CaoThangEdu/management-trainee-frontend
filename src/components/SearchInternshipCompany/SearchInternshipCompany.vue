@@ -1,5 +1,5 @@
 <template>
-  <div class="row notify-component">
+  <div class="row notify-component" v-if="certificate.status === 'unconfirmed'">
     <div class="col-12">
       <div class="card">
         <header class="card-header">
@@ -30,7 +30,7 @@
                     placeholder="Nhập tên công ty"
                   />
                 </div>
-                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12 ">
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-12">
                   <button
                     @click="getCompaniesByNameAsync()"
                     type="submit"
@@ -53,9 +53,7 @@
                   <th scope="col">Tên công ty</th>
                   <th scope="col">Địa chỉ</th>
                   <th scope="col">Lĩnh Vực</th>
-                  <th scope="col" style="width: 110px;">
-                    Hoạt động
-                  </th>
+                  <th scope="col" style="width: 110px">Hoạt động</th>
                 </tr>
               </thead>
               <tbody>
@@ -85,11 +83,12 @@
             </table>
           </div>
         </div>
-        <ConfirmationCertificate 
-          :isShow="isShow" 
-          :keyCompany="keyCompany" 
+        <ConfirmationCertificate
+          :isShow="isShow"
+          :keyCompany="keyCompany"
           :student="student"
-          @closeModal="closeModal"/>
+          @closeModal="closeModal"
+        />
         <div class="card-footer d-flex justify-content-center text--blue">
           <!-- <JwPagination
             :items="companies"
@@ -109,7 +108,8 @@ import CompanyService from "../../services/company/companyServices";
 import JwPagination from "jw-vue-pagination";
 import ComponentBase from "../common/component-base/ComponentBase";
 import AppConfig from "../../../src/app.config.json";
-import ConfirmationCertificate from "./ConfirmationCertificate.vue"
+import ConfirmationCertificate from "./ConfirmationCertificate.vue";
+import CertificateService from "../../services/certificate/CertificateServices";
 import { mapGetters } from "vuex";
 export default {
   name: "SearchInternshipCompany",
@@ -117,7 +117,7 @@ export default {
   components: {
     JwPagination,
     ComponentBase,
-    ConfirmationCertificate
+    ConfirmationCertificate,
   },
   data() {
     return {
@@ -144,11 +144,17 @@ export default {
       },
       isShow: false,
       keyCompany: {},
-      student:{}
+      student: {},
+      isRegistered: false,
     };
   },
   async mounted() {
     await this.getAllCompaniesAsync();
+    let certificate = await this.getCertificateAsync(this.userProfile);
+    if (certificate.length !== 0) {
+      this.certificate = certificate[0];
+      this.isRegistered = true;
+    }
   },
   computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
@@ -158,6 +164,30 @@ export default {
     }),
   },
   methods: {
+    async getCertificateAsync(user) {
+      let filterCerticate = {
+        internshipCourseId: user.internshipCourseId,
+        status: "",
+        studentCode: user.mssv,
+        classId: user.classId,
+      };
+      // Call Api
+      this.showLoading();
+      const api = new CertificateService();
+
+      const response = await api.getCertificatesAsync(filterCerticate);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      return response.data;
+    },
     async getAllCompaniesAsync() {
       // Call Api
       this.showLoading();
@@ -197,14 +227,14 @@ export default {
       this.keyCompany = company;
       this.student = this.userProfile ?? {};
     },
-    closeModal(isShow){
+    closeModal(isShow) {
       this.isShow = isShow;
-    }
+    },
   },
-  watch:{
-    userProfile(){
+  watch: {
+    userProfile() {
       this.student = this.userProfile ?? {};
-    }
-  }
+    },
+  },
 };
 </script>

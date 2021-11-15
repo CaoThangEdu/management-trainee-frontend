@@ -226,6 +226,7 @@ export default {
                 value: 4,
               },
             },
+            showInLegend: true
           },
         },
         colors: ["#2eb85c", "#e55353"],
