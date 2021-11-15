@@ -17,7 +17,7 @@
     </div>
     <template #header>
       <h5>Xác nhận đăng ký giấy giới thiệu thực tập</h5>
-      <button class="close" style="color: red;" @click="closeModal()">
+      <button class="close" style="color: red" @click="closeModal()">
         &times;
       </button>
     </template>
@@ -31,7 +31,7 @@
         <div class="col-form-label col-md-4 col-sm-4"></div>
         <div class="col-md-8 col-sm-8 pl-0 pr-0">
           <button
-            @click="createCertificateAsync()"
+            @click="save()"
             class="btn btn-primary float-right ml-2"
           >
             Đăng ký
@@ -81,13 +81,44 @@ export default {
         classId: "",
       },
       companiesByTaxCode: {},
+      isRegistered:false
     };
   },
   async mounted() {
     this.companiesByTaxCode = await this.getCompaniesAsync();
+     let certificate = await this.getCertificateAsync(this.student);
+      if (certificate.length !== 0) {
+      this.certificate = certificate[0];
+      this.isRegistered = true;
+    }
   },
 
   methods: {
+    async getCertificateAsync(user) {
+      let filterCerticate = {
+        internshipCourseId: user.internshipCourseId,
+        status: "",
+        studentCode: user.mssv,
+        classId: user.classId,
+      };
+      // Call Api
+      this.showLoading();
+      const api = new CertificateService();
+
+      const response = await api.getCertificatesAsync(filterCerticate);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      return response.data;
+    },
+
     closeModal() {
       this.$emit("closeModal", false);
     },
@@ -122,9 +153,50 @@ export default {
         `${AppConfig.notification.title_default}`,
         `Đăng ký thành công`
       );
-      this.errorMessages = []
+      this.errorMessages = [];
       await this.createCompanyAsync();
       this.closeModal();
+    },
+
+    async updateCertificateAsync() {
+      this.certificate.mssv = this.student.mssv;
+      this.certificate.classId = this.student.classId;
+      this.certificate.taxCode = this.keyCompany.taxCode;
+      this.certificate.companyName = this.keyCompany.title;
+      this.certificate.companyAddress = this.keyCompany.companyAddress;
+      this.certificate.owner = this.keyCompany.owner;
+      this.certificate.phoneNumberOfCompany = this.keyCompany.phoneNumber;
+      this.certificate.career = this.keyCompany.career;
+      this.showLoading();
+      let api = new CertificateService();
+      let response = await api.updateCertificateAsync(this.certificate);
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
+      );
+      this.closeModal();
+    },
+
+    async save() {
+      if (!this.isRegistered) {
+        //create
+        await this.createCertificateAsync(this.student);
+      } else {
+        //update
+        await this.updateCertificateAsync();
+      }
     },
 
     async getCompaniesAsync() {
@@ -155,7 +227,9 @@ export default {
       this.showLoading();
       const api = new CompanyService();
 
-      const response = await api.getCompanieByTaxCodeAsync(this.keyCompany.taxCode);
+      const response = await api.getCompanieByTaxCodeAsync(
+        this.keyCompany.taxCode
+      );
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -170,7 +244,11 @@ export default {
 
     async createCompanyAsync() {
       let company = await this.getCompanieByTaxCodeAsync();
-      if (company == null || this.companiesByTaxCode[company.taxCode] !== undefined ) return;
+      if (
+        company == null ||
+        this.companiesByTaxCode[company.taxCode] !== undefined
+      )
+        return;
       company.status = "active";
       this.showLoading();
       let api = new CompanyService();

@@ -18,7 +18,7 @@ export default class CertificateViewModel extends ViewModel {
   getValidations() {
     let validations = {
       taxCode: {
-        label: 'Mã sô thuế',
+        label: 'Mã số thuế',
         rules: {
           require: '',
           maxLength: {

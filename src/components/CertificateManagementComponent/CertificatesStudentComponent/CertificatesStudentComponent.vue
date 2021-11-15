@@ -16,157 +16,111 @@
             ></path>
           </svg>
           <span>Đăng ký giấy giới thiệu thực tập</span>
-
-          <button
-            class="btn btn-primary float-right"
-            @click="createCertificates"
-          >
-            + Đăng ký
-          </button>
         </header>
-        <div class="card-body">
-          <div class="row mb-3">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-              <h3>Danh sách giấy xác nhận đã đăng ký</h3>
+        <div class="card-body p-5">
+          <div class="">
+            <div class="form-group row">
+              <label class="col-md-2 col-sm-4 col-form-label">
+                Mã số thuế (<span class="text--red">*</span>)
+              </label>
+              <div class="col-md-8 col-sm-8 pr-0">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="certificate.taxCode"
+                />
+              </div>
+              <div class="col-md-2 col-sm-8 pl-0">
+                <button
+                  @click="checkCompany()"
+                  class="btn btn-primary float-right ml-2"
+                >
+                  Kiểm tra
+                </button>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-sm-4 col-form-label"
+                >Tên công ty
+              </label>
+              <div class="col-md-10 col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="certificate.companyName"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-sm-4 col-form-label"
+                >Chủ sở hữu
+              </label>
+              <div class="col-md-10 col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="certificate.owner"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-sm-4 col-form-label">Địa chỉ</label>
+              <div class="col-md-10 col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="certificate.companyAddress"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-sm-4 col-form-label"
+                >Số điện thoại công ty</label
+              >
+              <div class="col-md-10 col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="certificate.phoneNumberOfCompany"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-sm-4 col-form-label">Ngành nghề</label>
+              <div class="col-md-10 col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="certificate.career"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-sm-4 col-form-label"
+                >Số điện thoại sinh viên</label
+              >
+              <div class="col-md-10 col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="certificate.phoneNumberOfStudent"
+                />
+              </div>
             </div>
           </div>
-          <div id="table" class="table-responsive">
-            <table class="table table-hover">
-              <caption></caption>
-              <thead class="">
-                <tr>
-                  <th scope="col" class="text-center">STT</th>
-                  <th scope="col" class="align-middle" style="width: 300px">
-                    Thông tin sinh viên
-                  </th>
-                  <th scope="col" class="align-middle">Thông tin công ty</th>
-                  <th scope="col" class="align-middle" style="width: 200px">
-                    Trạng thái
-                  </th>
-                  <th scope="col" class="align-middle" style="width: 110px">
-                    Thao tác
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in pageOfItems" :key="index">
-                  <td class="text-center">{{index + 1}}</td>
-                  <td>
-                    <div><strong>MSSV:</strong> {{ student.mssv }}</div>
-                    <div>
-                      <strong>Họ tên sinh viên:</strong>
-                      {{ student.fullName }}
-                    </div>
-                    <div>
-                      <strong>lớp:</strong>
-                      {{ student.className }}
-                    </div>
-                    <div>
-                      <strong>Số điện thoại:</strong>
-                      {{item.phoneNumberOfStudent }}
-                    </div>
-                    <div>
-                      <strong>Ngày đăng ký giấy: </strong>
-                      {{
-                        convertTime(item.creationTime)
-                      }}
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <strong>Mã số thuế:</strong>
-                      {{ item.taxCode }}.
-                    </div>
-                    <div>
-                      <strong>Tên công ty:</strong>
-                      {{ item.companyName }}.
-                    </div>
-                    <div>
-                      <strong>Xác nhận công ty:</strong>
-                      {{
-                        confirmationCompany(item.taxCode)
-                      }}.
-                    </div>
-                  </td>
-                  <td>
-                    <button
-                      v-if="item.status === 'unconfirmed'"
-                      class="btn btn-warning not-active"
-                    >
-                      Đang chờ duyệt
-                    </button>
-                    <button
-                      v-if="item.status === 'confirmed'"
-                      class="btn btn-primary not-active"
-                    >
-                      Đã duyệt
-                    </button>
-                    <button
-                      v-if="item.status === 'complete'"
-                      class="btn btn-success not-active"
-                    >
-                      Hoàn thành
-                    </button>
-                  </td>
-                  <td>
-                      <button
-                      :disabled="item.status !== 'unconfirmed'"
-                      class="btn btn-primary mr-1"
-                      @click="updateCertificate(index)"
-                    >
-                      <em class="fa fa-edit"></em>
-                    </button>
-                    <button
-                      :disabled="item.status !== 'unconfirmed'"
-                      class="btn btn-danger"
-                      @click="deleteCertificate(item.id,index)"
-                    >
-                      <em class="fa fa-trash"></em>
-                    </button>
-                  </td>
-                </tr>
-                <tr v-show="pageOfItems == null || pageOfItems.length === 0">
-                  <th colspan="5" id="" class="text-left">
-                    Không có dữ liệu nào được tìm thấy.
-                  </th>
-                </tr>
-              </tbody>
-            </table>
+          <hr />
+          <div class="button text-center my-3">
+            <button
+              :disabled="certificate.status === 'unconfirmed'"
+              @click="save()"
+              class="btn btn-success w-25"
+            >
+              {{ !isRegistered ? "Đăng ký" : "Cập nhật" }}
+            </button>
           </div>
-        </div>
-        <CertificateDetailComponent
-          :data="editCertificate"
-          @change-data="changeData"
-          @changeCompanies="changeCompanies"
-        />
-
-        <div
-          class="card-footer d-flex justify-content-center text--blue"
-          v-show="pageOfItems == null || pageOfItems.length === 0"
-        >
-          <select
-            :class="{ 'd-none': certificates == null || certificates.length === 0 }"
-            class="form-control w-auto mr-2"
-            @change="changePageSize()"
-            v-model="pageSize"
-          >
-            <option value="10">10/ trang</option>
-            <option value="20">20/ trang</option>
-            <option value="30">30/ trang</option>
-            <option value="40">40/ trang</option>
-            <option value="50">50/ trang</option>
-          </select>
-          <JwPagination
-            :items="certificates"
-            @changePage="onChangePage"
-            :labels="customLabels"
-            :pageSize="20"
-          >
-          </JwPagination>
-          <ConfirmDialog
-            :data="confirmedCertificate"
-            @agree="agreeConfirm"
-          ></ConfirmDialog>
+          <div class="col-md-12 col-sm-12">
+            <AlertMessages :messages="errorMessages" />
+          </div>
         </div>
       </div>
     </div>
@@ -174,97 +128,77 @@
 </template>
 
 <script>
-import CertificateDetailComponent from "../CertificateDetailComponent/CertificateDetailComponent.vue";
 import ComponentBase from "../../common/component-base/ComponentBase";
+import BaseModal from "../../common/base-modal/BaseModal";
+import AlertMessages from "../../common/alert/alert-messages/AlertMessages";
 import AppConfig from "../../../../src/app.config.json";
-import JwPagination from "jw-vue-pagination";
-import ConfirmDialog from "../../common/confirm-dialog/ConfirmDialog";
-import CertificateSevice from "../../../services/certificate/CertificateServices";
-import CrudMixin from "../../../helpers/mixins/crudMixin";
+import CertificateViewModel from "../../../view-model/Certificate/CertificateViewModel";
+import CertificateService from "../../../services/certificate/CertificateServices";
 import CompanyService from "../../../services/company/companyServices";
-import moment from "moment";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import CrudMixin from "../../../helpers/mixins/crudMixin";
+
 export default {
-  name: "CertificatesStudentComponent",
+  name: "CertificateComponent",
   extends: ComponentBase,
   components: {
-    CertificateDetailComponent,
-    ConfirmDialog,
-    JwPagination,
+    BaseModal,
+    AlertMessages,
   },
   mixins: [CrudMixin],
   data() {
     return {
-      pageSize: 10,
-      internshipCompanies: {},
-      certificates: [],
-      defaultCertificates: [],
-      editCertificate: {},
-      confirmedCertificate: null,
-      pageOfItems: [],
-      customLabels: {
-        first: "<<",
-        last: ">>",
-        previous: "<",
-        next: ">",
-      },
-      student: {},
+      isShow: false,
+      errorMessages: [],
       companiesByTaxCode: {},
-      company: {},
-      selectCertificate: -1,
-      filterCerticate: {
-        studentCode: "",
-        status: "",
+      certificate: {
+        taxCode: "",
+        companyName: "",
+        companyAddress: "",
+        owner: "",
+        phoneNumberOfCompany: "",
+        phoneNumberOfStudent: "",
+        career: "",
+        status: "unconfirmed", //confirmed, unconfirmed, complete
+        mssv: "",
         classId: "",
-        internshipCourseId: "",
       },
-      unconfirmedData: [],
-      confirmedData: [],
-      completeData: [],
-      notRegisteredData: [],
+      company: {},
+      isCompanyConfirmation: false,
+      isRegistered: false,
     };
   },
 
   async mounted() {
-    if (this.userProfile !== "") {
-      this.student = this.userProfile;
-      // this.filterCerticate.classId = this.student.classId;
-      this.filterCerticate.internshipCourseId = this.student.internshipCourseId;
-      this.filterCerticate.studentCode = this.student.mssv;
-      await this.getCertificatesAsync();
-    }
     await this.getCompaniesAsync();
+    let certificate = await this.getCertificateAsync(this.userProfile);
+    if (certificate.length !== 0) {
+      this.certificate = certificate[0];
+      this.isRegistered = true;
+    }
   },
+
   computed: {
     //gọi phương thức từ getter trên store (tên module, tên phương thức) để xử lý dữ liệu
     ...mapGetters("user", {
       userProfile: "getUserInfo",
+      tokenKey: "getTokenKey",
     }),
   },
+
   methods: {
-    convertTime(time) {
-      return moment(time).format("DD/MM/YYYY");
-    },
-
-    getInfoObject(id, list) {
-      return CrudMixin.methods.getInfo(id, list);
-    },
-
-    onChangePage(pageOfItems) {
-      // update page of items
-      this.pageOfItems = pageOfItems;
-    },
-
-    createCertificates() {
-      this.editCertificate = {};
-    },
-
-    async getCertificatesAsync() {
+    async getCertificateAsync(user) {
+      let filterCerticate = {
+        internshipCourseId: user.internshipCourseId,
+        status: "",
+        studentCode: user.mssv,
+        classId: user.classId,
+      };
       // Call Api
       this.showLoading();
-      const api = new CertificateSevice();
+      const api = new CertificateService();
 
-      const response = await api.getCertificatesAsync(this.filterCerticate);
+      const response = await api.getCertificatesAsync(filterCerticate);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -275,92 +209,31 @@ export default {
         );
         return;
       }
-      this.certificates = response.data;
+      return response.data;
+    },
+    // },
+    //gọi phương thức từ actions trên store (tên module, tên phương thức) để xử lý dữ liệu
+    ...mapActions("user", ["updateUserInfoDataAsync"]),
+    async pressKeyEnter() {
+      await this.save();
     },
 
-    updateCertificate(index) {
-      this.selectCertificate = index;
-      this.editCertificate = Object.assign({}, this.certificates[index]);
-    },
-
-    changeIsdelete(index) {
-      this.editCertificates = Object.assign({}, this.pageOfItems[index]);
-    },
-
-    async changeData(certificate, action) {
-      if (action === "create") {
-        return this.certificates.unshift(certificate);
-      }
-      this.$set(this.certificates, this.selectCertificate, certificate);
-      this.selectCertificate = -1;
-    },
-
-    deleteCertificate(id, index) {
-      this.confirmedCertificate = { id: id, index: index };
-    },
-    // Call api delete Certificate
-    async agreeConfirm(confirmedCertificate) {
-      this.showLoading();
-      let api = new CertificateSevice();
-      let response = await api.deleteCertificateAsync(confirmedCertificate.id); // Gọi Api
-      this.showLoading(false);
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-      this.certificates.splice(confirmedCertificate.index, 1);
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_deleted_success_default}`
-      );
-    },
-
-    async updateCertificateAsync(index) {
-      this.showLoading();
-      let api = new CertificateSevice();
-      let response = await api.updateCertificateAsync(this.certificates[index]);
-      this.showLoading(false);
-
-      if (!response.isOK) {
-        this.showNotifications(
-          "error",
-          `${AppConfig.notification.title_default}`,
-          response.errorMessages
-        );
-        return;
-      }
-
-      this.$set(this.certificates, index, response.data);
-      if (response.data.status === "confirmed") {
-        this.company.taxCode = response.data.taxCode;
-        this.company.title = response.data.companyName;
-        this.company.companyAddress = response.data.companyAddress;
-        this.company.owner = response.data.owner;
-        this.company.phoneNumber = response.data.phoneNumberOfCompany;
+    async createCertificateAsync() {
+      if (this.isCompanyConfirmation === true) {
+        this.company.taxCode = this.certificate.taxCode;
+        this.company.title = this.certificate.companyName;
+        this.company.companyAddress = this.certificate.companyAddress;
+        this.company.owner = this.certificate.owner;
+        this.company.phoneNumber = this.certificate.phoneNumberOfCompany;
+        this.company.career = this.certificate.career;
         this.company.status = "active";
-
         await this.createCompanyAsync(this.company);
       }
-      this.showNotifications(
-        "success",
-        `${AppConfig.notification.title_default}`,
-        `${AppConfig.notification.content_updated_success_default}`
-      );
-      await this.showchartAsnyc();
-    },
-
-    async createCompanyAsync(company) {
-      if (this.companiesByTaxCode[company.taxCode]) {
-        return;
-      }
+      this.certificate.classId = this.userProfile.classId;
+      this.certificate.mssv = this.userProfile.mssv;
       this.showLoading();
-      let api = new CompanyService();
-      let response = await api.createCompanyAsync(company);
+      let api = new CertificateService();
+      let response = await api.createCertificateAsync(this.certificate);
       this.showLoading(false);
       if (!response.isOK) {
         this.showNotifications(
@@ -375,18 +248,14 @@ export default {
         `${AppConfig.notification.title_default}`,
         `${AppConfig.notification.content_created_success_default}`
       );
+      this.isCompanyConfirmation = false;
+      this.isRegistered = true;
     },
 
-    async getCompaniesAsync() {
-      let filter = {
-        status: "",
-        keyword: "",
-      };
-      // Call Api
+    async updateCertificateAsync() {
       this.showLoading();
-      const api = new CompanyService();
-
-      const response = await api.getCompaniesAsync(filter);
+      let api = new CertificateService();
+      let response = await api.updateCertificateAsync(this.certificate);
       this.showLoading(false);
 
       if (!response.isOK) {
@@ -397,33 +266,132 @@ export default {
         );
         return;
       }
-      this.companiesByTaxCode = CrudMixin.methods.convertArrayToObject(
-        response.data,
-        "taxCode"
+
+      this.showNotifications(
+        "success",
+        `${AppConfig.notification.title_default}`,
+        `${AppConfig.notification.content_updated_success_default}`
       );
     },
 
-    confirmationCompany(taxCode) {
-      if (this.companiesByTaxCode[taxCode]) {
-        return "Hoạt động";
+    async save() {
+      // validate
+      let viewModel = new CertificateViewModel();
+      viewModel.setFields(this.certificate);
+      this.errorMessages = viewModel.isValid();
+
+      if (this.errorMessages.length > 0) {
+        return;
       }
-      return "Không hoạt động";
+
+      if (!this.isRegistered) {
+        //create
+        await this.createCertificateAsync(this.userProfile);
+      } else {
+        //update
+        await this.updateCertificateAsync();
+      }
     },
 
-    changeCompanies(company) {
-      this.companiesByTaxCode[company.taxCode] = company;
+    async getCompaniesAsync() {
+      // Call Api
+      this.showLoading();
+      const api = new CompanyService();
+
+      const response = await api.getAllCompaniesAsync();
+      this.showLoading(false);
+
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      if (response.data !== undefined || response.data.items.length !== 0) {
+        let companies = CrudMixin.methods.convertArrayToObject(
+          response.data.items,
+          "taxCode"
+        );
+        this.companiesByTaxCode = companies;
+      }
     },
 
-  },
-  watch: {
-    async userProfile() {
-     if (this.userProfile !== "") {
-      this.student = this.userProfile;
-      // this.filterCerticate.classId = this.userProfile.classId;
-      this.filterCerticate.internshipCourseId = this.userProfile.internshipCourseId;
-      this.filterCerticate.studentCode = this.userProfile.mssv;
-      await this.getCertificatesAsync();
-    }
+    async getCompanieByTaxCodeAsync(taxCode) {
+      // Call Api
+      this.showLoading();
+      const api = new CompanyService();
+      const response = await api.getCompanieByTaxCodeAsync(taxCode);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      return response.data;
+    },
+
+    async checkCompany() {
+      if (this.companiesByTaxCode[this.certificate.taxCode] !== undefined) {
+        this.certificate.companyName =
+          this.companiesByTaxCode[this.certificate.taxCode].title;
+        this.certificate.owner =
+          this.companiesByTaxCode[this.certificate.taxCode].owner;
+        this.certificate.companyAddress =
+          this.companiesByTaxCode[this.certificate.taxCode].companyAddress;
+        this.certificate.phoneNumberOfCompany =
+          this.companiesByTaxCode[this.certificate.taxCode].phoneNumber;
+        this.certificate.career =
+          this.companiesByTaxCode[this.certificate.taxCode].career;
+        return;
+      }
+
+      let company = await this.getCompanieByTaxCodeAsync(
+        this.certificate.taxCode
+      );
+      if (
+        company.taxCode !== null ||
+        company.title !== null ||
+        company.owner !== null ||
+        company.companyAddress !== null
+      ) {
+        this.certificate.companyName = company.title;
+        this.certificate.owner = company.owner;
+        this.certificate.companyAddress = company.companyAddress;
+        this.certificate.phoneNumberOfCompany = company.phoneNumber;
+        this.certificate.career = company.career;
+        this.isCompanyConfirmation = true;
+        return;
+      }
+
+      return this.showNotifications(
+        "error",
+        `${AppConfig.notification.title_default}`,
+        "Không tìm thấy công ty vui lòng nhập thông tin công ty!"
+      );
+    },
+
+    async createCompanyAsync(company) {
+      if (this.companiesByTaxCode[company.taxCode] !== undefined) {
+        return;
+      }
+      this.showLoading();
+      let api = new CompanyService();
+      let response = await api.createCompanyAsync(company);
+      this.showLoading(false);
+      if (!response.isOK) {
+        this.showNotifications(
+          "error",
+          `${AppConfig.notification.title_default}`,
+          response.errorMessages
+        );
+        return;
+      }
+      this.$emit("changeCompanies", response.data);
     },
   },
 };
