@@ -15,7 +15,7 @@
       </li> -->
     </ul>
     <ul class="c-header-nav mr-4">
-      <li class="c-header-nav-item d-md-down-none mx-2 navbar__item--has-notify"
+      <li class="c-header-nav-item mx-2 navbar__item--has-notify"
         @click="showNotify()">
         <span href="#" class="c-header-nav-link header-icon-notification">
           <CIcon name="cil-bell" />
@@ -67,7 +67,7 @@
           <CIcon name="cil-list" />
         </a>
       </li> -->
-      <li class="c-header-nav-item d-md-down-none mx-2">
+      <li class="c-header-nav-item mx-2">
         <a href="#" class="c-header-nav-link">
           <!-- <CIcon name="cil-envelope-open" /> -->
           <HeaderDropdownAccount />
