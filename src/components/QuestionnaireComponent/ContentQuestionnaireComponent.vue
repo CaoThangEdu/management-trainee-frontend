@@ -41,7 +41,7 @@
               <thead class="">
                 <tr>
                   <th scope="col" class="align-middle">STT</th>
-                  <th scope="col" class="align-middle" style="width: 800px;">Câu hỏi</th>
+                  <th scope="col" class="align-middle" style="width: 600px;">Câu hỏi</th>
                   <th scope="col" class="align-middle" style="width: 150px;">Số thứ tự</th>
                   <th scope="col" class="align-middle text-center">Thao tác</th>
                 </tr>
