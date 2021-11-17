@@ -9,7 +9,7 @@ export default class StudentService extends ServicesBaseAPI {
   
   async scoreStudentAsync(object) {
     try {
-      const response = await this.http.post('http://localhost:21021/api/services/app/Score/ToMark', object);
+      const response = await this.http.post(`${AppConfig.apiHost}/Score/ToMark`, object);
       this.setResult(response);
     } catch (e) {
       return this.http.loadError(e);

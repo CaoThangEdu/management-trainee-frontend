@@ -135,7 +135,7 @@ export default {
       let accessToken = authToken?.accessToken;
       this.showLoading();
       await axios.get(
-        `http://localhost:21021/api/services/app/Notify/GetNotifyByEmail?email=${this.userProfile?.user?.emailAddress}`, 
+        `${AppConfig.apiHost}/Notify/GetNotifyByEmail?email=${this.userProfile?.user?.emailAddress}`, 
         {
           headers: { Authorization: `Bearer ${accessToken}` }
         })
