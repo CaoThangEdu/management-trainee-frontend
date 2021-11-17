@@ -1,6 +1,6 @@
 {
-  "authHost": "http://localhost:21021",
-  "apiHost": "http://localhost:21021/api/services/app",
+  "authHost": "https://api.caothang.online",
+  "apiHost": "https://api.caothang.online/api/services/app",
   "validate_messages": {
     "_default": "{field} không đúng.",
     "require": "Vui lòng nhập {field}.",
