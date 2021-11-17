@@ -119,7 +119,6 @@
           <hr />
           <div class="button text-center my-3">
             <button
-              :disabled="certificate.status === 'unconfirmed'"
               @click="save()"
               class="btn btn-success w-25"
             >

@@ -50,7 +50,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(question, index) in questions" :key="index">
+                <tr v-for="(question, index) in pageOfItems" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>
                     <input
