@@ -17,9 +17,15 @@
           </svg>
           <span>Đăng ký giấy giới thiệu thực tập</span>
         </header>
-        <div class="card-body p-5">
-            <step-progress :steps="mySteps" :current-step="currentStep" active-color="green" icon-class="fa fa-check"></step-progress>
-            <hr class="" style="margin:50px 0 50px 0;">
+        <div class="card-body">
+          <step-progress
+            v-if="isCertificate"
+            :steps="mySteps"
+            :current-step="currentStep"
+            active-color="green"
+            icon-class="fa fa-check"></step-progress>
+          <hr class="" style="margin:50px 0 50px 0;"
+            v-if="isCertificate">
           <div class="">
             <div class="form-group row">
               <label class="col-md-2 col-sm-4 col-form-label">
@@ -171,7 +177,8 @@ export default {
       isCompanyConfirmation: false,
       isRegistered: false,
       mySteps:['Đang chờ duyệt', 'Đã duyệt', 'Hoàn thành'],
-      currentStep:1
+      currentStep:1,
+      isCertificate: false,
     };
   },
 
@@ -179,6 +186,7 @@ export default {
     await this.getCompaniesAsync();
     let certificate = await this.getCertificateAsync(this.userProfile);
     if (certificate.length !== 0) {
+      this.isCertificate = true;
       this.certificate = certificate[0];
       this.isRegistered = true;
       if(this.certificate.status === "confirmed"){
