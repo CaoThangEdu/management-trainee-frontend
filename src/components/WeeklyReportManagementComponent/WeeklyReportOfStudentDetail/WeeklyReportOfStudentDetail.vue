@@ -50,8 +50,10 @@
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{student.title}}</td>
                     <td>{{student.description}}</td>
-                    <td>{{student.creationTime}}</td>
-                    <td>Xem báo cáo</td>
+                    <td>{{convertTime(student.creationTime, 'HH:mm DD/MM/YYYY')}}</td>
+                    <td>
+                      <a :href="student.link" target="_blank">Xem chi tiết</a>
+                    </td>
                   </tr>
                   <tr v-if="Object.keys(getStudentDetail).length == 0">
                     <th colspan="5" class="text-left">
