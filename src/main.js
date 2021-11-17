@@ -13,6 +13,7 @@ import 'regenerator-runtime/runtime';
 import HighchartsVue from 'highcharts-vue';
 import jsPDF from 'jspdf'
 
+
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true });
 Vue.config.productionTip = false;
 Vue.config.performance = true;

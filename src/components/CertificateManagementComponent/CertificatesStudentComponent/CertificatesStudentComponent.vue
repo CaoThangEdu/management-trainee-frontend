@@ -18,6 +18,8 @@
           <span>Đăng ký giấy giới thiệu thực tập</span>
         </header>
         <div class="card-body p-5">
+            <step-progress :steps="mySteps" :current-step="currentStep" active-color="green" icon-class="fa fa-check"></step-progress>
+            <hr class="" style="margin:50px 0 50px 0;">
           <div class="">
             <div class="form-group row">
               <label class="col-md-2 col-sm-4 col-form-label">
@@ -137,13 +139,15 @@ import CertificateService from "../../../services/certificate/CertificateService
 import CompanyService from "../../../services/company/companyServices";
 import { mapGetters, mapActions } from "vuex";
 import CrudMixin from "../../../helpers/mixins/crudMixin";
-
+import StepProgress from 'vue-step-progress';
+import 'vue-step-progress/dist/main.css';
 export default {
   name: "CertificateComponent",
   extends: ComponentBase,
   components: {
     BaseModal,
     AlertMessages,
+    'step-progress': StepProgress
   },
   mixins: [CrudMixin],
   data() {
@@ -166,6 +170,8 @@ export default {
       company: {},
       isCompanyConfirmation: false,
       isRegistered: false,
+      mySteps:['Đang chờ duyệt', 'Đã duyệt', 'Hoàn thành'],
+      currentStep:1
     };
   },
 
@@ -175,6 +181,12 @@ export default {
     if (certificate.length !== 0) {
       this.certificate = certificate[0];
       this.isRegistered = true;
+      if(this.certificate.status === "confirmed"){
+         this.currentStep = 2;
+      }
+      if(this.certificate.status === "complete"){
+        this.currentStep = 3;
+      }
     }
   },
 
@@ -408,4 +420,5 @@ export default {
   height: 28px;
   padding: 0px 5px;
 }
+
 </style>
